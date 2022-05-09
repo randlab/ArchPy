@@ -1,0 +1,12 @@
+
+#exclude these
+*.pyc
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+#ArchPy result files
+*.unt
+*.sf
+*.sfb
+*.fac
+*.pro

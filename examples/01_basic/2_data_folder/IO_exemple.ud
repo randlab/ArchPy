@@ -1,0 +1,9 @@
+bh_ID,Strat,top,bot
+bh1,B,15,5
+bh1,A,5,-5
+bh2,C,15,10
+bh2,B,10,4
+bh2,A,4,-2
+bh3,C,15,12
+bh3,B,12,7
+bh3,A,7,0

@@ -1,0 +1,61 @@
+ID: 1
+color: gold
+dic_facies:
+  TI: D_dic_facies_TI.gslib
+  angle1: 0
+  angle2: 0
+  angle3: 0
+  anisotropyRatioMode: one
+  ax: 1
+  ay: 1
+  az: 1
+  constantThreshold: 0.001
+  deactivationDistance: 4.0
+  f_method: MPS
+  globalPdf:
+  - 0.28
+  - 0.27
+  - 0.35
+  - 0.1
+  homo_usage: 1
+  localPdf: D_dic_facies_localPdf
+  localPdfRadius: 12.0
+  maxscan: 0.1
+  neig: 15
+  probaUsage: 2
+  radiusMode: large_default
+  rotAzi: 90
+  rotAziLoc: false
+  rotDip: 0
+  rotDipLoc: false
+  rotPlunge: 0
+  rotPlungeLoc: false
+  rot_usage: 1
+  rx: 2000.0
+  ry: 3000.0
+  rz: 200.99999999999997
+  thresh: 0.1
+  xloc: false
+  xr: 0.5
+  yloc: false
+  yr: 0.5
+  zloc: false
+  zr: 1
+name: D
+order: 1
+surface:
+  contact: onlap
+  dic_surf:
+    N_transfo: false
+    covmodel:
+      alpha: 0.0
+      elem:
+      - !!python/tuple
+        - cubic
+        - r:
+          - 500.0
+          - 1000.0
+          w: 100.0
+    int_method: kriging
+    tau: 0.01
+  name: Surface 1

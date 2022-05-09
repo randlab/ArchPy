@@ -1,0 +1,12 @@
+METADATA FOR TRAINING IMAGES
+file_name = ti_channels3D_4f_100x50x22.vtk
+format = ASCII (VTK) for PARAVIEW
+size
+  nx=100
+  ny=50
+  nz=22
+type = categorical - 4 facies
+source =
+  JOA
+description =
+  This image contains 3D channels.

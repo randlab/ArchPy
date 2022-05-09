@@ -1,0 +1,12 @@
+METADATA FOR TRAINING IMAGES
+file_name = ti_channels_strebelle_125x125x21.vtk
+format = ASCII (VTK) for PARAVIEW
+size
+  nx=125
+  ny=125
+  nz=21
+type = categorical - 2 facies
+source =
+  Strebelle / JOA
+description =
+  This image contains 3D channels: "Strebelle channels in 3D".

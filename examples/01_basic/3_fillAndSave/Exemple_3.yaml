@@ -1,0 +1,450 @@
+Facies:
+  Clay:
+    ID: 4
+    color: blue
+  GM:
+    ID: 3
+    color: blueviolet
+  Gravel:
+    ID: 2
+    color: lightgreen
+  SM:
+    ID: 5
+    color: brown
+  Sand:
+    ID: 1
+    color: yellow
+  Silt:
+    ID: 6
+    color: goldenrod
+  basement:
+    ID: 7
+    color: red
+Pile_master: P1
+Piles:
+  P1:
+    list_units:
+    - D
+    - C
+    - B
+    - A
+    name: P1
+    seed: 1
+    verbose: 1
+Results:
+  facies: Exemple_3.fac
+  properties: Exemple_3.pro
+  surfaces: Exemple_3.sf
+  surfaces_bot: Exemple_3.sfb
+  units: Exemple_3.unt
+Units:
+  A:
+    ID: 4
+    color: red
+    dic_facies:
+      f_method: homogenous
+    list_facies:
+    - basement
+    name: A
+    order: 4
+    surface:
+      contact: erode
+      dic_surf:
+        N_transfo: false
+        covmodel:
+          alpha: 0.0
+          elem:
+          - !!python/tuple
+            - spherical
+            - r:
+              - 10.0
+              - 10.0
+              w: 1.0
+        int_method: grf_ineq
+        tau: 0.01
+      name: Surface 1
+  B:
+    ID: 3
+    color: green
+    dic_facies:
+      TI: B_dic_facies_TI.gslib
+      angle1: 0
+      angle2: 0
+      angle3: 0
+      anisotropyRatioMode: one
+      ax: 1
+      ay: 1
+      az: 1
+      constantThreshold: 0.001
+      deactivationDistance: 4.0
+      f_method: MPS
+      globalPdf:
+      - 0.33
+      - 0.37
+      - 0.2
+      - 0.1
+      homo_usage: 1
+      localPdf: null
+      localPdfRadius: 12.0
+      maxscan: 0.1
+      neig: 24
+      probaUsage: 1
+      radiusMode: large_default
+      rotAzi: 90
+      rotAziLoc: false
+      rotDip: 0
+      rotDipLoc: false
+      rotPlunge: 0
+      rotPlungeLoc: false
+      rot_usage: 1
+      rx: 19.95
+      ry: 10.049999999999999
+      rz: 9.300000000000022
+      thresh: 0.05
+      xloc: false
+      xr: 0.5
+      yloc: false
+      yr: 0.5
+      zloc: false
+      zr: 0.3
+    list_facies:
+    - Sand
+    - Gravel
+    - GM
+    - SM
+    name: B
+    order: 3
+    surface:
+      contact: onlap
+      dic_surf:
+        N_transfo: false
+        covmodel:
+          alpha: 0.0
+          elem:
+          - !!python/tuple
+            - cubic
+            - r:
+              - 6.0
+              - 6.0
+              w: 0.6
+        int_method: grf_ineq
+        tau: 0.01
+      name: Surface 1
+  C:
+    ID: 2
+    color: blue
+    dic_facies:
+      SIS_orientation: false
+      azimuth: 0
+      dip: 0
+      f_covmodel:
+      - alpha: 0.0
+        beta: 0.0
+        elem:
+        - !!python/tuple
+          - exponential
+          - r:
+            - 10.0
+            - 10.0
+            - 3.0
+            w: 0.25
+        gamma: 0.0
+      - alpha: 45.0
+        beta: 30.0
+        elem:
+        - !!python/tuple
+          - exponential
+          - r:
+            - 20.0
+            - 20.0
+            - 5.0
+            w: 0.21
+        gamma: 0.0
+      f_method: SIS
+      neig: 10
+      plunge: 0
+      probability: null
+      r: 1
+    list_facies:
+    - Clay
+    - Silt
+    name: C
+    order: 2
+    surface:
+      contact: onlap
+      dic_surf:
+        N_transfo: false
+        covmodel:
+          alpha: 0.0
+          elem:
+          - !!python/tuple
+            - cubic
+            - r:
+              - 8.0
+              - 8.0
+              w: 0.2
+        int_method: grf_ineq
+        tau: 0.01
+      name: Surface 1
+  D:
+    ID: 1
+    color: gold
+    dic_facies:
+      Flag:
+        1:
+        - - !!python/tuple
+            - -.inf
+            - -0.3
+          - !!python/tuple
+            - -.inf
+            - 0
+        2:
+        - - !!python/tuple
+            - 0.3
+            - .inf
+          - !!python/tuple
+            - -.inf
+            - 0.5
+        3:
+        - - !!python/tuple
+            - -.inf
+            - -0.3
+          - !!python/tuple
+            - 0
+            - .inf
+        5:
+        - - !!python/tuple
+            - -0.3
+            - 0.3
+          - !!python/tuple
+            - -.inf
+            - .inf
+        - - !!python/tuple
+            - 0.3
+            - .inf
+          - !!python/tuple
+            - 0.5
+            - .inf
+      G_cm:
+      - alpha: 0.0
+        beta: 0.0
+        elem:
+        - !!python/tuple
+          - cubic
+          - r:
+            - 5.0
+            - 5.0
+            - 2.0
+            w: 1.0
+        - !!python/tuple
+          - nugget
+          - w: 0.0
+        gamma: 0.0
+      - alpha: 30.0
+        beta: 0.0
+        elem:
+        - !!python/tuple
+          - spherical
+          - r:
+            - 10.0
+            - 10.0
+            - 5.0
+            w: 1.0
+        - !!python/tuple
+          - nugget
+          - w: 0.0
+        gamma: 0.0
+      f_method: TPGs
+      grf_method: sgs
+      neig: 20
+      nit: 100
+    list_facies:
+    - Sand
+    - Gravel
+    - GM
+    - SM
+    name: D
+    order: 1
+    surface:
+      contact: onlap
+      dic_surf:
+        N_transfo: false
+        covmodel:
+          alpha: 0.0
+          elem:
+          - !!python/tuple
+            - cubic
+            - r:
+              - 6.0
+              - 6.0
+              w: 0.6
+        int_method: grf_ineq
+        tau: 0.01
+      name: Surface 1
+boreholes:
+  facies_data: Exemple_3.fd
+  list_bhs: Exemple_3.lbh
+  units_data: Exemple_3.ud
+facies_computed: 1
+grid:
+  bot: Exemple_3.bot
+  dimensions: !!python/tuple
+  - 133.0
+  - 67.0
+  - 62.0
+  mask: Exemple_3.msk
+  origin: !!python/tuple
+  - 0.0
+  - 0.0
+  - -15.0
+  spacing: !!python/tuple
+  - 0.15
+  - 0.15
+  - 0.15
+  top: Exemple_3.top
+name: Exemple_3
+ncpu: -1
+prop_computed: 1
+properties:
+  K:
+    covmodels:
+    - alpha: 0
+      beta: 0.0
+      elem:
+      - !!python/tuple
+        - spherical
+        - r:
+          - 3.0
+          - 3.0
+          - 1.0
+          w: 0.1
+      gamma: 0.0
+    - alpha: -20
+      beta: 0.0
+      elem:
+      - !!python/tuple
+        - exponential
+        - r:
+          - 5.0
+          - 5.0
+          - 1.0
+          w: 0.3
+      gamma: 0.0
+    - alpha: -20.0
+      beta: 0.0
+      elem:
+      - !!python/tuple
+        - exponential
+        - r:
+          - 5.0
+          - 5.0
+          - 1.0
+          w: 0.3
+      gamma: 0.0
+    - null
+    - alpha: 0.0
+      beta: 0.0
+      elem:
+      - !!python/tuple
+        - spherical
+        - r:
+          - 3.0
+          - 3.0
+          - 1.0
+          w: 0.1
+      gamma: 0.0
+    - alpha: -20.0
+      beta: 0.0
+      elem:
+      - !!python/tuple
+        - exponential
+        - r:
+          - 5.0
+          - 5.0
+          - 1.0
+          w: 0.3
+      gamma: 0.0
+    - null
+    def_mean: -5
+    facies:
+    - Sand
+    - Gravel
+    - GM
+    - Clay
+    - SM
+    - Silt
+    - basement
+    int_method:
+    - sgs
+    - sgs
+    - sgs
+    - homogenous
+    - sgs
+    - sgs
+    - homogenous
+    means:
+    - -3.5
+    - -2.0
+    - -4.5
+    - -8.0
+    - -5.5
+    - -6.5
+    - -10.0
+    name: K
+    vmax: null
+    vmin: null
+  Porosity:
+    covmodels:
+    - alpha: 0
+      beta: 0.0
+      elem:
+      - !!python/tuple
+        - exponential
+        - r:
+          - 5.0
+          - 5.0
+          - 5.0
+          w: 0.005
+      gamma: 0.0
+    - alpha: 0.0
+      beta: 0.0
+      elem:
+      - !!python/tuple
+        - exponential
+        - r:
+          - 5.0
+          - 5.0
+          - 5.0
+          w: 0.005
+      gamma: 0.0
+    - alpha: 0.0
+      beta: 0.0
+      elem:
+      - !!python/tuple
+        - exponential
+        - r:
+          - 5.0
+          - 5.0
+          - 5.0
+          w: 0.005
+      gamma: 0.0
+    def_mean: 0.3
+    facies:
+    - Sand
+    - GM
+    - Clay
+    int_method:
+    - sgs
+    - sgs
+    - sgs
+    means:
+    - 0.4
+    - 0.3
+    - 0.2
+    name: Porosity
+    vmax: null
+    vmin: 0
+seed: 1
+surfaces_computed: 1
+verbose: 1
+ws: 3_fillAndSave

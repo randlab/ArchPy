@@ -48,7 +48,7 @@ These are not required but highly recommanded.
  ## Paper
  A paper was published on the ArchPy concept and its different capabilities.
  The paper was written with the version 0.1 of ArchPy.
- It is available with the following [doi](10.3389/feart.2022.884075).
+ It is available with the following [link](https://www.frontiersin.org/articles/10.3389/feart.2022.884075/).
 
  ## Contact
  For any questions regarding ArchPy, please contact me at <ludovic.schorpp@unine.ch>

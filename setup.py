@@ -6,7 +6,7 @@ with open("README.md", "r") as file:
 
 setuptools.setup(
     name='Geoarchpy',
-    version='0.1.1',
+    version='0.2.1',
     author="Ludovic Schorpp",
     author_email="ludovic.schorpp@unine.ch",
     description="Simpler geological and property models",

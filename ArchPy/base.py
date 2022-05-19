@@ -1616,66 +1616,152 @@ class Arch_table():
                 if self.verbose: 
                     print("object isn't a borehole object or object is already in the list")
 
-    def create_fake_bh(self, x, y, bh_name="dummy", bh_id="dummy", iu=0, ifa=0, depth=None, facies=True): 
-
+    def make_fake_bh(self, positions_x, positions_y, units=None, facies=None, stratIndex=0, faciesIndex=0, extractUnits=True, extractFacies=True):
+        
         """
-        Sample a borehole at specified location in Archtable project
+        Create fake boreholes from realization of the Arch_table.
 
-        #inputs#
-        x, y   : floats, coordinates
-        bh_name: borehole name --> not used by ArchPy
-        bh_id  : borheole id --> most important
-        iu     : int, index unit realization to sample
-        ifa    : int, index facies realization to sample
-        depth  : float, depth of the borehole
-        facies : bool, flag to indicate to sample facies or not
+        # inputs #
+        positions_x  : seqence of numbers, indicate the x positions 
+                       of the borehole to create bhs
+        positions_y  : seqence of numbers, indicate the y positions 
+                       of the borehole to create bhs
+        units        : optional argument, 3D array, unit array to use 
+                       to create bhs
+        facies       : optional argument, 3D array, facies array to use 
+                       to create bhs
+        stratIndex   : int, unit index to sample
+        faciesIndex  : int, facies index to sample 
+        extractUnits : bool, flag to indicate to sample units or not
+        extractFacies: bool, flag to indicate to sample facies or not
 
-        #outputs#
-        A borehole object at x and y location with specified depth
-        """
+        # outputs #
+        a list of borehole objects
+        """ 
 
-        log_strati=[]
-        log_facies=[]
-        unit_prev=None
-        facies_prev=None
-        for iz in self.get_zgc()[:: -1]: 
-            cell=self.coord2cell(x, y, iz)
-            if cell is not None: 
+        # get 3D arrays to sample
+        if units is None:
+            units = self.get_units_domains_realizations(all_data=False, iu=stratIndex)
+        if facies is None:
+            facies = self.get_facies(all_data=False, iu=stratIndex, ifa=faciesIndex)
 
-                #unit
-                unit_id=self.get_units_domains_realizations(iu=iu)[cell]
-                unit=self.get_unit(ID=unit_id, type="ID")
-                if unit_prev is not None: 
-                    if unit != unit_prev: 
-                        z=np.round(iz+self.get_sz()/2,2)
-                        log_strati.append((unit,z))
-                        unit_prev=unit
-                else: 
-                    z=np.round(iz+self.get_sz()/2,2)
-                    log_strati.append((unit,z))
-                    unit_prev=unit
+        units_data=units.copy()
+        # units_data[np.isnan(units_data)]=-99  # default ID to indicate no data 
+        facies_data=facies.copy()
+        # facies_data[np.isnan(facies_data)]=-99  # same for facies
+        
+        fake_bh = []
+        if type(positions_x) is not np.ndarray:
+            positions_x = np.array([positions_x])
+        if type(positions_y) is not np.ndarray:
+            positions_y = np.array([positions_y])
+        for x,y in zip(positions_x,positions_y):
+            
+            cell_x,cell_y, z = self.pointToIndex(x,y,1)
+            
+            if extractUnits:
+                #unit log
+                unit_log = []
+                unit_idx = units_data[:, cell_y, cell_x]
+                if unit_idx[-1] != 0:
+                    unit_log.append((self.get_unit(ID = unit_idx[-1], type='ID', vb=0), np.round(self.zg[-1], 2)))
 
-                if facies: 
-                    #facies
-                    facies_id=self.get_facies(iu, ifa, all_data=False)[cell]
-                    facies=self.get_facies_obj(ID=facies_id, type="ID")
+                for index_trans in reversed(np.where(np.diff(unit_idx) != 0)[0]):
+                    unit_log.append((self.get_unit(ID =unit_idx[index_trans], type='ID', vb=0), np.round(self.zg[index_trans+1], 2)))
+            else:
+                unit_log=None
+                
+            #facies log
+            if extractFacies:
+                facies_log = []
+                facies_idx = facies_data[:, cell_y, cell_x]
+                #If model has no free space above, we need to add the transition Surface - first layer
+                if facies_idx[-1] != 0:
+                    facies_log.append((self.get_facies_obj(ID = facies_idx[-1], type='ID', vb=0), np.round(self.zg[-1], 2)))
 
-                    if facies_prev is not None: 
-                        if facies != facies_prev: 
-                            z=np.round(iz+self.get_sz()/2,2)
-                            log_facies.append((facies,z))
-                            facies_prev=facies
-                    else: 
-                        z=np.round(iz+self.get_sz()/2,2)
-                        log_facies.append((facies,z))
-                        facies_prev=facies
+                for index_trans in reversed(np.where(np.diff(facies_idx) != 0)[0]):
+                    fa_obj=self.get_facies_obj(ID =facies_idx[index_trans], type='ID', vb=0)
+                    iz=np.round(self.zg[index_trans+1], 2)
+                    facies_log.append((fa_obj, iz))
+            
+            else:
+                facies_log=None
+                
+            # merge None if same unit above and below
+            if unit_log is not None:
+                c=0
+                for i in range(len(unit_log)):
+                    i-=c
+                    if unit_log[i][0] is None and i > 0:
+                        if unit_log[i-1][0] == unit_log[i+1][0]:
+                            unit_log=unit_log[:i] + unit_log[(i+2):]
+                        c+=2
 
-        if depth is None: 
-            depth=self.get_zg()[-1] - self.get_zg()[0] - self.get_sz()
-        bh= ArchPy.base.borehole(bh_name, bh_id, x, y, log_strati[0][1], depth=depth,
-                             log_strati=log_strati,
-                             log_facies=log_facies)
-        return bh
+            fake_bh.append(borehole("fake","fake",x=x,y=y,z=self.top[cell_y,cell_x],
+                                    depth =-self.bot[cell_y,cell_x],log_strati=unit_log,log_facies=facies_log))
+            
+        return fake_bh
+
+    # def create_fake_bh(self, x, y, bh_name="dummy", bh_id="dummy", iu=0, ifa=0, depth=None, facies=True): 
+
+    #     """
+    #     Sample a borehole at specified location in Archtable project
+
+    #     #inputs#
+    #     x, y   : floats, coordinates
+    #     bh_name: borehole name --> not used by ArchPy
+    #     bh_id  : borheole id --> most important
+    #     iu     : int, index unit realization to sample
+    #     ifa    : int, index facies realization to sample
+    #     depth  : float, depth of the borehole
+    #     facies : bool, flag to indicate to sample facies or not
+
+    #     #outputs#
+    #     A borehole object at x and y location with specified depth
+    #     """
+
+    #     log_strati=[]
+    #     log_facies=[]
+    #     unit_prev=None
+    #     facies_prev=None
+    #     for iz in self.get_zgc()[:: -1]: 
+    #         cell=self.coord2cell(x, y, iz)
+    #         if cell is not None: 
+
+    #             #unit
+    #             unit_id=self.get_units_domains_realizations(iu=iu)[cell]
+    #             unit=self.get_unit(ID=unit_id, type="ID")
+    #             if unit_prev is not None: 
+    #                 if unit != unit_prev: 
+    #                     z=np.round(iz+self.get_sz()/2,2)
+    #                     log_strati.append((unit,z))
+    #                     unit_prev=unit
+    #             else: 
+    #                 z=np.round(iz+self.get_sz()/2,2)
+    #                 log_strati.append((unit,z))
+    #                 unit_prev=unit
+
+    #             if facies: 
+    #                 #facies
+    #                 facies_id=self.get_facies(iu, ifa, all_data=False)[cell]
+    #                 facies=self.get_facies_obj(ID=facies_id, type="ID")
+
+    #                 if facies_prev is not None: 
+    #                     if facies != facies_prev: 
+    #                         z=np.round(iz+self.get_sz()/2,2)
+    #                         log_facies.append((facies,z))
+    #                         facies_prev=facies
+    #                 else: 
+    #                     z=np.round(iz+self.get_sz()/2,2)
+    #                     log_facies.append((facies,z))
+    #                     facies_prev=facies
+
+    #     if depth is None: 
+    #         depth=self.get_zg()[-1] - self.get_zg()[0] - self.get_sz()
+    #     bh= ArchPy.base.borehole(bh_name, bh_id, x, y, log_strati[0][1], depth=depth,
+    #                          log_strati=log_strati,
+    #                          log_facies=log_facies)
+    #     return bh
 
     def add_fake_bh(self, bhs): 
 
@@ -4531,32 +4617,32 @@ class Unit():
 
 
                         #Modify sill of covmodel if there is only one
-                        if len(self.list_f_covmodel) == 1: 
-                            if ArchTable.verbose: 
-                                print("Only one facies covmodels for multiples facies, adapt sill to right proportions")
+                        if len(facies) > 0:  # ensure that there is at least one data point
+                            if len(self.list_f_covmodel) == 1: 
+                                if ArchTable.verbose: 
+                                    print("Only one facies covmodels for multiples facies, adapt sill to right proportions")
 
-                            cm=self.list_f_covmodel[0]
+                                cm=self.list_f_covmodel[0]
 
-                            sill=cm.sill() #get sill
+                                sill=cm.sill() #get sill
 
-                            self.list_f_covmodel=[] #reset list
-                            for fa in self.list_facies: #loop over facies
-                                cm_copy=copy.deepcopy(cm) #make a copy
+                                self.list_f_covmodel=[]  # reset list
+                                for fa in self.list_facies: #loop over facies
+                                    cm_copy=copy.deepcopy(cm) #make a copy
 
-                                p=np.sum(facies == fa.ID)/len(facies == fa.ID) #calculate proportion of facies
-                                if p > 0: 
-                                    var=p*(1-p) #variance
-                                    ratio=var/sill  #ratio btw covmodel and real variance
+                                    p=np.sum(facies == fa.ID)/len(facies == fa.ID) #calculate proportion of facies
+                                    if p > 0: 
+                                        var=p*(1-p) #variance
+                                        ratio=var/sill  #ratio btw covmodel and real variance
 
-                                    for e in cm_copy.elem: 
-                                        e[1]["w"] *= ratio
-                                else: 
-                                    for e in cm_copy.elem: 
-                                        e[1]["w"] *= 1
-                                self.list_f_covmodel.append(cm_copy)
+                                        for e in cm_copy.elem: 
+                                            e[1]["w"] *= ratio
+                                    else: 
+                                        for e in cm_copy.elem: 
+                                            e[1]["w"] *= 1
+                                    self.list_f_covmodel.append(cm_copy)
 
                         ## Simulation
-
                         simus = gci.simulateIndicator3D(cat_values, self.list_f_covmodel, dimensions, spacing, origin,
                                                         nreal=nreal, method="simple_kriging", x=hd, v=facies, mask=mask,
                                                         searchRadiusRelative=kwargs["r"], nneighborMax=kwargs["neig"],

@@ -41,7 +41,7 @@ These are not required but highly recommanded.
  There is some example notebooks :
  - 01_basic : a folder where simple and basics ArchPy functionnalities are described 
  - 02_3D_ArchPy : a complete 3D ArchPy model example
- - 03_Article_example : synthetical example shown in ArchPy article
+ - 03_Article_example : a synthetical example shown in ArchPy article
  - 04_hierarchies : an exemple with many hierarchical units to test ArchPy capabilities
  - 05_mps_surfaces : an example how to use MPS to simulate the units surfaces
  

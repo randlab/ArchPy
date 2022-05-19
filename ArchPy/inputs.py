@@ -79,7 +79,7 @@ def imp_cm(covmodel_dic):
     return cm
 
        
-def load_results(ArchTable, surfs =None, surfs_bot=None, units=None, facies=None, props=None):
+def load_results(ArchTable, surfs=None, surfs_bot=None, units=None, facies=None, props=None):
     
     """
     Load ArchTable results. 
@@ -119,36 +119,36 @@ def load_results(ArchTable, surfs =None, surfs_bot=None, units=None, facies=None
             ArchTable.surfaces_computed=1
         except:
             print("Surface bot results file not found")
-
-    if units is None:
-        #units
-        try:
-            with open(os.path.join(ArchTable.ws, ArchTable.name + ".unt"), "rb") as f:
-                ArchTable.Geol.units_domains=pickle.load(f)
-            print("#### Units loaded ####")
-            ArchTable.surfaces_computed=1
-        except: 
-            print("Unit results file not found")
-    if facies is None:
-        #facies
-        try:
-            with open(os.path.join(ArchTable.ws, ArchTable.name + ".fac"), "rb") as f:
-                ArchTable.Geol.facies_domains=pickle.load(f)
-            print("#### Facies loaded ####")
-            ArchTable.facies_computed=1
-        except:
-            print("Facies results file not found")
-    if props is None:
-        #prop
-        try:
-            with open(os.path.join(ArchTable.ws, ArchTable.name + ".pro"), "rb") as f:
-                ArchTable.Geol.prop_values=pickle.load(f)
-            print("#### Properties loaded ####")
-            ArchTable.prop_computed=1
-        except:
-            print("Property results file not found")
             
-    #asserts TO DO
+    if ~ArchTable.write_results:
+        if units is None:
+            #units
+            try:
+                with open(os.path.join(ArchTable.ws, ArchTable.name + ".unt"), "rb") as f:
+                    ArchTable.Geol.units_domains=pickle.load(f)
+                print("#### Units loaded ####")
+                ArchTable.surfaces_computed=1
+            except: 
+                print("Unit results file not found")
+        if facies is None:
+            #facies
+            try:
+                with open(os.path.join(ArchTable.ws, ArchTable.name + ".fac"), "rb") as f:
+                    ArchTable.Geol.facies_domains=pickle.load(f)
+                print("#### Facies loaded ####")
+                ArchTable.facies_computed=1
+            except:
+                print("Facies results file not found")
+        if props is None:
+            #prop
+            try:
+                with open(os.path.join(ArchTable.ws, ArchTable.name + ".pro"), "rb") as f:
+                    ArchTable.Geol.prop_values=pickle.load(f)
+                print("#### Properties loaded ####")
+                ArchTable.prop_computed=1
+            except:
+                print("Property results file not found")
+            
     if surfs is not None:
         try:
             with open(surfs, "rb") as f:
@@ -165,6 +165,7 @@ def load_results(ArchTable, surfs =None, surfs_bot=None, units=None, facies=None
                 ArchTable.surfaces_computed=1
         except:
             print("Surface bot results file not found")
+
     if units is not None:
         try:
             with open(units, "rb") as f:
@@ -801,20 +802,20 @@ def import_project(project_name, ws, import_bhs=True, import_results=True, impor
                     surfs_bot=os.path.join(ws, d_res["surfaces_bot"])
                 else:
                     surfs_bot=None
-                if "units" in d_res.keys():
-                    units=os.path.join(ws, d_res["units"])
-                else:
-                    units=None
-                if "facies" in d_res.keys():
-                    facies=os.path.join(ws, d_res["facies"])
-                else:
-                    facies=None
-                if "properties" in d_res.keys():
-                    props=os.path.join(ws, d_res["properties"])
-                else:
-                    props=None
+                # if "units" in d_res.keys():
+                #     units=os.path.join(ws, d_res["units"])
+                # else:
+                #     units=None
+                # if "facies" in d_res.keys():
+                #     facies=os.path.join(ws, d_res["facies"])
+                # else:
+                #     facies=None
+                # if "properties" in d_res.keys():
+                #     props=os.path.join(ws, d_res["properties"])
+                # else:
+                #     props=None
 
-                load_results(ArchTable, surfs, surfs_bot, units, facies, props)
+                load_results(ArchTable, surfs, surfs_bot)
             else:
                 print("No results files provided in the yaml file \n")
                 print("Trying to find results files in working_directory")
@@ -935,25 +936,26 @@ def save_results(ArchTable):
         with open(os.path.join(ArchTable.ws, fn), "wb") as f:
             pickle.dump(ArchTable.Geol.surfaces_bot_by_piles, f)
     
+    if ~ArchTable.write_results:
         #units
         fn=ArchTable.name + ".unt"
         d["units"]=fn
         with open(os.path.join(ArchTable.ws, fn), "wb") as f:
             pickle.dump(ArchTable.Geol.units_domains, f)
 
-    if ArchTable.facies_computed:
-        #facies
-        fn=ArchTable.name + ".fac"
-        d["facies"]=fn
-        with open(os.path.join(ArchTable.ws, fn), "wb") as f:
-            pickle.dump(ArchTable.Geol.facies_domains, f)
+        if ArchTable.facies_computed:
+            #facies
+            fn=ArchTable.name + ".fac"
+            d["facies"]=fn
+            with open(os.path.join(ArchTable.ws, fn), "wb") as f:
+                pickle.dump(ArchTable.Geol.facies_domains, f)
 
-    if ArchTable.prop_computed:
-        #prop
-        fn=ArchTable.name + ".pro"
-        d["properties"]=fn 
-        with open(os.path.join(ArchTable.ws, fn), "wb") as f:
-            pickle.dump(ArchTable.Geol.prop_values, f)
+        if ArchTable.prop_computed:
+            #prop
+            fn=ArchTable.name + ".pro"
+            d["properties"]=fn 
+            with open(os.path.join(ArchTable.ws, fn), "wb") as f:
+                pickle.dump(ArchTable.Geol.prop_values, f)
 
     return d
 

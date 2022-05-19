@@ -173,8 +173,8 @@ def krige(x, v, xu, cov_model, method='simple_kriging', mean=None):
 
     # Solve the kriging system
     w = np.linalg.solve(mat, b) # w: matrix of dimension nmat x nu
-    
-        
+
+
     # Kriged standard deviation at unknown points
     vu_std = np.sqrt(np.maximum(0, cov0 - np.array([np.dot(w[:,i], b[:,i]) for i in range(nu)])))
     if ordinary_kriging:
@@ -261,34 +261,8 @@ def run_sim(data_org,xg,covmodel,var,nsim = 10,nit=20):
 
     return np.array(lst)
 
-def run_sim_2d(data_org,xg,yg,covmodel,var=None,mean=None,krig_type = "simple_kriging",nsim = 1,nit=20,nmax=20, grf_method = "fft", ncpu=-1, seed=123456789):
+def Gibbs_estimate(data_org, covmodel, nit=50, krig_type="simple_kriging", mean=None, var=None, nmax=20):
 
-
-    """
-    #####
-    inputs
-    #####
-    data_org : 2D array-like of size nd x 6
-               [[x1, y1, z1, vineq_min1, vineq_max1],
-                [x2, y2, z2, vineq_min2, vineq_max2],
-                ...,
-                [xnd, ynd, znd, vineq_minnd, vineq_maxnd],]
-    xg : x coordinate vector (np.arange(x0,x1+sx,sx)
-    yg : y coordinate vector (np.arange(y0,y1+sy,sy)
-    nsim : int, number of simulations
-    nit : int, number of Gibbs iterations
-    covmodel : covariance model (see geone.CovModel documentation)
-    #####
-    output : array of size (nsim,ny,nx), array of all simulations
-    #####
-    """
-    # grid
-    nx = xg.shape[0]-1
-    sx = np.diff(xg)[0]
-    ox = xg[0]
-    ny = yg.shape[0]-1
-    sy = np.diff(yg)[0]
-    oy = yg[0]
     # copy data and rearrange data
     data = data_org.copy()
 
@@ -351,6 +325,7 @@ def run_sim_2d(data_org,xg,yg,covmodel,var=None,mean=None,krig_type = "simple_kr
     ndata = data.shape[0]
     weight_arr = np.zeros([nineq,ndata])
     std_arr = np.zeros(nineq)
+    
     #select nearest neighbours using a kdtree
     tree = KDTree(data[:,:2])
     if nmax > ndata:
@@ -363,6 +338,181 @@ def run_sim_2d(data_org,xg,yg,covmodel,var=None,mean=None,krig_type = "simple_kr
         weight_arr[i,idx[1:]] = w[:,0]
         std_arr[i] = vu_std
         
+    ### loop over inequality data, Gibbs sampler ###
+    
+    vals=np.zeros([nineq, nit+1])
+    if neq > 1:
+        #initial values
+        x_tmp = []
+        v_tmp = []
+        for ieq in eq_data:
+            x_tmp.append(tuple(ieq[0:2]))
+            v_tmp.append(ieq[2])
+        for i in range(nineq):
+            xu = ineq_data[i]
+            idx = tree.query(xu[:2].reshape(1,-1),k=ndata,return_distance=False)[0] # search nearest neighbours
+            idx2 = [i for i in range(len(data)) if tuple(data[i,:2]) in x_tmp]
+            idx2 = idx2[:nmax]
+            x = np.array(x_tmp)[idx2]
+            v = np.array(v_tmp)[idx2]
+            m,s = gcm.krige(x, v, xu[:2].reshape(-1,2), cov_model=covmodel, method=krig_type, mean=mean)
+            if np.abs(m) != np.inf and s > 0:
+                ## truncation
+                if (xu[3] != xu[3]) and (xu[4] == xu[4]):
+                    myclip_a = -np.inf
+                    myclip_b = xu[4]
+                elif (xu[3] == xu[3]) and (xu[4] != xu[4]):
+                    myclip_a = xu[3]
+                    myclip_b = np.inf
+                elif (xu[3] == xu[3]) and (xu[4] == xu[4]):
+                    myclip_a = xu[3]
+                    myclip_b = xu[4]
+                a, b = (myclip_a - m) / s, (myclip_b - m) / s
+                val = truncnorm.rvs(a,b,loc=m,scale=s) # draw and update value
+                if ~np.isinf(val) and ~np.isnan(val):
+                    xu[2] = val
+                    vals[i, 0]=val
+                    x_tmp.append(tuple(xu[:2]))
+                    v_tmp.append(val)
+    for it in range(nit):
+        for i in range(nineq):
+            xu = ineq_data[i]
+            v_data = np.concatenate([eq_data,ineq_data]) #reappend data
+            if krig_type == "simple_kriging":
+                m = np.dot(weight_arr[i], v_data[:,2]) + (1-np.sum(weight_arr[i],axis=0))*mean #compute expected value using simple kriging
+            elif krig_type == "ordinary_kriging":
+                m = np.dot(weight_arr[i], v_data[:,2])
+            s = std_arr[i]
+            #draw using truncated gaussians
+            if np.abs(m) != np.inf and s > 0:
+                ## truncation
+                if (xu[3] != xu[3]) and (xu[4] == xu[4]):
+                    myclip_a = -np.inf
+                    myclip_b = xu[4]
+                elif (xu[3] == xu[3]) and (xu[4] != xu[4]):
+                    myclip_a = xu[3]
+                    myclip_b = np.inf
+                elif (xu[3] == xu[3]) and (xu[4] == xu[4]):
+                    myclip_a = xu[3]
+                    myclip_b = xu[4]
+                a, b = (myclip_a - m) / s, (myclip_b - m) / s
+                val = truncnorm.rvs(a,b,loc=m,scale=s) # draw and update value
+                if ~np.isinf(val) and ~np.isnan(val):
+                    xu[2] = val
+                    vals[i, it+1]=val
+    
+    ineq_vals=vals.mean(1)  #  estimate best value
+    o=0
+    for idata in data[neq:]:
+        idata[2]=ineq_vals[o]
+        o+=1
+    
+    return data
+            
+            
+def run_sim_2d(data_org,xg,yg,covmodel,var=None,mean=None,krig_type = "simple_kriging",nsim = 1,nit=20,nmax=20, grf_method = "fft", ncpu=-1, seed=123456789):
+
+
+    """
+    #####
+    inputs
+    #####
+    data_org : 2D array-like of size nd x 6
+               [[x1, y1, z1, vineq_min1, vineq_max1],
+                [x2, y2, z2, vineq_min2, vineq_max2],
+                ...,
+                [xnd, ynd, znd, vineq_minnd, vineq_maxnd],]
+    xg : x coordinate vector (np.arange(x0,x1+sx,sx)
+    yg : y coordinate vector (np.arange(y0,y1+sy,sy)
+    nsim : int, number of simulations
+    nit : int, number of Gibbs iterations
+    covmodel : covariance model (see geone.CovModel documentation)
+    #####
+    output : array of size (nsim,ny,nx), array of all simulations
+    #####
+    """
+    # grid
+    nx = xg.shape[0]-1
+    sx = np.diff(xg)[0]
+    ox = xg[0]
+    ny = yg.shape[0]-1
+    sy = np.diff(yg)[0]
+    oy = yg[0]
+    # copy data and rearrange data
+    data = data_org.copy()
+
+    """ SHIFTED TO BASE. A supprimer
+    # default values
+    for idata in data:
+        if (idata[3] != idata[3]) and (idata[4] == idata[4]): # inf ineq
+            idata[2] = idata[4]
+        elif(idata[3] == idata[3]) and (idata[4] != idata[4]): # sup ineq
+            idata[2] = idata[3]
+        elif (idata[3] == idata[3]) and (idata[4] == idata[4]): # sup and inf ineq
+            assert idata[3] <= idata[4], "inf ineq must be inferior or equal to sup ineq in point {}".format(idata)
+            idata[2] = (idata[3]+idata[4])/2
+            if idata[3] == idata[4]: # if both ineq are equal
+                idata[3] = np.nan
+                idata[4] = np.nan
+    """
+    #split data
+    mask_eq = (data[:,3] == data[:,3]) | (data[:,4] == data[:,4])
+    ineq_data = data[mask_eq]
+    eq_data = data[~mask_eq]
+    neq = eq_data.shape[0]
+    data = np.concatenate((eq_data, ineq_data))
+
+    if krig_type == "ordinary_kriging":
+        mean = None #mean set to None
+
+    ## kriging to test and remove some ineq data 
+    ##(an ineq is removed if the ineq is above/below kriging estimate +- 4 times krig standard deviation)
+    #change ini data to krige estimates only with eq data
+    if neq > 1:
+        ini_v,ini_s = gcm.krige(eq_data[:,:2], eq_data[:,2], ineq_data[:,:2].reshape(-1,2), cov_model=covmodel, method=krig_type, mean=mean)
+        arr_sup = ini_v+4*ini_s
+        arr_inf = ini_v-4*ini_s
+        mask_inf = (ineq_data[:,3] < arr_inf)
+        mask_sup = (ineq_data[:,4] > arr_sup)
+
+        #remove ineq_
+        ineq_data[mask_inf, 3] = np.nan
+        ineq_data[mask_sup, 4] = np.nan
+        super_mask = (ineq_data[:, 3] == ineq_data[:, 3]) | (ineq_data[:, 4] == ineq_data[:, 4])
+        ineq_data = ineq_data[super_mask]
+
+        data = np.concatenate((eq_data, ineq_data))
+    
+    #if no variance are given
+    if var is None:
+        var = covmodel.sill()
+
+    if (eq_data.shape[0] > 0) & (mean is None) :
+        mean = np.mean(eq_data[:,2]) # what to do if no equality point ???
+    elif (eq_data.shape[0] == 0) & (mean is None):
+        mean = (np.nanmean(ineq_data[:,3]) + np.nanmean(ineq_data[:,4]))/2
+        krig_type = "simple_kriging" #set to simple kriging to avoid surface to go at infinity if no equality points
+    if krig_type == "ordinary_kriging":
+        mean = None #mean set to None
+
+    #calculation weights --> add nmax neighbours
+    nineq = ineq_data.shape[0]
+    neq = eq_data.shape[0]
+    ndata = data.shape[0]
+    weight_arr = np.zeros([nineq,ndata])
+    std_arr = np.zeros(nineq)
+    #select nearest neighbours using a kdtree
+    tree = KDTree(data[:,:2])
+    if nmax > ndata:
+        nmax = ndata
+    for i in range(nineq):
+        xu = ineq_data[i]
+        idx = tree.query(xu[:2].reshape(1,-1),k=nmax,return_distance=False)[0] # search nearest neighbours
+        x = data[idx[1:]] # select nearest neig
+        w,vu_std = krige(x[:,:2],x[:,3],xu[:2].reshape(-1,2),cov_model = covmodel,method = krig_type,mean=mean)
+        weight_arr[i,idx[1:]] = w[:,0]
+        std_arr[i] = vu_std
+
     ### loop over inequality data, Gibbs sampler ###
     lst = np.ones([nsim,ny,nx])
     for isim in range(nsim):

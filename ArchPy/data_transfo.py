@@ -105,11 +105,3 @@ def NScore_Btrsf(data_transformed,di):
 
     return x_retransformed
 
-
-
-def N2OtherDistri():
-
-    """
-    Transform a gaussian distributed dataset into another given distribution TO DO
-    """
-    return

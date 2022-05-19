@@ -132,6 +132,7 @@ def resample_to_grid(xc, yc, rxc, ryc, raster_band, method="nearest"):
 
     return data
 
+
 ##### ArchPy functions #####
 def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, seed=123456789, **kwargs): 
 
@@ -180,8 +181,8 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, seed=123456789, **kwargs):
     oy=yg[0]
 
     ##kwargs
-    kwargs_def_grf={"nit": 50, "nmax": 20, "krig_type": "simple_kriging",
-                      "grf_method": "fft", "mean": None,"unco": False} #number of gibbs sampler iterations, number of neigbors, krig type and grf method
+    kwargs_def_grf={"nit": 50, "nmax": 20, "krig_type": "simple_kriging",  # number of gibbs sampler iterations, number of neigbors, krig type
+                      "grf_method": "fft", "mean": None,"unco": False}  # and grf method, mean and unconditional flag
 
     kwargs_def_MPS={"unco": False,
                       "xr": 1, "yr": 1, "zr": 1, "maxscan": 0.25, "neig": 24, "thresh": 0.05, "xloc": False, "yloc": False, "zloc": False,
@@ -190,7 +191,7 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, seed=123456789, **kwargs):
                       "angle1": 0, "angle2": 0, "angle3": 0,
                       "relativeDistanceFlag": False, "rescalingMode": 'min_max', "TargetMin": None, "TargetMax": None, "TargetMean": None, "TargetLength": None} #continous params
 
-
+    kw={}
     #assign default values
     if method in ["kriging", "grf", "grf_ineq"]: 
         kw=kwargs_def_grf
@@ -204,6 +205,8 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, seed=123456789, **kwargs):
     #if no data --> unco set to True
     if len(xp)+len(ineq_data) == 0: 
         kwargs["unco"]=True
+    else:
+        kwargs["unco"]=False
 
     ##DATA
     # handle inequalities (setup equality points to lower/upper bounds of inequalities if krig ineq or GRF ineq are not used for the interpolation)
@@ -211,26 +214,41 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, seed=123456789, **kwargs):
     y_in=[]
     z_in=[]
     if method in ["kriging", "cubic", "linear", "nearest", "grf"]: 
-        for in_data in ineq_data: 
-            if (in_data[3] == in_data[3]) & (in_data[4] != in_data[4]): # inf ineq
-                x_in.append(in_data[0])
-                y_in.append(in_data[1])
-                z_in.append(in_data[3])
+        if litho.get_surface_covmodel() is not None and len(ineq_data) > 0:
+            
+            # gibbs sampler to estimate values at inequality point, requires a covmodel
+            eq_d=np.array([xp, yp, zp]).T
+            dmy=np.nan*np.ones([2, len(litho.x)]).T
+            eq_d=np.concatenate([eq_d, dmy], 1)  # append all data together in right format
+            all_data=np.concatenate([eq_d, np.array(ineq_data)])
+            all_data=ArchPy.ineq.Gibbs_estimate(all_data, litho.get_surface_covmodel(), krig_type="simple_kriging", nit=50)  # Gibbs sampler 
+              
+            xp=all_data[:, 0]  
+            yp=all_data[:, 1]
+            zp=all_data[:, 2]
+                
+        else:
+            for in_data in ineq_data:  # handle inequality with non ineq methods
+                if (in_data[3] == in_data[3]) & (in_data[4] != in_data[4]): # inf ineq
+                    x_in.append(in_data[0])
+                    y_in.append(in_data[1])
+                    z_in.append(in_data[3])
 
-            elif (in_data[3] != in_data[3]) & (in_data[4] == in_data[4]): # sup ineq
-                x_in.append(in_data[0])
-                y_in.append(in_data[1])
-                z_in.append(in_data[4])
+                elif (in_data[3] != in_data[3]) & (in_data[4] == in_data[4]): # sup ineq
+                    x_in.append(in_data[0])
+                    y_in.append(in_data[1])
+                    z_in.append(in_data[4])
 
-            elif (in_data[3] == in_data[3]) & (in_data[4] == in_data[4]): # sup and inf ineq
-                x_in.append(in_data[0])
-                y_in.append(in_data[1])
-                z_in.append((in_data[3]+in_data[4])/2)
+                elif (in_data[3] == in_data[3]) & (in_data[4] == in_data[4]): # sup and inf ineq
+                    x_in.append(in_data[0])
+                    y_in.append(in_data[1])
+                    z_in.append((in_data[3]+in_data[4])/2)
 
-        # append data
-        xp=np.concatenate((xp, x_in))
-        yp=np.concatenate((yp, y_in))
-        zp=np.concatenate((zp, z_in))
+            # append data
+            xp=np.concatenate((xp, x_in))
+            yp=np.concatenate((yp, y_in))
+            zp=np.concatenate((zp, z_in))
+            
         data=np.concatenate([xp.reshape(-1, 1), yp.reshape(-1, 1)], axis=1)
 
     ## dealt with inequality data in the right format
@@ -260,7 +278,7 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, seed=123456789, **kwargs):
                 vIneq_max=np.array([]).reshape(0, 2)
 
     ### interpolations methods ###
-    if  method.lower() in ["linear", "cubic", "nearest"]: # spline methods
+    if method.lower() in ["linear", "cubic", "nearest"]: # spline methods
         if kwargs["unco"] == False: 
             s=scipy.interpolate.griddata(np.array([xp, yp]).T, zp, xu, method=method, fill_value=np.mean(zp))
             s=s.reshape(ny, nx)
@@ -274,7 +292,7 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, seed=123456789, **kwargs):
             if kwargs["unco"] == False: 
                 s, var=gcm.krige(data, zp, xu, covmodel, method=kwargs["krig_type"])
                 #s=gci.estimate2D(covmodel, [nx, ny], [sx, sy], [ox, oy], x=data, v=zp,
-                #                   method="ordinary_kriging", nneighborMax=10, searchRadiusRelative=3.0)["image"].val[0]
+                #                   method="ordinary_kriging", nneighborMax=10, searchRadiusRelative=1.0)["image"].val[0]
                 s=s.reshape(ny, nx)
             else: 
                 raise ValueError ("Error: No data point found or unconditional kriging requested")
@@ -285,24 +303,28 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, seed=123456789, **kwargs):
                 if litho.N_transfo: 
                     di=store_distri(zp, t=kwargs["tau"])
                     norm_zp=NScore_trsf(zp, di)
+
+                    # need to recompute variogram TO DO
+
                     if kwargs["grf_method"] == "fft": 
                         sim=geone.grf.grf2D(covmodel, [nx, ny], [sx, sy], [ox, oy], x=data, v=norm_zp, nreal=1, mean=0, var=1, printInfo=False)
                         s=NScore_Btrsf(sim[0].flatten(), di)# back transform
                         s=s.reshape(ny, nx)
                     elif kwargs["grf_method"] == "sgs": 
-                        sim=gci.simulate2D(covmodel, [nx, ny], [sx, sy], [ox, oy], x=data, v=norm_zp, nreal=1, mean=0, var=1, verbose=0, nthreads=ncpu, seed=seed)
+                        sim=gci.simulate2D(covmodel, [nx, ny], [sx, sy], [ox, oy], x=data, v=norm_zp, nreal=1, mean=0, var=1, verbose=verbose, nthreads=ncpu, seed=seed)
                         s=NScore_Btrsf(sim["image"].val[0,0].flatten(), di)# back transform
                         s=s.reshape(ny, nx)
+
                 else: # no normal score
                     mean=np.mean(zp)
                     if kwargs["grf_method"] == "fft": 
                         sim=geone.grf.grf2D(covmodel, [nx, ny], [sx, sy], [ox, oy], x=data, v=zp, nreal=1, mean=mean, printInfo=False)
                         s=sim[0]
                     elif kwargs["grf_method"] == "sgs": 
-                        sim=gci.simulate2D(covmodel, [nx, ny], [sx, sy], [ox, oy], x=data, v=zp, nreal=1, mean=mean, verbose=0, nthreads=ncpu, seed=seed)
+                        sim=gci.simulate2D(covmodel, [nx, ny], [sx, sy], [ox, oy], x=data, v=zp, nreal=1, mean=mean, verbose=verbose, nthreads=ncpu, seed=seed)
                         s=sim["image"].val[0,0]
 
-            else: #unconditional
+            else:  # unconditional
                 if kwargs["grf_method"] == "fft": 
                     sim=geone.grf.grf2D(covmodel, [nx, ny], [sx, sy], [ox, oy], nreal=1, mean=kwargs["mean"], printInfo=False)
                     s=sim[0]
@@ -319,6 +341,9 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, seed=123456789, **kwargs):
                 vIneq_max=NScore_trsf(vIneq_max, di)
                 var=1
                 mean=0
+
+                # need to recompute variogram TO DO
+
             else: 
                 var=covmodel.sill()
                 if len(v_eq) == 0: # if only inequality data what to do ??
@@ -326,18 +351,19 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, seed=123456789, **kwargs):
                 else: 
                     mean=(np.mean(zp))
                     
-            """
+            
             sim=gci.simulate2D(covmodel, (nx, ny), (sx, sy), (ox, oy), method="simple_kriging", mean=mean,
                                 x=x_eq, v=v_eq,
                                 xIneqMin=xIneq_min, vIneqMin=vIneq_min,
                                 xIneqMax=xIneq_max, vIneqMax=vIneq_max,
                                 searchRadiusRelative=1,
-                                nGibbsSamplerPath=kwargs["nit"], seed=seed, nneighborMax=kwargs["nmax"])["image"].val[0, 0]
+                                nGibbsSamplerPathMin=kwargs["nit"],nGibbsSamplerPathMax=2*kwargs["nit"], seed=seed, nneighborMax=kwargs["nmax"])["image"].val[0, 0]
             
             """
             eq_d=np.concatenate([x_eq, v_eq.reshape(-1, 1), np.nan*np.ones([v_eq.shape[0], 2])], axis=1)
             all_data=np.concatenate([eq_d, np.array(litho.ineq)])
             sim=run_sim_2d(all_data, xg, yg, covmodel, nsim=1, nit=kwargs["nit"], var=var, mean=mean, nmax=kwargs["nmax"], krig_type=kwargs["krig_type"], grf_method=kwargs["grf_method"], ncpu=ncpu, seed=seed)[0]
+            """
 
             if litho.N_transfo: 
                 s=NScore_Btrsf(sim.flatten(), di)
@@ -557,7 +583,7 @@ class Arch_table():
     """
 
 
-    def __init__(self, name, working_directory="ArchPy_workspace", seed=np.random.randint(1e6), verbose=1, ncpu=-1): 
+    def __init__(self, name, working_directory="ArchPy_workspace", seed=np.random.randint(1e6), write_results=False, verbose=1, ncpu=-1): 
 
         assert name is not None, "A name must be provided"
 
@@ -587,13 +613,11 @@ class Arch_table():
         self.ny=None
         self.nz=None
         self.Pile_master=None
+        self.write_results=write_results
         self.bhs_processed=0  # flag to know if boreholes have been processed
         self.surfaces_computed=0
         self.facies_computed=0
         self.prop_computed=0
-        self.surfs=None
-        self.prop_values=None
-        self.facies_domains=None
         self.nreal_units=0
         self.nreal_fa=0
         self.nreal_prop=0
@@ -678,11 +702,58 @@ class Arch_table():
             assert 0, ('Error: Grid was not added')
         return self.oz
 
-    def get_facies(self): 
-        if self.Geol.facies_domains is None: 
-            assert 0, ('Error: facies domains not computed')
-        facies =self.Geol.facies_domains.copy()
-        return facies
+    # def get_facies(self): 
+
+    #     # if self.Geol.facies_domains is None: 
+    #     #     assert 0, ('Error: facies domains not computed')
+
+    #     facies =self.Geol.facies_domains.copy()
+    #     return facies
+
+    def get_facies(self, iu=0, ifa=0, all_data=True): 
+
+        """
+        Return a numpy array of 1 or all facies realization(s).
+        iu      : int, unit index
+        ifa     : int, facies index 
+        all_data: bool, return all the units simulations
+        """
+
+        if self.write_results:
+            if "fd" not in [i.split(".")[-1] for i in os.listdir(self.ws)]:
+                raise ValueError("Facies have not been computed yet")
+
+        nreal_fa=self.nreal_fa
+        nreal_u=self.nreal_units
+        nx=self.get_nx()
+        ny=self.get_ny()
+        nz=self.get_nz()
+
+        if all_data: 
+            fd=np.zeros([nreal_u, nreal_fa, nz, ny, nx])
+
+            # get all real
+            if self.write_results:
+                for iu in range(nreal_u):
+                    for ifa in range(nreal_fa):
+                        fname=self.name+"_{}_{}.fd".format(iu, ifa)
+                        fpath=os.path.join(self.ws, fname)
+                        with open(fpath, "rb") as f:
+                            fd[iu, ifa]=pickle.load(f)
+            else:
+                fd=self.Geol.facies_domains.copy()
+        else: 
+            if self.write_results:
+                fname=self.name+"_{}_{}.fd".format(iu, ifa)
+                fpath=os.path.join(self.ws, fname)
+                with open(fpath, "rb") as f:
+                    fd=pickle.load(f)
+            else:
+                fd=self.Geol.facies_domains.copy()[iu, ifa]
+
+        return fd
+
+
 
     def get_surfaces_unit(self, unit, typ="top"): 
 
@@ -980,26 +1051,77 @@ class Arch_table():
             raise ValueError('the propriety '+name+' was not found')
         return interest
 
-    def getprop(self, name): 
+    # def getprop(self, name): 
+
+    #     """
+    #     return property values for a given property.
+
+    #     #inputs#
+    #     name: string, property name
+
+    #     #outputs#
+    #     a property object
+    #     """
+
+    #     if self.Geol.prop_values is None: 
+    #         raise ValueError("Properties have not been computed")
+    #     if name in self.Geol.prop_values.keys(): 
+    #         prop=self.Geol.prop_values[name].copy()
+    #         prop[:,:,:, ~self.mask]=np.nan
+    #     else: 
+    #         l=[i.name for i in self.list_props]
+    #         raise ValueError('The propriety "'+name+'"" was not found \n available Property names are: {}'.format(l))
+    #     return prop
+
+    def getprop(self, name, iu=None, ifa=None, ip=None, all_data=True):
 
         """
-        return property values for a given property.
-
-        #inputs#
-        name: string, property name
-
-        #outputs#
-        a property object
+        Return a numpy array of 1 or all facies realization(s).
+        iu      : int, unit index
+        ifa     : int, facies index 
+        ip      : int, property index
+        all_data: bool, return all the units simulations
         """
 
-        if self.Geol.prop_values is None: 
-            raise ValueError("Properties have not been computed")
-        if name in self.Geol.prop_values.keys(): 
-            prop=self.Geol.prop_values[name].copy()
-            prop[:,:,:, ~self.mask]=np.nan
-        else: 
-            l=[i.name for i in self.list_props]
+        if self.write_results:
+            if "pro" not in [i.split(".")[-1] for i in os.listdir(self.ws)]:
+                raise ValueError("Properties have not been computed yet")
+
+        l=[i.name for i in self.list_props]
+        if name not in l: 
             raise ValueError('The propriety "'+name+'"" was not found \n available Property names are: {}'.format(l))
+
+        nreal_prop=self.nreal_prop
+        nreal_fa=self.nreal_fa
+        nreal_u=self.nreal_units
+        nx=self.get_nx()
+        ny=self.get_ny()
+        nz=self.get_nz()
+
+        if all_data: 
+            prop=np.zeros([nreal_u, nreal_fa, nreal_prop, nz, ny, nx])
+
+            if self.write_results:
+                # get all real
+                for iu in range(nreal_u):
+                    for ifa in range(nreal_fa):
+                        for ip in range(nreal_prop):
+                            fname=self.name+"{}_{}_{}_{}.pro".format(name, iu, ifa, ip)
+                            fpath=os.path.join(self.ws, fname)
+                            with open(fpath, "rb") as f:
+                                prop[iu, ifa, ip]=pickle.load(f)
+            else:
+                prop=self.Geol.prop_values[name]
+
+        else: 
+            if self.write_results:
+                fname=self.name+"{}_{}_{}_{}.pro".format(name, iu, ifa, ip)
+                fpath=os.path.join(self.ws, fname)
+                with open(fpath, "rb") as f:
+                    prop=pickle.load(f)
+            else:
+                prop=self.Geol.prop_values[name][iu, ifa, ip]
+
         return prop
 
     def get_bounds(self): 
@@ -1016,7 +1138,7 @@ class Arch_table():
             if i.ID not in l: 
                 l.append(i.ID)
             else: 
-                print("Sorry dude, unit {} has the same ID {} than another unit. ID must be differents for each units".format(i.name, i.ID))
+                print("Sorry, unit {} has the same ID {} than another unit. ID must be differents for each units".format(i.name, i.ID))
                 return None
         return 1
 
@@ -1102,7 +1224,8 @@ class Arch_table():
                 If given, top, bot and polygon are ignored.
         """
 
-        print("## Adding Grid ##")
+        if self.verbose:
+            print("## Adding Grid ##")
         ## cell centers ##
         sx=spacing[0]
         sy=spacing[1]
@@ -1174,7 +1297,7 @@ class Arch_table():
 
             if isinstance(top, str): 
                 print("Top is a raster - resampling activated")
-                top=resample_to_grid(xc, yc, rxc, ryc, DEM.read()[0], method=rspl_method) #resampling
+                top=resample_to_grid(xc, yc, rxc, ryc, DEM.read()[0], method=rspl_method)  # resampling
 
             if isinstance(bot, str): 
                 print("Bot is a raster - resampling activated")
@@ -1185,7 +1308,7 @@ class Arch_table():
                 x=np.linspace(x0, x1, rxlen)
                 y=np.linspace(y1, y0, rylen)
                 rxc, ryc=np.meshgrid(x, y)
-                bot=resample_to_grid(xc, yc, rxc, ryc, rast.read()[0], method=rspl_method) #resampling
+                bot=resample_to_grid(xc, yc, rxc, ryc, rast.read()[0], method=rspl_method)  # resampling
 
         if top is not None: 
             assert top.shape == (ny, nx), "Top shape is not adequat respectively to coordinate vectors. \n Must be have a size of -1 respectively to coordinate vectors xg and yg (which are the vectors of edge cells)"
@@ -1196,7 +1319,7 @@ class Arch_table():
         if (top is None) and (mask is None): 
             top=np.ones([ny, nx])*np.max(zg)
 
-        elif (top is None) and (mask is not None): # if mask is provided but not top
+        elif (top is None) and (mask is not None):  # if mask is provided but not top
             top =np.zeros([ny, nx])*np.nan
             for ix in range(nx): 
                 for iy in range(ny): 
@@ -1205,7 +1328,7 @@ class Arch_table():
                             top[iy, ix]=zgc[iz]
                             break
 
-        #cut top
+        # cut top
         top[top>zg[-1]]=zg[-1]
         top[top<zg[0]]=zg[0]
         self.top=top
@@ -1214,7 +1337,7 @@ class Arch_table():
         if (bot is None) and (mask is None): 
             bot=np.ones([ny, nx])*np.min(zg)
 
-        elif (bot is None) and (mask is not None): # if mask is provided but not top
+        elif (bot is None) and (mask is not None):  # if mask is provided but not top
             bot =np.zeros([ny, nx])*np.nan
             for ix in range(nx): 
                 for iy in range(ny): 
@@ -1222,12 +1345,12 @@ class Arch_table():
                         if mask[iz, iy, ix]: 
                             bot[iy, ix]=zgc[iz]
                             break
-        #cut bot
+        # cut bot
         bot[bot>zg[-1]]=zg[-1]
         bot[bot<zg[0]]=zg[0]
         self.bot=bot
 
-        #create mask from top and bot if none
+        # create mask from top and bot if none
         if mask is None: 
             mask=np.zeros([nz, ny, nx], dtype=bool)
             iu=z_tree.query(top.reshape(-1, 1), return_distance=False).reshape(ny, nx)
@@ -1534,7 +1657,7 @@ class Arch_table():
 
                 if facies: 
                     #facies
-                    facies_id=self.get_facies()[iu, ifa, cell]
+                    facies_id=self.get_facies(iu, ifa, all_data=False)[cell]
                     facies=self.get_facies_obj(ID=facies_id, type="ID")
 
                     if facies_prev is not None: 
@@ -1572,7 +1695,7 @@ class Arch_table():
                     if self.verbose: 
                         print("object isn't a borehole object or object is already in the list")
         except: # boreholes not in a list
-            if (isinstance(bhs, borehole)) and (bhs not in self.list_bhs): 
+            if (isinstance(bhs, borehole)) and (bhs not in self.list_fake_bhs): 
                 if self.check_bh_inside(bhs): 
                     self.list_fake_bhs.append(bhs)
                     if self.verbose: 
@@ -1583,8 +1706,8 @@ class Arch_table():
 
 
     def rem_all_bhs(self, fake_only=False): 
+    
         """Remove all boreholes from the list"""
-
 
         if fake_only: 
             self.list_fake_bhs=[]
@@ -1853,8 +1976,9 @@ class Arch_table():
         #set hierarchy_relations
         self.hierarchy_relations(vb=self.verbose)
 
-        if len(self.list_bhs) == 0: 
-            print("No borehole found - no hd extracted")
+        if len(self.list_bhs + self.list_fake_bhs) == 0: 
+            if self.verbose:
+                print("No borehole found - no hd extracted")
             #self.bhs_processed=1
             return
 
@@ -1916,7 +2040,7 @@ class Arch_table():
             #check consistency
             check_bhs_consistency(new_bh_lst)
 
-            def add_contact(s, x, y, z, type="equality"): #function to add an hd point to a surface
+            def add_contact(s, x, y, z, type="equality", z2=None): #function to add an hd point to a surface
                 if self.coord2cell(x, y, z) is not None: 
                     if type == "equality": 
                         s.surface.x.append(x)
@@ -1926,6 +2050,8 @@ class Arch_table():
                         s.surface.ineq.append([x, y, 0, z, np.nan])
                     elif type == "ineq_sup": 
                         s.surface.ineq.append([x, y, 0, np.nan, z])
+                    elif type == "double_ineq":
+                        s.surface.ineq.append([x, y, 0, z, z2])  # inferior and upper ineq
 
             if len(new_bh_lst) == 0: 
                 if self.verbose: 
@@ -1953,78 +2079,121 @@ class Arch_table():
             #### Units ####
             for bh in new_bh_lst: 
                 if bh.log_strati is not None: 
-                    for i, s in enumerate(bh.log_strati): # loop over borehole (i: index, s: tuple (strati, altitude of contact))
-                        if s[0] is not None: #if there is unit info
-                            s1=s[0] # unit of interest (first element is strati object)
+                    for i, s in enumerate(bh.log_strati):  # loop over borehole (i: index, s: tuple (strati, altitude of contact))
+                        if s[0] is not None:  # if there is unit info
+                            s1=s[0]  # unit of interest (first element is strati object)
                             if s1.mummy_unit is not None: 
-                                Pile=s1.mummy_unit.SubPile  #Link with pile
+                                Pile=s1.mummy_unit.SubPile  # Link with pile
                             elif s1 in self.Pile_master.list_units: 
                                 Pile=self.Pile_master
 
-                            if (i == 0) and (s1.order == 1): # first unit encountered is also first unit in pile
+                            if (i == 0) and (s1.order == 1):  # first unit encountered is also first unit in pile
                                 #no equality point
                                 #add_contact(s1, bh.x, bh.y, s[1], "equality")
                                 pass
 
                             else: 
+                                non_unit=True  # flag to know if above unit is None or not
                                 if i == 0: # first unit in the log
                                     s_above_order=1  # second unit in pile (first is ignored)
-
-                                elif i < len(bh.log_strati): # others units encountered except first one
-                                    s_above=bh.log_strati[i-1][0] # unit just above unit of interest in bh
-                                    s_above_order=s_above.order
-
-                                if s1.contact == "comf": 
-                                    for il in range(s_above_order, s1.order-1): 
-                                        s2=Pile.list_units[il]
-                                        if s2.surface.contact == "erode": 
-                                            add_contact(s2, bh.x, bh.y, s[1], "ineq_inf")
-                                        elif s2.surface.contact == "onlap": 
-                                            add_contact(s2, bh.x, bh.y, s[1], "ineq_sup")
-
-                                elif s1.contact != "comf": 
-                                    erod_lst=[]
-                                    for il in range(s_above_order, s1.order-1): # check if overlaying layers are erode
-                                        s2=Pile.list_units[il]
-                                        if s2.surface.contact == "erode": 
-                                            erod_lst.append(s2)
-
-                                    if erod_lst: # if at least one erode layer exists above --> add equality point to erode
-                                        s2=min(erod_lst) # select higher one
-                                        if i == 0: #first unit at topography must be ineq_inf --> all erosions must go above
-                                            add_contact(s2, bh.x, bh.y, s[1], "ineq_inf")
-                                        else: 
-                                            add_contact(s2, bh.x, bh.y, s[1], "equality")
-
-                                        add_contact(s1, bh.x, bh.y, s[1], "ineq_inf")
-
-                                        #supplementary info, layer above erosion layer must go below and other erosion layer must go above
+                                    non_unit=False  # flag
+                                    
+                                elif i < len(bh.log_strati):  # others units encountered except first one
+                                    s_above=bh.log_strati[i-1]  # unit just above unit of interest in bh
+                                    # check above is not None
+                                    if s_above[0] is not None:
+                                        s_above_order=s_above[0].order
+                                        non_unit=False  # flag
+                                
+                                if ~non_unit:  
+                                    if s1.contact == "comf": 
                                         for il in range(s_above_order, s1.order-1): 
-                                            s_erod=Pile.list_units[il]
-                                            if s_erod.order < s2.order and i > 0: # non eroded layers --> not deposited a checker
-                                                add_contact(s_erod, bh.x, bh.y, s[1], "ineq_sup")
-                                            elif s_erod.order > (s2.order): #layers below erosion horizon --> must go above
-                                                if s_erod.surface.contact == "erode": 
-                                                    add_contact(s_erod, bh.x, bh.y, s[1], "ineq_inf")
+                                            s2=Pile.list_units[il]
+                                            if s2.surface.contact == "erode": 
+                                                add_contact(s2, bh.x, bh.y, s[1], "ineq_inf")
+                                            elif s2.surface.contact == "onlap": 
+                                                add_contact(s2, bh.x, bh.y, s[1], "ineq_sup")
 
-                                    else: # no erode layer --> exact data on surface of interest (s1) and ineq sup to others above
-                                        if i == 0: 
-                                            add_contact(s1, bh.x, bh.y, s[1], "ineq_inf") #unit at the topography must go above topo
-                                        else: 
-                                            add_contact(s1, bh.x, bh.y, s[1], "equality")  #else equality
+                                    elif s1.contact != "comf": 
+                                        erod_lst=[]
+                                        for il in range(s_above_order, s1.order-1): # check if overlaying layers are erode
+                                            s2=Pile.list_units[il]
+                                            if s2.surface.contact == "erode": 
+                                                erod_lst.append(s2)
 
-                                        for il in range(s_above_order, s1.order-1): # add inequality sup to other above layers
-                                            s_12=Pile.list_units[il] # unit above s1
-                                            if s_12.surface.contact == "onlap" and i > 0: 
-                                                add_contact(s_12, bh.x, bh.y, s[1], "ineq_sup")
+                                        if erod_lst:  # if at least one erode layer exists above --> add equality point to erode
+                                            s2=min(erod_lst)  # select higher one
+                                            if i == 0:  # first unit at topography must be ineq_inf --> all erosions must go above
+                                                add_contact(s2, bh.x, bh.y, s[1], "ineq_inf")
+                                            else: 
+                                                add_contact(s2, bh.x, bh.y, s[1], "equality")
 
-                            if (i == len(bh.log_strati)-1) & (s1.order < Pile.list_units[-1].order): # if last unit is not last in the pile --> below layers must go below
+                                            add_contact(s1, bh.x, bh.y, s[1], "ineq_inf")
+
+                                            # supplementary info, layer above erosion layer must go below and other erosion layer must go above
+                                            for il in range(s_above_order, s1.order-1): 
+                                                s_erod=Pile.list_units[il]
+                                                if s_erod.order < s2.order and i > 0:  # non eroded layers --> not deposited a checker
+                                                    add_contact(s_erod, bh.x, bh.y, s[1], "ineq_sup")
+                                                elif s_erod.order > (s2.order):  # layers below erosion horizon --> must go above
+                                                    if s_erod.surface.contact == "erode": 
+                                                        add_contact(s_erod, bh.x, bh.y, s[1], "ineq_inf")
+
+                                        else: # no erode layer --> exact data on surface of interest (s1) and ineq sup to others above
+                                            if i == 0: 
+                                                add_contact(s1, bh.x, bh.y, s[1], "ineq_inf")  # unit at the topography must go above topo
+                                            else: 
+                                                add_contact(s1, bh.x, bh.y, s[1], "equality")  # else equality
+
+                                            for il in range(s_above_order, s1.order-1): # add inequality sup to other above layers
+                                                s_12=Pile.list_units[il] # unit above s1
+                                                if s_12.surface.contact == "onlap" and i > 0: 
+                                                    add_contact(s_12, bh.x, bh.y, s[1], "ineq_sup")
+
+                                else:  # unit above is a gap
+                                    if i == 1:  # if second unit in log and above is None
+                                        add_contact(s1, bh.x, bh.y, s[1], "ineq_inf")  # unit must go above
+                                    else:
+                                        s_gap=s_above  # store gap information
+                                        s_above=bh.log_strati[i-2]  # take unit above gap
+                                        s_above_order=s_above[0].order
+
+                                        erod_lst=[]
+                                        for il in range(s_above_order, s1.order-1):  # check if overlaying layers are erode
+                                            s2=Pile.list_units[il]
+                                            if s2.surface.contact == "erode": 
+                                                erod_lst.append(s2)
+
+                                        if erod_lst: # if at least one erode layer exists above
+                                            s2=min(erod_lst)  # select higher one
+                                            add_contact(s2, bh.x, bh.y, s[1], z2=s_gap[1], type="double_ineq")  # erode surface must go between gap
+                                            add_contact(s1, bh.x, bh.y, s[1], "ineq_inf")
+
+                                            # supplementary info, layer above erosion layer must go below and other erosion layer must go above
+                                            for il in range(s_above_order, s1.order-1): 
+                                                s_erod=Pile.list_units[il]
+                                                if s_erod.order < s2.order and i > 0:  # non eroded layers --> not deposited a checker
+                                                    add_contact(s_erod, bh.x, bh.y, s[1], "ineq_sup")
+                                                elif s_erod.order > (s2.order):  # layers below erosion horizon --> must go above
+                                                    if s_erod.surface.contact == "erode": 
+                                                        add_contact(s_erod, bh.x, bh.y, s[1], "ineq_inf")
+
+                                        else:  # no erode layer 
+                                            add_contact(s1, bh.x, bh.y, s[1], z2=s_gap[1], type="double_ineq")  # surface must go between gap
+
+                                            # add upper bound to other above units in pile
+                                            for il in range(s_above_order, s1.order-1): # add inequality sup to other above layers
+                                                s_12=Pile.list_units[il]  # unit above s1
+                                                if s_12.surface.contact == "onlap" and i > 0: 
+                                                    add_contact(s_12, bh.x, bh.y, s_gap[1], "ineq_sup")
+
+                            if (i == len(bh.log_strati)-1) & (s1.order < Pile.list_units[-1].order):  # if last unit is not last in the pile --> below layers must go below
                                 for il in range(s1.order, Pile.list_units[-1].order): 
                                     s_12=Pile.list_units[il]
                                     add_contact(s_12, bh.x, bh.y, bh.z-bh.depth, "ineq_sup")
 
-                        else: #if there is a gap
-                            pass  #TO DO
+                        else:  # if there is a gap ignore and pass
+                            pass  
 
             self.bhs_processed=1
             if self.verbose: 
@@ -2033,15 +2202,21 @@ class Arch_table():
             if self.verbose: 
                 print("Boreholes already processed")
 
-    def compute_surf(self, nreal=1, fl_top=True): 
+    def compute_surf(self, nreal=1, fl_top=True, rm_res_files=True): 
 
         """
         Performs the computation of the surfaces
 
         #Inputs#
         nreal: int, number of realization
+        rm_res_files : bool, flag to remove previous existing resulting files
+               in working directory
         fl_top: bool, assign first layer to top of the domain (True by default)
         """
+
+        start=time.time()
+        np.random.seed(self.seed)  # set seed
+
 
         if nreal == 0:
             if self.verbose:
@@ -2052,16 +2227,25 @@ class Arch_table():
             print("Boreholes not processed, fully unconditional simulations will be tempted")
         #assert self.bhs_processed == 1, "Boreholes not processed"
 
-        np.random.seed(self.seed) # set seed
-        start=time.time()
-        self.Geol.units_domains=np.zeros([nreal, self.get_nz(), self.get_ny(), self.get_nx()]) #initialize result array
+        # create work directory if it doesn't exist
+        if self.ws not in os.listdir():
+            os.mkdir(self.ws)
+        
+        # remove preexisting results files in ws
+        if rm_res_files:
+            for file in os.listdir(self.ws):
+                if file.split(".")[-1] in ("ud", "fd", "pro"):
+                    fpath=os.path.join(self.ws, file)
+                    os.remove(fpath)
 
-        if self.check_units_ID() is None: #check if units have correct IDs
+        self.Geol.units_domains=np.zeros([nreal, self.get_nz(), self.get_ny(), self.get_nx()])  # initialize tmp result array
+
+        if self.check_units_ID() is None:  # check if units have correct IDs
             return None
-        self.get_pile_master().compute_surf(self, nreal, fl_top, vb=self.verbose) # compute surfs of the first pile
+        self.get_pile_master().compute_surf(self, nreal, fl_top, vb=self.verbose)  # compute surfs of the first pile
 
         #hierarchies
-        def fun(pile): #compute surf hierarchically
+        def fun(pile):  # compute surf hierarchically
             i=0
             for unit in pile.list_units: 
                 if unit.f_method == "SubPile": 
@@ -2076,9 +2260,65 @@ class Arch_table():
         if self.verbose: 
             print("\n### {}: Total time elapsed for computing surfaces ###".format(end - start))
 
-        self.surfaces_computed=1  #flag
 
-    def compute_facies(self, nreal=1, c_all=True, verbose_methods=0, *args): 
+        # write results
+        if self.write_results:
+            units_domains=self.Geol.units_domains
+            for ireal in range(nreal):
+
+                ud=units_domains[ireal]
+                fname=self.name+"_{}.ud".format(ireal)
+                fpath=os.path.join(self.ws, fname)
+                with open(fpath, "wb") as f:
+                    pickle.dump(ud, f)
+
+            #delet units domains in Geol object to for memory space
+            del(self.Geol.units_domains)
+
+        self.surfaces_computed=1  # flag
+
+
+    def define_domains(self, surfaces, fl_top=True): 
+
+        """
+        Performs the computation of the surfaces but were the surfaces
+
+        #Inputs#
+        surfaces : dictionary of surfaces as values and pile name as key
+        rm_res_files : bool, flag to remove previous existing resulting files
+               in working directory
+        fl_top: bool, assign first layer to top of the domain (True by default)
+        """
+
+        np.random.seed(self.seed)  # set seed
+        
+        nreal = surfaces[self.get_pile_master().name].shape[0]  # get number of realizations
+        self.Geol.units_domains=np.zeros([nreal, self.get_nz(), self.get_ny(), self.get_nx()])  # initialize tmp result array
+        
+        
+        if self.check_units_ID() is None:  # check if units have correct IDs
+            return None
+        
+        self.get_pile_master().define_domains(self, surfaces[self.get_pile_master().name], vb=self.verbose, fl_top=fl_top)
+
+        #hierarchies
+        def fun(pile):  # compute surf hierarchically
+            i=0
+            for unit in pile.list_units: 
+                if unit.f_method == "SubPile": 
+                    tops=surfaces[pile.name][:, i]
+                    bots=surfaces[pile.name][:, i+1]
+                    unit.SubPile.define_domains(self, surfaces[unit.SubPile.name], fl_top=True, subpile=True, tops=tops, bots=bots, vb=self.verbose)
+                    fun(unit.SubPile)
+                i += 1
+
+        fun(self.get_pile_master())  # run function
+
+        self.surfaces_computed=1  # flag
+        
+
+
+    def compute_facies(self, nreal=1, verbose_methods=0): 
 
         """
         Performs the computation of the facies
@@ -2088,8 +2328,6 @@ class Arch_table():
                 If false units must be passed by args and nreal
                 will be ignored and taken from previous simulation is possible
         verbose_methods: int (0 or 1), verbose for the facies methods, 0 by default
-        args: Sequence of unit objects, works only if c_all is False.
-               Only the units in args will be computed and will update the facies domain
         """
 
         if nreal==0:
@@ -2114,44 +2352,39 @@ class Arch_table():
         zg=self.zg
 
         #initialize array and set number of realization
-        if c_all: 
-            self.nreal_fa=nreal
-            self.Geol.facies_domains=np.zeros([self.nreal_units, nreal, self.get_nz(), self.get_ny(), self.get_nx()])
-        else: 
-            if self.nreal_fa == 0: 
+        self.nreal_fa=nreal
+        self.Geol.facies_domains=np.zeros([self.nreal_units, nreal, self.get_nz(), self.get_ny(), self.get_nx()])
+
+        for strat in self.get_all_units():  # loop over strati
+            if strat.contact == "onlap": 
                 if self.verbose: 
-                    print("Warning: no facies simulations have been done previously and c_all is set to False. \n Consider first computing facies with c_all set to True")
-                self.nreal_fa=nreal
-            else: 
-                nreal=self.nreal_fa
-
-        if c_all: 
-            for strat in self.get_all_units():  # loop over strati
-                if strat.contact == "onlap": 
-                    if self.verbose: 
-                        print("\n### Unit {}: facies simulation with {} method ####".format(strat.name, strat.f_method))
-                    start=time.time()
-                    strat.compute_facies(self, nreal, verbose=verbose_methods)
-                    end=time.time()
-
-                    if self.verbose: 
-                        print("Time elapsed {} s".format(np.round((end - start), decimals=2)))
-
-        else: 
-            for strat in args: 
-                if self.verbose: 
-                    print("\n### Unit {}: facies simulation ####".format(strat.name))
+                    print("\n### Unit {}: facies simulation with {} method ####".format(strat.name, strat.f_method))
                 start=time.time()
                 strat.compute_facies(self, nreal, verbose=verbose_methods)
                 end=time.time()
 
                 if self.verbose: 
                     print("Time elapsed {} s".format(np.round((end - start), decimals=2)))
-
-        self.facies_computed=1
+        
         end=time.time()
         if self.verbose: 
             print("\n### {}: Total time elapsed for computing facies ###".format(np.round((end - start_tot), decimals=2)))
+
+        if self.write_results:
+            # write results
+            fa_domains=self.Geol.facies_domains
+            for iu in range(self.nreal_units):
+                for ifa in range(self.nreal_fa):
+                    fd=fa_domains[iu, ifa]
+                    fname=self.name+"_{}_{}.fd".format(iu, ifa)
+                    fpath=os.path.join(self.ws, fname)
+                    with open(fpath, "wb") as f:
+                        pickle.dump(fd, f)
+
+            del(self.Geol.facies_domains)  # delete facies domain to free some memory
+
+        self.facies_computed=1
+
 
     def compute_domain(self, s1, s2): 
 
@@ -2209,7 +2442,7 @@ class Arch_table():
             if self.verbose:
                 print("Warning: nreal is set to 0")
             return
-        np.random.seed (self.seed) # set seed
+        np.random.seed (self.seed)  # set seed
         self.nreal_prop=nreal
         xg=self.xgc
         yg=self.ygc
@@ -2225,34 +2458,35 @@ class Arch_table():
         sz=self.get_sz()
         nreal_units=self.nreal_units
         nreal_fa=self.nreal_fa
-        self.Geol.prop_values={} #remove previous prop simulations
+        self.Geol.prop_values={}  # remove previous prop simulations
 
 
         for prop in self.list_props: 
             counter=0
             if self.verbose: 
                 print ("### {} {} property models will be modeled ###".format(nreal_units*nreal_fa*nreal, prop.name))
-            prop_values=np.zeros([nreal_units, nreal_fa, nreal, nz, ny, nx]) # property values
+            prop_values=np.zeros([nreal_units, nreal_fa, nreal, nz, ny, nx])  # property values
 
             #HD
             x=prop.x
             v=prop.v
 
+            units_data=self.get_units_domains_realizations(all_data=True)
+            facies_data=self.get_facies(all_data=True)
+
             #loop
-            for iu in range(nreal_units): # loop over units models
-                for ifa in range(nreal_fa): # loop over lithological models
+            for iu in range(nreal_units):  # loop over units models
+                for ifa in range(nreal_fa):  # loop over lithological models
                     K_fa=np.zeros([nreal, nz, ny, nx])
                     for strat in self.get_all_units(): 
-                        if strat.f_method != "Subpile": #discard units filled by subunits
-                            mask_strat=(self.Geol.units_domains[iu] == strat.ID) #mask unit
+                        if strat.f_method != "Subpile":  # discard units filled by subunits
+                            mask_strat=(units_data[iu] == strat.ID)
                             for fa in strat.list_facies: 
 
-                                #create mask facies for prop simulation
-                                facies_domain=self.Geol.facies_domains[iu, ifa].copy() #gather a realization of facies domain
-                                facies_domain[facies_domain != fa.ID]=0  #set 0 to other facies
-                                facies_domain[~mask_strat]=0  #set 0 outside of the strati to simulate same facies but in other strat independantely
-                                mask_facies=facies_domain.copy()
-                                mask_facies[mask_facies != 0]=1  #set to 1 for mask
+                                # create mask facies for prop simulation
+                                facies_domain=facies_data[iu, ifa].copy()  # gather a realization of facies domain
+                                facies_domain[facies_domain != fa.ID]=0  # set 0 to other facies
+                                facies_domain[~mask_strat]=0  # set 0 outside of the strati to simulate same facies but in other strat independantely
 
                                 #simulate
                                 if (fa in prop.facies) and (fa.ID in facies_domain): # simulation of the property (check if facies is inside strat unit)
@@ -2272,7 +2506,9 @@ class Arch_table():
 
                                     elif method == "sgs": 
 
-                                        sims=gci.simulate3D(covmodel, [nx, ny, nz], [sx, sy, sz], [x0, y0, z0], 
+                                        mask_facies=facies_domain.copy()
+                                        mask_facies[mask_facies != 0]=1  # set to 1 for mask
+                                        sims = gci.simulate3D(covmodel, [nx,  ny,  nz],  [sx,  sy,  sz],  [x0,  y0,  z0],
                                                              nreal=nreal, mean=m, mask=mask_facies, x=x, v=v, verbose=0, nthreads=self.ncpu, seed=self.seed)["image"].val
 
                                         sims=np.nan_to_num(sims) #remove nan
@@ -2292,8 +2528,8 @@ class Arch_table():
                                     sim[facies_domain != fa.ID]=0
                                     K_fa[ir] += sim
 
-                    K_fa[:, ~self.mask]=np.nan  #default value is 0 --> warning ?
-                    ma=((self.get_facies()[iu, ifa] == 0) * self.mask)
+                    K_fa[:, ~self.mask]=np.nan  # no value
+                    ma=((facies_data[iu, ifa] == 0) * self.mask)
                     K_fa[:, ma]=prop.def_mean
 
                     if prop.vmin is not None: 
@@ -2301,13 +2537,21 @@ class Arch_table():
                     if prop.vmax is not None: 
                         K_fa[K_fa > prop.vmax]=prop.vmax
 
-                    prop_values[iu, ifa]=K_fa
-                    counter += nreal
+                    if self.write_results:
+                        for ireal in range(nreal):
+                            fname=self.name+"{}_{}_{}_{}.pro".format(prop.name, iu, ifa, ireal)
+                            fpath=os.path.join(self.ws, fname)
+                            with open(fpath, "wb") as f:
+                                pickle.dump(K_fa[ireal], f) 
+                    else:
+                        prop_values[iu, ifa]=K_fa
+                        
+                    counter += nreal  
                     if self.verbose: 
                         print("### {} {} models done".format(counter, prop.name))
 
-
-            self.Geol.prop_values[prop.name] =prop_values
+            if ~self.write_results:
+                self.Geol.prop_values[prop.name]=prop_values
 
         self.prop_computed=1
 
@@ -2347,9 +2591,9 @@ class Arch_table():
                     l.append(unit.ID)
             fun(unit)
 
-            arr=np.zeros(self.Geol.units_domains.shape) #mask with 0 everywhere
+            arr=np.zeros([self.nreal_units, self.get_nz(), self.get_ny(), self.get_nx()])  # mask with 0 everywhere
             for idx in l: 
-                arr[self.Geol.units_domains == idx]=1  #set 1 where unit or sub-units are present
+                arr[self.get_units_domains_realizations() == idx]=1  # set 1 where unit or sub-units are present
 
         else: 
             unit=self.get_unit(name=unit_name, type="name")
@@ -2364,9 +2608,9 @@ class Arch_table():
                     l.append(unit.ID)
             fun(unit)
 
-            arr=np.zeros(self.Geol.units_domains[iu].shape) #mask with 0 everywhere
+            arr=np.zeros([self.get_nz(), self.get_ny(), self.get_nx()]) #mask with 0 everywhere
             for idx in l: 
-                arr[self.Geol.units_domains[iu] == idx]=1  #set 1 where unit or sub-units are present
+                arr[self.get_units_domains_realizations(iu) == idx]=1  #set 1 where unit or sub-units are present
 
         return arr
 
@@ -2513,8 +2757,6 @@ class Arch_table():
 
         return log_facies
 
-
-
     ### plotting ###
     def plot_bhs(self, log="strati", plotter=None, v_ex=1, plot_top=False, plot_bot=False): 
 
@@ -2609,7 +2851,6 @@ class Arch_table():
 
         if plotter is None: 
             p.add_bounding_box()
-
             p.show_axes()
             p.show()
 
@@ -2629,15 +2870,40 @@ class Arch_table():
                    master pile will be plotted. "all" to plot all possible units
         """
 
-        if self.Geol.units_domains is None: 
-            raise ValueError("Units have not been computed yet")
+        # if self.Geol.units_domains is None: 
+        #     raise ValueError("Units have not been computed yet")
+        if self.write_results:
+            if "ud" not in [i.split(".")[-1] for i in os.listdir(self.ws)]:
+                raise ValueError("Units have not been computed yet")
+
+        else:
+             if self.Geol.units_domains is None: 
+                raise ValueError("Units have not been computed yet")
+
 
         if isinstance(iu, int): 
             all_data=False
 
+        nreal=self.nreal_units
+        nx=self.get_nx()
+        ny=self.get_ny()
+        nz=self.get_nz()
+
         if all_data: 
+            ud=np.zeros([nreal, nz, ny, nx])
+
+            if self.write_results:
+                # get all real
+                for ireal in range(nreal):
+                    fname=self.name+"_{}.ud".format(ireal)
+                    fpath=os.path.join(self.ws, fname)
+                    with open(fpath, "rb") as f:
+                        ud[ireal]=pickle.load(f)
+            else:
+                ud=self.Geol.units_domains.copy()
+
             if fill == "ID": 
-                units_domains=self.Geol.units_domains.copy()
+                units_domains=ud
                 if h_level == "all": 
                     pass
                 elif isinstance(h_level, int) and h_level > 0: 
@@ -2645,27 +2911,32 @@ class Arch_table():
                     for idx in lst_ID: 
                         if idx != 0: 
                             s=self.get_unit(ID=idx, type="ID")
-                            h_lev=s.get_h_level() # hierarchical level of unit
-                            if h_lev > h_level: # compare unit level with level to plot
+                            h_lev=s.get_h_level()  # hierarchical level of unit
+                            if h_lev > h_level:  # compare unit level with level to plot
                                 for i in range(h_lev - h_level): 
                                     s=s.mummy_unit
                                 if s is None: 
                                     raise ValueError("Error: parent unit return is None, hierarchy relations are inconsistent with Pile and simulations")
                                 units_domains[units_domains == idx]=s.ID  # change ID values to Mummy ID
 
-
             elif fill == "color": 
-                nreal, nz, ny, nx=self.Geol.units_domains.shape
                 units_domains=np.zeros([nreal, nz, ny, nx, 4])
                 for unit in self.get_all_units(): 
                     if unit.f_method != "Subpile": 
-                        mask=(self.Geol.units_domains == unit.ID)
+                        mask=(ud == unit.ID)
                         units_domains[mask,: ]=matplotlib.colors.to_rgba(unit.c)
 
-
         else: 
+            if self.write_results:
+                fname=self.name+"_{}.ud".format(iu)
+                fpath=os.path.join(self.ws, fname)
+                with open(fpath, "rb") as f:
+                    ud=pickle.load(f)
+            else:
+                ud=self.Geol.units_domains.copy()[iu]
+
             if fill == "ID": 
-                units_domains=self.Geol.units_domains[iu].copy()
+                units_domains=ud
                 if h_level == "all": 
                     pass
                 elif isinstance(h_level, int) and h_level > 0: 
@@ -2673,8 +2944,8 @@ class Arch_table():
                     for idx in lst_ID: 
                         if idx != 0: 
                             s=self.get_unit(ID=idx, type="ID")
-                            h_lev=s.get_h_level() # hierarchical level of unit
-                            if h_lev > h_level: # compare unit level with level to plot
+                            h_lev=s.get_h_level()  # hierarchical level of unit
+                            if h_lev > h_level:  # compare unit level with level to plot
                                 for i in range(h_lev - h_level): 
                                     s=s.mummy_unit
                                 if s is None: 
@@ -2683,13 +2954,12 @@ class Arch_table():
 
 
             elif fill == "color": 
-                nz, ny, nx=self.Geol.units_domains[iu].shape
+                nz, ny, nx=ud.shape
                 units_domains=np.zeros([nz, ny, nx, 4])
                 for unit in self.get_all_units(): 
                     if unit.f_method != "Subpile": 
-                        mask=(self.Geol.units_domains[iu] == unit.ID)
+                        mask=(ud == unit.ID)
                         units_domains[mask,: ]=matplotlib.colors.to_rgba(unit.c)
-
 
         return units_domains
 
@@ -2723,7 +2993,7 @@ class Arch_table():
         y0=self.get_oy()
         z0=self.get_oz()
 
-        stratis_domain=self.get_units_domains_realizations(iu=iu, fill="ID", h_level=h_level).copy()
+        stratis_domain=self.get_units_domains_realizations(iu=iu, fill="ID", h_level=h_level)
         lst_ID=np.unique(stratis_domain)
 
         ## change values
@@ -2737,7 +3007,7 @@ class Arch_table():
                 new_id += 1
 
         #plot
-        stratis_domain[stratis_domain==0]=np.nan  #remove where no formations are present
+        stratis_domain[stratis_domain==0]=np.nan  # remove where no formations are present
         if plotter is None: 
             p=pv.Plotter()
         else: 
@@ -2824,14 +3094,21 @@ class Arch_table():
             raise ValueError ("unit/facies must be a string name of a unit or a unit object that is contained inside the Master Pile")
 
         if typ == "unit": 
-            units=self.get_units_domains_realizations(h_level=hl, all_data=True)
-            nreal=units.shape[0]
-            arr=(units == i).sum(0)/nreal
+            arr=np.zeros([self.nz, self.ny, self.nx])
+            # compute probabilities
+            for iu in range(self.nreal_units):
+                units=self.get_units_domains_realizations(iu=iu, h_level=hl, all_data=False)
+                arr+=(units == i)
+            arr/=self.nreal_units
+
         elif typ == "facies": 
-            facies=self.get_facies()
-            facies=facies.reshape(-1, nz, ny, nx)
-            nreal=facies.shape[0]
-            arr=(facies == i).sum(0)/nreal
+            arr=np.zeros([self.nz, self.ny, self.nx])
+            # compute probabilities
+            for iu in range(self.nreal_units):
+                for ifa in range(self.nreal_fa):
+                    facies=self.get_facies(iu=iu, ifa=ifa, all_data=False)
+                    arr+=(facies == i)
+            arr/=(self.nreal_units*self.nreal_fa)
         im=geone.img.Img(nx, ny, nz, sx, sy, sz*v_ex, x0, y0, z0, nv=1, val=arr, varname="P [-]") #create img object
 
         #create slices
@@ -2846,14 +3123,14 @@ class Arch_table():
             slicey=np.array(slicey)
             slicey[slicey<0]=0
             slicey[slicey>1]=1
-            cy=im.oy + slicey * im.ny * im.sy  # center along x
+            cy=im.oy + slicey * im.ny * im.sy  # center along y
         else: 
             cy=None
         if slicez is not None: 
             slicez=np.array(slicez)
             slicez[slicez<0]=0
             slicez[slicez>1]=1
-            cz=im.oz + slicez * im.nz * im.sz  # center along x
+            cz=im.oz + slicez * im.nz * im.sz  # center along z
         else: 
             cz=None
 
@@ -2901,7 +3178,7 @@ class Arch_table():
                           DOES NOT correspond to facies IDs
         """
 
-        fa_domains=self.get_facies()[iu, ifa].copy()
+        fa_domains=self.get_facies(iu, ifa, all_data=False)
 
         #keep facies in only wanted units
         if inside_units is not None: 
@@ -3022,8 +3299,8 @@ class Arch_table():
         others params see plot_arr function
         """
 
-        prop=self.getprop(property)[iu, ifa, ip]
-        facies=self.get_facies()[iu, ifa]
+        prop=self.getprop(property, iu, ifa, ip, all_data=False)
+        facies=self.get_facies(iu, ifa, all_data=False)
 
         #keep values in only wanted units
         if inside_units is not None: 
@@ -3131,7 +3408,7 @@ class Arch_table():
         """
 
         #load property array and facies array
-        prop=self.getprop(property)
+        prop=self.getprop(property)  # to modify
         prop_shape=prop.shape
         facies=self.get_facies()
         facies_shape=facies.shape
@@ -3380,7 +3657,7 @@ class Arch_table():
         """
 
         if typ == "units": 
-            arr=self.get_units_domains_realizations(iu=iu, fill="color").copy()
+            arr=self.get_units_domains_realizations(iu=iu, fill="color")
 
         elif typ == 'proba_units': 
             units=self.get_units_domains_realizations()
@@ -3393,7 +3670,7 @@ class Arch_table():
             arr=(facies == i).sum(0).sum(0) /nreal
 
         elif typ =="facies": 
-            arr=self.get_facies()[iu, ifa].copy()
+            arr=self.get_facies(iu, ifa, all_data=False)
             #change values to have colors directly
             new_arr=np.zeros([arr.shape[0], arr.shape[1], arr.shape[2], 4])
             list_fa=np.unique(arr)
@@ -3406,7 +3683,7 @@ class Arch_table():
 
         elif typ =="prop": 
             assert isinstance(property, str), "property should be given in a property name --> string"
-            arr=self.getprop(property)[iu, ifa, ip].copy()
+            arr=self.getprop(property, iu, ifa, ip, all_data=False)
 
         elif typ =="entropy_units":
             units=self.get_units_domains_realizations()
@@ -3415,6 +3692,18 @@ class Arch_table():
             nreal=units.shape[0]
             for unit in self.get_all_units():
                 Pi=(units==unit.ID).sum(0)/nreal
+                pi_mask=(self.mask) & (Pi!=0)
+                SE[pi_mask] += Pi[pi_mask]*(np.log(Pi[pi_mask])/np.log(b))
+                arr=-SE
+                arr[~self.mask]=np.nan
+
+        elif typ == "entropy_facies":
+            facies_domains=self.get_facies().reshape(-1, self.nz, self.ny, self.nx)
+            SE=np.zeros(self.mask.shape)  # shannon entropy
+            b=len(self.get_all_facies())
+            nreal=facies_domains.shape[0]
+            for facies in self.get_all_facies():
+                Pi=(facies_domains==facies.ID).sum(0)/nreal
                 pi_mask=(self.mask) & (Pi!=0)
                 SE[pi_mask] += Pi[pi_mask]*(np.log(Pi[pi_mask])/np.log(b))
                 arr=-SE
@@ -3615,7 +3904,7 @@ class Pile():
 
         if vb: 
             print("########## PILE {} ##########".format(self.name))
-        #make sure to have lithologies ordered
+        #make sure to have ordered lithologies 
         self.order_units(vb=vb)
 
         ### initialize surfaces by setting to 0
@@ -3643,11 +3932,10 @@ class Pile():
                 if (fl_top) and (i == nlay-1): # first layer assign to top
                     s1=top
                 elif (litho.surface.int_method in ["kriging", "linear", "cubic", "nearest"]) and (ireal > 0): # determinist method
-                    s1=org_surfs[0, (nlay-1)-i]
+                    s1=org_surfs[0, (nlay-1)-i].copy()
                     if vb: 
                         print("{}: determinist interpolation method, reuse the first surface".format(litho.name))
                 else: 
-
                     if len(litho.surface.ineq) == 0 and litho.surface.int_method == "grf_ineq": 
                         if vb: 
                             print("Unit {} has no inequality point, the interpolation method is switched to GRF".format(litho.name))
@@ -3711,6 +3999,103 @@ class Pile():
             print("##########################\n")
 
 
+    def define_domains(self, ArchTable, surfaces, tops=None, bots=None, subpile=False, vb=0, fl_top=True):
+        
+        assert surfaces.shape[1] == len(self.list_units), "the number of surfaces {} provided is not equal to the number of units {}".format(surfaces.shape[1], len(self.list_units))
+        
+        # nreal
+        nreal=surfaces.shape[0]
+
+        ArchTable.nreal_units=nreal  # store number of realizations
+
+        #simulation grid
+        xg=ArchTable.get_xgc()
+        nx=xg.shape[0]
+        yg=ArchTable.get_ygc()
+        ny=yg.shape[0]
+        zg=ArchTable.get_zg()
+        nz=zg.shape[0] - 1
+        if ~subpile: 
+            top=ArchTable.top
+            bot=ArchTable.bot
+        mask=ArchTable.mask
+        nlay=len(self.list_units)
+
+        #make sure to have ordered lithologies 
+        self.order_units(vb=vb)
+
+        ### initialize surfaces by setting to 0
+
+        surfs=np.zeros([nreal, nlay, ny, nx])
+        surfs_bot=np.zeros([nreal, nlay, ny, nx])
+        org_surfs=surfaces
+        real_domains=np.zeros([nreal, nlay, nz, ny, nx])
+
+        for ireal in range(nreal): # loop over real
+            
+            #top/bot
+            if subpile: 
+                top=tops[ireal]
+                bot=bots[ireal]
+
+            # counter for current simulated surface
+            i=-1
+
+            for litho in self.list_units[:: -1]: 
+            
+                i += 1  # index for simulated surface
+                start=time.time()
+                if (fl_top) and (i == nlay-1): # first layer assign to top
+                    s1=top
+                else:
+                    s1=org_surfs[ireal, (nlay-1)-i].copy()
+
+                # adapt altitude if above/below top/bot
+                s1[s1>top]=top[s1>top]
+                s1[s1<bot]=bot[s1<bot]
+
+                # strati consistency and erosion rules
+                if i > 0: 
+                    for o in range(i): # index for checking already simulated surfaces
+                        litho2=self.list_units[:: -1][o]
+                        s2=surfs[ireal, (nlay-1)-o] #idx from nlay-1 to nlay-i-1
+                        if litho != litho2: 
+                            if (litho.order < litho2.order) & (litho.surface.contact == "onlap"): # si couche simulée sup et onlap
+                                s1[s1 < s2]=s2[s1 < s2]
+                            elif (litho.order < litho2.order) & (litho.surface.contact == "erode"): # si couche simulée érode une ancienne
+                                s2[s2 > s1]=s1[s2 > s1]
+                                if o == i-1 and litho.contact == "erode": # if index "o" is underlying layer
+                                    s1[s1 > s2]=s2[s1 > s2] # prevent erosion layers having volume
+
+                surfs[ireal, (nlay-1)-i]=s1  #add surface
+
+            #compute domains
+
+            surfs_ir=surfs[ireal]
+
+            for i in range(surfs_ir.shape[0]): 
+                if i < surfs_ir.shape[0]-1: 
+                    s_bot=surfs_ir[i+1] # bottom
+                else: 
+                    s_bot=bot
+                s_top=surfs_ir[i] # top
+                a=ArchTable.compute_domain(s_top, s_bot)
+                real_domains[ireal, i]=a*mask*self.list_units[i].ID
+                surfs_bot[ireal, i]=s_bot
+
+
+        #only 1 big array
+        a=np.sum(real_domains, axis=1)
+        ArchTable.Geol.units_domains[a != 0]=a[a != 0]
+        del(real_domains)
+        ArchTable.Geol.surfaces_by_piles[self.name]=surfs
+        ArchTable.Geol.surfaces_bot_by_piles[self.name]=surfs_bot
+        ArchTable.Geol.org_surfaces_by_piles[self.name]=org_surfs
+
+        if vb: 
+            print("##########################\n")
+
+
 class Unit(): 
 
     def __init__(self, name, order, color, surface=None, ID=None,
@@ -3735,7 +4120,7 @@ class Unit():
                          (see geone documentation) for facies interpolation
                          with SIS
             TI       : geone image, Training image for MPS simulation
-                         of the fillinf the units
+                         of the filling the units
             SubPile  : Pile object, is used to fill the unit
                          if the f_method is "SubPile"
             Flag     : 
@@ -4079,13 +4464,17 @@ class Unit():
             if self.verbose: 
                 print("Unit {} has only one facies, facies method sets to homogenous".format(self.name))
 
+        # unit data
+        unit_data=ArchTable.get_units_domains_realizations(all_data=True)
+
         ### Simulations ###
         if self.f_method != "SubPile": 
             for iu in range(nreal_units): # loop over existing surfaces
                 if ArchTable.verbose: 
                     print("### Unit {} - realization {} ###".format(self.name, iu))
                 if self.contact == "onlap": 
-                    mask=ArchTable.Geol.units_domains[iu] == self.ID
+                    mask = (unit_data[iu] == self.ID)
+                    #mask=ArchTable.Geol.units_domains[iu] == self.ID
                     method=self.f_method  # method of simulation
 
                     ## HOMOGENOUS ##
@@ -4108,18 +4497,6 @@ class Unit():
                     elif method.upper() == "SIS": 
                         ## setup SIS ##
 
-                        """
-                        hd=np.array([])
-                        facies=np.array([])
-                        for fa in self.list_facies: 
-                            #ndarray
-                            fa_x=np.array(fa.x)
-                            fa_y=np.array(fa.y)
-                            fa_z=np.array(fa.z)
-                            facies=np.concatenate([facies, fa.ID*np.ones([fa_x.shape[0]])]) # append facies IDs
-                            hd=np.concatenate([hd.reshape(-1, 3), np.concatenate([[fa_x], [fa_y], [fa_z]], axis=0).T]) # append data for input SIS format
-
-                        """
                         hd, facies=ArchTable.hd_fa_in_unit(self, iu=iu)
                         hd=np.array(hd)
                         facies=np.array(facies)
@@ -4179,10 +4556,12 @@ class Unit():
                                 self.list_f_covmodel.append(cm_copy)
 
                         ## Simulation
-                        simus=gci.simulateIndicator3D(cat_values, self.list_f_covmodel, dimensions, spacing, origin, 
-                                                        nreal=nreal, method="simple_kriging", x=hd, v=facies, mask=mask, 
-                                                        searchRadiusRelative=kwargs["r"], nneighborMax=kwargs["neig"], 
-                                                        probability=kwargs["probability"], verbose=verbose, nthreads=ArchTable.ncpu, seed=seed)["image"].val
+
+                        simus = gci.simulateIndicator3D(cat_values, self.list_f_covmodel, dimensions, spacing, origin,
+                                                        nreal=nreal, method="simple_kriging", x=hd, v=facies, mask=mask,
+                                                        searchRadiusRelative=kwargs["r"], nneighborMax=kwargs["neig"],
+                                                        probability=kwargs["probability"], verbose=verbose, nthreads = ArchTable.ncpu, seed=seed)["image"].val
+
 
 
                         ### rearrange data into a 2D array of the simulation grid size ###
@@ -4392,7 +4771,6 @@ class Surface():
 
         self.dic_surf=dic_surf
 
-
     def copy(self): 
         return copy.deepcopy(self)
 
@@ -4408,11 +4786,10 @@ class Surface():
         else: 
             print("Surface {}: covmodel not a geone 2D covmodel".format(self.name))
 
-
     def get_surface_covmodel(self): 
-        if self.covmodel is None: 
-            if self.verbose: 
-                print ("Warning: Unit '{}' have no Covmodel for surface interpolation".format(self.name))
+        if self.covmodel is None:  
+            print ("Warning: Unit '{}' have no Covmodel for surface interpolation".format(self.name))
+            return None
         else: 
             return self.covmodel
 
@@ -4620,7 +4997,3 @@ class Geol():
         self.surfaces_by_piles={}
         self.surfaces_bot_by_piles={}
         self.org_surfaces_by_piles={}
-        self.units_domains=None
-        self.units_domains_colors=None
-        self.facies_domains=None
-        self.prop_values=None

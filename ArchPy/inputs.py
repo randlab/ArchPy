@@ -334,12 +334,12 @@ def load_bh_files(list_bhs, facies_data, units_data,
 
     #loading files
     #fa_data=pd.read_csv(facies_data)
-    fa_data=facies_data
+    fa_data=facies_data.copy()
     fa_data.rename(columns={fa_bh_id_col:"bh_ID", fa_top_col:"top",fa_bot_col:"bot",fa_ID:"facies_ID"},inplace=True)
     fa_data.set_index("bh_ID", inplace=True)
     
     #s_data=pd.read_csv(units_data)
-    s_data=units_data
+    s_data=units_data.copy()
     s_data.rename(columns={u_bh_id_col:"bh_ID", u_top_col:"top",u_bot_col:"bot",u_ID:"Strat"},inplace=True)
     s_data.set_index("bh_ID", inplace=True)
     

@@ -691,7 +691,7 @@ def run_tpgs(nsim,xg,yg,zg,data,Gk,flag,nit=100,nmax = 24,grf_method="fft",mask=
     G1,G2 = Gk
     output = np.ones([nsim,nz,ny,nx])
 
-    if data is not None: #co simulation
+    if data is not None:  # conditional simulation
 
         #keep data inside mask
         if mask is not None:

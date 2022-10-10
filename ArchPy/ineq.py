@@ -292,6 +292,7 @@ def Gibbs_estimate(data_org, covmodel, nit=50, krig_type="simple_kriging", mean=
     ## kriging to test and remove some ineq data 
     ##(an ineq is removed if the ineq is above/below kriging estimate +- 4 times krig standard deviation)
     #change ini data to krige estimates only with eq data
+    """
     if neq > 1:
         ini_v,ini_s = gcm.krige(eq_data[:,:2], eq_data[:,2], ineq_data[:,:2].reshape(-1,2), cov_model=covmodel, method=krig_type, mean=mean)
         arr_sup = ini_v+4*ini_s
@@ -306,6 +307,7 @@ def Gibbs_estimate(data_org, covmodel, nit=50, krig_type="simple_kriging", mean=
         ineq_data = ineq_data[super_mask]
         
         data = np.concatenate((eq_data, ineq_data))
+    """
     
     #if no variance are given
     if var is None:

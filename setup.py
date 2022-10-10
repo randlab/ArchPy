@@ -6,7 +6,7 @@ with open("README.md", "r") as file:
 
 setuptools.setup(
     name='Geoarchpy',
-    version='0.2.1',
+    version='0.3.0',
     author="Ludovic Schorpp",
     author_email="ludovic.schorpp@unine.ch",
     description="Simpler geological and property models",
@@ -17,7 +17,8 @@ setuptools.setup(
                       'numpy',
                       'pyvista==0.32.1',
                       'scipy',
-                      'shapely'],
+                      'shapely==1.7.1',
+                      'numba'],
     packages=setuptools.find_packages(),
     include_package_data=True,
     data_files=[("lib\\site-packages\\ArchPy\\libraries", ["ArchPy\\libraries\\cov_facies.dll"])],

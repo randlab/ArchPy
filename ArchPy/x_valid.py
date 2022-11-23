@@ -393,8 +393,8 @@ def test_bh_1fold(ArchTable, bhs_real, bhs_test, weighting_method="same_weight",
 
 # X_validation
 def X_valid(ArchTable, k=3, nreal_un=5, nreal_fa=2,plot=True,
-            weighting_method="same_weight", dic_weights=None,
-            seed=15, verbose=1):
+            weighting_method="same_weights", dic_weights=None,
+            seed=15, folding_method="random", verbose=1):
     
     """
     Perform a Cross-validation on the given ArchTable
@@ -403,9 +403,10 @@ def X_valid(ArchTable, k=3, nreal_un=5, nreal_fa=2,plot=True,
     k     : int, number of folds
     nreal_un : int, number of unit realizations to estimate score
     nreal_fa : int, number of facies realiations to estimate score
-    same_weight : bool, to apply same weight to each facies/unit
+    weighting_method : str, which method to use for applying the weights
+                 possible values are : same_weights, prop_weights, user_weights
     plot        : bool, display plots
-    seed        : seed for reproducibility
+    seed        : int, seed 
     verbose     : 0 or 1
 
     ### outputs ###
@@ -437,17 +438,25 @@ def X_valid(ArchTable, k=3, nreal_un=5, nreal_fa=2,plot=True,
     l_bhs = arch_table_dummy.list_bhs
     n_bh = len(l_bhs)
 
+    if k > n_bh:
+        k = n_bh    
 
     ## Folding method --> TO DO add other methods ##
-    if k > n_bh:
-        k = n_bh
-        
-    # determine size of a fold
-    size_fold = int(n_bh/k)
+    if folding_method == "random":
+            
+        # determine size of a fold
+        size_fold = int(n_bh/k)
 
-    # shuffle bh ids
-    ids = np.arange(n_bh)
-    np.random.shuffle(ids)
+        # shuffle bh ids
+        ids = np.arange(n_bh)
+        np.random.shuffle(ids)
+
+    elif folding_method == "stratified":
+        
+        pass
+
+    elif folding_method == "kmeans":
+        pass
 
     # get folds
     folds = np.ones([k, size_fold])

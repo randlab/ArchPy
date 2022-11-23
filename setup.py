@@ -6,7 +6,7 @@ with open("README.md", "r") as file:
 
 setuptools.setup(
     name='Geoarchpy',
-    version='0.3.0',
+    version='0.3.1',
     author="Ludovic Schorpp",
     author_email="ludovic.schorpp@unine.ch",
     description="Simpler geological and property models",
@@ -15,7 +15,7 @@ setuptools.setup(
     url = "https://github.com/randlab/ArchPy",
     install_requires=['matplotlib',
                       'numpy',
-                      'pyvista==0.32.1',
+                      'pyvista',
                       'scipy',
                       'shapely==1.7.1',
                       'numba'],

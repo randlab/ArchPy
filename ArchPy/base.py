@@ -746,7 +746,7 @@ class Arch_table():
                 nx=self.get_nx()
                 ny=self.get_ny()
                 nz=self.get_nz()
-                fd=np.zeros([nreal_u, nreal_fa, nz, ny, nx])
+                fd=np.zeros([nreal_u, nreal_fa, nz, ny, nx], dtype=np.int8)
                 for iu in range(nreal_u):
                     for ifa in range(nreal_fa):
                         fname=self.name+"_{}_{}.fd".format(iu, ifa)
@@ -852,7 +852,7 @@ class Arch_table():
             s=self.get_surfaces_unit(u)
             if i == 0:
                 nreal, ny, nx=s.shape
-                surfs=np.zeros([nlay, nreal, ny, nx])
+                surfs=np.zeros([nlay, nreal, ny, nx], dtype=np.float32)
                 surfs[0]=s
             else:
                 surfs[i]=s
@@ -1064,28 +1064,6 @@ class Arch_table():
             raise ValueError('the propriety '+name+' was not found')
         return interest
 
-    # def getprop(self, name):
-
-    #     """
-    #     return property values for a given property.
-
-    #     #inputs#
-    #     name: string, property name
-
-    #     #outputs#
-    #     a property object
-    #     """
-
-    #     if self.Geol.prop_values is None:
-    #         raise ValueError("Properties have not been computed")
-    #     if name in self.Geol.prop_values.keys():
-    #         prop=self.Geol.prop_values[name].copy()
-    #         prop[:,:,:, ~self.mask]=np.nan
-    #     else:
-    #         l=[i.name for i in self.list_props]
-    #         raise ValueError('The propriety "'+name+'"" was not found \n available Property names are: {}'.format(l))
-    #     return prop
-
     def getprop(self, name, iu=None, ifa=None, ip=None, all_data=True):
 
         """
@@ -1112,7 +1090,7 @@ class Arch_table():
         nz=self.get_nz()
 
         if all_data:
-            prop=np.zeros([nreal_u, nreal_fa, nreal_prop, nz, ny, nx])
+            prop=np.zeros([nreal_u, nreal_fa, nreal_prop, nz, ny, nx], dtype=np.float32)
 
             if self.write_results:
                 # get all real
@@ -1289,9 +1267,9 @@ class Arch_table():
         oy=origin[1]
         oz=origin[2]
 
-        xg=np.arange(ox, ox+nx*sx+sx, sx)
-        yg=np.arange(oy, oy+ny*sy+sy, sy)
-        zg=np.arange(oz, oz+nz*sz+sz, sz)
+        xg=np.arange(ox, ox+nx*sx+sx, sx, dtype=np.float32)
+        yg=np.arange(oy, oy+ny*sy+sy, sy, dtype=np.float32)
+        zg=np.arange(oz, oz+nz*sz+sz, sz, dtype=np.float32)
 
         xgc=xg[: -1]+sx/2
         ygc=yg[: -1]+sy/2
@@ -1367,10 +1345,10 @@ class Arch_table():
 
         #define top/bot
         if (top is None) and (mask is None):
-            top=np.ones([ny, nx])*np.max(zg)
+            top=np.ones([ny, nx], dtype=np.float32)*np.max(zg)
 
         elif (top is None) and (mask is not None):  # if mask is provided but not top
-            top =np.zeros([ny, nx])*np.nan
+            top =np.zeros([ny, nx], dtype=np.float32)*np.nan
             for ix in range(nx):
                 for iy in range(ny):
                     for iz in range(nz-1, -1, -1):
@@ -1381,14 +1359,13 @@ class Arch_table():
         # cut top
         top[top>zg[-1]]=zg[-1]
         top[top<zg[0]]=zg[0]
-        self.top=top
-
+        self.top=top.astype(np.float32)
 
         if (bot is None) and (mask is None):
-            bot=np.ones([ny, nx])*np.min(zg)
+            bot=np.ones([ny, nx], dtype=np.float32)*np.min(zg)
 
         elif (bot is None) and (mask is not None):  # if mask is provided but not top
-            bot =np.zeros([ny, nx])*np.nan
+            bot =np.zeros([ny, nx], dtype=np.float32)*np.nan
             for ix in range(nx):
                 for iy in range(ny):
                     for iz in range(nz):
@@ -1398,7 +1375,7 @@ class Arch_table():
         # cut bot
         bot[bot>zg[-1]]=zg[-1]
         bot[bot<zg[0]]=zg[0]
-        self.bot=bot
+        self.bot=bot.astype(np.float32)
 
         # create mask from top and bot if none
         if mask is None:
@@ -1412,7 +1389,7 @@ class Arch_table():
 
         # list of coordinates 2D and 3D
         X, Y=np.meshgrid(xgc, ygc)
-        self.xu2D=np.array([X.flatten(), Y.flatten()]).T
+        self.xu2D=np.array([X.flatten(), Y.flatten()], dtype=np.float32).T
 
         #X, Y, Z=np.meshgrid(xgc, ygc, zgc)
         #self.xu3D=np.array([X.flatten(), Y.flatten(), Z.flatten()]).T
@@ -1422,7 +1399,7 @@ class Arch_table():
         if isinstance(polygon, (shapely.geometry.Polygon, shapely.geometry.MultiPolygon)):
             print("Polygon is a shapely instance - discretization activated")
 
-            polygon_array=np.zeros([ny*nx]) #2D array simulation domain
+            polygon_array=np.zeros([ny*nx], dtype=bool) #2D array simulation domain
             cell_l=[]
             for i,cell in enumerate(self.xu2D):
 
@@ -1583,6 +1560,10 @@ class Arch_table():
         """
         Method that returns the cell in which are the given coordinates
         """
+
+        assert y == y, "coordinates contain NaN"
+        assert x == x, "coordinates contain NaN"
+        assert z == z, "coordinates contain NaN"
 
         xg=self.get_xg()
         yg=self.get_yg()
@@ -1831,7 +1812,7 @@ class Arch_table():
         nz = self.get_nz()
         arr = self.get_units_domains_realizations(iu)
         arr = self.get_units_domains_realizations(iu)
-        geol_map = np.zeros([ny, nx])
+        geol_map = np.zeros([ny, nx], dtype=np.int8)
         for iz in np.arange(nz-1, 0, -1):
             iy,ix=np.where(arr[iz] != 0)
             slic = geol_map[iy, ix]
@@ -1870,7 +1851,7 @@ class Arch_table():
         
             from skimage import measure
             
-            arr = geol_map.copy()
+            arr = geol_map.astype(np.float32).copy()
             arr[geol_map == u1_id] = 1
             arr[geol_map == u2_id] = 2
             arr[(geol_map != u1_id) & (geol_map != u2_id)] = np.nan
@@ -2602,11 +2583,11 @@ class Arch_table():
         # remove preexisting results files in ws
         if rm_res_files:
             for file in os.listdir(self.ws):
-                if file.split(".")[-1] in ("ud", "fd", "pro"):
+                if file.split(".")[-1] in ("unt", "fac", "pro"):
                     fpath=os.path.join(self.ws, file)
                     os.remove(fpath)
 
-        self.Geol.units_domains=np.zeros([nreal, self.get_nz(), self.get_ny(), self.get_nx()])  # initialize tmp result array
+        self.Geol.units_domains=np.zeros([nreal, self.get_nz(), self.get_ny(), self.get_nx()], dtype=np.int8)  # initialize tmp result array
 
         if self.check_units_ID() is None:  # check if units have correct IDs
             return None
@@ -2651,7 +2632,7 @@ class Arch_table():
     def define_domains(self, surfaces, fl_top=True):
 
         """
-        Performs the computation of the surfaces but were the surfaces
+        Performs the computation of the units domains when surfaces are provided
 
         #Inputs#
         surfaces : dictionary of surfaces as values and pile name as key
@@ -2663,7 +2644,7 @@ class Arch_table():
         #np.random.seed(self.seed)  # set seed
 
         nreal = surfaces[self.get_pile_master().name].shape[0]  # get number of realizations
-        self.Geol.units_domains=np.zeros([nreal, self.get_nz(), self.get_ny(), self.get_nx()])  # initialize tmp result array
+        self.Geol.units_domains=np.zeros([nreal, self.get_nz(), self.get_ny(), self.get_nx()], dtype=np.int8)  # initialize tmp result array
 
 
         if self.check_units_ID() is None:  # check if units have correct IDs
@@ -2723,7 +2704,7 @@ class Arch_table():
 
         #initialize array and set number of realization
         self.nreal_fa=nreal
-        self.Geol.facies_domains=np.zeros([self.nreal_units, nreal, self.get_nz(), self.get_ny(), self.get_nx()])
+        self.Geol.facies_domains=np.zeros([self.nreal_units, nreal, self.get_nz(), self.get_ny(), self.get_nx()], dtype=np.int8)
 
         for strat in self.get_all_units():  # loop over strati
             if strat.contact == "onlap":
@@ -2790,7 +2771,7 @@ class Arch_table():
         idx_s2=(np.round((s2-z0)/sz)).astype(int)
 
         #domain
-        a=np.zeros([nz, ny, nx])
+        a=np.zeros([nz, ny, nx], dtype=bool)
         for iy in range(ny):
             for ix in range(nx):
                 a[idx_s2[iy, ix]: idx_s1[iy, ix], iy, ix]=1
@@ -2835,7 +2816,7 @@ class Arch_table():
             counter=0
             if self.verbose:
                 print ("### {} {} property models will be modeled ###".format(nreal_units*nreal_fa*nreal, prop.name))
-            prop_values=np.zeros([nreal_units, nreal_fa, nreal, nz, ny, nx]) # property values
+            prop_values=np.zeros([nreal_units, nreal_fa, nreal, nz, ny, nx], dtype=np.float32) # property values
 
             #HD
             x=prop.x
@@ -2844,7 +2825,7 @@ class Arch_table():
             #loop
             for iu in range(nreal_units): # loop over units models
                 for ifa in range(nreal_fa): # loop over lithological models
-                    K_fa=np.zeros([nreal, nz, ny, nx])
+                    K_fa=np.zeros([nreal, nz, ny, nx], dtype=np.float32)
                     for strat in self.get_all_units():
                         if strat.f_method != "Subpile": #discard units filled by subunits
                             # mask_strat=(self.get_units_domains_realizations(iu) == strat.ID)
@@ -2853,11 +2834,11 @@ class Arch_table():
 
                                 #create mask facies for prop simulation
                                 # facies_domain=self.get_facies(iu, ifa, all_data=False)
-                                facies_domain=self.Geol.facies_domains[iu, ifa].copy() #gather a realization of facies domain
-                                facies_domain[facies_domain != fa.ID]=0  #set 0 to other facies
-                                facies_domain[~mask_strat]=0  #set 0 outside of the strati to simulate same facies but in other strat independantely
+                                facies_domain=self.Geol.facies_domains[iu, ifa].copy()  # gather a realization of facies domain
+                                facies_domain[facies_domain != fa.ID]=0  # set 0 to other facies
+                                facies_domain[~mask_strat]=0  # set 0 outside of the strati to simulate same facies but in other strat independantely
                                 mask_facies=facies_domain.copy()
-                                mask_facies[mask_facies != 0]=1  #set to 1 for mask
+                                mask_facies[mask_facies != 0]=1  # set to 1 for mask
 
                                 #simulate
                                 if (fa in prop.facies) and (fa.ID in facies_domain): # simulation of the property (check if facies is inside strat unit)
@@ -3011,7 +2992,7 @@ class Arch_table():
             dy=-np.diff(s, axis=0)[:, 1: ]/sy
             dx=-np.diff(s, axis=1)[1:,: ]/sx
             e2=(0, 1) # principal direction (North)
-            ang=np.ones([dy.shape[0]*dy.shape[1]])
+            ang=np.ones([dy.shape[0]*dy.shape[1]], dtype=np.float32)
             i=-1
             for ix, iy in zip(dx.flatten(), dy.flatten()):
                 i+= 1
@@ -3062,7 +3043,7 @@ class Arch_table():
             dip_bot[0,: ]=dip_bot[1,: ]
             dip_bot[:, 0]=dip_bot[:, 1]
 
-            azi=np.zeros([nz, ny, nx])
+            azi=np.zeros([nz, ny, nx], dtype=np.float32)
             mask=self.unit_mask(unit_name=unit.name, iu=iu)
             for ix in range(nx):
                 for iy in range(ny): # TO FINISH
@@ -3083,7 +3064,7 @@ class Arch_table():
                                 azi[:, iy, ix]=np.interp(zg, [zg[i2], zg[i1]], [vbot, vtop+360])
             azi[mask!=1]=0
 
-            dip=np.zeros([nz, ny, nx])
+            dip=np.zeros([nz, ny, nx], dtype=np.float32)
             for ix in range(nx):
                 for iy in range(ny):
                     t=np.where(mask[:, iy, ix]) # retrieve idx to indicate where layer exist vertically at certain location x
@@ -3296,7 +3277,7 @@ class Arch_table():
         nz=self.get_nz()
 
         if all_data:
-            ud=np.zeros([nreal, nz, ny, nx])
+            ud=np.zeros([nreal, nz, ny, nx], dtype=np.int8)
 
             if self.write_results:
                 # get all real
@@ -3399,7 +3380,7 @@ class Arch_table():
         y0=self.get_oy()
         z0=self.get_oz()
 
-        stratis_domain=self.get_units_domains_realizations(iu=iu, fill="ID", h_level=h_level)
+        stratis_domain=self.get_units_domains_realizations(iu=iu, fill="ID", h_level=h_level).astype(np.float32)
         lst_ID=np.unique(stratis_domain)
 
         ## change values
@@ -3584,7 +3565,7 @@ class Arch_table():
                           DOES NOT correspond to facies IDs
         """
 
-        fa_domains=self.get_facies(iu, ifa, all_data=False)
+        fa_domains=self.get_facies(iu, ifa, all_data=False).astype(np.float32)
 
         #keep facies in only wanted units
         if inside_units is not None:
@@ -4334,10 +4315,10 @@ class Pile():
 
         ### initialize surfaces by setting to 0
 
-        surfs=np.zeros([nreal, nlay, ny, nx])
-        surfs_bot=np.zeros([nreal, nlay, ny, nx])
-        org_surfs=np.zeros([nreal, nlay, ny, nx])
-        real_domains=np.zeros([nreal, nlay, nz, ny, nx])
+        surfs=np.zeros([nreal, nlay, ny, nx], dtype=np.float32)
+        surfs_bot=np.zeros([nreal, nlay, ny, nx], dtype=np.float32)
+        org_surfs=np.zeros([nreal, nlay, ny, nx], dtype=np.float32)
+        real_domains=np.zeros([nreal, nlay, nz, ny, nx], dtype=np.int8)
 
         for ireal in range(nreal): # loop over real
 
@@ -4433,7 +4414,6 @@ class Pile():
         #only 1 big array
         a=np.sum(real_domains, axis=1)
         ArchTable.Geol.units_domains[a != 0]=a[a != 0]
-        del(real_domains)
         ArchTable.Geol.surfaces_by_piles[self.name]=surfs
         ArchTable.Geol.surfaces_bot_by_piles[self.name]=surfs_bot
         ArchTable.Geol.org_surfaces_by_piles[self.name]=org_surfs
@@ -4955,7 +4935,7 @@ class Unit():
         spacing=(sx, sy, sz)
 
         nreal_units=ArchTable.nreal_units
-        facies_domains=np.zeros([nreal_units, nreal, nz, ny, nx])
+        facies_domains=np.zeros([nreal_units, nreal, nz, ny, nx], dtype=np.int8)
 
         kwargs=self.dic_facies  # retrieve keyword arguments
 
@@ -5008,7 +4988,7 @@ class Unit():
                             raise ValueError ("No facies passed to homogenous unit {}".format(self.name))
 
                         ## setup a 3D array of the simulation grid size and assign one facies to the unit###
-                        grid=np.zeros([nz, ny, nx])
+                        grid=np.zeros([nz, ny, nx], dtype=np.int8)
                         facies=self.list_facies[0]
                         #grid[mask]=facies.ID
                         for ireal in range(nreal):
@@ -5490,6 +5470,33 @@ class borehole():
         else:
             return False
 
+    def prop_units(self):
+
+        """
+        Return a dictionnary of the proportion of the units in the borehole
+        """
+
+        d = {}
+
+        alt_prev = self.z
+        unit_prev = None
+        for s in self.log_strati:
+            
+            if s[0].name not in d.keys():
+                d[s[0].name] = 0
+            
+            if unit_prev is not None:
+                thk = unit_prev[1] - s[1]
+                d[unit_prev[0].name] += thk
+                
+            unit_prev = s
+        thk = unit_prev[1] - (self.z - self.depth)
+        d[unit_prev[0].name] += thk 
+
+        for k,v in d.items():  # mean
+            d[k] /= self.depth
+
+        return d
 
     def extract(self, z, vb=1):
 

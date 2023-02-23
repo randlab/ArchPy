@@ -277,7 +277,6 @@ def load_bh_files(list_bhs, facies_data, units_data,
                         
                     ibot=max(is_bot, ifa_bot) #take highest bot
                     strat.append((bh_id, is_id, ifa_id, itop, ibot)) #add interval
-                    #print((bh_id, is_id, ifa_id, itop, ibot))
                     
                     if ifa_bot > is_bot:
                         i_fa += 1
@@ -353,7 +352,6 @@ def load_bh_files(list_bhs, facies_data, units_data,
     fa_data.replace(dic_facies_names, inplace=True)
     s_data.replace(dic_units_names, inplace=True)
     
-    
     #change depth into altitude
     if not altitude:
         for bh_id in list_bhs.index:
@@ -395,11 +393,13 @@ def load_bh_files(list_bhs, facies_data, units_data,
 
             if i > 0 and bot != top:  # if there is a gap in the data
                 fa_data=add_gap(fa_data, bh_id, bot, top)
+
             bot=fa_idata.loc[i,"bot"]
 
             if i == fa_idata.shape[0] - 1:  # last lay
                 if (bot-1e-5 > top_0 - depth):  # if bot above maximum depth of borehole --> add a gap
                     fa_data=add_gap(fa_data, bh_id, bot, top_0 - depth)
+
         #units data
         for i in range(s_idata.shape[0]):
 
@@ -412,6 +412,7 @@ def load_bh_files(list_bhs, facies_data, units_data,
 
             if i > 0 and bot != top:  # if there is a gap in the data
                 fa_data=add_gap(fa_data, bh_id, bot, top)
+
             bot=s_idata.loc[i,"bot"]
 
             if i == s_idata.shape[0] - 1:  # last lay
@@ -431,16 +432,22 @@ def load_bh_files(list_bhs, facies_data, units_data,
     return final_db, list_bhs
 
 
-def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()):
+def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=(), extract_units=True, extract_facies=True, ignore2None=True, fill_gaps=True, vb=0):
      
     """
     Return a list of ArchTable boreholes from final database of load_bh_files
-
+    df       : a dataframe containing the geological infos. Generally generate using load_bh_files.
     list_bhs : list of boreholes dataframe with appropriate column name (generally use second output of load_bh_files)
     ArchTable: Arch_table object
     units_to_ignore : sequence of string, unit identifiers to ignore in the database df
                       e.g. if a unit is present in the logs but not defined in the ArchTable
-    facies_to_ignore : sequence of string, facies identifiers to ignore in the database df                
+    facies_to_ignore : sequence of string, facies identifiers to ignore in the database df    
+    extract_units    : bool, extracting unit info
+    extract_ facies  : bool, extracting facies info
+    ignore2None      : bool, Ignoring units, facies are considered as None (i.e. gaps)
+    fill_gaps        : bool, if possible, gaps are filled. It means that
+                       if you have a gap btw two occurence of the same unit, the gap is considered
+                       belonging to this unit      
     """
 
     #list_bhs=pd.read_csv(list_bhs)
@@ -455,6 +462,7 @@ def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()
     bh_ID_prev=""
     unit_name_prev=""
     facies_name_prev= ""
+    prev_ignore_flag=False
     l_bhs=[]
     log_strati=[]
     log_facies=[]
@@ -465,6 +473,7 @@ def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()
     
         bh_ID=df.loc[idx,"bh_ID"]
         
+
         #store borehole
         if bh_ID != bh_ID_prev:  # new borehole --> save old one
             if log_strati or log_facies:  # if data about units or facies 
@@ -474,26 +483,30 @@ def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()
                     log_strati=None
                 if len([s[0] for s in log_facies if s[0] is not None]) == 0:
                     log_facies=None
-                    
-                # get borehole info
-                bh=list_bhs.loc[list_bhs["bh_ID"] == bh_ID_prev] 
-                x=bh["bh_x"].values[0]
-                y=bh["bh_y"].values[0]
-                z=bh["bh_z"].values[0]
-                depth=bh["bh_depth"].values[0]
-                if idepth != depth:
-                    print("end of data does not match end of borehole. \nBorehole depth adapted to the data")
-                    depth=idepth
-                ID=bh["bh_ID"].values[0]
-                l_bhs.append(ArchPy.base.borehole(i, ID, x, y, z, depth, log_strati, log_facies))
-                i += 1
-
-                #reinitialize lith and facies names
-                unit_name_prev=""
-                facies_name_prev= ""
                 
-                #reini idepth
-                idepth=0
+                if log_strati is not None or log_facies is not None: 
+                   
+                    # get borehole info
+                    bh=list_bhs.loc[list_bhs["bh_ID"] == bh_ID_prev] 
+                    x=bh["bh_x"].values[0]
+                    y=bh["bh_y"].values[0]
+                    z=bh["bh_z"].values[0]
+                    depth=bh["bh_depth"].values[0]
+                    if idepth != depth:
+                        if vb:
+                            print("end of data does not match end of borehole. \nBorehole depth adapted to the data")
+                        depth=idepth
+                    ID=bh["bh_ID"].values[0]
+                    l_bhs.append(ArchPy.base.borehole(i, ID, x, y, z, depth, log_strati, log_facies))
+                    i += 1
+
+                    #reinitialize lith and facies names
+                    unit_name_prev=""
+                    facies_name_prev= ""
+                    prev_ignore_flag=False
+
+                    #reini idepth
+                    idepth=0
                 
             bh_ID_prev=bh_ID
 
@@ -501,54 +514,102 @@ def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()
             log_strati=[]
             log_facies=[]
 
-        unit_name=df.loc[idx,"Strat_ID"]
-        facies_name=df.loc[idx,"Facies_ID"]
-        
-        #log_strati # TO MODIFY
-        if unit_name not in units_to_ignore:
-            if unit_name in [i.name for i in ArchTable.get_all_units()]:# new bh that have strati info
-                if unit_name not in [i[0].name for i in log_strati if i[0] is not None]: # if this encountered unit is not already in log
+        if extract_units:
+            unit_name=df.loc[idx,"Strat_ID"]
+            #log strati
+            if unit_name not in units_to_ignore:
+                prev_ignore_flag=False
+                if unit_name in [i.name for i in ArchTable.get_all_units()]:# new bh that have strati info
+                    #if unit_name not in [i[0].name for i in log_strati if i[0] is not None]: # if this encountered unit is not already in log
                     if unit_name_prev != unit_name:
                         if altitude:
                             z=df.loc[idx,"top"] 
                         else:
                             z=list_bhs.loc[list_bhs["bh_ID"] == bh_ID]["bh_z"].values[0] - df.loc[idx,"top"] 
                         z=np.round(z, 2)
-                            
-                        #idepth --> variable to ensure that the depth of the bh will be reached
-                        if (list_bhs.loc[list_bhs["bh_ID"] == bh_ID]["bh_z"].values[0] - df.loc[idx,"bot"]) > idepth:
-                            idepth=list_bhs.loc[list_bhs["bh_ID"] == bh_ID]["bh_z"].values[0] - df.loc[idx,"bot"]
 
                         if unit_name is not None:
                             log_strati.append((ArchTable.get_unit(unit_name),z))
                         else:
                             log_strati.append((None, z))
                         unit_name_prev=unit_name
-            else:
-                print("{} unit name not found in ArchTable".format(unit_name))
-                pass
-            
-        #log_facies
-        if facies_name not in facies_to_ignore:
-            if facies_name in [i.name for i in ArchTable.get_all_facies()]:# new bh that have strati info
-                if facies_name_prev != facies_name:
-                    if altitude:
-                        z=df.loc[idx,"top"] 
-                    else:
-                        z=list_bhs.loc[list_bhs["bh_ID"] == bh_ID]["bh_z"].values[0] - df.loc[idx,"top"] 
-                    z=np.round(z, 2)
-                    
-                    #idepth --> variable to ensure that the depth of the bh will be reached
-                    if list_bhs.loc[list_bhs["bh_ID"] == bh_ID]["bh_z"].values[0] - df.loc[idx,"bot"] > idepth:
-                        idepth=list_bhs.loc[list_bhs["bh_ID"] == bh_ID]["bh_z"].values[0] - df.loc[idx,"bot"]
                         
-                    if facies_name is not None:
-                        log_facies.append((ArchTable.get_facies_obj(facies_name),z))
+                    #idepth --> variable to ensure that the depth of the bh will be reached
+                    if (list_bhs.loc[list_bhs["bh_ID"] == bh_ID]["bh_z"].values[0] - df.loc[idx,"bot"]) > idepth:
+                        idepth=list_bhs.loc[list_bhs["bh_ID"] == bh_ID]["bh_z"].values[0] - df.loc[idx,"bot"]
+
+                        
+                else:
+                    if vb:
+                        print("{} unit name not found in ArchTable".format(unit_name))
+                    pass
+            else:  # unit to ignore
+                if ignore2None:
+                    if prev_ignore_flag:
+                        pass
                     else:
+                        if altitude:
+                            z=df.loc[idx,"top"] 
+                        else:
+                            z=list_bhs.loc[list_bhs["bh_ID"] == bh_ID]["bh_z"].values[0] - df.loc[idx,"top"]
+                        z=np.round(z, 2)
+
+                        if log_strati and fill_gaps:
+                            if log_strati[-1][0] is None:  # if latest entry is None
+                                log_strati.pop(-1)  # remove latest None entry
+
+                        log_strati.append((None, z))
+                        prev_ignore_flag = True
+
+                        if not fill_gaps:
+                            unit_name_prev = unit_name
+
+        if extract_facies:
+            facies_name=df.loc[idx,"Facies_ID"]
+       
+            #log_facies
+            if facies_name not in facies_to_ignore:
+                prev_ignore_flag = False
+                if facies_name in [i.name for i in ArchTable.get_all_facies()]:# new bh that have strati info
+                    if facies_name_prev != facies_name:
+                        if altitude:
+                            z=df.loc[idx,"top"] 
+                        else:
+                            z=list_bhs.loc[list_bhs["bh_ID"] == bh_ID]["bh_z"].values[0] - df.loc[idx,"top"] 
+                        z=np.round(z, 2)
+                        
+                        #idepth --> variable to ensure that the depth of the bh will be reached
+                        if list_bhs.loc[list_bhs["bh_ID"] == bh_ID]["bh_z"].values[0] - df.loc[idx,"bot"] > idepth:
+                            idepth=list_bhs.loc[list_bhs["bh_ID"] == bh_ID]["bh_z"].values[0] - df.loc[idx,"bot"]
+                            
+                        if facies_name is not None:
+                            log_facies.append((ArchTable.get_facies_obj(facies_name),z))
+                        else:
+                            log_facies.append((None, z))
+                        facies_name_prev=facies_name
+                else:
+                    print("{} facies name not found in ArchTable".format(facies_name))
+            else:  # unit to ignore
+                if ignore2None:
+                    if prev_ignore_flag:
+                        pass
+                    else:
+                        if altitude:
+                            z=df.loc[idx,"top"] 
+                        else:
+                            z=list_bhs.loc[list_bhs["bh_ID"] == bh_ID]["bh_z"].values[0] - df.loc[idx,"top"]
+                        z=np.round(z, 2)
+
+                        if log_facies and fill_gaps:
+                            if log_facies[-1][0] is None:  # if latest entry is None
+                                log_facies.pop(-1)  # remove latest None entry
+
                         log_facies.append((None, z))
-                    facies_name_prev=facies_name
-            else:
-                print("{} facies name not found in ArchTable".format(facies_name))
+                        prev_ignore_flag = True
+
+                        if not fill_gaps:
+                            facies_name_prev = facies_to_ignore
+                
 
     #store final borehole
     if log_strati or log_facies: #if data about units or facies (to do)
@@ -767,9 +828,16 @@ def import_project(project_name, ws, import_bhs=True, import_results=True, impor
                 else:
                     print("bot array has not been found")
         
-        #add polygon TO DO
+        # add polygon
+        # mask
+        mask = dic_project["grid"]["mask"]
+        if mask.split(".")[-1] == "msk":
+            path=os.path.join(ws, mask+".npy")
+            if os.path.exists(path):
+                mask=np.load(path)
+
         di=(int(di[0]), int(di[1]), int(di[2]))
-        ArchTable.add_grid(di, spa, ori, top=top, bot=bot)
+        ArchTable.add_grid(di, spa, ori, top=top, bot=bot, mask=mask)
     
     if import_bhs:
         # boreholes
@@ -788,6 +856,12 @@ def import_project(project_name, ws, import_bhs=True, import_results=True, impor
         
         ArchTable.add_bh(boreholes)
     
+    if "geol_map" in dic_project.keys():
+        path=os.path.join(ws, dic_project["geol_map"]+".npy")
+        if os.path.exists(path):
+            geol_map=np.load(path)
+            ArchTable.add_geological_map(geol_map)
+
     if import_results:
         print("\n\n ##LOADING RESULTS## \n\n")
         # load results 
@@ -875,7 +949,10 @@ def write_bh_files(ArchTable):
                     bot=bh.z - bh.depth
                 
                 strati_bhid.append(bh.ID)
-                strati_id.append(unit.name)
+                if unit is not None:
+                    strati_id.append(unit.name)
+                else:
+                    strati_id.append(None)
                 strati_top.append(top)
                 strati_bot.append(bot)
                 
@@ -889,7 +966,10 @@ def write_bh_files(ArchTable):
                     bot=bh.z - bh.depth
                 
                 facies_bhid.append(bh.ID)
-                facies_id.append(fa.name)
+                if fa is not None:
+                    facies_id.append(fa.name)
+                else:
+                    facies_id.append(None)
                 facies_top.append(top)
                 facies_bot.append(bot)  
     
@@ -1007,7 +1087,7 @@ def create_d_f_covmodels(unit):
     
     return l
 
-def create_d_surface(surface, ws=None):
+def create_d_surface(surface, ws):
     
     """
     create a yaml dic for a surface object
@@ -1028,26 +1108,26 @@ def create_d_surface(surface, ws=None):
         elif hasattr(v, "__iter__") and isinstance(v[0], (int, float)): #sequence of numbers
             new_v=[]
             for iv in v:
-                new_v.append(float(iv))#change data format cause yaml doesn't support np.float so to be sure...
+                new_v.append(float(iv))  # change data format cause yaml doesn't support np.float so to be sure...
             d_dic_s[k]=new_v
         
-        elif isinstance(v, np.ndarray): #numpy array --> store it in binary file
-            f_name=surface.name + "_dic_surf_" + str(k)
+        elif isinstance(v, np.ndarray):  # numpy array --> store it in binary file
+            f_name=surface.name + "_dic_surf_" + str(k) 
             np.save(os.path.join(ws, f_name),v)
             d_dic_s[k]=f_name
             
-        elif isinstance(v, geone.img.Img): #geone image --> just save file in ws
+        elif isinstance(v, geone.img.Img):  # geone image --> just save file in ws
             f_name=surface.name + "_dic_surf_" + str(k)
-            geone.img.writeImageGslib(v, os.path.join(ws, f_name)) #write file
+            geone.img.writeImageGslib(v, os.path.join(ws, f_name))  # write file
             d_dic_s[k]=f_name
             
-        else: #warning some arguments cannot work with the export
+        else:  # warning some arguments cannot work with the export
             d_dic_s[k]=v
             
     d["dic_surf"]=d_dic_s
     return d
 
-def create_d_unit(unit, ws=None):
+def create_d_unit(unit, ws):
     
     d={}
     d["name"]=unit.name
@@ -1063,7 +1143,7 @@ def create_d_unit(unit, ws=None):
         d["color"]=new_c
     
     d["ID"]=unit.ID
-    d["surface"]=create_d_surface(unit.surface)
+    d["surface"]=create_d_surface(unit.surface, ws)
     d["list_facies"]=[i.name for i in unit.list_facies]
 
     #dic facies
@@ -1216,10 +1296,9 @@ def save_project(ArchTable, results=True):
     d["facies_computed"]=ArchTable.facies_computed
     d["prop_computed"]=ArchTable.prop_computed
 
-
     ##grid##
     gr={}
-    gr["dimensions"]=(float(ArchTable.get_nx()), float(ArchTable.get_ny()), float(ArchTable.get_nz()))
+    gr["dimensions"]=(int(ArchTable.get_nx()), int(ArchTable.get_ny()), int(ArchTable.get_nz()))
     gr["spacing"]=(float(ArchTable.get_sx()), float(ArchTable.get_sy()), float(ArchTable.get_sz()))
     gr["origin"]=(float(ArchTable.get_ox()), float(ArchTable.get_oy()), float(ArchTable.get_oz()))
     
@@ -1239,9 +1318,18 @@ def save_project(ArchTable, results=True):
     np.save(os.path.join(ArchTable.ws, file), ArchTable.mask)
     gr["mask"]=file
     
+#    file=ArchTable.name+".poly"
+#    np.save(os.path.join(ArchTable.ws, file), ArchTable.mask.any(0))
+#    gr["polygon"]=file
+
     #save grid
     d["grid"]=gr
     
+    #geol map
+    if ArchTable.geol_map is not None:
+        file=ArchTable.name+".gmap"
+        np.save(os.path.join(ArchTable.ws, file), ArchTable.geol_map)
+        d["geol_map"]=file
 
     #save boreholes
     d_bh={}

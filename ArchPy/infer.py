@@ -11,9 +11,6 @@ from ipywidgets import interact, fixed, Button
 #my modules
 import ArchPy
 
-
-
-
 # functions
 def cm_any_nan(cm):
     
@@ -45,18 +42,18 @@ def cm_any_nan(cm):
                             break
                             
                             
-def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1,
-                  npoints_min=20, max_nugget=1, bounds = None, default_covmodel=None, **kwargs):
+def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1, plot=True,
+                  npoints_min=20, max_nugget=1, bounds = None, default_covmodel=None, vb=1, **kwargs):
     
     """
-    surf
-    hmax
+    
     """
     
-    plt.cla()
-    plt.close()
-    global fig, ax  # global figure to allow class to access to the plot
-    fig,ax=plt.subplots()
+    if plot:
+        plt.cla()
+        plt.close()
+        global fig, ax  # global figure to allow class to access to the plot
+        fig,ax=plt.subplots()
         
     surf = unit.surface
 
@@ -67,7 +64,7 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
     Ly = ArchTable.get_yg()[-1] - ArchTable.get_yg()[0]
     
     dmax = np.sqrt(Lx**2 + Ly**2)
-    
+
     if len(surf.z) > npoints_min:
         
         if auto:  # automatic inference
@@ -76,7 +73,9 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
                 
                 # compute var exp
                 h,exp_var, p = gcm.variogramExp1D(x, v, hmax=hmax, ncla=20, make_plot = False, **kwargs)  # just make a plot of the exp variogram
-                plt.scatter(h, exp_var)
+
+                if plot:
+                    plt.scatter(h, exp_var)
                 
                 # boundaries
                 vmax = np.var(v)*2
@@ -136,12 +135,14 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
 
                 # finalization                              
                 surf.set_covmodel(gcm.covModel1D_to_covModel2D(cm_fitted))
-                plt.title(unit.name)
-                cm_fitted.plot_model(vario=True, c="k")
-                if ~np.isnan(hmax):
-                    plt.xlim(-hmax*0.1, hmax)
-                plt.xlabel("h [L]")
-                plt.legend()  
+                if plot:
+                    plt.title(unit.name)
+                    cm_fitted.plot_model(vario=True, c="k")
+                    if ~np.isnan(hmax):
+                        plt.xlim(-hmax*0.1, hmax)
+                    plt.xlabel("h [L]")
+                    plt.legend() 
+                    plt.show() 
                 
 
             elif dim == 2: 
@@ -200,19 +201,20 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
                 (h1, v1, p1), (h2, v2, p2) = gcm.variogramExp2D(x, v, cm_fitted.alpha, hmax=(hmax, hmax), 
                                                                 make_plot=False, **kwargs)
                 
-                plt.scatter(h1, v1, color="lightblue", label="x : var-exp")
-                plt.scatter(h2, v2, color="orange", label="y : var-exp")
+                if plot:
+                    plt.scatter(h1, v1, color="lightblue", label="x : var-exp")
+                    plt.scatter(h2, v2, color="orange", label="y : var-exp")
+                    
+                    plt.title(r"{} : $\alpha$ {}".format(unit.name, np.round(cm_fitted.alpha, 2)))
+                    
+                    cm_fitted.plot_model_one_curve(1, 1, hmax=2*dmax, c="lightblue", label= "x' model")
+                    cm_fitted.plot_model_one_curve(2, 1, hmax=2*dmax, c="orange", label="y' model")
                 
-                plt.title(r"{} : $\alpha$ {}".format(unit.name, np.round(cm_fitted.alpha, 2)))
-                
-                cm_fitted.plot_model_one_curve(1, 1, hmax=2*dmax, c="lightblue", label= "x' model")
-                cm_fitted.plot_model_one_curve(2, 1, hmax=2*dmax, c="orange", label="y' model")
-                
-                if ~np.isnan(hmax):
-                    plt.xlim(-hmax*0.1, hmax)
-                plt.xlabel("h [L]")
-                plt.legend()  
-                
+                    if ~np.isnan(hmax):
+                        plt.xlim(-hmax*0.1, hmax)
+                    plt.xlabel("h [L]")
+                    plt.legend()  
+                    
                 # set model
                 surf.set_covmodel(cm_fitted)
                 
@@ -262,22 +264,34 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
             # display(button)  # Important !! --> you have to use display to show the button
             
     else :  # not enough data for a variogram
-        print("not enough data points")
 
-        def on_button_clicked(b):
-            # create default
+        if vb:
+            print("Not enough data points")
 
+        if not auto:
+            def on_button_clicked(b):
+                # create default
+
+                if default_covmodel is not None:
+                    surf.set_covmodel(default_covmodel)
+                else:
+                    cm_def = gcm.CovModel2D(elem=[("exponential", {"w":(Lz/4)**2/(128), "r":[min(Lx, Ly)/4, min(Lx,Ly)/4]})])
+                    surf.set_covmodel(cm_def)
+
+            button = Button(description="add default covmodel")  # continue button
+            display(button)
+            button.on_click(on_button_clicked)
+
+        else:
+            if vb:
+                print("Default covmodel added")
             if default_covmodel is not None:
                 surf.set_covmodel(default_covmodel)
             else:
-                cm_def = gcm.CovModel2D(elem=[("exponential", {"w":Lz**2/(128), "r":[min(Lx, Ly)/4, min(Lx,Ly)/4]})])
+                cm_def = gcm.CovModel2D(elem=[("exponential", {"w":(Lz/4)**2/(128), "r":[min(Lx, Ly)/4, min(Lx,Ly)/4]})])
                 surf.set_covmodel(cm_def)
 
-        button = Button(description="add default covmodel")  # continue button
-        display(button)
-        button.on_click(on_button_clicked)
-
-        
+    
                                                
 def fit_surfaces(self, default_covmodel=None, **kwargs):
 

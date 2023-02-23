@@ -6,7 +6,7 @@ with open("README.md", "r") as file:
 
 setuptools.setup(
     name='Geoarchpy',
-    version='0.3.1',
+    version='0.3.2',
     author="Ludovic Schorpp",
     author_email="ludovic.schorpp@unine.ch",
     description="Simpler geological and property models",
@@ -17,8 +17,11 @@ setuptools.setup(
                       'numpy',
                       'pyvista',
                       'scipy',
-                      'shapely==1.7.1',
-                      'numba'],
+                      'numba',
+                      'scikit-learn',
+                      'pyyaml',
+                      'pandas',
+                      'shapely < 2.0'],  # download geone
     packages=setuptools.find_packages(),
     include_package_data=True,
     data_files=[("lib\\site-packages\\ArchPy\\libraries", ["ArchPy\\libraries\\cov_facies.dll"])],

@@ -2398,7 +2398,7 @@ class Arch_table():
 
     #     return prop_units
 
-    def get_prop(self, type="units", depth_min=0, depth_max=np.inf, ignore_units=[], mask=None):
+    def get_proportions(self, type="units", depth_min=0, depth_max=np.inf, ignore_units=[], mask=None):
 
         """
         Function that returns the proportions of the units in the boreholes
@@ -3622,42 +3622,90 @@ class Arch_table():
 
         return log_facies
 
-    def get_entropy(typ = "units"):
+    def get_entropy(self, typ = "units", h_level = None, recompute=False):
 
         """
         Compute the Shannon entropy for units or facies and return it.
+
+        ## inputs ##
+        typ      : str, type of models to use to comppute the entropy,
+                   valid values are "units" and "facies"
+        h_level  : int, hiearchical level to use to compute the entropy,
+                   only used if typ is "units"
+        recompute: bool
+
+        ## output ##
+        3D nd.array of size (nz, ny, nx)
         """
 
+        if typ == "units":
+            string = "units_entropy"
+        elif typ== "facies":
+            string = "units_facies"
 
-        if typ =="units":
-            units=self.get_units_domains_realizations()
-            SE=np.zeros(self.mask.shape)  # shannon entropy
-            b=len(self.get_all_units())
-            nreal=units.shape[0]
-            for unit in self.get_all_units():
-                Pi=(units==unit.ID).sum(0)/nreal
-                pi_mask=(self.mask) & (Pi!=0)
-                SE[pi_mask] += Pi[pi_mask]*(np.log(Pi[pi_mask])/np.log(b))
-                arr=-SE
+        if hasattr(self.Geol, string) and recompute == False:
+
+            if recompute == "false":
+                if typ == "units":
+                    return self.Geol.units_entropy
+                elif typ == "facies":
+                    return self.Geol.facies_entropy
+ 
+        elif recompute or not hasattr(self.Geol, string):
+
+            nz = self.get_nz()
+            ny = self.get_ny()
+            nx = self.get_nx()
+
+            arr = np.zeros([nz, ny, nx])
+            if typ =="units":
+                units = self.get_units_domains_realizations(h_level = h_level)
+                list_units_ids = np.unique(units[units != 0])
+
+                data = units[:, self.mask]
+                SE = np.zeros([data.shape[1]])
+                #b=len(self.get_all_units())
+                b = len(list_units_ids)
+                nreal=units.shape[0]
+
+                for idx in list_units_ids:
+                    unit = self.get_unit(ID=idx, type="ID")
+                    Pi = (data == unit.ID).sum(0)/nreal
+                    pi_mask = (Pi != 0)
+                    SE[pi_mask] += Pi[pi_mask] * (np.log(Pi[pi_mask])/np.log(b))
+                    arr[self.mask] =- SE
+
                 arr[~self.mask]=np.nan
 
-        elif typ == "facies":
-            facies_domains=self.get_facies().reshape(-1, self.nz, self.ny, self.nx)
-            SE=np.zeros(self.mask.shape)  # shannon entropy
-            b=len(self.get_all_facies())
-            nreal=facies_domains.shape[0]
-            for facies in self.get_all_facies():
-                Pi=(facies_domains==facies.ID).sum(0)/nreal
-                pi_mask=(self.mask) & (Pi!=0)
-                SE[pi_mask] += Pi[pi_mask]*(np.log(Pi[pi_mask])/np.log(b))
-                arr=-SE
+                self.Geol.units_entropy = arr    
+                return arr
+
+            elif typ == "facies":
+
+                facies_domains = self.get_facies().reshape(-1, self.nz, self.ny, self.nx)
+                data = units[:, self.mask]
+                SE = np.zeros([data.shape[1]])  # shannon entropy
+                b = len(self.get_all_facies())
+                nreal=facies_domains.shape[0]
+
+                for facies in self.get_all_facies():
+                    Pi = (data == facies.ID).sum(0)/nreal
+                    pi_mask = (Pi != 0)
+                    SE[pi_mask] += Pi[pi_mask] * (np.log(Pi[pi_mask])/np.log(b))
+                    arr[self.mask] =- SE
+
                 arr[~self.mask]=np.nan
 
-        return arr
+                self.Geol.facies_entropy = arr
+
+            else:
+                print("Choose between units or facies")
+
 
     def realizations_aggregation(self, method="basic",
-                             depth=100, ignore_units=None, quantile = 0.3,
-                             units_to_fill=[]):
+                             depth=100, ignore_units=None,
+                             units_to_fill=[],
+                             n_iter = 50):
     
         """
         Method to aggregate multiple ArchPy realizations into one for units and facies (TO DO)
@@ -3673,24 +3721,14 @@ class Arch_table():
                                   if units were simulated with categorical method,
                                   basic method is used for these units
                             
-        depth    : 
+        depth : 
                    float, probas_prop parameter, maximum depth of investigation 
                    to compute probas and proportions. 
                    Should be around the median depth of the boreholes
-                   
+                       
         ignore_units: 
                    list, probas_prop parameter, units name to ignore.
                    These units will not be aggregated in the final model.
-                   
-        quantile : 
-                   float (0-1), probas_prop parameter. Used to determine 
-                   the 2d extent of the investigation. This 2d extent is
-                   based on the density of the boreholes and computed using
-                   a kernel density algorithm. The quantile determine the 
-                   value threshold of the kernel to include area in the 2d
-                   extent.
-                   An high value will select more area than an low value.
-                   default is 0.3.
                    
         units_to_fill:
                    list, mean_surfs parameter, units name to fill with NN at the end
@@ -3727,36 +3765,22 @@ class Arch_table():
         
         elif method == "probas_prop":
 
-            # compute mask_2d
-            bh_x = [bh.x for bh in self.list_bhs]
-            bh_depth = [bh.depth for bh in self.list_bhs]
-            bh_y = [bh.y for bh in self.list_bhs]
-            X = np.array([bh_x, bh_y]).T
-
-            from sklearn.neighbors import KernelDensity
-            kde = KernelDensity(kernel='gaussian', bandwidth=.5*np.std(bh_y)*len(bh_x)**(-1/5)).fit(X)
-            score = kde.score_samples(self.xu2D).reshape(ny, nx)
-            score[~self.mask2d] = np.nan
-
-            mask_2d = score > np.nanquantile(score, quantile)
-            
             ## tirer les proportions de chaque units
-            d_prop_units = self.get_prop(depth_min = 0, depth_max = depth, ignore_units=ign_un, mask=mask_2d)
+            d_prop_units = self.get_proportions(depth_min = 0, depth_max = depth, ignore_units = ign_un)
 
             # create mask
             inter = int(depth/self.get_sz())
             mask_depth = np.zeros([nz, ny, nx], dtype=bool)
             for iy in range(ny):
                 for ix in range(nx):
-                    if mask_2d[iy, ix]:
-                        a = np.where(self.mask[:, iy, ix])
-                        if len(a[0]) > 0:
+                    a = np.where(self.mask[:, iy, ix])
+                    if len(a[0]) > 0:
 
-                            v = int(max(a[0]) - min(a[0]))
-                            if v > inter:
-                                mask_depth[max(a[0])-inter:max(a[0]), iy, ix] = True
-                            else:
-                                mask_depth[min(a[0]):max(a[0]), iy, ix] = True
+                        v = int(max(a[0]) - min(a[0]))
+                        if v > inter:
+                            mask_depth[max(a[0])-inter:max(a[0]), iy, ix] = True
+                        else:
+                            mask_depth[min(a[0]):max(a[0]), iy, ix] = True
 
             # compute probas
             d_sorted = {k: v for k, v in sorted(d_prop_units.items(), key=lambda item: item[1])}
@@ -3769,31 +3793,31 @@ class Arch_table():
         #         print(k)
 
                 # compute prop of unit
-                d = self.get_prop(depth_min = 0, depth_max = depth, ignore_units=ign_un, mask=mask_2d)
-                v = d[k]
+                #d = self.get_proportions(depth_min = 0, depth_max = depth)
+                #v = d[k]
 
                 # compute proba unit
                 arr=np.zeros([self.nz, self.ny, self.nx])
 
                 # compute probabilities
                 arr += (units == self.get_unit(k).ID).sum(0)
-                arr/=len(d)
-
+                arr /= units.shape[0]
+                
                 # loop probas
-                for iv in np.arange(1, 0, -0.1):
-                    prop = (arr[mask_depth] >= iv).sum()/tot_cells
+                for iv in np.arange(1, 0, -0.01):
+                    prop = (arr[mask_depth] >= iv).sum() / mask_depth.sum()
         #             print(prop, v)
                     if prop > v:
                         break
 
-        #         print(iv)
+        #         print(np.round(iv, 3))
                 mask_sim = (best_model==0) & (arr >= iv)
                 best_model[mask_sim] = mask_sim[mask_sim].astype(int) * self.get_unit(k).ID
+                
+                #tot_cells -= mask_sim[mask_depth].sum()  # remove attributed cells from total
+                # units[:, mask_sim] = 0  # remove simulated units 
 
-                tot_cells -= mask_sim[mask_depth].sum()  # remove attributed cells from total
-                units[:, mask_sim] = 0  # remove simulated units 
-
-                ign_un.append(k)
+                # ign_un.append(k)
 
             mask = (best_model == 0) & (self.mask)
             best_model[mask] = -99  # non filled units
@@ -3893,19 +3917,37 @@ class Arch_table():
                     M[ireal, oreal] = np.sum(s1 != s2)
                     M[oreal, ireal] = M[ireal, oreal]
                     
-            mds = MDS(random_state=None)
-            M_transform = mds.fit_transform(M)
+            # mds = MDS(random_state=None)
+            # M_transform = mds.fit_transform(M)
             
-            from sklearn.cluster import k_means
+            # from sklearn.cluster import k_means
 
-            centr, code, jsp = k_means(M_transform, 1)
-            # plt.scatter(centr[:, 0], centr[:, 1], c="r", s=100, marker="x")
-            # plt.scatter(M_transform[:, 0], M_transform[:, 1], c=code)
+            # centr, code, jsp = k_means(M_transform, 1)
+            # # plt.scatter(centr[:, 0], centr[:, 1], c="r", s=100, marker="x")
+            # # plt.scatter(M_transform[:, 0], M_transform[:, 1], c=code)
 
-            dist_sim = np.sqrt((M_transform[:, 0] - centr[0][0])**2 + (M_transform[:, 1] - centr[0][1])**2)
+            # dist_sim = np.sqrt((M_transform[:, 0] - centr[0][0])**2 + (M_transform[:, 1] - centr[0][1])**2)
 
-            idx = np.where(dist_sim==min(dist_sim))[0][0]
+            # idx = np.where(dist_sim==min(dist_sim))[0][0]
             
+            # loop to find the most representative simulation
+            l = []
+            for i in range(n_iter):
+
+                mds = MDS(random_state=None)
+                M_transform = mds.fit_transform(M)
+
+                from sklearn.cluster import k_means
+
+                centr, code, jsp = k_means(M_transform, 1)
+                dist_sim = np.sqrt((M_transform[:, 0] - centr[0][0])**2 + (M_transform[:, 1] - centr[0][1])**2)
+
+                idx = np.where(dist_sim==min(dist_sim))[0][0]
+                l.append(idx)
+
+            l = np.array(l)
+            res = np.bincount(l)
+            idx = np.where(np.bincount(l) == max(np.bincount(l)))[0][0]
             best_model = self.Geol.units_domains[idx]
             
             return best_model
@@ -4091,6 +4133,7 @@ class Arch_table():
                 units_domains=ud
                 if h_level == "all":
                     pass
+
                 elif isinstance(h_level, int) and h_level > 0:
                     lst_ID=np.unique(units_domains)
                     for idx in lst_ID:
@@ -4103,9 +4146,9 @@ class Arch_table():
                                 if s is None:
                                     raise ValueError("Error: parent unit return is None, hierarchy relations are inconsistent with Pile and simulations")
                                 units_domains[units_domains == idx]=s.ID  # change ID values to Mummy ID
-
+                
             elif fill == "color":
-                units_domains=np.zeros([nreal, nz, ny, nx, 4])
+                units_domains=np.zeros([nreal, nz, ny, nx, 4], dtype=np.float32)
                 for unit in self.get_all_units():
                     if unit.f_method != "Subpile":
                         mask=(ud == unit.ID)
@@ -4149,7 +4192,8 @@ class Arch_table():
         return units_domains
 
 
-    def plot_units(self, iu=0, v_ex=1, plotter=None, h_level="all", slicex=None, slicey=None, slicez=None, filtering_value=None, scalar_bar_kwargs=None):
+    def plot_units(self, iu=0, v_ex=1, plotter=None, h_level="all", slicex=None, slicey=None, slicez=None,
+                   filtering_value=None, scalar_bar_kwargs=None, show_scalar_bar=True):
 
         """
         Plot units domain for a specific realization iu
@@ -4225,10 +4269,12 @@ class Arch_table():
         if slicex is not None or slicey is not None or slicez is not None:
             imgplt3.drawImage3D_slice(im, plotter=p, slice_normal_x=cx, slice_normal_y=cy, slice_normal_z=cz,
                                     custom_scalar_bar_for_equidistant_categories=True,
-                                    custom_colors=colors, scalar_bar_annotations=d, filtering_value=filtering_value, scalar_bar_kwargs=scalar_bar_kwargs)
+                                    custom_colors=colors, scalar_bar_annotations=d, filtering_value=filtering_value,
+                                    scalar_bar_kwargs=scalar_bar_kwargs, show_scalar_bar = show_scalar_bar)
         else:
             imgplt3.drawImage3D_surface(im, plotter=p, custom_scalar_bar_for_equidistant_categories=True,
-                                                custom_colors=colors, scalar_bar_annotations=d, filtering_value=filtering_value, scalar_bar_kwargs=scalar_bar_kwargs)
+                                                custom_colors=colors, scalar_bar_annotations=d, filtering_value=filtering_value,
+                                                scalar_bar_kwargs=scalar_bar_kwargs, show_scalar_bar = show_scalar_bar)
 
         if plotter is None:
             p.add_bounding_box()
@@ -4340,7 +4386,8 @@ class Arch_table():
 
 
     def plot_facies(self, iu=0, ifa=0, v_ex=1, inside_units=None,
-                    plotter=None, slicex=None, slicey=None, slicez=None, filtering_value=None, scalar_bar_kwargs=None):
+                    plotter=None, slicex=None, slicey=None, slicez=None, filtering_value=None,
+                    scalar_bar_kwargs=None, show_scalar_bar=True):
 
         """
         Plot the facies realizations over the domain with the colors attributed to facies
@@ -4443,10 +4490,12 @@ class Arch_table():
         if slicex is not None or slicey is not None or slicez is not None:
             imgplt3.drawImage3D_slice(im, plotter=p, slice_normal_x=cx, slice_normal_y=cy, slice_normal_z=cz,
                                     custom_scalar_bar_for_equidistant_categories=True,
-                                    custom_colors=colors, scalar_bar_annotations=d, filtering_value=ft_val, scalar_bar_kwargs=scalar_bar_kwargs)
+                                    custom_colors=colors, scalar_bar_annotations=d, filtering_value=ft_val,
+                                    scalar_bar_kwargs=scalar_bar_kwargs, show_scalar_bar = show_scalar_bar)
         else:
             imgplt3.drawImage3D_surface(im, plotter=p, custom_scalar_bar_for_equidistant_categories=True,
-                                    custom_colors=colors, scalar_bar_annotations=d, filtering_value=ft_val, scalar_bar_kwargs=scalar_bar_kwargs)
+                                    custom_colors=colors, scalar_bar_annotations=d, filtering_value=ft_val,
+                                    scalar_bar_kwargs=scalar_bar_kwargs, show_scalar_bar = show_scalar_bar)
 
         if plotter is None:
             p.add_bounding_box()
@@ -4845,11 +4894,11 @@ class Arch_table():
     """
     Boreholes appear multiple times on the cross-section, have to think about that
     """
-    def plot_cross_section(self, p_list, typ="units", iu=0, ifa=0, ip=0,
+    def plot_cross_section(self, p_list, typ="units", arr=None, iu=0, ifa=0, ip=0,
                            property=None, esp=None, ax=None, colorbar=False,
                            ratio_aspect=2, i=0,
                            dist_max = 100, width=.5,
-                           ):
+                           vmax=None, vmin=None):
 
         """
         Plot a cross section along the points given in
@@ -4874,43 +4923,47 @@ class Arch_table():
                        to adjust vertical exaggeration
         """
 
-        def plot_bh(bh, x=None, width=width):
+        def plot_bh(bh, x=None, width=width, typ="units"):
 
-            if x is None:
-                ix = bh.x
-            else:
-                ix = x
+            if typ == "units":
+                if bh.log_strati is not None:
+                    if x is None:
+                        ix = bh.x
+                    else:
+                        ix = x
 
-            i = -1
-            for i in range(len(bh.log_strati)-1):
-                s = bh.log_strati[i][1]
-                unit = bh.log_strati[i][0]
+                    i = -1
+                    for i in range(len(bh.log_strati)-1):
+                        s = bh.log_strati[i][1]
+                        unit = bh.log_strati[i][0]
 
-                if i < len(bh.log_strati):
-                    s2 = bh.log_strati[i+1][1]
+                        if i < len(bh.log_strati):
+                            s2 = bh.log_strati[i+1][1]
 
-                if unit is not None:
-                    plt.bar(ix, s - s2, bottom=s2, color=unit.c, alpha=1, edgecolor = 'black', width=width)
+                        if unit is not None:
+                            plt.bar(ix, s - s2, bottom=s2, color=unit.c, alpha=1, edgecolor = 'black', width=width)
 
-            s = bh.log_strati[i+1][1]
-            unit = bh.log_strati[i+1][0]
-            s2 = bh.z - bh.depth
-            if unit is not None:
-                plt.bar(ix, s - s2, bottom=s2, color=unit.c, alpha=1, edgecolor = 'black', width=width)
+                    s = bh.log_strati[i+1][1]
+                    unit = bh.log_strati[i+1][0]
+                    s2 = bh.z - bh.depth
+                    if unit is not None:
+                        plt.bar(ix, s - s2, bottom=s2, color=unit.c, alpha=1, edgecolor = 'black', width=width)
 
         if typ == "units":
-            arr=self.get_units_domains_realizations(iu=iu, fill="color")
+            arr=self.get_units_domains_realizations(iu=iu, fill="color", all_data=False)
 
         elif typ == 'proba_units':
             units=self.get_units_domains_realizations()
             nreal=units.shape[0]
             arr=(units == i).sum(0)/nreal
+            del(units)
 
         elif typ == 'proba_facies':
             facies=self.get_facies()
             nreal=facies.shape[0] * facies.shape[1]
             arr=(facies == i).sum(0).sum(0) /nreal
-
+            del(facies)
+            
         elif typ =="facies":
             arr=self.get_facies(iu, ifa, all_data=False)
             #change values to have colors directly
@@ -4933,11 +4986,13 @@ class Arch_table():
             b=len(self.get_all_units())
             nreal=units.shape[0]
             for unit in self.get_all_units():
+                print(unit)
                 Pi=(units==unit.ID).sum(0)/nreal
                 pi_mask=(self.mask) & (Pi!=0)
                 SE[pi_mask] += Pi[pi_mask]*(np.log(Pi[pi_mask])/np.log(b))
                 arr=-SE
-                arr[~self.mask]=np.nan
+            arr[~self.mask]=np.nan
+            del(units)
 
         elif typ == "entropy_facies":
             facies_domains=self.get_facies().reshape(-1, self.nz, self.ny, self.nx)
@@ -4949,8 +5004,11 @@ class Arch_table():
                 pi_mask=(self.mask) & (Pi!=0)
                 SE[pi_mask] += Pi[pi_mask]*(np.log(Pi[pi_mask])/np.log(b))
                 arr=-SE
-                arr[~self.mask]=np.nan
+            arr[~self.mask]=np.nan
+            del(facies_domains)
 
+        elif typ =="arr":
+            pass
         else:
             assert 'Typ unknown'
             return
@@ -4962,9 +5020,12 @@ class Arch_table():
             fig, ax=plt.subplots(figsize=(10, 10))
 
         extent=[0, dist, self.get_oz(), self.get_zg()[-1]]
-        a=ax.imshow(xsec, origin="lower", extent=extent, interpolation="none")
+        a=ax.imshow(xsec, origin="lower", extent=extent, interpolation="none", vmax=vmax, vmin=vmin)
+        if colorbar:
+            plt.colorbar(a, ax=ax, orientation='horizontal')
         ax.set_aspect(abs((extent[1]-extent[0])/(extent[3]-extent[2]))/ratio_aspect)
 
+        del(arr)
 
         #get boreholes
         dist_tot = 0
@@ -5003,14 +5064,14 @@ class Arch_table():
                     dist_to_plot = dist_tot + dist  # distance where to plot the bh
 
                     # plot bh
-                    plot_bh(bh, dist_to_plot)
+                    if typ == "units":
+                        plot_bh(bh, dist_to_plot)
 
             # increment total distance
             dist_points = ((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2)**0.5
             dist_tot += dist_points
 
-        if colorbar:
-            plt.colorbar(a, ax=ax, orientation='horizontal')
+        
 
 
     def plot_lines(self, list_lines, names=None, ax=None, legend=True):

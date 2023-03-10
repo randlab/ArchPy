@@ -433,7 +433,7 @@ def X_valid(ArchTable, k=3, nreal_un=5, nreal_fa=2,plot=True,
             weighting_method = "same_weights", dic_weights = None, parallel=False,
             seed = 15, folding_method = "random", aspect="auto",
              verbose = 1, **kwargs):
-    
+
     """
     Perform a Cross-validation on the given ArchTable
 
@@ -569,6 +569,7 @@ def X_valid(ArchTable, k=3, nreal_un=5, nreal_fa=2,plot=True,
             arch_table_dummy.compute_surf(nreal_un)
             arch_table_dummy.compute_facies(nreal_fa)
 
+
         if aggregate_method is not None:  # only works on units...
 
             res = arch_table_dummy.realizations_aggregation(method=aggregate_method, **kwargs)
@@ -587,8 +588,6 @@ def X_valid(ArchTable, k=3, nreal_un=5, nreal_fa=2,plot=True,
                               faciesIndex=range(max(1, arch_table_dummy.nreal_fa)),
                               extractFacies=extractFacies)
         a = np.array(a)
-
-        #return arch_table_dummy, a, bh_rm
 
         # test this fold
         d = test_bh_1fold(arch_table_dummy, a, bh_rm, plot=plot, weighting_method=weighting_method, dic_weights=dic_weights, 

@@ -197,7 +197,7 @@ def load_bh_files(list_bhs, facies_data, units_data,
                   fa_top_col="top",fa_bot_col="bot",fa_ID="facies_ID",
                   bhx_col="bh_x", bhy_col='bh_y', bhz_col='bh_z', bh_depth_col='bh_depth',
                   dic_units_names={},
-                  dic_facies_names={}, altitude=True):
+                  dic_facies_names={}, altitude=True, vb=1):
 
     """
     This function merges unit and facies
@@ -321,7 +321,8 @@ def load_bh_files(list_bhs, facies_data, units_data,
 
     #fill gaps
     def add_gap(data, bh_id, top, bot):
-        print("Gap encountered - creation of a gap interval")
+        if vb:
+            print("Gap encountered - creation of a gap interval")
         idata=data.loc[[bh_id]]
         lay=idata.iloc[0]
         lay.top=top
@@ -387,7 +388,8 @@ def load_bh_files(list_bhs, facies_data, units_data,
             #top
             top=fa_idata.loc[i, "top"]
             if top_0 != top and i == 0:
-                print("Error, top altitude of first facies does not match borehole altitude")
+                if vb:
+                    print("Error, top altitude of first facies does not match borehole altitude")
                 fa_idata.loc[i,"top"]=top_0
 
 
@@ -406,7 +408,8 @@ def load_bh_files(list_bhs, facies_data, units_data,
             #top
             top=s_idata.loc[i, "top"]
             if top_0 != top and i == 0:
-                print("Error, top altitude of first unit does not match borehole altitude")
+                if vb:
+                    print("Error, top altitude of first unit does not match borehole altitude")
                 s_idata.loc[i,"top"]=top_0
 
 
@@ -792,7 +795,7 @@ def import_project(project_name, ws, import_bhs=True, import_results=True, impor
             if unit.dic_facies["SubPile"] is not None:
                 unit.set_SubPile(d_piles[unit.dic_facies["SubPile"]])
     
-    ArchTable=ArchPy.base.Arch_table(dic_project["name"], working_directory=dic_project["ws"], seed=dic_project["seed"],
+    ArchTable=ArchPy.base.Arch_table(dic_project["name"], working_directory=dic_project["ws"], seed = min(int(dic_project["seed"] / 1e6), 1),
                                       verbose=dic_project["verbose"], ncpu=dic_project["ncpu"])
     
     ArchTable.set_Pile_master(d_piles[dic_project["Pile_master"]])
@@ -1213,7 +1216,10 @@ def create_d_prop(prop):
     def fun(seq):
         l=[]
         for i in seq:
-            l.append(float(i))
+            if hasattr(i, "__iter__"):
+                l.append([float(o) for o in i])
+            else:
+                l.append(float(i))
         return l
 
     def fun2(seq):
@@ -1288,7 +1294,7 @@ def save_project(ArchTable, results=True):
     d["ws"]=ArchTable.ws
     if ArchTable.ws not in os.listdir():
         os.makedirs(ArchTable.ws)
-    d["seed"]=ArchTable.seed
+    d["seed"] = ArchTable.seed
     d["verbose"]=ArchTable.verbose
     d["Pile_master"]=ArchTable.get_pile_master().name
     d["ncpu"]=ArchTable.ncpu

@@ -38,7 +38,8 @@ These are not required but highly recommanded.
    - PyVista, ver. = 0.32 (ArchPy does not support 0.33 for the moment).
    - pyyaml (for export uses)
    - Rasterio (to use rasters)
-
+   - Geopandas (to use shapefile)
+   
  ## Examples
  There is some example notebooks :
  - 01_basic : a folder where simple and basics ArchPy functionnalities are described 
@@ -49,6 +50,7 @@ These are not required but highly recommanded.
  - 06_cross_validation : a notebook that present how to perform a cross-validation directly with ArchPy
  - 07_geological_map : this notebook presents how to integrate and use a geological in an ArchPy model
  - 08_inference : little guide how to use archpy inference tools to estimate surface parameters (no facies parameters for now)
+ - 09_interface : little exemple of an interface to call an preexisting archpy model.
  
  ## Paper
  A paper was published on the ArchPy concept and its different capabilities.

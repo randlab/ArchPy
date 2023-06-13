@@ -1,3 +1,8 @@
+"""
+This module contains functions used for the validation of ArchPy models
+For now it the validation mainly relies on cross-validation through the k-fold method
+"""
+
 import numpy as np
 import matplotlib
 from matplotlib import colors
@@ -28,8 +33,21 @@ from ArchPy.base import Geol
 def brier_func(p, i):
     
     """
-    p : vector of probabilities
-    i : index of the true answer in vector
+    Compute the Brier score given a vector of probabilities
+
+    Parameters
+    ----------
+
+    p : sequence if float
+        vector of probabilities. Values must be between 0 and 1
+    i : int
+        index of the true answer in vector
+
+    Returns
+    -------
+    float
+        Brier score
+        
     """
     
     s=0
@@ -50,13 +68,17 @@ def img_to_3D_colors(arr, dic):
     Replace value in an array using a dictionnary
     linking actual values to new values
 
-    #inputs#
-    arr: any nd.array with values
-    dic: a dictionnary with arr values as keys and
-          new values as dic values
+    Parameters
+    ----------
+    arr : ndarray
+        array of values to replace
+    dic : dict
+        dictionnary linking actual values to new values
 
-    #output#
-    A new array with values replaced
+    Returns
+    -------
+    ndarray
+        array of new values
     """
 
     arr_old=arr.flatten().copy()
@@ -72,7 +94,24 @@ def img_to_3D_colors(arr, dic):
 
 def bh2array(ArchTable, bh, typ="units"):
 
-    """ from ArchPy borehole to array of IDs"""
+    """ 
+    Function to convert an ArchPy borehole to an array of IDs, either units or facies
+    IDs are given by the facies/units ID
+
+    Parameters
+    ----------
+    ArchTable : :class:`ArchPy.base.Arch_table`
+        ArchPy table
+    bh : :class:`ArchPy.base.borehole`
+        ArchPy borehole
+    typ : str
+        type of data to extract, either "units" or "facies"
+
+    Returns
+    -------
+    ndarray
+        array of IDs
+    """
     
     step=ArchTable.get_sz()  # vertical resolution
     nz=ArchTable.get_nz()  # nz
@@ -122,15 +161,33 @@ def test_bh_1fold(ArchTable, bhs_real, bhs_test, weighting_method = "same_weight
                   plot = True, brier = True, proba_correct = False, aspect="auto"):
     
     """
-    a X-validation on one fold
-    
-    ### inputs ###
-    
-    bhs_real    : seq of ArchPy boreholes of realizations
-    bhs_test    : seq of ArchPy boreholes to test (test set)
-    same_weight : bool, mean weight to each facies/unit class
-    plot        : bool, plot or not
-    
+    Perform a test on a single fold of a cross-validation
+
+    Parameters
+    ----------
+    ArchTable : :class:`ArchPy.base.Arch_table`
+        ArchPy table to test
+    bhs_real : sequence of :class:`ArchPy.base.borehole`
+        "fake" boreholes sampled in the realizations of the ArchTable
+    bhs_test : sequence of :class:`ArchPy.base.borehole`
+        "real" boreholes to test
+    weighting_method : str
+        method to weight the realizations, either "same_weight" or "weights"
+    dic_weights : dict
+        dictionnary linking realization index to weight
+    plot : bool
+        plot or not
+    brier : bool
+        compute Brier score or not
+    proba_correct : bool
+        compute probability of correct classification or not
+    aspect : str
+        aspect ratio of the plot
+
+    Returns
+    -------
+    dict
+        dictionnary of results
     """
     
     reals = bhs_real
@@ -437,26 +494,55 @@ def X_valid(ArchTable, k=3, nreal_un=5, nreal_fa=2,plot=True,
     """
     Perform a Cross-validation on the given ArchTable
 
-    ## inputs ##
-    k     : int, number of folds
-    nreal_un : int, number of unit realizations to estimate score
-    nreal_fa : int, number of facies realiations to estimate score
-    brier    : bool, return brier scores
-    proba_correct : bool, return proportion of correct cells per units/facies
-    aggregate_method : str or None, to perform X-valid on mean model rather than on realizations
-                       This parameter is pass to the realizations_aggregation function
-                       Ignored if None
-    weighting_method : str, which method to use for applying the weights
-                 possible values are : same_weights, prop_weights, user_weights
-    folding_method : string, folding method to use to separate the data
-                     methods availables : "random", "k_means" (to implement), "stratified" (to implement)
-    plot        : bool, display plots
-    seed        : int, seed 
-    verbose     : 0 or 1
+    Parameters
+    ----------
+    ArchTable : :class:`base.Arch_table` object
+        The ArchTable to perform the X-validation on
+    k : int
+        Number of folds
+    nreal_un : int
+        Number of unit realizations to estimate score
+    nreal_fa : int
+        Number of facies realiations to estimate score
+    brier : bool
+        Return brier scores
+    proba_correct : bool
+        Return proportion of correct cells per units/facies
+    aggregate_method : str or None
+        To perform X-valid on mean model rather than on realizations
+        This parameter is pass to the realizations_aggregation function
+        Ignored if None
+    weighting_method : str
+        Which method to use for applying the weights
+        possible values are : same_weights, prop_weights, user_weights
+    folding_method : string
+        Folding method to use to separate the data
+        methods availables : "random", "k_means" (to implement), "stratified" (to implement)
+    plot : bool
+        Display plots
+    seed : int
+        Seed
+    verbose : 0 or 1
+        Verbosity level
+        
+    Returns
+    -------
+    tuple of size 3
+        (score_folds, df_conf_norm_un, df_conf_norm_fa) where
+        score_folds is a list of size k containing the scores for each fold.
 
-    ### outputs ###
-    list of tuples, each containing 2 scores,
-    unit and facies. The number of tuples = k.
+        Each entry of the score_folds list is a tuple containing various scores:
+
+            - final score units
+            - final score facies
+            - distinct brier scores for each borehole (units and facies)
+            - proportion of correct cells for each borehole (units and facies)
+            - list of test boreholes
+            - list of train boreholes (nreal, nreal_fa, n_boreholes)
+
+        df_conf_norm_un is a dataframe containing the normalized confusion matrix for each unit
+        df_conf_norm_fa is a dataframe containing the normalized confusion matrix for each facies
+        
     """
 
     np.random.seed(seed)
@@ -731,8 +817,8 @@ def X_valid(ArchTable, k=3, nreal_un=5, nreal_fa=2,plot=True,
 
     return (np.array(score_folds), df_conf_norm_un, df_conf_norm_fa)
 
-
 def plot_confusion_matrix(df, title='Confusion matrix', cmap="plasma"):
+
     plt.imshow(df, cmap=cmap) # imshow
     plt.title("Confusion matrix")
     plt.colorbar()

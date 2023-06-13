@@ -1,6 +1,8 @@
+"""
+This module contains various functions to infer parameters of archpy model. For now, only surface parameters can be inferred.
+"""
+
 import numpy as np
-import matplotlib
-from matplotlib import colors
 import matplotlib.pyplot as plt
 import geone
 import geone.covModel as gcm
@@ -15,7 +17,12 @@ import ArchPy
 def cm_any_nan(cm):
     
     """
-    detect if there is a nan inside a covmodel
+    Detect if there is a nan inside a covmodel
+
+    Parameters
+    ----------
+    cm: :class:`geone.covModel.CovModel1D`, :class:`geone.covModel.CovModel2D` or :class:`geone.covModel.CovModel3D`
+        covmodel to check
     """
     
     yes = False
@@ -46,7 +53,36 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
                   npoints_min=20, max_nugget=1, bounds = None, default_covmodel=None, vb=1, **kwargs):
     
     """
-    
+    Infer surface parameters of a unit in an :class:`base.Arch_table`. Fitting can be done automatically or manually.
+
+    Parameters
+    ----------
+    ArchTable: :class:`base.Arch_table`
+        ArchTable to infer surface parameters
+    unit: :class:`base.Unit`
+        unit to infer surface parameters
+    hmax: float, optional  
+        maximum distance to consider for variogram inference
+    cm_to_fit: :class:`geone.covModel.CovModel1D`, :class:`geone.covModel.CovModel2D` or :class:`geone.covModel.CovModel3D`, optional
+        covmodel to fit
+    auto: bool, optional
+        if True, automatic inference of the covmodel
+    dim: int, optional
+        dimension of the covmodel to fit
+    plot: bool, optional
+        if True, plot the variogram
+    npoints_min: int, optional
+        minimum number of points to infer the covmodel
+    max_nugget: float, optional
+        maximum nugget effect to infer
+    bounds: list, optional  
+        bounds for the parameters of the covmodel to fit
+        list containing two lists, one for the lower bounds and one for the upper bounds of each parameter
+
+    Returns
+    -------
+    cm: :class:`geone.covModel.CovModel1D`, :class:`geone.covModel.CovModel2D` or :class:`geone.covModel.CovModel3D`
+        inferred covmodel
     """
     
     if plot:
@@ -288,12 +324,29 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
             if default_covmodel is not None:
                 surf.set_covmodel(default_covmodel)
             else:
-                cm_def = gcm.CovModel2D(elem=[("exponential", {"w":(Lz/4)**2/(128), "r":[min(Lx, Ly)/4, min(Lx,Ly)/4]})])
-                surf.set_covmodel(cm_def)
+                if surf.covmodel is None:
+                    cm_def = gcm.CovModel2D(elem=[("exponential", {"w":(Lz/4)**2/(128), "r":[min(Lx, Ly)/4, min(Lx,Ly)/4]})])
+                    surf.set_covmodel(cm_def)
+                else:
+                    if vb:
+                        print("Nothing has changed")
 
     
                                                
 def fit_surfaces(self, default_covmodel=None, **kwargs):
+
+    """
+    Function to fit a covmodel to each surface of an :class:`Arch_table` object
+
+    Parameters
+    ----------
+    self : :class:`base.Arch_table` object
+        Arch_table object to fit
+    default_covmodel : :class:`geone.CovModel2D` object, optional
+        Default covmodel to add if not enough data for a variogram
+    **kwargs :
+        Arguments for :func:`infer_surface`. See :func:`infer_surface` for more details
+    """
 
     print(default_covmodel)
     # create a nested function to set default argument (ArchTable and surface)
@@ -315,6 +368,26 @@ def fit_surfaces(self, default_covmodel=None, **kwargs):
 ## Class for estimate var exp
 def plot_var_exp(h1, h2, v1 ,v2, p1, p2, print_pairs=False):
     
+    """
+    Function to plot experimental variogram
+
+    Parameters
+    ----------
+    h1 : array
+        spacing lag between points in x direction
+    h2 : array
+        spacing lag between points in y direction
+    v1 : array
+        variance between points in x direction
+    v2 : array
+        variance between points in y direction
+    p1 : array
+        number of pairs between points in x direction
+    p2 : array
+        number of pairs between points in y direction
+    print_pairs : bool, optional
+        print number of pairs on the plot. The default is False.
+    """
     
     plt.scatter(h1, v1, label="x'")
     plt.scatter(h2, v2, label="y'")
@@ -333,6 +406,21 @@ def plot_var_exp(h1, h2, v1 ,v2, p1, p2, print_pairs=False):
     
 class Var_exp():
     
+    """
+    Class to estimate experimental variogram
+
+    Parameters
+    ----------
+    x : array
+        x coordinates of the points. size = (n, dim) with dim = 1, 2 or 3
+    v : array
+        values
+    hmax_lim : float
+        maximum distance to consider for the variogram
+    ax : matplotlib axis
+        axis to plot the variogram
+    """
+
     def __init__(self, x, v, hmax_lim=1000, ax=None):
         
         self.x = np.array(x)
@@ -347,6 +435,15 @@ class Var_exp():
         
     # fit function
     def fit(self, **kwargs):
+        
+        """
+        Function to fit the experimental variogram
+
+        Parameters
+        ----------
+        kwargs : dict
+            dictionnary of parameters to pass to make_exp_var
+        """
 
         if self.ax is None:
             [l.remove() for l in ax.lines]
@@ -358,11 +455,27 @@ class Var_exp():
         self.w = w
     
     def clear(self):
+
+        """
+        :meta_private:
+        """
         self.w.widget.close()
     
     
     # functions
     def make_exp_var(self, dim=1, **kwargs):
+
+        """
+        Function to estimate the experimental variogram
+
+        Parameters
+        ----------
+        dim : int
+            dimension of the problem
+        kwargs : dict
+            dictionnary of parameters to pass to make_exp_var_1D, make_exp_var_2D or make_exp_var_3D
+        """
+
         print("Experimental variogram parameters")
         x = self.x
         v = self.v
@@ -383,6 +496,25 @@ class Var_exp():
             pass
 
     def make_exp_var_1D(self, x, v, hmax, ncla=10, **kwargs):
+
+        """
+        Function to estimate the experimental variogram in 1D
+
+        Parameters
+        ----------
+
+        x : array
+            x coordinates of the points. size = (n, dim) with dim = 1, 2 or 3
+        v : array
+            values
+        hmax : float
+            maximum distance to consider for the variogram
+        ncla : int
+            number of classes to consider
+        kwargs : dict
+            dictionnary of parameters to pass to geone.covModel.variogramExp1D
+        """
+
         plt.cla()
         
         if hmax <= 0:
@@ -401,6 +533,29 @@ class Var_exp():
         
     def make_exp_var_2D(self, x, v, hmax_x, hmax_y, ncla_x=10, ncla_y=10, alpha=0, **kwargs):
         
+        """
+        Function to estimate the experimental variogram in 2D
+
+        Parameters
+        ----------
+        x : array
+            x coordinates of the points. size = (n, dim) with dim = 1, 2 or 3
+        v : array
+            values
+        hmax_x : float
+            maximum distance to consider for the variogram in x direction
+        hmax_y : float
+            maximum distance to consider for the variogram in y direction
+        ncla_x : int
+            number of classes to consider in x direction
+        ncla_y : int   
+            number of classes to consider in y direction
+        alpha : float
+            angle of the direction of the variogram
+        kwargs : dict
+            dictionnary of parameters to pass to geone.covModel.variogramExp2D
+        """
+
         plt.cla()
         
         if hmax_x <= 0:
@@ -430,13 +585,30 @@ class Var_exp():
                                                                       **kwargs)
 
 
-# fit
-# class for adjusting variograms
-
 class Cm2fit():
     
+    """
+    Class for adjusting variograms
+
+    Parameters
+    ----------
+    h_max : float
+        maximum distance for the variogram
+    w_max : float
+        maximum variance for the variogram
+    r_max : float
+        maximum range for the variogram
+    nu_max : float
+        maximum smoothness (nu parameter) to consider for the variogram, only for Matern covariance
+    alpha : float
+        angle of the direction of the variogram, 0 implies that x axis os oriented West-East and y axis South-North
+        This is just initial value for the fit. Only used for 2D variograms
+    ax : matplotlib.axes, optional
+        axes to plot the variogram
+    """
+
+
     # 1D estimation
-    
     def __init__(self, h_max=10, w_max=10, r_max = 100, nu_max=10, alpha=0, ax=None):
         
         self.h_max = h_max
@@ -451,6 +623,11 @@ class Cm2fit():
     # update functions 
     def update_hmax(self, h_max):
         
+        """
+        update the maximum distance for the variogram
+
+        :meta private:
+        """
         #remove
         if self.ax is None:
             [l.remove() for l in ax.lines]
@@ -467,6 +644,12 @@ class Cm2fit():
     
     def update_cm2D(self, h_max, alpha):
         
+        """
+        Update the maximum distance for the variogram and the angle of the direction of the variogram
+
+        :meta private:
+        """
+
         #remove
         if self.ax is None:
             [l.remove() for l in ax.lines]
@@ -483,6 +666,13 @@ class Cm2fit():
         
     
     def make_update(self):
+        
+        """
+        Private function to update the variogram
+
+        :meta private:
+        """
+
         def update(i, typ, **kwargs):
             
             if self.ax is None:
@@ -511,6 +701,13 @@ class Cm2fit():
         return update
 
     def make_update_2D(self):
+
+        """
+        Private function to update the variogram
+
+        :meta private:
+        """
+
         def update(i, typ, **kwargs):
             
             # remove previous lines
@@ -543,6 +740,19 @@ class Cm2fit():
     # display widgets
     def choose_struc(self, n_struc=1, dim=1):
         
+        """
+        Methods to add widgets depending on the numbers of structures to consider
+
+        :meta private:
+
+        Parameters
+        ----------
+        n_struc : int
+            number of structures to consider
+        dim : int
+            dimension of the problem
+        """
+
         if dim == 1:
             #empty covmodel
             elem = []
@@ -581,6 +791,10 @@ class Cm2fit():
 
     def fit(self, dim=1):
         
+        """
+        :meta private:
+        """
+
         plt.grid()
         if self.ax is None:
             [l.remove() for l in ax.lines]
@@ -593,7 +807,11 @@ class Cm2fit():
         self.w.append(wid)
         
     def clear(self):
-        
+
+        """
+        :meta private:
+        """
+
         for w in self.w:
             w.widget.close()
         

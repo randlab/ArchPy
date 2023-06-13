@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tpgs module &mdash; ArchPy 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/twemoji.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
+        <script src="_static/twemoji.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ArchPy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="README_rtd.html">Let's get started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">List of modules</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ArchPy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">tpgs module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/tpgs.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-tpgs">
+<span id="tpgs-module"></span><h1>tpgs module<a class="headerlink" href="#module-tpgs" title="Permalink to this heading"></a></h1>
+<p>Module to use Truncated plurigaussians.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The C functions are not working anymore due to incompatibilities between linux, windows and mac os.</p>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="tpgs.Cstruc2geoCm2D">
+<span class="sig-prename descclassname"><span class="pre">tpgs.</span></span><span class="sig-name descname"><span class="pre">Cstruc2geoCm2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Cstruc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tpgs.Cstruc2geoCm2D" title="Permalink to this definition"></a></dt>
+<dd><p>Inverse of geoCm2Cstruc</p>
+<p>Pass from a C structure in ctypes to a geone covmodel</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tpgs.Cstruc2geoCm3D">
+<span class="sig-prename descclassname"><span class="pre">tpgs.</span></span><span class="sig-name descname"><span class="pre">Cstruc2geoCm3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Cstruc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tpgs.Cstruc2geoCm3D" title="Permalink to this definition"></a></dt>
+<dd><p>inverse of geoCm2Cstruc3D</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tpgs.Gspace2Pspace">
+<span class="sig-prename descclassname"><span class="pre">tpgs.</span></span><span class="sig-name descname"><span class="pre">Gspace2Pspace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tpgs.Gspace2Pspace" title="Permalink to this definition"></a></dt>
+<dd><p>Return a flag in the probability space given a flag in gaussian space</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tpgs.Ivario">
+<span class="sig-prename descclassname"><span class="pre">tpgs.</span></span><span class="sig-name descname"><span class="pre">Ivario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">icat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ncla</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nan</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tpgs.Ivario" title="Permalink to this definition"></a></dt>
+<dd><p>Compute experimental indicator variogram using geone variogram</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>ndarray of size (n, k)</em>) – coordinates of data points, where n is the number of points and k is the dimension</p></li>
+<li><p><strong>v</strong> (<em>ndarray of size (n,)</em>) – values at data points</p></li>
+<li><p><strong>icat</strong> (<em>ndarray of size (n,)</em>) – category of data points</p></li>
+<li><p><strong>ncla</strong> (<em>int</em>) – number of categories</p></li>
+<li><p><strong>dim</strong> (<em>int</em>) – dimension of the space</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – angle of rotation</p></li>
+<li><p><strong>hmax</strong> (<em>float</em>) – maximum distance</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Experimental variogram</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tpgs.Truncation2D">
+<span class="sig-prename descclassname"><span class="pre">tpgs.</span></span><span class="sig-name descname"><span class="pre">Truncation2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tpgs.Truncation2D" title="Permalink to this definition"></a></dt>
+<dd><p>Function that operates the truncation process for TPGs</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tpgs.Truncation3D">
+<span class="sig-prename descclassname"><span class="pre">tpgs.</span></span><span class="sig-name descname"><span class="pre">Truncation3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ny</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tpgs.Truncation3D" title="Permalink to this definition"></a></dt>
+<dd><p>Function that operates the truncation process for TPGs in 3D</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul>
+<li><p><strong>nx</strong> (<em>int</em>) – number of cells in x direction</p></li>
+<li><p><strong>ny</strong> (<em>int</em>) – number of cells in y direction</p></li>
+<li><p><strong>nz</strong> (<em>int</em>) – number of cells in z direction</p></li>
+<li><p><strong>sims</strong> (<em>ndarray of size (nsim, nz, ny, nx)</em>) – simulations to apply the truncation</p></li>
+<li><p><strong>flag</strong> (<em>dictionnary</em>) – It contains for each facies a list of the thresholds (in gaussian space) for the two gaussian fields
+example with 3 facies of ID : (1,2,3):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="p">[[(</span><span class="o">-</span><span class="n">inf</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="n">inf</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span> <span class="p">[(</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">inf</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="n">inf</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)]],</span>
+    <span class="mi">2</span><span class="p">:</span> <span class="p">[[(</span><span class="o">-</span><span class="n">inf</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">inf</span><span class="p">)]],</span>
+    <span class="mi">3</span><span class="p">:</span> <span class="p">[[(</span><span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="n">inf</span><span class="p">,</span> <span class="n">inf</span><span class="p">)],</span> <span class="p">[(</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">inf</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">inf</span><span class="p">)]]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tpgs.VarStruc2D">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tpgs.</span></span><span class="sig-name descname"><span class="pre">VarStruc2D</span></span><a class="headerlink" href="#tpgs.VarStruc2D" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Structure</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tpgs.VarStruc2D.alpha">
+<span class="sig-name descname"><span class="pre">alpha</span></span><a class="headerlink" href="#tpgs.VarStruc2D.alpha" title="Permalink to this definition"></a></dt>
+<dd><p>Structure/Union member</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tpgs.VarStruc2D.c">
+<span class="sig-name descname"><span class="pre">c</span></span><a class="headerlink" href="#tpgs.VarStruc2D.c" title="Permalink to this definition"></a></dt>
+<dd><p>Structure/Union member</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tpgs.VarStruc2D.nstruc">
+<span class="sig-name descname"><span class="pre">nstruc</span></span><a class="headerlink" href="#tpgs.VarStruc2D.nstruc" title="Permalink to this definition"></a></dt>
+<dd><p>Structure/Union member</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tpgs.VarStruc2D.rx">
+<span class="sig-name descname"><span class="pre">rx</span></span><a class="headerlink" href="#tpgs.VarStruc2D.rx" title="Permalink to this definition"></a></dt>
+<dd><p>Structure/Union member</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tpgs.VarStruc2D.ry">
+<span class="sig-name descname"><span class="pre">ry</span></span><a class="headerlink" href="#tpgs.VarStruc2D.ry" title="Permalink to this definition"></a></dt>
+<dd><p>Structure/Union member</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tpgs.VarStruc2D.var_type">
+<span class="sig-name descname"><span class="pre">var_type</span></span><a class="headerlink" href="#tpgs.VarStruc2D.var_type" title="Permalink to this definition"></a></dt>
+<dd><p>Structure/Union member</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tpgs.VarStruc3D">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tpgs.</span></span><span class="sig-name descname"><span class="pre">VarStruc3D</span></span><a class="headerlink" href="#tpgs.VarStruc3D" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Structure</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tpgs.VarStruc3D.alpha">
+<span class="sig-name descname"><span class="pre">alpha</span></span><a class="headerlink" href="#tpgs.VarStruc3D.alpha" title="Permalink to this definition"></a></dt>
+<dd><p>Structure/Union member</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tpgs.VarStruc3D.beta">
+<span class="sig-name descname"><span class="pre">beta</span></span><a class="headerlink" href="#tpgs.VarStruc3D.beta" title="Permalink to this definition"></a></dt>
+<dd><p>Structure/Union member</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tpgs.VarStruc3D.c">
+<span class="sig-name descname"><span class="pre">c</span></span><a class="headerlink" href="#tpgs.VarStruc3D.c" title="Permalink to this definition"></a></dt>
+<dd><p>Structure/Union member</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tpgs.VarStruc3D.gamma">
+<span class="sig-name descname"><span class="pre">gamma</span></span><a class="headerlink" href="#tpgs.VarStruc3D.gamma" title="Permalink to this definition"></a></dt>
+<dd><p>Structure/Union member</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tpgs.VarStruc3D.nstruc">
+<span class="sig-name descname"><span class="pre">nstruc</span></span><a class="headerlink" href="#tpgs.VarStruc3D.nstruc" title="Permalink to this definition"></a></dt>
+<dd><p>Structure/Union member</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tpgs.VarStruc3D.rx">
+<span class="sig-name descname"><span class="pre">rx</span></span><a class="headerlink" href="#tpgs.VarStruc3D.rx" title="Permalink to this definition"></a></dt>
+<dd><p>Structure/Union member</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tpgs.VarStruc3D.ry">
+<span class="sig-name descname"><span class="pre">ry</span></span><a class="headerlink" href="#tpgs.VarStruc3D.ry" title="Permalink to this definition"></a></dt>
+<dd><p>Structure/Union member</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tpgs.VarStruc3D.rz">
+<span class="sig-name descname"><span class="pre">rz</span></span><a class="headerlink" href="#tpgs.VarStruc3D.rz" title="Permalink to this definition"></a></dt>
+<dd><p>Structure/Union member</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tpgs.VarStruc3D.var_type">
+<span class="sig-name descname"><span class="pre">var_type</span></span><a class="headerlink" href="#tpgs.VarStruc3D.var_type" title="Permalink to this definition"></a></dt>
+<dd><p>Structure/Union member</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tpgs.coord2cell">
+<span class="sig-prename descclassname"><span class="pre">tpgs.</span></span><span class="sig-name descname"><span class="pre">coord2cell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tpgs.coord2cell" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="tpgs.fa_domains">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">tpgs.</span></span><span class="sig-name descname"><span class="pre">fa_domains</span></span><a class="headerlink" href="#tpgs.fa_domains" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Structure</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tpgs.fa_domains.bnd_vector">
+<span class="sig-name descname"><span class="pre">bnd_vector</span></span><a class="headerlink" href="#tpgs.fa_domains.bnd_vector" title="Permalink to this definition"></a></dt>
+<dd><p>Structure/Union member</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="tpgs.fa_domains.ncuboids">
+<span class="sig-name descname"><span class="pre">ncuboids</span></span><a class="headerlink" href="#tpgs.fa_domains.ncuboids" title="Permalink to this definition"></a></dt>
+<dd><p>Structure/Union member</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tpgs.flag2Cflag">
+<span class="sig-prename descclassname"><span class="pre">tpgs.</span></span><span class="sig-name descname"><span class="pre">flag2Cflag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tpgs.flag2Cflag" title="Permalink to this definition"></a></dt>
+<dd><p>From a dictionary of facies to dic of C structures for the flag of the Truncated Plurigau</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>flag</strong> (<em>dictionary</em>) – dictionary containing the thresholds for each facies</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dictionary of facies to C structure</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dictionnary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tpgs.geoCm2Cstruc2D">
+<span class="sig-prename descclassname"><span class="pre">tpgs.</span></span><span class="sig-name descname"><span class="pre">geoCm2Cstruc2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">covmodel</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tpgs.geoCm2Cstruc2D" title="Permalink to this definition"></a></dt>
+<dd><p>Pass from a geone covmodel to a C structure in ctypes that will be used in C functions</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tpgs.geoCm2Cstruc3D">
+<span class="sig-prename descclassname"><span class="pre">tpgs.</span></span><span class="sig-name descname"><span class="pre">geoCm2Cstruc3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">covmodel</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tpgs.geoCm2Cstruc3D" title="Permalink to this definition"></a></dt>
+<dd><p>Pass from a geone covmodel to a C structure in ctypes that will be used in C functions</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tpgs.infacies">
+<span class="sig-prename descclassname"><span class="pre">tpgs.</span></span><span class="sig-name descname"><span class="pre">infacies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g1v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g2v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tpgs.infacies" title="Permalink to this definition"></a></dt>
+<dd><p>return the facies in which a point of coordinate (g1v, g2v) is.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>g1v</strong> (<em>float</em>) – value of the first gaussian field
+x coordinate to evaluate on the flag</p></li>
+<li><p><strong>g2v</strong> (<em>float</em>) – value of the second gaussian field
+y coordinate to evaluate on the flag</p></li>
+<li><p><strong>flag</strong> (<em>dictionnary</em>) – Threshold flag for the TPGs</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tpgs.opti_vario">
+<span class="sig-prename descclassname"><span class="pre">tpgs.</span></span><span class="sig-name descname"><span class="pre">opti_vario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">IK_covmodels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covmodels_to_fit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">du</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.03</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.03</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_reg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_infos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Nelder-mead'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ftol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xtol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tpgs.opti_vario" title="Permalink to this definition"></a></dt>
+<dd><p>Optimize parameters of the two covmodels (covmodels_to_fit) of the tpgs
+in order to reproduce the IK_covmodels using a least-square method
+Very slow –&gt; To improve</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul>
+<li><p><strong>IK_covmodels</strong> (<em>list of size k</em>) – list of k indicator covmodels (geone.covModel) where k is the number of facies
+order in the list must be the same than the keys of the flag</p></li>
+<li><p><strong>covmodels_to_fit</strong> (<em>list of size 2</em>) – list of 2 covmodels (geone.covModel) to infer. Parameters to infer should be specified with a string.
+Example:</p>
+<p>G1_to_opt = gcm.CovModel3D(elem=[(“gaussian”,{“w”:1,”r”:[“rx1”,”rx1”,”rz1”]})], alpha=”alpha”,beta=0,gamma=0)
+G2_to_opt = gcm.CovModel3D(elem=[(“gaussian”,{“w”:1,”r”:[“rx2”,”rx2”,”rz2”]})], alpha=”alpha2”,beta=”beta2”,gamma=0)
+covmodels_to_fit = [G1_to_opt,G2_to_opt]</p>
+</li>
+<li><p><strong>pk</strong> (<em>array-like of size k</em>) – proportion for each facies (order in the list must be the same than the keys of the flag)</p></li>
+<li><p><strong>flag</strong> (<em>dictionnary</em>) – dictionnary containing for each facies a list of the thresholds (in gaussian space) for the two gaussian fields</p>
+<p>Example with 3 facies of ID : (1,2,3):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="p">[[(</span><span class="o">-</span><span class="n">inf</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="n">inf</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span> <span class="p">[(</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">inf</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="n">inf</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)]],</span>
+    <span class="mi">2</span><span class="p">:</span> <span class="p">[[(</span><span class="o">-</span><span class="n">inf</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">inf</span><span class="p">)]],</span>
+    <span class="mi">3</span><span class="p">:</span> <span class="p">[[(</span><span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="n">inf</span><span class="p">,</span> <span class="n">inf</span><span class="p">)],</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="n">inf</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">inf</span><span class="p">)]]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>n</strong> (<em>int, optional</em>) – number of points to use to compute the variogram</p></li>
+<li><p><strong>du</strong> (<em>float, optional</em>) – precision to use in the calcul of the probability btw facies,
+values of 0.05 are generally enough.</p></li>
+<li><p><strong>dv</strong> (<em>float, optional</em>) – precision to use in the calcul of the probability btw facies,
+values of 0.05 are generally enough.</p></li>
+<li><p><strong>c_reg</strong> (<em>float, optional</em>) – regularization coefficient to apply on radius parameters (radius of covmodels only),
+problem dependent.</p></li>
+<li><p><strong>print_infos</strong> (<em>bool, optional</em>) – if True, print informations about the optimization process</p></li>
+<li><p><strong>min_method</strong> (<em>str, optional</em>) – method to use for the optimization, see scipy.optimize.minimize</p></li>
+<li><p><strong>ftol</strong> (<em>float, optional</em>) – tolerance on the function value for the stop criterion, see scipy.optimize.minimize</p></li>
+<li><p><strong>xtol</strong> (<em>float, optional</em>) – tolerance on the parameters for the stop criterion, see scipy.optimize.minimize</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>result of the optimization process</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>scipy.optimize.OptimizeResult</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tpgs.p1zone">
+<span class="sig-prename descclassname"><span class="pre">tpgs.</span></span><span class="sig-name descname"><span class="pre">p1zone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag_facies</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tpgs.p1zone" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate the probability of a facies to belongs to a certain part of the facies
+(on the flag –&gt; facies are separated by thresholds and it is possible to have multiple zones for 1 facies)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>flag_facies</strong> (<em>list of list of tuples</em>) – Each sublist contains two tuples that are the
+threshold coordinates (in gaussian space) that form a rectangle where the facies is present
+(format : [[(x0,x1),(y0,y1)],[(x1,x3),(y1,y4)]],
+xi –&gt; 1st gaussian field, yi –&gt; second gaussian field</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tpgs.pfa">
+<span class="sig-prename descclassname"><span class="pre">tpgs.</span></span><span class="sig-name descname"><span class="pre">pfa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tpgs.pfa" title="Permalink to this definition"></a></dt>
+<dd><p>Determine the probability of each facies according to the flag for TPGs</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tpgs.plot_flag">
+<span class="sig-prename descclassname"><span class="pre">tpgs.</span></span><span class="sig-name descname"><span class="pre">plot_flag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">flag</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tpgs.plot_flag" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tpgs.run_tpgs">
+<span class="sig-prename descclassname"><span class="pre">tpgs.</span></span><span class="sig-name descname"><span class="pre">run_tpgs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nsim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Gk</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grf_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fft'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tpgs.run_tpgs" title="Permalink to this definition"></a></dt>
+<dd><p>Run simulations using the Truncated plurigaussian (2 gaussian fields) methods : Covmodels must be provided !</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul>
+<li><p><strong>nsim</strong> (<em>int</em>) – number of simulations</p></li>
+<li><p><strong>xg</strong> (<em>1D array</em>) – x coordinates of the grid (edges)</p></li>
+<li><p><strong>yg</strong> (<em>1D array</em>) – y coordinates of the grid (edges)</p></li>
+<li><p><strong>zg</strong> (<em>1D array</em>) – z coordinates of the grid (edges)</p></li>
+<li><p><strong>data</strong> (<em>2D array</em>) – (x, y, z, g1, g2, v), where x,y,z are the cartesian coordinates,
+g1 and g2 are the values of first/second gaussian fields and v is the facies value</p></li>
+<li><p><strong>Gk</strong> (<em>list of 2 3D covmodels (geone object)</em>) – list of 2 3D covmodels (geone object)</p></li>
+<li><p><strong>flag</strong> (<em>dict</em>) – dictionnary containing for each facies a list of the thresholds (in gaussian space) for the two gaussian fields</p>
+<p>Generic example for one facies:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="n">f_i</span><span class="p">:</span> <span class="p">[(</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">),</span> <span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Example with 3 facies:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="p">[[(</span><span class="o">-</span><span class="n">inf</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="n">inf</span><span class="p">,</span> <span class="mi">0</span><span class="p">)],</span> <span class="p">[(</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">inf</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="n">inf</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)]],</span>
+    <span class="mi">2</span><span class="p">:</span> <span class="p">[[(</span><span class="o">-</span><span class="n">inf</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">inf</span><span class="p">)]],</span>
+    <span class="mi">3</span><span class="p">:</span> <span class="p">[[(</span><span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="n">inf</span><span class="p">,</span> <span class="n">inf</span><span class="p">)],</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="n">inf</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">inf</span><span class="p">)]]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+<li><p><strong>nit</strong> (<em>int</em>) – number of iterations for the gibbs sampler (used for the conditional simulations)</p></li>
+<li><p><strong>nmax</strong> (<em>int</em>) – maximum number of neighbors to consider, lower values will speed up the simulation</p></li>
+<li><p><strong>grf_method</strong> (<em>str</em>) – method to use for the grf simulation, either “fft” or “sgs”</p></li>
+<li><p><strong>mask</strong> (<em>3D array</em>) – mask to use for the simulation, if None, no mask is used</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>sim</strong> – 4D array of the simulations (nsim, nz, ny, nx)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>4D array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tpgs.simple_kriging">
+<span class="sig-prename descclassname"><span class="pre">tpgs.</span></span><span class="sig-name descname"><span class="pre">simple_kriging</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tpgs.simple_kriging" title="Permalink to this definition"></a></dt>
+<dd><p>Performs kriging - interpolates at locations xu the values v measured at locations x.
+Covariance model given should be:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>in same dimension as dimension of locations x, xu</p></li>
+<li><p>in 1D, it is then used as an omni-directional covariance model</p></li>
+</ul>
+</div></blockquote>
+<p>(see below).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul>
+<li><p><strong>x</strong> (<em>2-dimensional array of shape (n, d)</em>) – coordinates of the data points
+(n: number of points, d: dimension)
+Note: for data in 1D, it can be a 1-dimensional array of shape (n,)</p></li>
+<li><p><strong>v</strong> (<em>1-dimensional array of shape (n,)</em>) – values at data points</p></li>
+<li><p><strong>xu</strong> (<em>2-dimensional array of shape (nu, d)</em>) – coordinates of the points where the interpolation has to be done
+(nu: number of points, d: dimension same as for x) called unknown points
+Note: for data in 1D, it can be a 1-dimensional array of shape (nu,)</p></li>
+<li><p><strong>cov_model</strong> (<em>CovModel1D or CovModel2D or CovModel3D or CovModel1D</em>) – Covariance model to use.
+Available covariance models classes are:</p>
+<blockquote>
+<div><ul>
+<li><p>in same dimension as dimension of points (d), i.e.:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>CovModel1D class if data in 1D (d=1)</p></li>
+<li><p>CovModel2D class if data in 2D (d=2)</p></li>
+<li><p>CovModel3D class if data in 3D (d=3)</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>or CovModel1D whatever dimension of points (d):</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>used as an omni-directional covariance model</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><strong>mean</strong> (<em>None or float or ndarray</em>) – mean of the simulation (for simple kriging only)
+Possible values are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>None   : mean of hard data values (stationary), i.e. mean of v</p></li>
+<li><p>float  : for stationary mean (set manually)</p></li>
+<li><p>ndarray: of of shape (nu,) for non stationary mean, mean at point xu</p></li>
+</ul>
+</div></blockquote>
+<p>For ordinary kriging (method = ‘ordinary_kriging’) this parameter ignored (not used)</p>
+</li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>kriging weights
+kriging variance</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(weight, variance)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tpgs.zone_facies">
+<span class="sig-prename descclassname"><span class="pre">tpgs.</span></span><span class="sig-name descname"><span class="pre">zone_facies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g1v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g2v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag_facies</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tpgs.zone_facies" title="Permalink to this definition"></a></dt>
+<dd><p>Given gaussian values for gaussian fields (g1v,g2v)
+check if the point is inside a certain facies and in which interval</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>flag_facies</strong> (<em>list</em>) – list of thresholds for a certain facies. Comes from the flag.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>index position to indicate which interval of the facies or None if the point is not inside</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, University of Neuchâtel.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

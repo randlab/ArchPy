@@ -7,19 +7,18 @@ def infer_pile(l_bhs):
     """
     Determine all possible stratigraphic piles compatible with a given set of boreholes
     
-    # inputs #
-    l_bhs    : list of lists, list of the boreholes. Boreholes are simply
-               lists of int values ranging from 0 to n, where n is the number of
-               different units. In the list number are from younger to older, meaning that
-               first number is the top unit (youngest) of the bh, last is the last (oldest) unit.
-    
-    # output #
-    results  : (list, float), pile are returned in the same format
-               as boreholes (list of ids from top (youngest) 
-               to bottom(oldest)). The float is the percentage 
-               of boreholes in aggreement with this pile
+    Parameters
+    ----------
+
+    l_bhs : list of lists
+        list of the boreholes. Boreholes are simply lists of int values ranging from 0 to n, where n is the number of
+
+    Returns
+    -------
+    list of lists
+        list of all possible piles compatible with the boreholes
     """
-    
+
     def create_table(l_bhs, n_units):
     
         M = np.zeros((n_units, n_units), dtype=int)
@@ -59,7 +58,7 @@ def infer_pile(l_bhs):
         return M
         
         
-    ## algo
+    # algo
     l_M = []  # list of all the possible connexion tables
 
     # how many units present
@@ -71,7 +70,7 @@ def infer_pile(l_bhs):
     n_units = len(list_ids)
 
 
-    #matrice
+    # matrix
     M = np.zeros((n_units, n_units), dtype=int)
     l_M.append(M)
 
@@ -88,7 +87,7 @@ def infer_pile(l_bhs):
             iM += 1
             compatible = True   
 
-            #check compatibility first
+            # check compatibility first
             for i in range(len(bh) - 1, 0, -1):  # loop in the log
                 s1 = bh[i]
                 s2 = bh[i-1]  # s2 is above s1

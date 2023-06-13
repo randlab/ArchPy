@@ -1,3 +1,11 @@
+"""
+This module contains functions to perform inequality simulations.
+
+Warning
+-------
+This module is obsolete and is not used in the main code.
+"""
+
 import numpy as np
 import matplotlib
 from matplotlib import colors
@@ -19,6 +27,7 @@ from ArchPy.data_transfo import *
 
 ### functions ###
 def krige(x, v, xu, cov_model, method='simple_kriging', mean=None):
+
     """
     Performs kriging - interpolates at locations xu the values v measured at locations x.
     Covariance model given should be:
@@ -26,45 +35,48 @@ def krige(x, v, xu, cov_model, method='simple_kriging', mean=None):
         - in 1D, it is then used as an omni-directional covariance model
     (see below).
 
-    :param x:       (2-dimensional array of shape (n, d)) coordinates
-                        of the data points (n: number of points, d: dimension)
-                        Note: for data in 1D, it can be a 1-dimensional array of shape (n,)
-    :param v:       (1-dimensional array of shape (n,)) values at data points
+    Parameters
+    ----------
+    x : (2-dimensional array of shape (n, d))
+        coordinates of the data points
+        (n: number of points, d: dimension)
+        Note: for data in 1D, it can be a 1-dimensional array of shape (n,)
+    v : (1-dimensional array of shape (n,))
+        values at data points
+    xu : (2-dimensional array of shape (nu, d))
+        coordinates of the points where the interpolation has to be done
+        (nu: number of points, d: dimension same as for x),
+        called unknown points
+        Note: for data in 1D, it can be a 1-dimensional array of shape (nu,)
+    cov_model : (CovModel1D or CovModel2D or CovModel3D or CovModel1D)
+        covariance model:
+            - in same dimension as dimension of points (d), i.e.:
+                - CovModel1D class if data in 1D (d=1)
+                - CovModel2D class if data in 2D (d=2)
+                - CovModel3D class if data in 3D (d=3)
+            - or CovModel1D whatever dimension of points (d):
+                - used as an omni-directional covariance model
+    method : (string)
+        indicates the method used:
+            - 'simple_kriging': interpolation by simple kriging
+            - 'ordinary_kriging': interpolation by ordinary kriging
+    mean : (None or float or ndarray)
+        mean of the simulation (for simple kriging only):
+            - None   : mean of hard data values (stationary), i.e. mean of v
+            - float  : for stationary mean (set manually)
+            - ndarray: of of shape (nu,) for non stationary mean,
+                mean at point xu
+        For ordinary kriging (method = 'ordinary_kriging'),
+        this parameter ignored (not used)   
 
-    :param xu:      (2-dimensional array of shape (nu, d)) coordinates
-                        of the points where the interpolation has to be done
-                        (nu: number of points, d: dimension same as for x),
-                        called unknown points
-                        Note: for data in 1D, it can be a 1-dimensional array of shape (nu,)
-
-    :param cov_model:
-                    covariance model:
-                        - in same dimension as dimension of points (d), i.e.:
-                            - CovModel1D class if data in 1D (d=1)
-                            - CovModel2D class if data in 2D (d=2)
-                            - CovModel3D class if data in 3D (d=3)
-                        - or CovModel1D whatever dimension of points (d):
-                            - used as an omni-directional covariance model
-
-    :param method:  (string) indicates the method used:
-                        - 'simple_kriging': interpolation by simple kriging
-                        - 'ordinary_kriging': interpolation by ordinary kriging
-
-    :param mean:    (None or float or ndarray) mean of the simulation
-                        (for simple kriging only):
-                            - None   : mean of hard data values (stationary),
-                                       i.e. mean of v
-                            - float  : for stationary mean (set manually)
-                            - ndarray: of of shape (nu,) for non stationary mean,
-                                mean at point xu
-                        For ordinary kriging (method = 'ordinary_kriging'),
-                        this parameter ignored (not used)
-
-    :return:        (vu, vu_std) with:
-                        vu:     (1-dimensional array of shape (nu,)) kriged values (estimates) at points xu
-                        vu_std: (1-dimensional array of shape (nu,)) kriged standard deviation at points xu
+    Returns
+    -------
+    vu : (1-dimensional array of shape (nu,))
+        kriged values (estimates) at points xu
+    vu_std : (1-dimensional array of shape (nu,))
+        kriged standard deviation at points xu
     """
-
+    
     # Prevent calculation if covariance model is not stationary
     if not cov_model.is_stationary():
         print("ERROR: 'cov_model' is not stationary: krige can not be applied")
@@ -187,14 +199,29 @@ def krige(x, v, xu, cov_model, method='simple_kriging', mean=None):
 def run_sim(data_org,xg,covmodel,var,nsim = 10,nit=20):
 
     """
-    ### inputs ###
-    data_org :
-    xg : 1d grid (np.arange(x0,x1+sx,sx), must be sorted
-    nsim :
-    nit :
-    covmodel :
+    Run a inequation simulation
 
-    output : array of size (nsim,nx), list of all simulations in one 2D array
+    Parameters
+    ----------
+    data_org : array of size (nd,4)
+        data_org[:,0] : position x of the data
+        data_org[:,1] : equality value (nan if no equality)
+        data_org[:,2] : lower bound (nan if no lower bound)
+        data_org[:,3] : upper bound (nan if no upper bound)
+    xg : 1d grid (np.arange(x0,x1+sx,sx), must be sorted
+    nsim : int  (default : 10)
+        number of simulations
+    nit : int (default : 20)
+        number of iterations in the gibbs sampler
+    covmodel : geone.CovModel1D
+        geone covariance model
+    var : float
+        variance of the simulation
+
+    Returns
+    -------
+    sim : array of size (nsim,nx)
+        list of all simulations in one 2D array
     """
 
     # grid
@@ -414,49 +441,47 @@ def Gibbs_estimate(data_org, covmodel, nit=50, krig_type="simple_kriging", mean=
             
 def run_sim_2d(data_org,xg,yg,covmodel,var=None,mean=None,krig_type = "simple_kriging",nsim = 1,nit=20,nmax=20, grf_method = "fft", ncpu=-1, seed=123456789):
 
-
     """
-    #####
-    inputs
-    #####
+    Run a 2D inequality simulation using the Gibbs sampler
+
+    Parameters
+    ----------
     data_org : 2D array-like of size nd x 6
-               [[x1, y1, z1, vineq_min1, vineq_max1],
+                [[x1, y1, z1, vineq_min1, vineq_max1],
                 [x2, y2, z2, vineq_min2, vineq_max2],
                 ...,
                 [xnd, ynd, znd, vineq_minnd, vineq_maxnd],]
-    xg : x coordinate vector (np.arange(x0,x1+sx,sx)
-    yg : y coordinate vector (np.arange(y0,y1+sy,sy)
-    nsim : int, number of simulations
-    nit : int, number of Gibbs iterations
-    covmodel : covariance model (see geone.CovModel documentation)
-    #####
-    output : array of size (nsim,ny,nx), array of all simulations
-    #####
+    xg : sequence of float
+        x coordinate vector (np.arange(x0,x1+sx,sx)
+    yg : sequence of float
+        y coordinate vector (np.arange(y0,y1+sy,sy)
+    covmodel : geone.CovModel
+        covariance model to use. Must be 2D.
+    var : float or None, optional
+        variance. If None, will be estimated from data.
+    mean : float or None, optional
+        mean. If None, will be estimated from data.
+    krig_type : str, optional
+        kriging type to use. Must be "simple_kriging" or "ordinary_kriging".
+    nsim : int, optional
+        number of simulations
+    nit : int, optional
+        number of Gibbs iterations
+    nmax : int, optional
+        maximum number of nearest neighbours to consider
+    grf_method : str, optional  
+        method to use for grf simulation. Must be "fft" or "lu".
+    ncpu : int, optional
+        number of cores to use. If -1, will use all available cores.
+    seed : int, optional
+        seed for random number generator
+    
+    Returns
+    -------
+    out : 3D array of size (nsim,ny,nx)
+        array of all simulations
     """
-    # grid
-    nx = xg.shape[0]-1
-    sx = np.diff(xg)[0]
-    ox = xg[0]
-    ny = yg.shape[0]-1
-    sy = np.diff(yg)[0]
-    oy = yg[0]
-    # copy data and rearrange data
-    data = data_org.copy()
-
-    """ SHIFTED TO BASE. A supprimer
-    # default values
-    for idata in data:
-        if (idata[3] != idata[3]) and (idata[4] == idata[4]): # inf ineq
-            idata[2] = idata[4]
-        elif(idata[3] == idata[3]) and (idata[4] != idata[4]): # sup ineq
-            idata[2] = idata[3]
-        elif (idata[3] == idata[3]) and (idata[4] == idata[4]): # sup and inf ineq
-            assert idata[3] <= idata[4], "inf ineq must be inferior or equal to sup ineq in point {}".format(idata)
-            idata[2] = (idata[3]+idata[4])/2
-            if idata[3] == idata[4]: # if both ineq are equal
-                idata[3] = np.nan
-                idata[4] = np.nan
-    """
+    
     #split data
     mask_eq = (data[:,3] == data[:,3]) | (data[:,4] == data[:,4])
     ineq_data = data[mask_eq]

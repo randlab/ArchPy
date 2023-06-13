@@ -1,17 +1,19 @@
+"""
+This module is the core of the ArchPy and contains most of 
+the central classes and functions.
+"""
+
 import numpy as np
 import matplotlib
 from matplotlib import colors
 import matplotlib.pyplot as plt
 import pyvista as pv
 import scipy
-from scipy.interpolate import NearestNDInterpolator
 from scipy.ndimage import uniform_filter
 import copy
 import time
 import shapely.geometry
 import sys
-import numba
-from numba import jit
 
 #geone
 import geone
@@ -34,16 +36,21 @@ from ArchPy.inputs import * # inputs utilities
 def Arr_replace(arr, dic):
 
     """
-    Replace value in an array using a dictionnary
-    linking actual values to new values
+    Replace value in an array using a dictionnary linking actual values to new values
 
-    #inputs#
-    arr: any nd.array with values
-    dic: a dictionnary with arr values as keys and
-          new values as dic values
 
-    #output#
-    A new array with values replaced
+    Parameters
+    ----------
+    arr : np.ndarray
+        Any numpy array that contains values
+    dic : dict
+        A dictionnary with arr values as keys and
+        new values as dic values
+
+    Returns
+    -------
+    nd.array
+        A new array with values replaced
     """
 
     arr_old=arr.flatten().copy()
@@ -55,9 +62,27 @@ def Arr_replace(arr, dic):
             arr_new[i]=np.nan
     return arr_new.reshape(arr.shape)
 
+
 def get_size(obj, seen=None):
-    """Recursively finds size of objects,
-       function taken from stack overflow by Aaron Hall"""
+
+    """Recursively finds size of objects
+
+    Parameters
+    ----------
+    obj : any python object
+        The object, variables or anything 
+        whose size we are looking for
+
+    Returns
+    -------
+    int
+        Size of the object in bytes
+
+    Note
+    ----
+    Function taken from stack overflow, written by Aaron Hall
+    """
+
     size=sys.getsizeof(obj)
     if seen is None:
         seen=set()
@@ -80,8 +105,7 @@ def get_size(obj, seen=None):
 def resample_to_grid(xc, yc, rxc, ryc, raster_band, method="nearest"):
 
     """
-    !! function taken from flopy (3.3.4) !!
-    Method to resample the raster data to a
+    Function to resample the raster data to a
     user supplied grid of x, y coordinates.
 
     x, y coordinate arrays should correspond
@@ -109,6 +133,11 @@ def resample_to_grid(xc, yc, rxc, ryc, raster_band, method="nearest"):
     Returns
     -------
         np.array
+
+    Note
+    ----
+    Function taken from flopy (3.3.4) 
+
     """
 
     from scipy.interpolate import griddata
@@ -138,31 +167,44 @@ def resample_to_grid(xc, yc, rxc, ryc, raster_band, method="nearest"):
 def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, mask2D=None, seed=123456789, **kwargs):
 
     """
-    function to realize a 2D interpolation based on a
+    Function to realize a 2D interpolation based on a
     multitude of methods (scipy.interpolate, geone (kriging, MPS, ...))
 
-    #####
-    inputs:
-    litho: Surface object
-    xg, yg: 1 ndarray of size nx, ny, central coordinates
-             vectors of the simulation grid
-    xu   : ndarray of size (n, 2), position at which
-             we want to know the estimation
-             (not used for every interp method)
-    kwargs: different parameters for surface interpolation
-        - nit: number of iterations for gibbs sampler
-                 (depends on the number of data)
-        - nmax: number of neighbours in grf
-                 with inequalities (to speed up the simulations)
-        - krig_type: ordinary or simple kriging for kriging
-                 interpolation and grf inequalities
-                 calculation of weights
-        - mean: values or 2D array, mean value for the simulation if unco flag is set to True or no HD are found
-        - unco: bool, unconditional or not
+    Parameters
+    ----------
+    litho: :class:`Surface` object
+        ArchPy surface object on which we want to interpolate
+        the surface
+    xg: ndarray of size nx
+        central coordinates in x direction
+    yg: ndarray of size ny
+        central coordinates in y direction
+    xu: ndarray of size (n, 2)
+        position at which we want to know
+        the estimation (not used for every interp method)
 
-    ######
-    outputs:
-    s: array of same size as x, interpolated values
+    **kwargs
+        Different parameters for surface interpolation
+
+        - nit: int
+            Number of iterations for gibbs sampler
+            (depends on the number of data)
+        - nmax: int
+            Number of neighbours in grf
+            with inequalities (to speed up the simulations)
+        - krig_type: str
+            Can be either "ordinary_kigring" or "simple kriging" method 
+            for kriging interpolation and grf with inequalities
+        - mean: float or 2D array
+            Mean value to use with grf methods
+        - unco: bool
+            Unconditional or not
+        - All other MPS and GRF parameters (see geone documentation)
+
+    Returns
+    -------
+    ndarray
+        array of same size as x, interpolated values
     """
 
     if hasattr(litho, "sto_x") and hasattr(litho, "sto_y") and hasattr(litho, "sto_z") and hasattr(litho, "sto_ineq"):
@@ -400,12 +442,6 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, mask2D=None, seed=123456789, 
                                 nGibbsSamplerPathMin=kwargs["nit"],nGibbsSamplerPathMax=2*kwargs["nit"],
                                  seed=seed, nneighborMax=kwargs["nmax"], nthreads=ncpu, mask=mask2D)["image"].val[0, 0]
 
-            """
-            eq_d=np.concatenate([x_eq, v_eq.reshape(-1, 1), np.nan*np.ones([v_eq.shape[0], 2])], axis=1)
-            all_data=np.concatenate([eq_d, np.array(litho.ineq)])
-            sim=run_sim_2d(all_data, xg, yg, covmodel, nsim=1, nit=kwargs["nit"], var=var, mean=mean, nmax=kwargs["nmax"], krig_type=kwargs["krig_type"], grf_method=kwargs["grf_method"], ncpu=ncpu, seed=seed)[0]
-            """
-
             if litho.N_transfo:
                 s=NScore_Btrsf(sim.flatten(), di)
                 s=s.reshape(ny, nx)
@@ -504,11 +540,14 @@ def split_logs(bh):
     Take a raw borehole with hierarchical units mixed
     and sort them by group and hierarchy.
 
-    #input#
-    bh, a borehole object
+    Parameters
+    ----------
+    bh: :py:class:`borehole` object
 
-    #output#
-    list of new boreholes
+    Returns
+    -------
+    list
+        A list of new boreholes
     """
 
     l_bhs=[]
@@ -605,9 +644,18 @@ def split_logs(bh):
 def running_mean_2D(x, N):
 
     """
-    smooth a 2d surface
-    x: 2D nd.array
-    N: window semi-size
+    Smooth a 2d surface
+
+    Parameters
+    ----------
+    x: 2D ndarray
+        Array to smooth
+    N: int
+        Window semi-size
+
+    Returns
+    -------
+    2D ndarray
     """
 
     s=x.copy()
@@ -615,25 +663,33 @@ def running_mean_2D(x, N):
 
     return s
 
+
 ####### CLASSES ########
 class Arch_table():
 
     """
+
     Major class of ArchPy. Arch_table is the central object
     that can be assimilated as a "project".
     Practically every operations are done using an Arch_table
 
-    Attributes:
-    name            : string, name of the project
-    working directory: folder where to create and save files
-                        if it doesn't exist, it will be created
-    seed            : int, numerical seed for stochastic applications
-    verbose         : 0 or 1, if 0, ArchPy will print nothing
-    fill_flag       : bool, flag to perform filling of the top unit after
-                      units have been simulated
-    ncpu            : int, number of cpus to use if
-                        mulithread operations are available.
-                        -1 for all cpus - 1.
+    Parameters
+    ----------
+    name: str
+        Name of the project
+    working_directory: str
+        Path to the working directory
+    seed: int
+        Seed for random number generation
+    write_results: bool
+        If True, results will be written to disk
+    fill_flag: bool
+        If True, the top unit will be filled with the most common facies
+    verbose: int
+        Verbosity level
+    ncpu: int
+        Number of cpus to use for parallel operations, if -1, all cpus will be used
+
     """
 
 
@@ -684,79 +740,99 @@ class Arch_table():
 
     #get functions
     def get_pile_master(self):
+
+        """
+        Returns the Pile_master object
+        """
+
         if self.Pile_master is None:
             raise ValueError ("No Pile master defined for Arch Table {}".format(self.name))
         return self.Pile_master
 
     def get_xg(self):
+        """Returns the edges of the grid in x direction"""
         if self.xg is None:
             assert 0, ('Error: Grid was not added')
         return self.xg
 
     def get_yg(self):
+        """Returns the edges of the grid in y direction"""
         if self.yg is None:
             assert 0, ('Error: Grid was not added')
         return self.yg
 
     def get_zg(self):
+        """Returns the edges of the grid in z direction"""
         if self.zg is None:
             assert 0, ('Error: Grid was not added')
         return self.zg
 
     def get_xgc(self):
+        """Returns the centers of the grid in x direction"""
         if self.xgc is None:
             assert 0, ('Error: Grid was not added')
         return self.xgc
 
     def get_ygc(self):
+        """Returns the centers of the grid in y direction"""
         if self.ygc is None:
             assert 0, ('Error: Grid was not added')
         return self.ygc
 
     def get_zgc(self):
+        """Returns the centers of the grid in z direction"""
         if self.zg is None:
             assert 0, ('Error: Grid was not added')
         return self.zgc
     def get_nx(self):
+        """Returns the number of cells in x direction"""
         if self.nx is None:
             assert 0, ('Error: Grid was not added')
         return self.nx
 
     def get_ny(self):
+        """Returns the number of cells in y direction"""
         if self.ny is None:
             assert 0, ('Error: Grid was not added')
         return self.ny
 
     def get_nz(self):
+        """Returns the number of cells in z direction"""
         if self.nz is None:
             assert 0, ('Error: Grid was not added')
         return self.nz
     def get_sx(self):
+        """Returns the size of the cells in x direction"""
         if self.sx is None:
             assert 0, ('Error: Grid was not added')
         return self.sx
 
     def get_sy(self):
+        """Returns the size of the cells in y direction"""
         if self.sy is None:
             assert 0, ('Error: Grid was not added')
         return self.sy
 
     def get_sz(self):
+        """Returns the size of the cells in z direction"""
         if self.sz is None:
             assert 0, ('Error: Grid was not added')
         return self.sz
 
     def get_ox(self):
+        """Returns the origin of the grid in x direction"""
         if self.ox is None:
             assert 0, ('Error: Grid was not added')
         return self.ox
 
     def get_oy(self):
+        """Returns the origin of the grid in y direction"""
         if self.oy is None:
             assert 0, ('Error: Grid was not added')
         return self.oy
 
     def get_oz(self):
+        """Returns the origin of the grid in z direction"""
         if self.oz is None:
             assert 0, ('Error: Grid was not added')
         return self.oz
@@ -773,9 +849,20 @@ class Arch_table():
 
         """
         Return a numpy array of 1 or all facies realization(s).
-        iu      : int, unit index
-        ifa     : int, facies index
-        all_data: bool, return all the units simulations
+
+        Parameters
+        ----------
+        iu: int
+            unit index
+        ifa: int
+            facies index
+        all_data: bool
+            return all the units simulations
+
+        Returns
+        -------
+        ndarray
+            facies domains
         """
 
         if self.write_results:
@@ -810,25 +897,28 @@ class Arch_table():
 
         return fd
 
-
-
     def get_surfaces_unit(self, unit, typ="top"):
 
         """
         Return a 3D array of computed surfaces for a specific unit
 
-        #inputs#
-        unit: a Unit object contain inside the master pile
-               or another subunit
+        Parameters
+        ----------
+        unit: :class:`Unit` object
+            a Unit object contained inside the master pile
+            or another subunit
         typ: string, (top, bot or original),
-              specify which type of surface to return, top,
-              bot or original (surfaces before applying erosion
-              and stratigrapic rules)
+            specify which type of surface to return, top,
+            bot or original (surfaces before applying erosion
+            and stratigrapic rules)
 
-        #ouputs#
-        All computed surfaces in a nd.array of
-        size (nreal_units, ny, nx)
+        Returns
+        -------
+        3D ndarray of size (nreal_units, ny, nx)
+            All computed surfaces in a nd.array of
+            size (nreal_units, ny, nx)
         """
+
 
         assert unit in self.get_all_units(), "Unit must be included in a pile related to the master pile"
         assert self.Geol.surfaces_by_piles is not None, "Surfaces not computed"
@@ -857,16 +947,23 @@ class Arch_table():
         the hierarchical level desired, by default ArchPy try
         to return the highest hierarchical unit's surface
 
-        #inputs#
-        h_level: int or string, maximum level of hierarchy
-                  desired to return, "all" indicates to return
-                  the highest hierarchical level possible for each unit
+        Parameters
+        ----------
+        h_level: int or string,
+            maximum level of hierarchy
+            desired to return, "all" indicates to return
+            the highest hierarchical level possible for each unit
 
-        #outputs#
-        - a 4D (nlayer, nsim, ny, nx) arrays with the surfaces
-        - a list (nlayer) of units name corresponding to the
-          surfaces to distinguish wich surface correspond to which unit
+        Returns
+        -------
+        4D ndarray of size (nlayer, nsim, ny, nx)
+            All computed surfaces in a nd.array of
+            size (nlayer, nsim, ny, nx)
+        list
+            a list (nlayer) of units name corresponding to the
+            surfaces to distinguish wich surface correspond to which unit
         """
+
 
         if h_level == "all":
             l=[]
@@ -910,17 +1007,24 @@ class Arch_table():
         """
         Return the unit in the Pile with the associated name or ID.
 
-        #inputs#
-        name     : string, name of the strati to retrieve
-        ID       : int, ID of the strati to retrieve
-        type     : str, (name or ID), retrieving method
-        all_strats: bool, flag to indicate to also search in sub-units,
-                     if false research will be restricted to units
-                     directly in the Pile master
+        Parameters
+        ----------
+        name: string
+            name of the strati to retrieve
+        ID: int
+            ID of the strati to retrieve
+        type: str, (name or ID)
+            retrieving method
+        all_strats: bool
+            flag to indicate to also search in sub-units,
+            if false research will be restricted to units
+            directly in the Pile master
+        vb: int
+            verbosity level
 
-
-        #outputs#
-        A unit object
+        Returns
+        -------
+        :class:`Unit` object
         """
 
         assert isinstance(name, str), "Name must be a string"
@@ -948,7 +1052,18 @@ class Arch_table():
     def getbhindex(self, ID):
 
         """
-        Return the index corresponding to a certain borehole ID"""
+        Return the index corresponding to a certain borehole ID
+
+        Parameters
+        ----------
+        ID: string
+            borehole ID
+
+        Returns
+        -------
+        int
+            index of the borehole in the pile
+        """
 
         interest=None
         for i in range(len(self.list_bhs)):
@@ -963,7 +1078,17 @@ class Arch_table():
 
         """
         Return the borehole object given its ID
+
+        Parameters
+        ----------
+        ID: string
+            borehole ID
+
+        Returns
+        -------
+        :class:`Borehole` object
         """
+
         index=self.getbhindex(ID)
         return self.list_bhs[index]
 
@@ -972,16 +1097,20 @@ class Arch_table():
         """
         Return the facies in the Pile with the associated name or ID.
 
-        #inputs#
-        name      : string, name of the strati to retrieve
-        ID        : int, ID of the strati to retrieve
-        type      : str, (name or ID), retrieving method
-        all_strats: bool, flag to indicate to also search in sub-units,
-                      if false research will be restricted to units
-                      directly in the Pile master
+        Parameters
+        ----------
+        name: string
+            name of the strati to retrieve
+        ID: int
+            ID of the strati to retrieve
+        type: str, (name or ID)
+            retrieving method
+        vb: int
+            verbosity level (0 or 1)
 
-        #outputs#
-        A facies object
+        Returns
+        -------
+        :class:`Facies` object
         """
 
         assert isinstance(name, str), "Name must be a string"
@@ -1005,6 +1134,24 @@ class Arch_table():
         return None
 
     def pointToIndex(self, x, y, z):
+        
+        """
+        Return the index of the cell containing the point (x,y,z)
+
+        Parameters
+        ----------
+        x: float
+            x coordinate of the point
+        y: float
+            y coordinate of the point
+        z: float
+            z coordinate of the point
+
+        Returns
+        -------
+        3 int
+            index of the cell containing the point (x,y,z)
+        """
 
         cell_x=np.array((x-self.ox)/self.sx).astype(int)
         cell_y=np.array((y-self.oy)/self.sy).astype(int)
@@ -1016,14 +1163,18 @@ class Arch_table():
     def get_all_units(self, recompute=True):
 
         """
-        return a list of all units, even sub-units
+        Return a list of all units, even sub-units
 
-        recompute: bool, if False, the list all units attribute
-                    will be simply retrieve. Even if changes have
-                    been made.
+        Parameters
+        ----------
+        recompute: bool
+            if False, the list all units attribute
+            will be simply retrieve. Even if changes have
+            been made.
 
-        #outputs#
-        List of all units
+        Returns
+        -------
+        list of :class:`Unit` objects
         """
 
         if len(self.list_all_units) == 0:
@@ -1053,14 +1204,18 @@ class Arch_table():
     def get_all_facies(self, recompute=True):
 
         """
-        return a list of all facies
+        Return a list of all facies
 
-        recompute: bool, if False, the list all facies attribute
-                    will be simply retrieve. Even if changes have
-                    been made on the project.
-
-        #outputs#
-        List of all facies
+        Parameters
+        ----------
+        recompute: bool
+            if False, the list all facies attribute
+            will be simply retrieve. Even if changes have
+            been made on the project.
+        
+        Returns
+        -------
+        list of :class:`Facies` objects
         """
 
         if len(self.list_all_facies) == 0:
@@ -1089,7 +1244,13 @@ class Arch_table():
 
     def get_piles(self):
 
-        """Return a list of all the subpiles"""
+        """
+        Return a list of all the subpiles
+        
+        Returns
+        -------
+        list of :class:`Pile` objects
+        """
 
         l=[]
 
@@ -1102,7 +1263,20 @@ class Arch_table():
         return l
 
     def getpropindex(self, name):
-        """ Return the index corresponding to a certain prop name"""
+
+        """ Return the index corresponding to a certain prop name
+        
+        Parameters
+        ----------
+        name: str
+            name of the property to retrieve
+
+        Returns
+        -------
+        int
+            index of the property
+        """
+
         interest=None
         for i in range(len(self.list_props)):
             if self.list_props[i].name == name:
@@ -1115,10 +1289,22 @@ class Arch_table():
 
         """
         Return a numpy array of 1 or all facies realization(s).
-        iu      : int, unit index
-        ifa     : int, facies index
-        ip      : int, property index
-        all_data: bool, return all the units simulations
+
+        Parameters
+        ----------
+        iu:int
+            unit index
+        ifa:int
+            facies index
+        ip:int
+            property index
+        all_data:bool
+            return all the units simulations
+
+        Returns
+        -------
+        numpy array
+            1 or all facies realization(s)
         """
 
         if self.write_results:
@@ -1164,12 +1350,27 @@ class Arch_table():
 
     def get_bounds(self):
 
-        """Return bounds of the simulation domain (xmin, xmax, ymin, ymax, zmin, zmax)"""
+        """Return bounds of the simulation domain 
+        
+        Returns
+        -------
+        tuple
+            (xmin, xmax, ymin, ymax, zmin, zmax)
+        """
 
         bounds=[self.get_ox(), self.get_xg()[-1], self.get_oy(), self.get_yg()[-1], self.get_oz(), self.get_zg()[-1]]
         return bounds
 
     def check_units_ID(self):
+        
+        """
+        check the IDs of units in order to be sure that they are different
+
+        Returns
+        -------
+        int
+            1 if all is ok
+        """
 
         l=[]
         for i in self.get_all_units(recompute=True):
@@ -1183,7 +1384,12 @@ class Arch_table():
     def check_piles_name(self):
 
         """
-        check names of subpile --> must be different
+        check the names of piles in order to be sure that they are different
+
+        Returns
+        -------
+        int
+            1 if all is ok
         """
 
         l_names=[]
@@ -1202,6 +1408,12 @@ class Arch_table():
 
         """
         Define a pile object as the main pile of the project
+
+        Parameters
+        ----------
+        Pile_master: :class:`Pile` object
+            pile object to set as the main pile of the project
+
         """
 
         assert isinstance(Pile_master, Pile), "Pile master is not an ArchPy Pile object"
@@ -1223,29 +1435,55 @@ class Arch_table():
         return cell_x, cell_y, cell_z
 
     def celltoindex(self,cell_x,cell_y,cell_z):
-        '''cell index to cell position'''
+
+        '''cell index to cell position
+        
+        Parameters
+        ----------
+        cell_x : int
+            cell index in x direction
+        cell_y : int
+            cell index in y direction
+        cell_z : int
+            cell index in z direction
+            
+        Returns
+        -------
+        tuple
+            (x,y,z) cell position
+        '''
+
         x=self.get_sx()* cell_x + min(self.get_xgc())
         y=self.get_sy()* cell_y + min(self.get_ygc())
         z=self.get_sz()* cell_z + min(self.get_zgc())
         return x,y,z
 
     def reprocess(self):
+
+        """Reprocess the boreholes and erase the previous hard data"""
+
         self.bhs_processed=0
         self.erase_hd()
         self.process_bhs()
         self.seed= int(self.seed + 1e6)
 
     def resample2grid(self, raster_path, band=None, rspl_method="nearest"):
+
         """
-        resample a raster to the size of the simulation grid.
+        Resample a raster to the size of the simulation grid.
 
-        ### inputs ###
-        raster_path : str, path to the raster file
-        band        : int, raster band to use, if None 0 is used
-        rspl_method : str, resampling method to use.
-                     availables are : nearest, linear, cubic
+        Parameters
+        ----------
+        raster_path : str
+            path to the raster file
+        band : int, optional
+            raster band to use, if None 0 is used. The default is None.
+        rspl_method : str, optional
+            resampling method to use. availables are : nearest, linear, cubic.
+            The default is "nearest".
 
-        ### outputs ###
+        Returns
+        -------
         2D array of size (self.ny, self.nx)
         """
 
@@ -1277,7 +1515,8 @@ class Arch_table():
         """
         Method to add/change simulation grid, regular grid.
 
-        # parameters #
+        Parameters
+        ----------
         dimensions: sequence of size 3,
                      number of cells in x, y and direction (nx, ny, nz)
         spacing: sequence of size 3,
@@ -1285,8 +1524,8 @@ class Arch_table():
         origin: sequence of size 3,
                 origin of the simulation grid of the cells
                 in x, y and direction (ox, oy, oz)
-        top, bot: 2D ndarray of dimensions (ny, nx)
-                  float or raster file, top and bottom of the simulation domain
+        top, bot: 2D ndarray of dimensions (ny, nx) or float or raster file,
+                  top and bottom of the simulation domain
         rspl_method: string
                     scipy resampling method (nearest, linear
                     and cubic --> nearest is generally sufficient)
@@ -1342,7 +1581,7 @@ class Arch_table():
         self.ygc=ygc  # yg_cell_centers
         self.zgc=zgc  # zg_cell_centers
 
-        self.xcellcenters, self.ycellcenters=np.meshgrid(xgc, ygc) # cell centers coordinates
+        self.xcellcenters, self.ycellcenters = np.meshgrid(xgc, ygc) # cell centers coordinates
 
         z_tree=KDTree(zg.reshape(-1, 1))
         self.z_tree=z_tree
@@ -1490,7 +1729,9 @@ class Arch_table():
 
     def hierarchy_relations(self, vb=1):
 
-        """Method that sets the hierarchical relations between units"""
+        """Method that sets the hierarchical relations between units
+        and sub-units
+        """
 
         def h_relations(pile):
             """
@@ -1517,6 +1758,16 @@ class Arch_table():
         """
         Check if a borehole is inside the simulation domain
         and cut boreholes if needed
+
+        Parameters
+        ----------
+        bh: :class:`Borehole`
+            borehole object
+        
+        Returns
+        -------
+        0 if borehole is outside the simulation domain
+        1 if borehole is inside the simulation domain
         """
 
         if bh.depth <= 0:
@@ -1563,7 +1814,7 @@ class Arch_table():
             return 0
 
         #check inside mask and adapt z borehole to DEM
-        for iz in np.arange(z0_bh, z0_bh-bh.depth, -sz):
+        for iz in np.arange(z0_bh, z0_bh-bh.depth, max(-sz, (-bh.depth) / 2)):
             if self.coord2cell(bh.x, bh.y, iz) is not None: # check if inside mask
                 if self.verbose:
                     #print("Borehole {} inside of the simulation zone".format(bh.ID))
@@ -1631,6 +1882,20 @@ class Arch_table():
 
         """
         Method that returns the cell in which are the given coordinates
+
+        Parameters
+        ----------
+        x: float
+            x coordinate
+        y: float
+            y coordinate
+        z: float, optional
+            z coordinate, if z is None, only x and y indexes are returned
+
+        Returns
+        -------
+        cell: tuple
+            cell indexes (ix, iy, iz) or (ix, iy) if z is None
         """
 
         assert y == y, "coordinates contain NaN"
@@ -1685,6 +1950,15 @@ class Arch_table():
 
         """
         Add a property to the Arch_Table
+
+        Parameters
+        ----------
+        prop: :class:`Prop` object
+            property to add to the Arch_Table
+        
+        Returns
+        -------
+        None
         """
 
         try:
@@ -1710,7 +1984,10 @@ class Arch_table():
         """
         Method to add borehole, list of boreholes if multiples
 
-        bhs: breohole or list of borehole objects
+        Parameters
+        ----------
+        bhs: :class:`borehole` object or list of :class:`borehole` objects
+            borehole(s) to add to the Arch_Table
         """
 
         if hasattr(bhs, "__iter__"):
@@ -1737,22 +2014,33 @@ class Arch_table():
 
         """
         Create fake boreholes from realization of the Arch_table.
-        # inputs #
-        positions_x  : seqence of numbers, indicate the x positions 
-                       of the borehole to create bhs
-        positions_y  : seqence of numbers, indicate the y positions 
-                       of the borehole to create bhs
-        units        : optional argument, 3D array, unit array to use 
-                       to create bhs
-        facies       : optional argument, 3D array, facies array to use 
-                       to create bhs
-        stratIndex   : int or sequence of int, unit index to sample
-        faciesIndex  : int or sequence of int, facies index to sample 
-        extractUnits : bool, flag to indicate to sample units or not
-        extractFacies: bool, flag to indicate to sample facies or not
-        # outputs #
-        a list of borehole objects
-        """ 
+
+
+        Parameters
+        ----------
+        positions_x: sequence of numbers
+            indicate the x positions of the borehole to create bhs
+        positions_y: sequence of numbers
+            indicate the y positions of the borehole to create bhs
+        units: 3D array, optional
+            unit array to use to create bhs
+        facies: 3D array, optional
+            facies array to use to create bhs
+        stratIndex: int or sequence of int, optional
+            unit index to sample
+        faciesIndex: int or sequence of int, optional
+            facies index to sample
+        extractUnits: bool, optional
+            flag to indicate to sample units or not
+        extractFacies: bool, optional
+            flag to indicate to sample facies or not
+        vb: int, optional
+            verbose level
+
+        Returns
+        -------
+        list of :class:`borehole` objects
+        """
 
         # get 3D arrays to sample
         if units is None and extractUnits:
@@ -1861,6 +2149,11 @@ class Arch_table():
         """
         Method to add a fake borehole, list if multiples
         Use for inversion purposes
+
+        Parameters
+        ----------
+        bhs : list of :class:`borehole` or :class:`borehole`
+            boreholes to add
         """
 
         try:
@@ -1888,7 +2181,18 @@ class Arch_table():
         
         """
         Compute and return the geological map for given unit realization
-        iu  : int, unit realization index
+
+        Parameters
+        ----------
+        iu: int
+            unit realization index
+        color: bool
+            if True return a 3D array with RGBA values
+
+        Returns
+        -------
+        2D ndarray
+            geological map
         """
 
         ny = self.get_ny()
@@ -1921,10 +2225,11 @@ class Arch_table():
         """
         Add a geological map to Arch_table
 
-        ### inputs ###
-        raster : 2D nd array of size (ny, nx). Values are units IDs
+        Parameters
+        ----------
+        raster : 2D ndarray of size (ny, nx)
+            geological map to add. Values are units IDs
         """
-
 
         self.geol_map = raster
         if self.verbose:
@@ -1934,8 +2239,17 @@ class Arch_table():
         
         """
         This function extract information at the boundaries
-        between units from the given geological map 
-        (see. Arch_table.add_geological_map)        
+        between units from the given geological map.(see :meth:`add_geological_map`)
+        Results are returned as a list of :class:`borehole` objects
+        
+        Parameters
+        ----------
+        step : int
+            step between each cells where to add a contour information
+
+        Returns
+        -------
+        list of :class:`borehole`
         """
 
         # some functions
@@ -2012,17 +2326,20 @@ class Arch_table():
         
         """
         Process the geological map attributed to ArchTable model. 
-        This function creates fake boreholes from a given geological map (raster) and them to list_map_bhs
+        This function creates fake boreholes from a
+        given geological map (raster) and them to list_map_bhs
 
-        ### inputs ###
-        typ    : str, flag to indicate what information to take,
-                 "uniform" for only superficial information (no contact or boundaries)
-                 "boundaries" for only the contact between the units
-                 "all" for both
-        step   : int, step for sampling the geological map, small values implies 
-                that much more data are sampled from the raster but this increases
-                the computational burden.
-
+        Parameters
+        ----------
+        typ : str
+            flag to indicate what information to take:
+            - "uniform" for only superficial information (no contact or boundaries)
+            - "boundaries" for only the contact between the units
+            - "all" for both
+        step : int
+            step for sampling the geological map, small values implies
+            that much more data are sampled from the raster but this increases
+            the computational burden. Default is 5 (every 5th cell is sampled)
         """
         
         xg = self.get_xg()
@@ -2073,7 +2390,15 @@ class Arch_table():
     # remove boreholes
     def rem_all_bhs(self, fake_only=False, geol_map_only=False):
 
-        """Remove all boreholes from the list"""
+        """Remove all boreholes from the list
+        
+        Parameters
+        ----------
+        fake_only : bool
+            if True, only fake boreholes are removed
+        geol_map_only : bool
+            if True, only boreholes from geological map are removed
+        """
 
         if fake_only:
             self.list_fake_bhs=[]
@@ -2094,6 +2419,11 @@ class Arch_table():
 
         """
         Remove a given bh from the list of boreholes
+
+        Parameters
+        ----------  
+        bh: :class:`borehole` object
+            borehole to remove
         """
 
         if bh in self.list_bhs:
@@ -2105,6 +2435,15 @@ class Arch_table():
                 print("Borehole {} not in the list".format(bh.ID))
 
     def rem_fake_bh(self, bh):
+        
+        """
+        Remove a given bh from the list of fake boreholes
+
+        Parameters
+        ----------
+        bh: :class:`borehole` object
+            borehole to remove
+        """
 
         if bh in self.list_fake_bhs:
             self.list_fake_bhs.remove(bh)
@@ -2150,6 +2489,7 @@ class Arch_table():
         """
         Order all the units in all the piles according to order attribute
         """
+        
         if self.verbose:
             print("##### ORDERING UNITS ##### ")
 
@@ -2165,20 +2505,40 @@ class Arch_table():
 
         """
         Add Hard data to the property "prop"
+        
+        Parameters
+        ----------
+        prop : string
+            property name of the `~ArchPy.base.Prop` object
+        x : ndarray of size (ndata, 3)
+            x, y and z coordinates of hd points
+        v : array of size (ndata)
+            HD property values at x position
 
-        #inputs#
-        prop : string, property name
-        x    : ndarray of size (ndata, 3), x, y and z coordinates of hd points
-        v    : array of size (ndata), HD property values at x position
         """
 
         prop=self.list_props(self.getpropindex(prop))
         prop.add_hd(x,v)
 
+
     def hd_un_in_unit(self, unit, iu=0):
 
         """
         Extract sub-units hard data for a unit
+
+        Parameters
+        ----------
+        unit : :class:`unit` object
+            unit to extract hard data
+        iu : int
+            index of the unit realization to extract hard data
+
+        Returns
+        -------
+        hd : list of tuples
+            list of hard data coordinates (x,y,z)
+        sub_units : list of int
+            list of sub-units ID
         """
 
         mask = self.Geol.units_domains[iu] == unit.ID 
@@ -2201,6 +2561,13 @@ class Arch_table():
         """
         Extract facies hard data for a unit and send warning
         if a hard data should not be in the unit
+
+        Parameters
+        ----------
+        unit : :class:`unit` object
+            unit to extract hard data
+        iu : int    
+            unit realization index to extract hard data
         """
 
         mask=self.unit_mask(unit.name, iu=iu)
@@ -2237,6 +2604,11 @@ class Arch_table():
         return hd, facies
 
     def compute_distribution(self):
+
+        """
+        Compute the probability distribution of the hard data for each unit
+        For each unit, the distribution is computed using the Normal Score Transform
+        """
 
         if self.verbose:
             print("\n ## Computing distributions for Normal Score Transform ##\n")
@@ -2277,14 +2649,19 @@ class Arch_table():
                     unit.surface.N_transfo = False
                     unit.surface.dic_surf["N_transfo"] = False
            
-
     def estimate_surf_params(self, default_covmodel=None, auto=False, **kwargs):
 
         """
         Alias for infer surface in ArchPy.infer
 
-        auto   : bool, to automatically infer parameter (True) or not (False)
-        kwargs : various kwargs and parameters that can be passed to ArchPy.infer.infer_surface or ArchPy.infer.fit_surfaces
+        Parameters
+        ----------
+        default_covmodel : str, default None
+            default covariance model to use for surface estimation
+        auto   : bool
+            to automatically infer parameter (True) or not (False)
+        kwargs : 
+            various kwargs and parameters that can be passed to ArchPy.infer.infer_surface or ArchPy.infer.fit_surfaces
         """
 
         import ArchPy.infer as api
@@ -2296,122 +2673,31 @@ class Arch_table():
                 api.infer_surface(self, u, default_covmodel=default_covmodel, **kwargs)
         else:
             api.fit_surfaces(self, default_covmodel=default_covmodel, **kwargs)
-        
 
-
-    # def estimate_facies_params(self, **kwargs):
-
-    #     return
-
-    # def get_prop_units(self, depth_max=np.inf, depth_min=0, ignore_units=[], mask=None):
-
-    #     """
-    #     Function that returns the proportions of the units in the boreholes
-
-    #     # inputs #
-    #     depth_max    : float, maximum depth of investigation in the boreholes
-    #     depth_min    : float, minimum depth of investigation in the boreholes
-    #     ignore_units : list of str, units name to ignore during the analysis
-    #     mask         : 2D ndarray of size (ny, nx), mask where to analyse 
-    #                    the borholes
-                       
-    #     # output #
-    #     dictionnary of units proportions
-    #     """
-        
-    #     list_bhs = self.list_bhs
-        
-    #     if mask is not None:
-    #         new_l_bhs = []
-    #         for bh in list_bhs:
-    #             iy, ix = self.coord2cell(bh.x, bh.y)
-    #             if mask[iy, ix]:
-    #                 new_l_bhs.append(bh)
-    #         list_bhs = new_l_bhs
-        
-        
-    #     meters_units = {}
-
-    #     for bh in list_bhs:
-
-    #         if bh.log_strati is not None:
-
-    #             thk = 0
-
-    #             n_units = len(bh.log_strati)
-
-    #             for i in range(n_units-1):
-    #                 s2 = bh.log_strati[i+1]
-    #                 s = bh.log_strati[i]
-
-    #                 if s[0] is not None:
-    #                     if s[0].name not in meters_units.keys():
-    #                         meters_units[s[0].name] = 0
-
-    #                 if bh.z - s2[1] < depth_max:
-
-    #                     if s[0] is not None:
-    #                         thk += s[1] - s2[1]
-    #                         meters_units[s[0].name] += s[1] - s2[1]
-    #                 else:
-    #                     if s[0] is not None:
-    #                         bot = bh.z - depth_max
-    #                         top = s[1]
-    #                         if bh.z - top > depth_max:
-    #                             top = bh.z - depth_max
-
-    #                         thk += top - bot
-    #                         meters_units[s[0].name] += top - bot
-
-    #             # last unit
-    #             if n_units > 1:
-    #                 s = bh.log_strati[i+1]
-    #             elif n_units == 1:
-    #                 s = bh.log_strati[0]
-
-    #                 if s[0] is not None: 
-
-    #                     if s[0].name not in meters_units.keys():
-    #                         meters_units[s[0].name] = 0
-
-    #                     bot = bh.z - bh.depth
-    #                     top = s[1]
-
-    #                     if bh.z - bot > depth_max:
-    #                         bot = bh.z - depth_max
-    #                     if bh.z - top > depth_max:
-    #                         top = bh.z - depth_max
-
-    #                     meters_units[s[0].name] += top - bot
-    #                     thk += top - bot
-
-    #         prop_units = {}
-
-    #         tot = 0
-    #         for k,v in meters_units.items():
-    #             if k not in ignore_units:
-    #                 tot += v
-
-    #         for k,v in meters_units.items():
-    #             if k not in ignore_units:
-    #                 prop_units[k] = v/tot
-
-    #     return prop_units
 
     def get_proportions(self, type="units", depth_min=0, depth_max=np.inf, ignore_units=[], mask=None):
 
         """
         Function that returns the proportions of the units in the boreholes
 
-        # inputs #
-        depth_max    : float, maximum depth of investigation in the boreholes
-        depth_min    : float, minimum depth of investigation in the boreholes
-        ignore_units : list of str, units name to ignore during the analysis
-        mask         : 2D ndarray of size (ny, nx), mask where to analyse 
-                       the borholes
-                       
-        # output #
-        dictionnary of units proportions
+        Parameters
+        ----------
+        type         : str
+            type of proportions to return
+            "units"  : proportions of units
+            "facies" : proportions of facies
+        depth_max    : float, default np.inf
+            maximum depth of investigation in the boreholes
+        depth_min    : float, default 0
+            minimum depth of investigation in the boreholes
+        ignore_units : list of str, default []
+            units name to ignore during the analysis
+        mask         : 2D ndarray of size (ny, nx), default None
+            mask where to analyse the boreholes
+
+        Returns
+        -------
+        dictionnary
         """
         
         list_bhs = self.list_bhs
@@ -2510,14 +2796,16 @@ class Arch_table():
         Extract hard data from boreholes for all units given
         the Piles defined in the Arch_table object.
 
-        #parameters#
-        step : float, vertical interval for extracting borehole
-                 facies information, default is sz from simulation grid
-        facies: bool, flag to indicate to process facies data or not
-        stop_condition: flag bool, flag to indicate if the process must be
-                         aborted if a inconsistency in bhs is found (False)
-                         or bhs will be simply ignored (True)
-
+        Parameters
+        ----------
+        step : float
+            vertical interval for extracting borehole
+        facies: bool
+            flag to indicate to process facies data or not
+        stop_condition: bool
+            flag to indicate if the process must be
+            aborted if a inconsistency in bhs is found (False)
+            or bhs will be simply ignored (True)
         """
 
         # functions
@@ -2955,11 +3243,16 @@ class Arch_table():
         """
         Performs the computation of the surfaces
 
-        #Inputs#
-        nreal: int, number of realization
-        rm_res_files : bool, flag to remove previous existing resulting files
-               in working directory
-        fl_top: bool, assign first layer to top of the domain (True by default)
+        Parameters
+        ----------
+
+        nreal: int
+            number of realizations
+        fl_top: bool
+            assign first layer to top of the domain (True by default)
+        rm_res_files : bool
+            flag to remove previous existing resulting files in working directory
+
         """
 
         start=time.time()
@@ -3041,12 +3334,13 @@ class Arch_table():
 
         """
         Performs the computation of the units domains when surfaces are provided
-
-        #Inputs#
+        
+        Parameters
+        ----------
         surfaces : dictionary of surfaces as values and pile name as key
-        rm_res_files : bool, flag to remove previous existing resulting files
-               in working directory
-        fl_top: bool, assign first layer to top of the domain (True by default)
+        fl_top: bool
+            assign first layer to top of the domain (True by default)
+
         """
 
         #np.random.seed(self.seed)  # set seed
@@ -3075,15 +3369,22 @@ class Arch_table():
 
         self.surfaces_computed=1  # flag
 
-
     def fill_ID(self, arr, ID=0):
     
         """
         Fill ID values in an 3D array given surroundings values using nearest neighbors
+        
+        Parameters
+        ----------
+        arr: ndarray of size (nz, ny, nx)
+            simulation grid size
+        ID: ID
+            ID to replace
 
-        # inputs #
-        arr : ndarray of size (nz, ny, nx) --> simulation grid size
-        ID  : int, ID to replace
+        Returns
+        -------
+        arr: ndarray of size (nz, ny, nx)
+            simulation grid size
         """
 
         nx = self.get_nx()
@@ -3126,6 +3427,11 @@ class Arch_table():
     
         """
         Function to fill each cells simulated top unit given their nearest neighbour.
+
+        Parameters
+        ----------
+        method: str
+            method to fill top unit. Default is "nearest_neighbors"
         """
 
         nx = self.get_nx()
@@ -3180,11 +3486,12 @@ class Arch_table():
         """
         Performs the computation of the facies
 
-        nreal: int, number of realizations
-        c_all: bool, compute facies in each units if True.
-                If false units must be passed by args and nreal
-                will be ignored and taken from previous simulation is possible
-        verbose_methods: int (0 or 1), verbose for the facies methods, 0 by default
+        Parameters
+        ----------
+        nreal: int
+            number of realizations
+        verbose_methods: int
+            verbose for the facies methods, 0 by default
         """
 
         if nreal==0:
@@ -3248,8 +3555,15 @@ class Arch_table():
         Return a bool 2D array that define the domain where the units
         exist (between two surfaces, s1 and s2)
 
-        s1, s2: 2D arrays, two given surfaces over simulation domain size: (ny, nx)),
-        s1 is top surface, s2 is bot surface
+        Parameters
+        ----------
+        s1, s2: 2D ndarrays
+            two surfaces over the simulation domain size: (ny, nx)
+        
+        Returns
+        -------
+        domain
+            3D ndarray of bools
         """
 
         zg=self.get_zg()
@@ -3262,7 +3576,6 @@ class Arch_table():
 
         top=self.top
         bot=self.bot
-
 
         z0=zg[0]
         z1=zg[-1]
@@ -3289,7 +3602,11 @@ class Arch_table():
 
         """
         Performs the computation of the properties added to the ArchTable
-        nreal: int, number of realizations
+
+        Parameters
+        ----------
+        nreal: int
+            number of realizations
         """
 
         assert len(self.list_props) > 0, "No property have been added to Arch_table object"
@@ -3432,15 +3749,21 @@ class Arch_table():
         """
         Return the mask of the given unit for a realization iu
 
-        #inputs#
-        unit_name: string, unit name defined when creating the object
-                    for more details: ArchPy.base.Unit
-        iu      : int, unit realization index (0, 1, ..., Nu)
-        all_real: bool, flag to know if a mask of all realizations
-                    must be returned
+        Parameters
+        ----------
+        unit_name: string
+            unit name defined when creating the unit object
+            for more details: :class:`Unit`
+        iu: int
+            unit realization index (0, 1, ..., Nu)
+        all_real: bool
+            flag to know if a mask of all realizations
+            must be returned
 
-        #outputs#
-        3D (or 4D) nd.array of 1 (present) and 0 (absent)
+        Returns
+        -------
+        3D (or 4D) ndarray
+            mask array 
         """
 
         if all_real: #all realizations
@@ -3487,12 +3810,22 @@ class Arch_table():
         Compute an orientation map for a certain Unit object
         from which we want to have the differents orientations
 
-        #inputs#
-        method: str, method to use to infer orientation map
-                (simple: vertically interpolate top/bot layer orientation)
-        unit : unit object (units simulations must have been performed)
-        iu   : idx units (if multiple realization of units)
-        smooth: int, half-size windows for rolling mean
+        Parameters
+        ----------
+        unit: :class:`Unit` object
+            unit object from which we want to have the orientation map
+        method: string
+            method to use to infer orientation map
+            (simple: vertically interpolate top/bot layer orientation)
+        iu: int
+            unit realization index (0, 1, ..., Nu)
+        smooth: int
+            half-size windows for rolling mean
+
+        Returns
+        -------
+        2D ndarray
+            orientation map
         """
 
         def azi_dip(s):
@@ -3590,13 +3923,19 @@ class Arch_table():
         """
         Extract the log facies in the ArchPy format at the specific location
 
-        #inputs#
-        facies: 3D array, a facies realization
-        bhx, bhy, bhz: borehole location
-        depth: depth of investigation
-
-        #output#
-        a log facies (list of facies object with elevations)
+        Parameters
+        ----------
+        facies: 3D ndarray
+            facies realization
+        bhx, bhy, bhz: float
+            borehole location
+        depth: float
+            depth of investigation
+        
+        Returns
+        -------
+        log_facies: list of :class:`Facies` object
+            a log facies (list of facies object with elevations)
         """
 
         bh_cell=self.coord2cell(bhx, bhy, bhz)
@@ -3627,15 +3966,20 @@ class Arch_table():
         """
         Compute the Shannon entropy for units or facies and return it.
 
-        ## inputs ##
-        typ      : str, type of models to use to comppute the entropy,
-                   valid values are "units" and "facies"
-        h_level  : int, hiearchical level to use to compute the entropy,
-                   only used if typ is "units"
+        Parameters
+        ----------
+        typ: string
+            type of models to use to compute the entropy,
+            valid values are "units" and "facies"
+        h_level: int
+            hiearchical level to use to compute the entropy,
+            only used if typ is "units"
         recompute: bool
-
-        ## output ##
-        3D nd.array of size (nz, ny, nx)
+            if True, recompute the entropy
+        
+        Returns
+        -------
+        3D ndarray of size (nz, ny, nx)
         """
 
         if typ == "units":
@@ -3710,30 +4054,30 @@ class Arch_table():
         """
         Method to aggregate multiple ArchPy realizations into one for units and facies (TO DO)
         
-        # inputs #
-        method   : str, method to use to aggregate the real.
-                   valid method are: 
-                   - basic, return a model with the most probable 
-                            units/facies in each cells
-                   - probas_prop, return a model constructed sequentially
-                                  by ensuring that proportions are respected (at best...)
-                   - mean_surfs,  return a model created by meaning the surface elevation
-                                  if units were simulated with categorical method,
-                                  basic method is used for these units
-                            
-        depth : 
-                   float, probas_prop parameter, maximum depth of investigation 
-                   to compute probas and proportions. 
-                   Should be around the median depth of the boreholes
-                       
-        ignore_units: 
-                   list, probas_prop parameter, units name to ignore.
-                   These units will not be aggregated in the final model.
-                   
-        units_to_fill:
-                   list, mean_surfs parameter, units name to fill with NN at the end
-                   Should not be used except to fill the top unit.      
-                   
+        Parameters
+        ----------
+        method: str
+            method to use to aggregate the realizations
+            valid method are:
+
+            - basic, return a model with the most probable units/facies in each cells
+            - probas_prop, return a model constructed sequentially by ensuring that proportions are respected (at best...)
+            - mean_surfs,  return a model created by meaning the surface elevation if units were simulated with categorical method, basic method is used for these units
+
+        depth: float
+            probas_prop parameter, maximum depth of investigation 
+            to compute probas and proportions. 
+            Should be around the median depth of the boreholes
+        ignore_units: list
+            probas_prop parameter, units name to ignore. 
+            These units will not be aggregated in the final model.
+        units_to_fill: list
+            mean_surfs parameter, units name to fill with NN at the end.
+            Should not be used except to fill the top unit.
+
+        Returns
+        -------
+        3D ndarray of size (nz, ny, nx)
         """
 
         if ignore_units is None:
@@ -3961,12 +4305,18 @@ class Arch_table():
         """
         Plot the boreholes of the Arch_table project.
 
-        #parameters#
-        log   : string, which log to plot --> strati or facies
+        Parameters
+        ----------
+        log: string
+            which log to plot --> strati or facies
         plotter: pyvista plotter
-        v_ex  : float, vertical exaggeration
-        plot_top: bool, if the top of the simulation domain must be plotted
-        plot_bot: bool, if the bot of the simulation domain must be plotted
+        v_ex: float
+            vertical exaggeration
+        plot_top: bool
+            if the top of the simulation domain must be plotted
+        plot_bot: bool
+            if the bot of the simulation domain must be plotted
+
         """
 
         z0=self.get_oz()
@@ -4086,15 +4436,20 @@ class Arch_table():
 
         """
         Return a numpy array of 1 or all units realization(s).
-        iu     : int, simulation to return
-        all_data: bool, return all the units simulations,
-                   in that case, iu is ignored
-        fill   : string, ID or color are possible, to return
-                   realizations with unit ID or RGBA color
-                   (for plotting purpose e.g. with plt.imshow)
-        h_level: string or int, hierarchical level to plot.
-                   A value of 1 indicates that only unit of the
-                   master pile will be plotted. "all" to plot all possible units
+
+        iu: int
+            simulation to return
+        all_data: bool
+            return all the units simulations,
+            in that case, iu is ignored
+        fill: string
+            ID or color are possible, to return
+            realizations with unit ID or RGBA color
+            (for plotting purpose e.g. with plt.imshow)
+        h_level: string or int
+            hierarchical level to plot.
+            A value of 1 indicates that only unit of the
+            master pile will be plotted. "all" to plot all possible units
         """
 
         # if self.Geol.units_domains is None:
@@ -4106,7 +4461,6 @@ class Arch_table():
         else:
              if self.Geol.units_domains is None:
                 raise ValueError("Units have not been computed yet")
-
 
         if isinstance(iu, int):
             all_data=False
@@ -4196,15 +4550,32 @@ class Arch_table():
                    filtering_value=None, scalar_bar_kwargs=None, show_scalar_bar=True):
 
         """
-        Plot units domain for a specific realization iu
+        plot units domain for a specific realization iu
 
-        iu    : int, unit index to plot
-        v_ex  : float, vertical exageration
-        h_level: string or int, hierarchical level to plot. A value
-                  of 1 indicates that only unit of the master pile will
-                  be plotted. "all" to plot all possible units
-
-        For other parameters see plot_arr function.
+        Parameters
+        ----------
+        iu: int
+            unit index to plot
+        v_ex: float
+            vertical exageration
+        plotter: pyvista.Plotter
+            pyvista.Plotter object to plot on
+        h_level: string or int
+            hierarchical level to plot.
+            A value of 1 indicates that only unit of the
+            master pile will be plotted. "all" to plot all possible units
+        slicex: float or sequence of floats
+            fraction of x axis where to slice
+        slicey: float or sequence of floats
+            fraction of y axis where to slice
+        slicez: float or sequence of floats
+            fraction of z axis where to slice
+        filtering_value: float
+            value to filter on
+        scalar_bar_kwargs: dict
+            kwargs to pass to the scalar bar
+        show_scalar_bar: bool
+            show scalar bar or not          
         """
 
         #ensure hierarchy_relations have been set
@@ -4288,12 +4659,28 @@ class Arch_table():
         Plot the probability of occurence of a specific unit or facies
         (can be passed by a name or the object directly)
 
-        #parameters#
-        obj: Unit/facies object or string name of the unit/facies
-        filtering_interval: interval of values to plot, values are variable
-                             and does not depend on the facies/unit IDs
-        for others params: see plot_arr function
+        Parameters
+        ----------
+        obj: :class:`Unit` or :class:`Facies` or str
+            unit or facies object or string name of the unit/facies
+            to plot the probability of occurence
+        v_ex: float
+            vertical exageration, default is 1
+        plotter: pyvista.Plotter
+            pyvista.Plotter object to plot on
+        slicex: float or sequence of floats
+            fraction of x axis where to slice
+        slicey: float or sequence of floats
+            fraction of y axis where to slice
+        slicez: float or sequence of floats
+            fraction of z axis where to slice
+        filtering_interval: sequence of floats
+            interval of values to plot
+        scalar_bar_kwargs: dict
+            kwargs to pass to the scalar bar
+
         """
+
         nx=self.get_nx()
         ny=self.get_ny()
         nz=self.get_nz()
@@ -4392,22 +4779,31 @@ class Arch_table():
         """
         Plot the facies realizations over the domain with the colors attributed to facies
 
-        #parameters#
-        iu: int, indice of units realization
-        ifa: int, indice of facies realziation
-        v_ex: int or float, vertical exageration
-        inside_units: array-like, list of units inside which
-                       we want to have the plot.
-                       if None --> all
+        Parameters
+        ----------
+        iu: int
+            indice of units realization
+        ifa: int
+            indice of facies realziation
+        v_ex: int or float
+            vertical exageration
+        inside_units: array-like of :class:`Unit` objects
+            list of units inside which we want to have the plot.
+            if None --> all
         plotter: pyvista plotter if wanted
-        slicex, slicey, slicez: array-like or number(s) between
-                                   0 and 1. fraction in x, y or z
-                                   direction where a plot of slices
-                                   is desired.
-                                   slicex=0.5 will mean a slice at
-                                   the middle of the x axis
-        filtering_value: array-like, values to plot, these values
-                          DOES NOT correspond to facies IDs
+        slicex: float or sequence of floats
+            fraction of x axis where to slice
+        slicey: float or sequence of floats
+            fraction of y axis where to slice
+        slicez: float or sequence of floats
+            fraction of z axis where to slice
+        filtering_value: array-like
+            values to plot, these values DOES NOT correspond to facies IDs
+        scalar_bar_kwargs: dict
+            kwargs for the scalar bar
+        show_scalar_bar: bool
+            if True, show the scalar bar
+
         """
 
         fa_domains=self.get_facies(iu, ifa, all_data=False).astype(np.float32)
@@ -4509,28 +4905,29 @@ class Arch_table():
         """
         Plot the facies realizations over the domain with the colors attributed to facies
 
-        #parameters#
-        property: string, property name
-        iu          : int, indice of units realization
-        ifa          : int, indice of facies realization
-        ip           : int, indice of property realization
-        v_ex         : int or float, vertical exageration
-        inside_units: array-like of Unit objects or unit names
-                        (string), list of units inside which we
-                        want to have the plot. By default all
-        inside_facies: array-like of Facies objects or facies
-                        names (string), list of facies inside
-                        which we want to have the plot. By default all
-        plotter     : pyvista plotter if wanted
-        slicex, slicey, slicez: array-like or number(s) between
-                                   0 and 1. fraction in x, y or z
-                                   direction where a plot of slices
-                                   is desired. slicex=0.5 will mean
-                                   a slice at the middle of the x axis
-        filtering_interval: array-like of 2 values, interval to plot,
-                             values out of it will be set to nan
-
-        others params see plot_arr function
+        Parameters
+        ----------
+        iu:int 
+            indice of units realization
+        ifa:int
+            indice of facies realization
+        ip:int
+            indice of property realization
+        v_ex:int or float
+            vertical exageration
+        inside_units:array-like of :class:`Unit` objects or unit names (string)
+            list of units inside which we want to have the plot. By default all
+        inside_facies:array-like of :class:`Facies` objects or facies names (string)
+            list of facies inside which we want to have the plot. By default all
+        plotter:pyvista plotter if wanted
+        slicex, slicey, slicez: float or sequence of floats
+            fraction in x, y or z direction where the slice is done
+        cmin, cmax:float
+            min and max value of the colorbar
+        filtering_interval:tuple of float
+            interval of values to be plotted
+        scalar_bar_kwargs:dict
+            kwargs for the scalar bar
         """
 
         prop=self.getprop(property, iu, ifa, ip, all_data=False)
@@ -4619,7 +5016,6 @@ class Arch_table():
             p.show()
 
 
-
     def plot_mean_prop(self, property, type="arithmetic", v_ex=1, inside_units=None, inside_facies=None,
                     plotter=None, slicex=None, slicey=None, slicez=None, cmin=None, cmax=None, filtering_interval=None, scalar_bar_kwargs=None):
 
@@ -4628,17 +5024,39 @@ class Arch_table():
         Function that plots the arithmetic mean of a property at every cells
         of the simulation domain given all the property simulations
 
-        #inputs#
-        property: str, property name
-        type: str, to specify the type of function to apply,
-               "arithmetic" stands for arithmetic mean,
-               "std" for standard deviation,
-               "median" is for plotting the median value
+        Parameters
+        ----------
+        property: string
+            name of the property to plot
+        type: string
+            type of mean to plot:
+            - "arithmetic" for arithmetic mean
+            - "std" for standard deviation
+            - "median" for median value
+        v_ex: float
+            vertical exaggeration
+        inside_units: list of string or :class:`Unit` objects
+            list of units to consider for the mean
+            "std" for standard deviation, "median" for median value
+        inside_facies: list of string or :class:`Facies` objects
+            list of facies to consider for the mean
+        plotter: pyvista.Plotter
+            pyvista plotter to plot on
+        slicex: float or sequence of floats
+            fraction of the x axis to plot
+        slicey: float or sequence of floats
+            fraction of the y axis to plot
+        slicez: float or sequence of floats
+            fraction of the z axis to plot
+        cmin: float
+            minimum value for the colorbar
+        cmax: float
+            maximum value for the colorbar
+        filtering_interval: float
+            interval to filter the data
+        scalar_bar_kwargs: dict
+            dictionary of arguments to pass to the pyvista scalar bar
 
-        Others arguments --> see plot_arr() function
-
-        #outputs#
-        A plot
         """
 
         #load property array and facies array
@@ -4695,35 +5113,40 @@ class Arch_table():
                       cmin=cmin, cmax=cmax, filtering_interval=filtering_interval, filtering_value=None, scalar_bar_kwargs=scalar_bar_kwargs)
 
 
-
     def plot_arr(self,arr,var_name ="V0",v_ex=1, plotter=None, slicex=None, slicey=None, slicez=None,
                  cmin=None, cmax=None, filtering_interval=None, filtering_value=None, scalar_bar_kwargs=None):
 
         """
         This function plot a 3D array with the same size of the simulation domain
 
-        #parameters#
-        arr      : 3D array to plot. Size of the simulation
-                     domain (nx, ny, nz)
-        var_name : str, variable names to plot and to show
-                     in the pyvista plot
-        v_ex     : float, vertical exaggeration
-        plotter  : pyvista external plotter
-        cmin, cmax: floats, min and max values for colorbar
-        filtering_interval: sequence of two values to plot,
-                             values outside this range will
-                             be discarded
-        filtering_value  : sequence of values, values passed
-                             will be plotted, others not
-                             (for categorical plot for example)
-        scalar_bar_kwargs: pyvista scalar bar kwargs
-                             (see pyvista colorbar documentation)
-        slicex, slicey, slicez: array-like or number(s) between
-                                   0 and 1. fraction in x, y or z
-                                   direction where a plot of slices
-                                   is desired. slicex=0.5 will mean
-                                   a slice at the middle of the x axis
-"""
+        Parameters
+        ----------
+        arr: 3D array
+            array to plot. Size of the simulation domain (nx, ny, nz)   
+        var_name: str
+            variable names to plot and to show in the pyvista plot
+        v_ex: float
+            vertical exaggeration
+        plotter: pyvista.Plotter
+            pyvista plotter to plot on
+        slicex: float or sequence of floats
+            fraction of the x axis to plot
+        slicey: float or sequence of floats
+            fraction of the y axis to plot
+        slicez: float or sequence of floats
+            fraction of the z axis to plot
+        cmin: float
+            minimum value for the colorbar
+        cmax: float
+            maximum value for the colorbar
+        filtering_interval: float
+            interval values to filter the data to show
+        filtering_value: float
+            values to filter. Only these values will be shown
+        scalar_bar_kwargs: dict
+            dictionary of arguments to pass to the pyvista scalar bar
+
+        """
 
         nx=self.get_nx()
         ny=self.get_ny()
@@ -4807,20 +5230,21 @@ class Arch_table():
         """
         Return a cross section along the points pass in p_list
 
-        #params#
+        Parameters
+        ----------
         arr_to_plot: 3D or 4D array of dimension nz, ny, nx(, 4)
-                      of which we want a cross section.
-                      This array will be considered being part
-                      of the ArchPy simulation domain.
-        p_list    : list or array of tuple containing x and
-                      y coordinates
-                      (e.g. p_list=[(100, 200), (300, 200)]
-                      --> draw a cross section between these two points)
-        esp       : float, spacing to use when sampling
-                      the array along the cross section
-
-        return
-        An array x_sec ready to plot and total distance of the cross section
+            array of which we want a cross section.
+            This array will be considered being part of the ArchPy simulation domain.
+        p_list: sequence of tuple
+            list or array of tuple containing x and y coordinates
+            (e.g. p_list=[(100, 200), (300, 200)] --> draw a cross section between these two points)
+        esp: float
+            spacing to use when sampling the array along the cross section
+            
+        Returns
+        -------
+        2D array
+            cross section ready to plot
         """
 
         ox=self.get_ox()
@@ -4904,23 +5328,27 @@ class Arch_table():
         Plot a cross section along the points given in
         p_list with a spacing defined (esp)
 
-        #inputs#
+        Parameters
+        ----------
         p_list : list or array of tuple containing
-                   x and y coordinates
-                  (e.g. p_list=[(100, 200), (300, 200)]
-                  --> draw a cross section between these two points)
-        typ    : string, units, facies or prop
-                   (if typ is "prop" then a property name
-                   should be given in the property argument)
-        iu        : int, units index realization
-        ifa    : int, facies index realization
-        ip          : int, property index realization
-        property: str, property name that have been computed
-        esp    : float, spacing to use when sampling the
-                   array along the cross section
-        ax     : matplotlib axes if desired
-        ratio_aspect: float, ratio between y and x axis
-                       to adjust vertical exaggeration
+                x and y coordinates
+                (e.g. p_list=[(100, 200), (300, 200)]
+                --> draw a cross section between these two points)
+        typ: string
+            units, facies or a property name
+        iu: int
+            units index realization
+        ifa: int
+            facies index realization
+        ip: int
+            property index realization
+        property: str
+            property name that have been computed
+        esp: float
+            spacing to use when sampling the array along the cross section
+        ax: matplotlib axes on which to plot
+        ratio_aspect: float
+            ratio between y and x axis to adjust vertical exaggeration
         """
 
         def plot_bh(bh, x=None, width=width, typ="units"):
@@ -5080,10 +5508,17 @@ class Arch_table():
         Plot cross-sections lines given in  the
         "list_lines" argument on a 2D top view of the domain
 
-        list_lines: list or array-like of point lists as
-                     defined in plot_cross_section
-        names: array-like of string to pass as label
-                to the plot function
+        Parameters
+        ----------
+        list_lines: seqence of points
+                list of points defining the cross-section
+                lines. Each point is a list of 2 floats [x, y]
+        names: sequence of string
+                list of names to give to the cross-section lines
+        ax: matplotlib axis
+                axis on which to plot the cross-section
+        legend: bool
+                if True, plot a legend
         """
 
         if ax is None:
@@ -5111,7 +5546,6 @@ class Arch_table():
 
 
 # CLASSES PILE + UNIT + SURFACE
-
 class Pile():
 
     """
@@ -5120,13 +5554,20 @@ class Pile():
     and allow to know the stratigraphical relations between the units.
     One Pile object must be defined for each subpile + 1 "master" pile.
 
-    ### init params ###
-    name    : str, name of the pile
-    nature  : str, units type of interpolation, can be "surfaces" or "3d_categorical"
-              if "surfaces" is chosen (default), 2D surfaces interpolations of 
-              the surfaces are performed. The surfaces are then used to delimit unit domains.
-              if "3d_categorical", a facies method is used to simulate position of the units.
-              The available methods are the same to simulate the facies.
+    Parameters
+    ----------
+    name: str
+        name of the pile
+    nature: str
+        units type of interpolation, can be "surfaces" or "3d_categorical"
+        if "surfaces" is chosen (default), 2D surfaces interpolations of
+        the surfaces are performed. The surfaces are then used to delimit unit domains.
+        if "3d_categorical", a facies method is used to simulate position of the units.
+        The available methods are the same to simulate the facies.
+    verbose: int
+        level of verbosity
+    seed: int
+        seed for random number generation
     """
 
     def __init__(self, name, nature="surfaces", verbose=1, seed=1):
@@ -5143,6 +5584,15 @@ class Pile():
         return self.name
 
     def add_unit(self, unit):
+        
+        """
+        Add a unit to the pile
+
+        Parameters
+        ----------
+        unit: Unit object
+            unit to add to the pile
+        """
 
         try: #iterable
             for i in unit:
@@ -5172,7 +5622,13 @@ class Pile():
 
     def remove_unit(self, unit_to_rem):
 
-        """Remove the given unit object from Pile object"""
+        """Remove the given unit object from Pile object
+        
+        Parameters
+        ----------
+        unit_to_rem: :class:`Unit` object
+            unit to remove from the pile
+        """
 
         if len(self.list_units) > 0:
             if unit_to_rem in self.list_units:
@@ -5188,6 +5644,11 @@ class Pile():
 
         """
         Order list_liths according the order attributes of each lithologies
+
+        Parameters
+        ----------
+        vb: int
+            level of verbosity, 0 for no print, 1 for print
         """
 
         if vb:
@@ -5236,12 +5697,21 @@ class Pile():
         Compute the elevation of the surfaces units (1st hierarchic order)
         contained in the Pile object.
 
-        #inputs#
-        nreal    : int, number of realization
-        fl_top   : bool, to not interpolate first layer and assign it=top
-        subpile  : pile object, if the pile is a subpile
-        tops, bots: sequence of arrays, of top/bot for subpile surface
-        vb       : bool, verbose 1 for all and 0 for nothing
+        Parameters
+        ----------
+        ArchTable: :class:`Arch_table` object
+            ArchTable object containing the architecture of the pile
+        nreal: int
+            number of realization
+        fl_top: bool
+            to not interpolate first layer and assign it=top
+        subpile: bool
+            if the pile is a subpile
+        tops, bots: sequence of 2D arrays of size (ny, nx)
+            of top/bot for subpile surface
+        vb: int
+            level of verbosity, 0 for no print, 1 for print
+
         """
 
         def add_sto_contact(s, x, y, z, type="equality", z2=None): #function to add a stochastic hd point to a surface
@@ -5408,8 +5878,30 @@ class Pile():
         if vb:
             print("##########################\n")
 
-
     def define_domains(self, ArchTable, surfaces, tops=None, bots=None, subpile=False, vb=0, fl_top=True):
+
+        """
+        Define units domains from precomputed surfaces.
+        This method is used when the surfaces are precomputed (e.g. from a previous simulation) 
+        in place to the compute_surfaces method.
+
+        Parameters
+        ----------
+        ArchTable : :class:`Arch_table`
+            ArchTable object
+        surfaces : array
+            array of surfaces (nreal, nlay, ny, nx)
+        tops : array
+            array of top elevations (ny, nx)
+        bots : array
+            array of bottom elevations (ny, nx)
+        subpile : bool
+            if the pile is a subpile, i.e. if True, the top and bottom of the pile are not used
+        vb : int
+            verbosity level, 0 is silent, 1 is verbose
+        fl_top : bool
+            if True, the top of the pile is used to define the top of the first unit
+        """
 
         assert surfaces.shape[1] == len(self.list_units), "the number of surfaces {} provided is not equal to the number of units {}".format(surfaces.shape[1], len(self.list_units))
 
@@ -5508,42 +6000,42 @@ class Pile():
 
 class Unit():
 
-    def __init__(self, name, order, color, surface=None, ID=None,
-                dic_facies={"f_method": "homogenous", "f_covmodel": None, "TI": None, "SubPile": None, "Flag": None, "G_cm": None},
-                contact="onlap", verbose=1):
+    """
+    This class defines Unit objects, which are the building blocks of the Pile class.
 
-        """
-        ###Description###
-        name     : string, name of the unit
-        order    : int, order of the unit in the pile (1 (top) to n (bottom),
-                     where n is the total number of units)
-        color    : string, color to use for plotting and representation
-        contact  : string, onlap or erode, if the unit is defined as erode
-                     then the unit will only act as an erosion surface and will
-                     fill nothing
-        ineq_data: inequality data of the following format: [(x1, y1, z1, lb, ub)]
-                     lb, ub: lower/upper boundary of the inequality, np.nan if none
-        dic_facies: parameters for facies filling
-            f_method : string, valable method are: homogenous, SubPile, SIS,
-                         MPS and TPGs
-            f_covmodel: 3D geone covmodel or list of covmodels
-                         (see geone documentation) for facies interpolation
-                         with SIS
-            TI       : geone image, Training image for MPS simulation
-                         of the filling the units
-            SubPile  : Pile object, is used to fill the unit
-                         if the f_method is "SubPile"
-            **kwargs
-              ||
-              ¦¦
-              \/
-        Facies keyword arguments to pass to the facies methods (these should be pass through dic_facies !):
-            - SIS:
-                - neig : number of neighbours
-                - r    : relative radius of research (default is 1)
+    Parameters
+    ----------
+    name : string
+        name of the unit that will be used as an identifier
+    order : int
+        order of the unit in the pile (1 (top) to n (bottom), where n is the total number of units)
+    color : string
+        color to use for plotting and representation.
+        The color can be any color that is accepted by matplotlib
+    surface : :class:`Surface` object
+        surface object that defines the surface of the unit
+    ID : int
+        ID of the unit, if None, the ID will be set to the order of the unit
+    dic_facies : dict
+        dictionary that defines the facies of the unit. The mandatory keys for the dictionary are:
+
+        - f_method : string, valable method are: 
+
+            - "homogenous" : homogenous facies
+            - "SubPile" : facies are simulated with a subpile
+            - "SIS" : facies are simulated with stochastic indicator simulation
+            - "MPS" : facies are simulated with Multiple points statistics
+            - "TPGs": facies are simulated with Truncated pluri-Gaussian method
+        - f_covmodel : 3D geone covariance model object or list of 3D geone covariance model objects only used with "SIS" method
+        - TI : geone.image, Training image for "MPS" method
+        - SubPile : :class:`Pile` object, subpile for "SubPile" method
     
-            - MPS:
-                - TI                    : geone img, Training image(s) to use
+        Facies keyword arguments to pass to the facies methods (these should be pass through dic_facies !):
+        
+            - "SIS" :
+                - "neigh" : int, number of neighbors to use for the SIS
+                - r : float, radius of the neighborhood to use for the SIS
+            - TI                    : geone img, Training image(s) to use
                 - mps "classic" parameters (maxscan, thresh, neig (number of neighbours))
                 - npost                 : number of path postprocessing, default 1
                 - radiusMode            : radius mode to use (check deesse manual)
@@ -5559,13 +6051,9 @@ class Unit():
                 - xr, yr, zr            : ratio for geom transformation
                 - xloc, yloc, zloc      : local or not transformation
                 - homo_usage            : homothety usage
-                - probaUsage            : probability constraint usage, 0 for no proba constraint,
-                                          1 for global proportion defined in globalPdf,
-                                          2 for local proportion defined in localPdf
-                - globalPdf             : array-like of float of length equal to the number of class,
-                                          proportion for each class
-                - localPdf              : (nclass, nz, ny, nx) array of floats probability for each class,
-                                          localPdf[i] is the "map defined on the simulation grid
+                - probaUsage            : probability constraint usage, 0 for no proba constraint, 1 for global proportion defined in globalPdf, 2 for local proportion defined in localPdf
+                - globalPdf             : array-like of float of length equal to the number of class, proportion for each class
+                - localPdf              : (nclass, nz, ny, nx) array of floats probability for each class, localPdf[i] is the "map defined on the simulation grid
                 - localPdfRadius        : support radius for local pdf, default is 2
                 - deactivationDistance  : float, distance at which localPdf are deactivated (see Deesse doc)
                 - constantThreshold     : float, threshold value for pdf's comparison
@@ -5581,12 +6069,16 @@ class Unit():
                                       (dim: dimension wanted for G_cm inference,
                                       (c_reg: regularisation term for G_cm inference),
                                       (n: number of control points for G_cm inference))
-        """
 
+    """
+
+    def __init__(self, name, order, color, surface=None, ID=None,
+                dic_facies={"f_method": "homogenous", "f_covmodel": None, "TI": None, "SubPile": None, "Flag": None, "G_cm": None},
+                contact="onlap", verbose=1):
+    
         assert ID != 0, "ID cannot be 0"
         assert name is not None, "A name must be provided"
         assert isinstance( surface, Surface), "A surface object must be provided for each unit"
-
 
         self.name=name
         self.order=order
@@ -5615,6 +6107,11 @@ class Unit():
 
         """
         Set a dictionary facies to Unit object
+
+        Parameters
+        ----------
+        dic_facies : dict
+            dictionnary containing the parameters to pass at the facies methods
         """
 
         assert dic_facies["f_method"] in ("MPS", "SIS", "homogenous", "TPGs", "SubPile"), 'Filling method unknown, valids are "MPS", "SIS", "homogenous", "TPGs", "SubPile'
@@ -5717,7 +6214,12 @@ class Unit():
 
         """
         Change or define a subpile for filling
+
+        Parameters
+        ----------
+        SubPile : :class:`Pile` object	
         """
+
         if isinstance(SubPile, Pile):
             if self.f_method == "SubPile":
                 self.SubPile=SubPile
@@ -5733,8 +6235,10 @@ class Unit():
         """
         Change training image for a strati unit
 
-        #input#
-        TI: Training image MUST be a geone img
+        Parameters
+        ----------
+        TI: geone.image
+            Training image to use with the MPS
         """
 
         if isinstance(TI, geone.img.Img):
@@ -5751,8 +6255,10 @@ class Unit():
         Change or add a top surface for Unit object.
         This will define how the top of the formation will be modelled.
 
-        #input#
-        surface: a ArchPy surface object
+        Parameters
+        ----------
+        surface: :class:`Surface` object
+            Surface object to use for the simulation of the top of the formation
         """
 
         if isinstance(surface, Surface):
@@ -5768,10 +6274,12 @@ class Unit():
         Remove existing facies covmodels and one or more
         depending of what is passed (array like or only one object)
 
-        #input#
-        f_covmodel: geone.covModel object that will be used
-                     for the interpolation of the facies if method is SIS,
-                     can be a list or only one object
+        Parameters
+        ----------
+
+        f_covmodel: geone.covModel object 
+            that will be used for the interpolation of the facies if method is SIS.
+            Can be a list or only one object.
         """
 
         self.list_f_covmodel=[]
@@ -5819,6 +6327,17 @@ class Unit():
         
         """
         Climb the hierarchical tree of self unit until finding a specific unit and return it
+
+        Parameters
+        ----------
+        unit_target: :class:`Unit` object
+            Unit object to find in the hierarchical tree
+
+        Returns
+        -------
+        unit: :class:`Unit` object or None
+            Unit object found in the hierarchical tree
+            if not found, return None
         """
         
         unit = self
@@ -5852,7 +6371,19 @@ class Unit():
 
 
         """
-        
+        Method to return all units that are under the current unit in the hierarchy
+
+        Parameters
+        ----------
+        recompute: bool
+            If True, recompute the list of units if there had been modifications in the hierarchy
+        vb: int
+            verbosity level, 0 for no print, 1 for print
+
+        Returns
+        -------
+        list
+        list of childs :class:`Unit` objects of the current unit
         """
 
         
@@ -5880,7 +6411,11 @@ class Unit():
 
         """
         Add facies object to strati
-        facies: facies object
+
+        Parameters
+        ----------
+        facies: :class:`Facies` object or list of them
+            Facies object to model inside the unit
         """
 
         if type(facies) == list:
@@ -5907,6 +6442,13 @@ class Unit():
 
         """
         To remove facies from unit, by default all facies are removed
+
+        Parameters
+        ----------
+        facies: :class:`Facies` object or list of them
+            Facies object to remove from the unit
+        all_facies: bool
+            If True, all facies are removed
         """
 
         if all_facies:
@@ -5919,12 +6461,19 @@ class Unit():
         """
         Compute facies domain for the specific unit
 
-        #inputs#
-        ArchTable: ArchTable object containing units, surface,
-                    facies and at least a Pile (see example on the github)
-        nreal   : int, number of realization (per unit realizations) to make
-        verbose : 0 or 1.
+        Parameters
+        ----------
+        ArchTable: :class:`Arch_table` object
+            ArchTable containing units, surface,
+            facies and at least a Pile (see example on the github)
+        nreal   : int
+            number of realization (per unit realizations) to make
+        mode: str
+            "facies" or "strati"
+        verbose : int
+            verbosity level, 0 for no print, 1 for print
         """
+ 
 
         xg=ArchTable.get_xg()
         yg=ArchTable.get_yg()
@@ -6159,7 +6708,7 @@ class Unit():
                             localPdf= kwargs["localPdf"],             # local target PDF
                             globalPdf=kwargs["globalPdf"],
                             localPdfSupportRadius=kwargs["localPdfRadius"],      # support radius
-                            comparingPdfMethod=5,           # method for comparing PDF's (see doc: help(gn.deesseinterface.SoftProbability))
+                            comparingPdfMethod=5,           # method for comparing PDF's (see doc: help(geone.deesseinterface.SoftProbability))
                             deactivationDistance=kwargs["deactivationDistance"],       # deactivation distance (checking PDF is deactivated for narrow patterns)
                             constantThreshold=kwargs["constantThreshold"])        # acceptation threshold
 
@@ -6290,47 +6839,47 @@ class Unit():
                 print("SubPile filling method, nothing happened")
             pass
 
+
 class Surface():
+
+    """
+    Class Surface, must be linked to a :class:`Unit` object
+
+    Parameters
+    ----------
+    name : string
+        to identify the surface for debugging purpose
+    contact : string
+        onlap or erode. Onlap indicates that this surface cannot erode older surfaces,
+        on contrary to erode surfaces
+    dic_surf : dict
+        parameters for surface interpolation:
+
+            - int_method : string
+                method of interpolation, possible methods are:
+                kriging, MPS, grf, grf_ineq, linear, nearest,
+            - covmodel : string
+                geone covariance model (see doc Geone for more information)
+                if a multi-gaussian method is used
+            - N_transfo : bool
+                Normal-score transform. Flag to apply or not a Normal Score on the data for the interpolation
+            - Units kwargs  (passed in dic_surf directly):
+
+            for the search ellipsoid (kriging, grf, ...):
+            
+                - r, relative (to covariance model) radius of research (default is 1)
+                - neig, number of neighbours
+                - krig_type: string, kriging method (ordinary_kriging, simple_kriging)
+            for MPS:
+            
+                - TI
+                - various MPS parameters, see geone documentation
+
+    """
 
     def __init__(self, name="Surface_1",
                 dic_surf={"int_method": "nearest", "covmodel": None, "N_transfo": False},
                 contact="onlap"):
-
-        """
-        Class Surface, must be linked to a Unit object
-        ###Description###
-        name          : string to identify the surface for debugging purpose
-        contact         : string, onlap or erode. Onlap indicates
-                         that this surface cannot erode older surfaces,
-                         on contrary to erode surfaces
-        dic_surf        : parameters for surface interpolation
-            int_method: method of interpolation, possible methods are:
-                         kriging, MPS, grf, grf_ineq, linear, nearest,
-            covmodel : geone covariance model (see doc Geone for more information)
-                         if a multi-gaussian method is used
-            N_transfo: bool, Normal-score transform. Flag to apply or not a
-                         Normal Score on the data for the interpolation
-            kwargs:
-              ||
-              ¦¦
-              \/
-        Units kwargs  (passed in dic_surf directly):
-            for the search ellipsoid (kriging, grf, ...):
-                - r, relative (to covariance model) radius of research (default is 1)
-                - neig, number of neighbours
-                - krig_type, string, kriging method (ordinary_kriging, simple_kriging)
-            for MPS:
-                - TI
-                - ...
-            if N_transfo is True:
-                tau: number between 0 and 0.5, threshold to apply at the distribution
-                      implying that 2*tau of the data are not "present"
-                      --> avoids extreme values effects and
-                      allows simulations to go higher/lower than data. Default 0.
-                bandwidth_mult: ]0 to 1] multiplier to apply on the bandwidth to 
-                                compute the kernel distribution. Default 1.
-
-        """
 
         assert contact in ["erode", "onlap", "comf"], "contact must be erode or onlap or comf"
         assert dic_surf["int_method"] is not None, "An interpolation method must be provided"
@@ -6366,10 +6915,17 @@ class Surface():
         return copy.deepcopy(self)
 
     def set_covmodel(self, covmodel):
+
         """
         change or add a covmodel for surface interpolation of self unit.
-        covmodel: geone.covModel2D that will serve for interpolation if the chosen method is grf, grf ineq or kriging
+
+        Parameters
+        ----------
+        covmodel : geone.covModel.CovModel2D
+            covariance model to be used for surface interpolation
+            if the chosen method is grf, grf ineq or kriging
         """
+
         if isinstance(covmodel, geone.covModel.CovModel2D):
             self.covmodel=covmodel
             # self.dic_surf["covmodel"]=covmodel
@@ -6390,6 +6946,14 @@ class Facies():
     """
     class for facies (2nd level of hierarchy)
 
+    Parameters
+    ----------
+    ID : int
+        facies ID that is used in the results
+    name : string
+        facies name, used as an identifier
+    color : string
+        color of the facies, used for plotting
     """
 
     def __init__(self, ID, name, color):
@@ -6420,28 +6984,35 @@ class Prop():
 
     """
     Class for defining a propriety to simulate (3rd level)
+
+    Parameters
+    ----------
+    name : string
+        Property name
+    facies : list of :class:`Facies` objects
+        facies in which we want to simulate the property
+        (in the others the propriety will be set homogenous with a default value)
+    covmodels : list of :class:`geone.covModel.CovModel2D` objects
+        covmodels for the simulation (same size of facies or only 1)
+    means : list of floats
+        mean of the property in each facies (same size of facies)
+    int_method : string
+        method of interpolation, possible methods are:
+        - sgs, default
+        - fft
+        - homogenous
+    def_mean : float
+        default mean to used if none is passed in means array
+    vmin, vmax : float
+        min resp. max value of the property
+    x : ndarray of size (n, 2 --> x, y)
+        position of hard data 
+    v : ndarray of size (n, 1 --> value)
+        value of hard data
     """
 
     def __init__(self, name, facies, covmodels, means, int_method="sgs", x=None, v= None, def_mean=1, vmin=None, vmax=None):
 
-        """
-        name     : name of the propriety
-        facies   : list, facies in which we want to simulate
-                     the property (in the others the propriety will
-                     be set homogenous with a default value
-        covmodels: list, covmodels for the simulation
-                     (same size of facies or only 1)
-        means    : list, mean of the property in each
-                     facies (same size of facies)
-        x        : ndarray of size (n, 3 --> x, y and value)
-                     hard data (if there is some)
-        int_method: string, interpolation method
-                     --> sgs, fft or homogenous, default is sgs
-        def_mean : float, default mean to used if none is passed in means array
-        vmin, vmax: float, min resp. max value of the property.
-                     Values below (resp. above) will be set to
-                     the min (resp. max) value
-        """
 
         assert isinstance(facies, list), "Facies must be a list of facies, even there is only one"
         assert isinstance(vmin, float) or isinstance(vmin, int) or vmin is None, "Vmin error"
@@ -6504,6 +7075,17 @@ class Prop():
 
     def add_hd(self, x,v):
 
+        """
+        add hard data to the property
+
+        Parameters
+        ----------
+        x : ndarray of size (n, 2 --> x, y)
+            position of hard data
+        v : ndarray of size (n, 1 --> value)
+            value of hard data
+        """
+
         assert x.shape[1] == 3, "invalid shape for hd position (x), must be (ndata, 3)"
         assert v.shape[0] == x.shape[0], "invalid number of data points between v and x"
 
@@ -6512,6 +7094,31 @@ class Prop():
 
 
 class borehole():
+
+    """
+    Class to create a borehole object. 
+    Borehole are used to define the lithology and add conditioning data into ArchPy models
+
+    Parameters
+    ----------
+    name : string
+        name of the borehole, not used
+    ID : int
+        ID of the borehole
+    x, y, z : float
+        x, y, z coordinates of the top of the borehole
+    depth : float
+        depth of the borehole
+    log_strati : list of tuples
+        log_strati contains the geological information about the units in the borehole
+        information is given by intervals of the form (strati, top) where strati is a :class:`Unit` object
+        and top is the top altitude of unit interval
+    log_facies : list of tuples
+        log_facies contains the facies information about the borehole
+        information is given by intervals of the form (facies, top) where facies is a :class:`Facies` object
+        and top is the top altitude of facies interval
+    """
+
     def __init__(self, name, ID, x, y, z, depth, log_strati, log_facies=None):
 
         self.name=name  # name of lithology

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ineq module &mdash; ArchPy 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/twemoji.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
+        <script src="_static/twemoji.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ArchPy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="README_rtd.html">Let's get started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">List of modules</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ArchPy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">ineq module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ineq.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-ineq">
+<span id="ineq-module"></span><h1>ineq module<a class="headerlink" href="#module-ineq" title="Permalink to this heading"></a></h1>
+<p>This module contains functions to perform inequality simulations.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This module is obsolete and is not used in the main code.</p>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="ineq.Gibbs_estimate">
+<span class="sig-prename descclassname"><span class="pre">ineq.</span></span><span class="sig-name descname"><span class="pre">Gibbs_estimate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_org</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covmodel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">krig_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'simple_kriging'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ineq.Gibbs_estimate" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ineq.krige">
+<span class="sig-prename descclassname"><span class="pre">ineq.</span></span><span class="sig-name descname"><span class="pre">krige</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cov_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'simple_kriging'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ineq.krige" title="Permalink to this definition"></a></dt>
+<dd><p>Performs kriging - interpolates at locations xu the values v measured at locations x.
+Covariance model given should be:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>in same dimension as dimension of locations x, xu</p></li>
+<li><p>in 1D, it is then used as an omni-directional covariance model</p></li>
+</ul>
+</div></blockquote>
+<p>(see below).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul>
+<li><p><strong>x</strong> (<em>(2-dimensional array of shape (n, d))</em>) – coordinates of the data points
+(n: number of points, d: dimension)
+Note: for data in 1D, it can be a 1-dimensional array of shape (n,)</p></li>
+<li><p><strong>v</strong> (<em>(1-dimensional array of shape (n,))</em>) – values at data points</p></li>
+<li><p><strong>xu</strong> (<em>(2-dimensional array of shape (nu, d))</em>) – coordinates of the points where the interpolation has to be done
+(nu: number of points, d: dimension same as for x),
+called unknown points
+Note: for data in 1D, it can be a 1-dimensional array of shape (nu,)</p></li>
+<li><p><strong>cov_model</strong> (<em>(CovModel1D or CovModel2D or CovModel3D or CovModel1D)</em>) –</p>
+<dl class="simple">
+<dt>covariance model:</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>in same dimension as dimension of points (d), i.e.:</dt><dd><ul>
+<li><p>CovModel1D class if data in 1D (d=1)</p></li>
+<li><p>CovModel2D class if data in 2D (d=2)</p></li>
+<li><p>CovModel3D class if data in 3D (d=3)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>or CovModel1D whatever dimension of points (d):</dt><dd><ul>
+<li><p>used as an omni-directional covariance model</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>method</strong> (<em>(string)</em>) –</p>
+<dl class="simple">
+<dt>indicates the method used:</dt><dd><ul class="simple">
+<li><p>‘simple_kriging’: interpolation by simple kriging</p></li>
+<li><p>‘ordinary_kriging’: interpolation by ordinary kriging</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>mean</strong> (<em>(None or float or ndarray)</em>) –</p>
+<dl class="simple">
+<dt>mean of the simulation (for simple kriging only):</dt><dd><ul class="simple">
+<li><p>None   : mean of hard data values (stationary), i.e. mean of v</p></li>
+<li><p>float  : for stationary mean (set manually)</p></li>
+<li><dl class="simple">
+<dt>ndarray: of of shape (nu,) for non stationary mean,</dt><dd><p>mean at point xu</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p>For ordinary kriging (method = ‘ordinary_kriging’),
+this parameter ignored (not used)</p>
+</li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>vu</strong> (<em>(1-dimensional array of shape (nu,))</em>) – kriged values (estimates) at points xu</p></li>
+<li><p><strong>vu_std</strong> (<em>(1-dimensional array of shape (nu,))</em>) – kriged standard deviation at points xu</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ineq.run_sim">
+<span class="sig-prename descclassname"><span class="pre">ineq.</span></span><span class="sig-name descname"><span class="pre">run_sim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_org</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covmodel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nsim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ineq.run_sim" title="Permalink to this definition"></a></dt>
+<dd><p>Run a inequation simulation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_org</strong> (<em>array of size (nd,4)</em>) – data_org[:,0] : position x of the data
+data_org[:,1] : equality value (nan if no equality)
+data_org[:,2] : lower bound (nan if no lower bound)
+data_org[:,3] : upper bound (nan if no upper bound)</p></li>
+<li><p><strong>xg</strong> (<em>1d grid (np.arange(x0,x1+sx,sx), must be sorted</em>)</p></li>
+<li><p><strong>nsim</strong> (<em>int  (default : 10)</em>) – number of simulations</p></li>
+<li><p><strong>nit</strong> (<em>int (default : 20)</em>) – number of iterations in the gibbs sampler</p></li>
+<li><p><strong>covmodel</strong> (<em>geone.CovModel1D</em>) – geone covariance model</p></li>
+<li><p><strong>var</strong> (<em>float</em>) – variance of the simulation</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>sim</strong> – list of all simulations in one 2D array</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array of size (nsim,nx)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ineq.run_sim_2d">
+<span class="sig-prename descclassname"><span class="pre">ineq.</span></span><span class="sig-name descname"><span class="pre">run_sim_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_org</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covmodel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">krig_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'simple_kriging'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nsim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grf_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fft'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ncpu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">123456789</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ineq.run_sim_2d" title="Permalink to this definition"></a></dt>
+<dd><p>Run a 2D inequality simulation using the Gibbs sampler</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_org</strong> (<em>2D array-like of size nd x 6</em>) – [[x1, y1, z1, vineq_min1, vineq_max1],
+[x2, y2, z2, vineq_min2, vineq_max2],
+…,
+[xnd, ynd, znd, vineq_minnd, vineq_maxnd],]</p></li>
+<li><p><strong>xg</strong> (<em>sequence of float</em>) – x coordinate vector (np.arange(x0,x1+sx,sx)</p></li>
+<li><p><strong>yg</strong> (<em>sequence of float</em>) – y coordinate vector (np.arange(y0,y1+sy,sy)</p></li>
+<li><p><strong>covmodel</strong> (<em>geone.CovModel</em>) – covariance model to use. Must be 2D.</p></li>
+<li><p><strong>var</strong> (<em>float or None, optional</em>) – variance. If None, will be estimated from data.</p></li>
+<li><p><strong>mean</strong> (<em>float or None, optional</em>) – mean. If None, will be estimated from data.</p></li>
+<li><p><strong>krig_type</strong> (<em>str, optional</em>) – kriging type to use. Must be “simple_kriging” or “ordinary_kriging”.</p></li>
+<li><p><strong>nsim</strong> (<em>int, optional</em>) – number of simulations</p></li>
+<li><p><strong>nit</strong> (<em>int, optional</em>) – number of Gibbs iterations</p></li>
+<li><p><strong>nmax</strong> (<em>int, optional</em>) – maximum number of nearest neighbours to consider</p></li>
+<li><p><strong>grf_method</strong> (<em>str, optional</em>) – method to use for grf simulation. Must be “fft” or “lu”.</p></li>
+<li><p><strong>ncpu</strong> (<em>int, optional</em>) – number of cores to use. If -1, will use all available cores.</p></li>
+<li><p><strong>seed</strong> (<em>int, optional</em>) – seed for random number generator</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>out</strong> – array of all simulations</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>3D array of size (nsim,ny,nx)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, University of Neuchâtel.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction &mdash; ArchPy 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/twemoji.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
+        <script src="_static/twemoji.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorials" href="tutorials.html" />
+    <link rel="prev" title="Welcome to ArchPy’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ArchPy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Let's get started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#notebook-examples">Notebook examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-cite">How to cite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contact">Contact</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">List of modules</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ArchPy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Introduction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/README_rtd.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h1>
+<p>ArchPy package is a tool to create, manipulate and vizualize 3D geological and petro-physical models of the subsurface.
+It relies on a hierarchical approach to generate geological and petrophyiscal models at different spatial scales.
+Three main levels can be distinguished:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Units: Biggest geological features, this level corresponds to the
+stratigraphical geological units that are distinct by their depositional time.
+They are defined by 2D surfaces that bound their bottom and top.</p></li>
+<li><p>Facies: Smaller and more scattered geological features, they represent the geological heterogeneity at a more local scale
+and are generally simulated using 3D indicator simulations (SIS, TPGs, MPS, …)</p></li>
+<li><p>Properties: these represent the physical properties of the subsurface such as permeability or electrical conductivity and are continuous.
+They represent a very local but critical heterogeneity that has to be taken into account into physical simulations (groundwater, geophysical, transport, etc.)</p></li>
+</ul>
+</div></blockquote>
+<p>ArchPy offers a variety of capabilities such as:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>blabla</p></li>
+<li><p>blabla 2</p></li>
+</ul>
+</div></blockquote>
+<p>ArchPy is a pure  Swiss product (🫕), produced by the <a class="reference external" href="https://www.unine.ch/philippe.renard/de/home.html">Randlab</a> at University of Neuchâtel.</p>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<p>ArchPy is available on <a class="reference external" href="https://pypi.org/project/geoarchpy">Pypi</a> and can be installed with pip:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">geoarchpy</span>
+</pre></div>
+</div>
+<p>OR</p>
+<p>ArchPy can be installed locally with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>when in the main directory.</p>
+<p>Alternatively, it is possible to add ArchPy path directly in the python script with sys:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;path where ArchPy is&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and then import ArchPy.</p>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
+<p>The following python packages are absolutely necessary:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://github.com/randlab/geone">Geone</a></p></li>
+<li><p>matplotlib</p></li>
+<li><p>numpy</p></li>
+<li><p>SciPy</p></li>
+<li><p>sklearn</p></li>
+<li><p>pandas</p></li>
+<li><p>shapely &lt; 2.0</p></li>
+</ul>
+</div></blockquote>
+<p>These are not required but highly recommanded:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>PyVista (for 3D vizualisation)</p></li>
+<li><p>pyyaml (for export uses)</p></li>
+<li><p>Rasterio (to use rasters)</p></li>
+<li><p>Geopandas (to use shapefile)</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="notebook-examples">
+<h2>Notebook examples<a class="headerlink" href="#notebook-examples" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><p>There is some example notebooks :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>01_basic : a folder where simple and basics ArchPy functionnalities are described</p></li>
+<li><p>02_3D_ArchPy : a complete 3D ArchPy model example</p></li>
+<li><p>03_Article_example : a synthetical example shown in ArchPy article</p></li>
+<li><p>04_hierarchies : an example with many hierarchical units to test ArchPy capabilities</p></li>
+<li><p>05_mps_surfaces : an example how to use MPS to simulate the units surfaces</p></li>
+<li><p>06_cross_validation : a notebook that present how to perform a cross-validation directly with ArchPy</p></li>
+<li><p>07_geological_map : this notebook presents how to integrate and use a geological in an ArchPy model</p></li>
+<li><p>08_inference : little guide how to use archpy inference tools to estimate surface parameters (no facies parameters for now)</p></li>
+<li><p>09_interface : little example of an interface to call an preexisting archpy model.</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+</section>
+<section id="how-to-cite">
+<h2>How to cite<a class="headerlink" href="#how-to-cite" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><p>A paper was published on the ArchPy concept and its different capabilities.
+The paper was written with the version 0.1 of ArchPy.
+It is available with the following <a class="reference external" href="https://www.frontiersin.org/articles/10.3389/feart.2022.884075/">Link</a>.</p>
+</div></blockquote>
+</section>
+<section id="contact">
+<h2>Contact<a class="headerlink" href="#contact" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><p>For any questions regarding ArchPy, please feel free to contact me at &lt;<a class="reference external" href="mailto:ludovic&#46;schorpp&#37;&#52;&#48;unine&#46;ch">ludovic<span>&#46;</span>schorpp<span>&#64;</span>unine<span>&#46;</span>ch</a>&gt;</p>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to ArchPy’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tutorials.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, University of Neuchâtel.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

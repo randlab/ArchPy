@@ -1,3 +1,7 @@
+"""
+This module contains functions to load and save ArchPy models and results.
+"""
+
 import os
 import sys
 import numpy as np
@@ -21,9 +25,9 @@ import ArchPy
 class drawPoly:
     
     """
-    To draw a polygon on a specified figure (ax)
-    first the object must be create and after the draw function can be called.
-    It takes as inputs a figure (ax) and a typ of drawing (rectangle or polygon)
+    Class to draw a polygon on a specified figure (ax) and return the coordinates of the polygon.
+    First the object must be create and after the draw function can be called.
+    It takes as inputs a figure (ax) and a type of drawing (rectangle or polygon)
     """
 
     def __init__(self):
@@ -31,6 +35,20 @@ class drawPoly:
         self.list_p=[]
     
     def draw(self, ax, typ="rectangle"):
+
+        """
+        Draw a polygon on a specified figure (ax) and return the coordinates of the polygon.
+        It takes as inputs a figure (ax) and a type of drawing (rectangle or polygon)
+
+        Parameters
+        ----------
+        ax : matplotlib axes object
+            axes on which the polygon will be drawn
+        typ : str, optional
+            type of drawing, by default "rectangle".
+            Can be "rectangle" or "polygon".
+        """
+
         print("Select your region")
         print("Use left button to select you area(s)")
         if typ=="rectangle":
@@ -48,6 +66,7 @@ class drawPoly:
         return 1
     
     def f(self, x):
+
         if x not in self.list_p:
             self.list_p.append(x)
             print("Polygon added - please press esc if you want to draw another or close the window when you have finished")
@@ -59,12 +78,31 @@ class drawPoly:
 def imp_cm(covmodel_dic):
     
     """
-    Import a geone covmodel given the dictionnary written in the yaml file
+    Function to import a geone covmodel given the dictionnary written in the yaml file
+
+    Note
+    ----
+    The dictionnary must contain the following keys:
+    - elem : list of tuples containing the elementary structures
+    - alpha : list of floats, anisotropy ratios
+    - beta : list of floats, anisotropy ratios
+    - gamma : list of floats, anisotropy ratios
+
+    Warning
+    -------
+    Does not work if the variogram is a pure nugget
+
+    Parameters
+    ----------
+    covmodel_dic : dict
+        dictionnary containing the covmodel parameters
+        
+    Returns
+    -------
+    geone.covModel
     """
 
-    #doest not work if pure nugget...
-
-    #check dimension
+    # check dimension
     n=len(covmodel_dic["elem"][0][1]["r"])
     if n == 1:
         cm=gcm.CovModel1D(elem=covmodel_dic["elem"])
@@ -85,24 +123,39 @@ def load_results(ArchTable, surfs=None, surfs_bot=None, units=None, facies=None,
     Load ArchTable results. 
     If external results must be imported, path of these files (e.g. surf argument) can be passed directly
     All files must be pickle binary files with appropriate format (see below).
-    surfs     : str, path to surfaces file 
-                The surfaces original format must be a dictionary with 2D arrays containing surfaces
-                as values and associated pile objects as keys.
-    surfs_bot : str, path to bot surfaces file
-                The surfaces original format must be a dictionary with 2D arrays containing surfaces
-                as values and associated pile objects as keys.
-    units     : str, path to units file
-                The units original format must be a 4D array of size (nreal, nz, ny, nx) 
-                with unit IDs as values.
-    facies    : str, path to facies file
-                The facies original format must be a 5D array of size 
-                (nreal_units, nreal_facies, nz, ny, nx) with facies IDs as values.
-    props     : str, path to prop file
-                The properties original format must be a dictionary with property names as keys and 
-                6D array of size (nreal_units, nreal_facies, nreal_prop, nz, ny, nx) 
-                with prop values as values.
-    """
 
+    Parameters
+    ----------
+    ArchTable : :class:`base.Arch_table`
+                ArchTable object
+    surf      : str,
+                Path to the surface results file
+                The surfaces original format must be a dictionary with 2D arrays containing surfaces
+                as values and associated pile objects as keys.
+    surf_bot  : str,
+                Path to the surface bot results file
+                The surfaces original format must be a dictionary with 2D arrays containing surfaces
+                as values and associated pile objects as keys.
+    units     : str,
+                Path to the units results file
+                The units original format must be a 4D array of size (nreal, nz, ny, nx)
+                with unit IDs as values.
+    facies    : str,
+                Path to the facies results file
+                The facies original format must be a 5D array of size
+                (nreal_units, nreal_facies, nz, ny, nx) with facies IDs as values.
+    props     : str,
+                Path to the properties results file
+                The properties original format must be a dictionary with property names as keys and
+                6D array of size (nreal_units, nreal_facies, nreal_prop, nz, ny, nx)
+                with prop values as values.
+
+    Returns
+    -------
+    ArchTable : :class:`base.Arch_table`
+                ArchTable object with results loaded
+    """
+       
     if surfs is None:
         #surfaces
         try:
@@ -204,34 +257,46 @@ def load_bh_files(list_bhs, facies_data, units_data,
     databases in only one, 
     each row of the output dataframe corresponds
     to a layer information about units and facies
-
-    #inputs#
-    list_bhs    : dataframe, list of boreholes file
-    facies_data : dataframe, facies data file
-    units_data  : dataframe, unit data file
-    {}_bh_id_col: str, column name of borehole identifier 
-                  in {} data file (list_bhs (lbhs), unit (u), facies (fa))
-    u_top_col   : str, column name of top elevation info 
-                  in unit data file
-    u_bot_col   : str, column name of bot elevation info 
-                  in unit data file
-    u_ID        : str, column name of unit identifier info
-                  in unit data file 
-    fa_top_col  : str, column name of top elevation info
-                  in facies data file
-    fa_bot_col  : str, column name of bot elevation info
-                  in facies data file
-    fa_ID       : str, column name of top elevation info
-                  in facies data file
-    dic_units_names  : dictionary of old units names (keys) 
-                       and new units names (values).
-                       This is useful to merge some units
-    dic_facies_names : dictionary of old facies names (keys) 
-                       and new facies names (values).
-                       This is useful to merge some facies
     
-    #outuput#
-    A panda dataframe containing geological informations
+    Parameters
+    ----------
+    list_bhs : panda dataframe
+        list of boreholes in ArchPy format
+    facies_data : panda dataframe
+        facies data file in ArchPy format
+    units_data : panda dataframe
+        unit data file in ArchPy format
+    lbhs_bh_id_col : str, optional
+        column name of borehole identifier in list_bhs data file, by default "bh_ID"
+    u_bh_id_col : str, optional
+        column name of borehole identifier in unit data file, by default "bh_ID"
+    fa_bh_id_col : str, optional
+        column name of borehole identifier in facies data file, by default "bh_ID"
+    u_top_col : str, optional
+        column name of top elevation info in unit data file, by default "top"
+    u_bot_col : str, optional
+        column name of bot elevation info in unit data file, by default "bot"
+    u_ID : str, optional
+        column name of unit identifier info in unit data file, by default "Strat"
+    fa_top_col : str, optional  
+        column name of top elevation info in facies data file, by default "top"
+    fa_bot_col : str, optional  
+        column name of bot elevation info in facies data file, by default "bot"
+    fa_ID : str, optional
+        column name of top elevation info in facies data file, by default "facies_ID"
+    dic_units_names : dictionary, optional
+        dictionary of units names, by default {}
+    dic_facies_names : dictionary, optional
+        dictionary of facies names, by default {}
+    altitude : bool, optional
+        if True, the elevation of the boreholes is taken into account, by default True
+    vb : int, optional
+        verbose, by default 1
+
+    Returns
+    -------
+    panda dataframe
+        dataframe with unit and facies information merged
     """
 
     def merge_dbs (fa_data, s_data):
@@ -259,7 +324,7 @@ def load_bh_files(list_bhs, facies_data, units_data,
                 i_s=0
                 ibot=None
                 itop=None
-                for i in range(fa_idata.shape[0]+s_idata.shape[0]): #loop over layers in borehole
+                for i in range(fa_idata.shape[0]+s_idata.shape[0]):  # loop over layers in borehole
 
                     #top, bot and id from facies and unit data 
                     ifa_top=fa_idata.top.values[i_fa]
@@ -336,11 +401,21 @@ def load_bh_files(list_bhs, facies_data, units_data,
     #fa_data=pd.read_csv(facies_data)
     fa_data=facies_data.copy()
     fa_data.rename(columns={fa_bh_id_col:"bh_ID", fa_top_col:"top",fa_bot_col:"bot",fa_ID:"facies_ID"},inplace=True)
+    if altitude:
+        fa_data.sort_values(by=["bh_ID","top"], ascending=False, inplace=True)
+    else:
+        fa_data.sort_values(by=["bh_ID","top"], ascending=True, inplace=True)
+
     fa_data.set_index("bh_ID", inplace=True)
     
     #s_data=pd.read_csv(units_data)
     s_data=units_data.copy()
     s_data.rename(columns={u_bh_id_col:"bh_ID", u_top_col:"top",u_bot_col:"bot",u_ID:"Strat"},inplace=True)
+    if altitude:
+        s_data.sort_values(by=["bh_ID","top"], ascending=False, inplace=True)
+    else:
+        s_data.sort_values(by=["bh_ID","top"], ascending=True, inplace=True)
+
     s_data.set_index("bh_ID", inplace=True)
     
     #list_bhs=pd.read_csv(list_bhs)
@@ -386,12 +461,14 @@ def load_bh_files(list_bhs, facies_data, units_data,
         #facies data
         for i in range(fa_idata.shape[0]):
             #top
+
             top=fa_idata.loc[i, "top"]
             if top_0 != top and i == 0:
+
                 if vb:
                     print("Error, top altitude of first facies does not match borehole altitude")
-                fa_idata.loc[i,"top"]=top_0
-
+                #fa_idata.loc[i,"top"]=top_0
+                fa_data=add_gap(fa_data, bh_id, top_0, top)
 
             if i > 0 and bot != top:  # if there is a gap in the data
                 fa_data=add_gap(fa_data, bh_id, bot, top)
@@ -407,20 +484,23 @@ def load_bh_files(list_bhs, facies_data, units_data,
 
             #top
             top=s_idata.loc[i, "top"]
+
             if top_0 != top and i == 0:
                 if vb:
                     print("Error, top altitude of first unit does not match borehole altitude")
-                s_idata.loc[i,"top"]=top_0
 
+                #s_idata.loc[i,"top"]=top_0
+                s_data=add_gap(s_data, bh_id, top_0, top)
 
             if i > 0 and bot != top:  # if there is a gap in the data
-                fa_data=add_gap(fa_data, bh_id, bot, top)
+                s_data=add_gap(s_data, bh_id, bot, top)
 
             bot=s_idata.loc[i,"bot"]
 
             if i == s_idata.shape[0] - 1:  # last lay
                 if (bot-1e-5 > top_0 - depth):  # if bot above maximum depth of borehole --> add a gap
-                    fa_data=add_gap(fa_data, bh_id, bot, top_0 - depth)
+                    s_data=add_gap(s_data, bh_id, bot, top_0 - depth)
+                    print(1)
 
     fa_data.index.rename("bh_ID", inplace=True)
     s_data.index.rename("bh_ID", inplace=True)
@@ -428,7 +508,7 @@ def load_bh_files(list_bhs, facies_data, units_data,
     #sort everything
     fa_data=fa_data.reset_index().sort_values(by=["bh_ID","top"],ascending=False).set_index("bh_ID")
     s_data=s_data.reset_index().sort_values(by=["bh_ID","top"],ascending=False).set_index("bh_ID")
-    
+
     #merge
     final_db=merge_dbs(fa_data, s_data)
 
@@ -439,20 +519,38 @@ def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()
      
     """
     Return a list of ArchTable boreholes from final database of load_bh_files
-    df       : a dataframe containing the geological infos. Generally generate using load_bh_files.
-    list_bhs : list of boreholes dataframe with appropriate column name (generally use second output of load_bh_files)
-    ArchTable: Arch_table object
-    units_to_ignore : sequence of string, unit identifiers to ignore in the database df
-                      e.g. if a unit is present in the logs but not defined in the ArchTable
-    facies_to_ignore : sequence of string, facies identifiers to ignore in the database df    
-    extract_units    : bool, extracting unit info
-    extract_ facies  : bool, extracting facies info
-    ignore2None      : bool, Ignoring units, facies are considered as None (i.e. gaps)
-    fill_gaps        : bool, if possible, gaps are filled. It means that
-                       if you have a gap btw two occurence of the same unit, the gap is considered
-                       belonging to this unit      
-    """
 
+    Parameters
+    ----------
+    df : pandas dataframe
+        final database of load_bh_files
+    list_bhs : pandas dataframe
+        list of boreholes dataframe with appropriate column name (generally use second output of :func:`load_bh_files`)
+    ArchTable : :class:`base.Arch_table` object
+        Arch_table object
+    units_to_ignore : sequence of string, optional
+        unit identifiers to ignore in the database df. The default is ().
+    facies_to_ignore : sequence of string, optional
+        facies identifiers to ignore in the database df. The default is ().
+    extract_units : bool, optional
+        extracting unit info. The default is True.
+    extract_facies : bool, optional
+        extracting facies info. The default is True.
+    ignore2None : bool, optional
+        Ignoring units and facies are considered as None (i.e. gaps). The default is True.
+    fill_gaps : bool, optional
+        if possible, gaps are filled. It means that if you have a gap in the data, 
+        the unit/facies is considered as the one above. The default is True.
+    vb : int, optional
+        verbose. The default is 0.
+
+    Returns
+    -------
+    list of :class:`base.borehole` objects 
+        list of boreholes objects
+
+    """
+ 
     #list_bhs=pd.read_csv(list_bhs)
 
     #reset index for getting boreholes objects
@@ -522,7 +620,7 @@ def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()
             #log strati
             if unit_name not in units_to_ignore:
                 prev_ignore_flag=False
-                if unit_name in [i.name for i in ArchTable.get_all_units()]:# new bh that have strati info
+                if unit_name in [i.name for i in ArchTable.get_all_units()] or unit_name is None:# new bh that have strati info
                     #if unit_name not in [i[0].name for i in log_strati if i[0] is not None]: # if this encountered unit is not already in log
                     if unit_name_prev != unit_name:
                         if altitude:
@@ -573,7 +671,7 @@ def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()
             #log_facies
             if facies_name not in facies_to_ignore:
                 prev_ignore_flag = False
-                if facies_name in [i.name for i in ArchTable.get_all_facies()]:# new bh that have strati info
+                if facies_name in [i.name for i in ArchTable.get_all_facies()] or facies_name is None:# new bh that have strati info
                     if facies_name_prev != facies_name:
                         if altitude:
                             z=df.loc[idx,"top"] 
@@ -639,7 +737,18 @@ def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()
 def import_d_facies(dic_project):
     
     """
-    Import a dictionary of facies objects
+    Import a dictionary of facies objects from the dictionary of
+    the project that was imported from the yaml file
+
+    Parameters
+    ----------
+    dic_project : dict
+        Dictionary of the project imported from the yaml file
+
+    Returns
+    -------
+    dict
+        Dictionary of facies objects
     """
     d={}
 
@@ -658,6 +767,20 @@ def import_d_units(dic_project, all_facies, ws=None):
 
     """
     Import a dictionary of unit objects
+
+    Parameters
+    ----------
+    dic_project : dict
+        Dictionary of the project imported from the yaml file
+    all_facies : dict
+        Dictionary of all facies objects
+    ws : str, optional
+        Path to the working directory, by default None
+
+    Returns
+    -------
+    dict
+        Dictionary of units objects   
     """
 
     d={}
@@ -716,6 +839,13 @@ def import_d_prop(dic_project, d_fa):
     
     """
     Import a dictionary of property objects
+
+    Parameters
+    ----------
+    dic_project : dict
+        Dictionary of the project imported from the yaml file
+    d_fa : dict
+        Dictionary of facies objects (see :func:`import_d_facies`)
     """
 
     assert "properties" in dic_project.keys(), '"properties" field not defined in the project yaml file'
@@ -749,6 +879,13 @@ def import_d_piles(dic_project, d_units):
     
     """
     Import a dictionary of pile objects from the given dictionary project
+
+    Parameters
+    ----------
+    dic_project : dict
+        Dictionary of the project imported from the yaml file
+    d_units : dict
+        Dictionary of units objects (see :func:`import_d_units`)
     """
 
     d={}
@@ -768,13 +905,27 @@ def import_project(project_name, ws, import_bhs=True, import_results=True, impor
     Load an ArchPy project (Arch_table) 
     with the specified name (project_name) 
     and in the working_directory (ws) 
-    import_bhs     : bool, flag to indicate to import borehole files
-    import_results : bool, flag to indicate to import result files
-    import_grid    : bool, flag to indicate to import grid
-    verbose : int (0 or 1), to change verbose of ArchTable if needed
     
-    # output #
-    An Arch_table object
+    Note
+    ----
+    All the configurations files must be in the working directory
+
+    Parameters
+    ----------
+    project_name : str
+        Name of the project --> name of the yaml file
+    ws : str
+        Path to the working directory where all files are stored
+    import_bh : bool, optional
+        Flag to indicate to import borehole files, by default True
+    import_results : bool, optional
+        Flag to indicate to import result files, by default True
+    import_grid : bool, optional
+        Flag to indicate to import grid, by default True
+
+    Returns
+    -------
+    :class:`ArchPy.base.Arch_table` object
     """
     
     print("### IMPORTING PROJECT {} IN {} DIRECTORY ### \n".format(project_name, ws))
@@ -1042,11 +1193,13 @@ def save_results(ArchTable):
 
     return d
 
-#Create data in a format acceptable for yaml#
+# Create data in a format acceptable for yaml#
 def Cm2YamlCm (cm):
 
     """
     Convert covmodel numbers to float format for yaml compatibility
+
+    :meta private:
     """
 
     cm_tr=[]
@@ -1094,6 +1247,8 @@ def create_d_surface(surface, ws):
     
     """
     create a yaml dic for a surface object
+
+    :meta private:
     """
     d={}
     d["name"]=surface.name
@@ -1195,9 +1350,6 @@ def create_d_unit(unit, ws):
 
 def create_d_pile(pile):
 
-    """
-    ...
-    """
 
     d={}
     d["name"]=pile.name
@@ -1208,10 +1360,6 @@ def create_d_pile(pile):
     return d
 
 def create_d_prop(prop):
-
-    """
-    ...
-    """
 
     def fun(seq):
         l=[]
@@ -1284,9 +1432,15 @@ def create_d_properties(ArchTable):
 def save_project(ArchTable, results=True):
     
     """
-    Return project (ArchTable) under the form of a dictionary 
-    in the right format for yaml export
-    results : bool, flag to save results or not
+    Save an Arch_table object in a yaml file and other supplementary files 
+    (images, numpy arrays, gslib files) in a folder.
+
+    Parameters
+    ----------
+    ArchTable : :class:`base.Arch_table`
+        Arch_table object to save
+    results : bool, optional
+        flag to save results or not
     """
 
     d={}
@@ -1377,9 +1531,32 @@ def save_project(ArchTable, results=True):
     return True 
 
 
-
 def bhs_analysis(db,  Strat_ID="Strat_ID", Facies_ID="Facies_ID", top_col="top", bot_col="bot", ax=None):
     
+    """
+    Function to plot the facies proportions in boreholes and return the values in a dataframe
+
+    Parameters
+    ----------
+    db : pandas dataframe
+        dataframe containing the boreholes
+    Strat_ID : str, optional
+        name of the column containing the stratigraphic ID
+    Facies_ID : str, optional
+        name of the column containing the facies ID
+    top_col : str, optional
+        name of the column containing the top of the unit
+    bot_col : str, optional
+        name of the column containing the bottom of the unit
+    ax : matplotlib axis, optional
+        axis to plot the results
+
+    Returns
+    -------
+    pandas dataframe   
+        dataframe containing the facies proportions in each stratigraphic unit
+    """
+
     t=db.copy()
     ##Facies
     t["thickness"]=t[top_col] - t[bot_col]
@@ -1402,5 +1579,5 @@ def bhs_analysis(db,  Strat_ID="Strat_ID", Facies_ID="Facies_ID", top_col="top",
               ncol=3, fancybox=True, shadow=True)
     plt.tight_layout()
     
-    return
+    return df
     

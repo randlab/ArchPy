@@ -1,5 +1,12 @@
+"""
+Module to use Truncated plurigaussians.
+
+Warning
+-------
+The C functions are not working anymore due to incompatibilities between linux, windows and mac os.
+"""
+
 import numpy as np
-import matplotlib
 from matplotlib import colors
 import matplotlib.pyplot as plt
 import scipy
@@ -107,6 +114,8 @@ def Cstruc2geoCm2D(Cstruc):
 
     """
     Inverse of geoCm2Cstruc
+
+    Pass from a C structure in ctypes to a geone covmodel
     """
 
     nstruc = Cstruc.nstruc
@@ -206,10 +215,58 @@ def Cstruc2geoCm3D(Cstruc):
     new_cm = gcm.CovModel3D(elem,alpha=Cstruc.alpha,beta=Cstruc.beta,gamma=Cstruc.gamma)
     return new_cm
 
+def Ivario(x,v,icat,ncla=10,dim = 1,alpha=0.0,hmax=np.nan):
+
+    """
+    Compute experimental indicator variogram using geone variogram
+
+    Parameters
+    ----------
+    x : ndarray of size (n, k)
+        coordinates of data points, where n is the number of points and k is the dimension
+    v : ndarray of size (n,)
+        values at data points
+    icat : ndarray of size (n,)
+        category of data points
+    ncla : int
+        number of categories
+    dim : int
+        dimension of the space
+    alpha : float
+        angle of rotation
+    hmax : float
+        maximum distance
+
+    Returns
+    -------
+    Experimental variogram
+    """
+
+    f = v.copy()
+    f[f!=icat]=0
+    f[f==icat]=1
+
+    if dim == 1:
+        return geone.covModel.variogramExp1D(x,f,ncla=ncla,hmax=hmax,make_plot=False)
+    elif dim == 2:
+        return geone.covModel.variogramExp2D(x,f,alpha=alpha,ncla=ncla,hmax=hmax,make_plot=False)
+    
+
 def flag2Cflag(flag):
 
     """
     From a dictionary of facies to dic of C structures for the flag of the Truncated Plurigau
+
+    Parameters
+    ----------
+
+    flag : dictionary
+        dictionary containing the thresholds for each facies
+
+    Returns
+    -------
+    dictionnary
+        dictionary of facies to C structure
     """
 
     dic = {}
@@ -227,37 +284,22 @@ def flag2Cflag(flag):
         dic[k] = fa
     return dic
 
-#functions
-def Ivario(x,v,icat,ncla=10,dim = 1,alpha=0.0,hmax=np.nan):
-
-    """
-    compute indicator variogram using geone variogramExp
-    x : ndarray of size (n,k) coordinates of points, where n is the number of points and k is the dimension
-    v : ndarray of size n, facies vector containing facies ID
-    icat : int, ID facies to indicate which facies to analyze
-    dim : int, wanted dimension (1,2 only)
-    alpha : float, direction if dim = 2
-    hmax : int or tuple of size 2 to indicate maximum distance to investigate
-    """
-
-    f = v.copy()
-    f[f!=icat]=0
-    f[f==icat]=1
-
-    if dim == 1:
-        return geone.covModel.variogramExp1D(x,f,ncla=ncla,hmax=hmax,make_plot=False)
-    elif dim == 2:
-        return geone.covModel.variogramExp2D(x,f,alpha=alpha,ncla=ncla,hmax=hmax,make_plot=False)
-
 
 def zone_facies(g1v,g2v,flag_facies):
 
     """
     Given gaussian values for gaussian fields (g1v,g2v)
     check if the point is inside a certain facies and in which interval
-    flag_facies : list of thresholds for a certain facies
 
-    return : index position to indicate which interval of the facies or None if the point is not inside
+    Parameters
+    ----------
+    flag_facies : list 
+        list of thresholds for a certain facies. Comes from the flag.
+
+    return
+    ------
+    int
+        index position to indicate which interval of the facies or None if the point is not inside
     """
 
     i = -1
@@ -278,6 +320,16 @@ def infacies(g1v,g2v,flag):
     """
     return the facies in which a point of coordinate (g1v, g2v) is.
 
+    Parameters
+    ----------
+    g1v : float
+        value of the first gaussian field
+        x coordinate to evaluate on the flag
+    g2v : float
+        value of the second gaussian field
+        y coordinate to evaluate on the flag
+    flag : dictionnary
+        Threshold flag for the TPGs
     """
 
     for k in flag.keys():
@@ -319,9 +371,14 @@ def p1zone(flag_facies):
     """
     Calculate the probability of a facies to belongs to a certain part of the facies
     (on the flag --> facies are separated by thresholds and it is possible to have multiple zones for 1 facies)
-    flag_facies : list of the thresholds for the facies
-                (format : [[(x0,x1),(y0,y1)],[(x1,x3),(y1,y4)]],
-                 for some thresholds xi,yi for the two gaussian fields)
+
+    Parameters
+    ----------
+    flag_facies : list of list of tuples
+        Each sublist contains two tuples that are the 
+        threshold coordinates (in gaussian space) that form a rectangle where the facies is present
+        (format : [[(x0,x1),(y0,y1)],[(x1,x3),(y1,y4)]],
+        xi --> 1st gaussian field, yi --> second gaussian field
     """
 
     proba_zones = []
@@ -341,7 +398,6 @@ def p1zone(flag_facies):
     return pz
 
 def plot_flag(flag,**kwargs):
-
 
     l= []
     for v in flag.values():
@@ -380,6 +436,7 @@ def Gspace2Pspace(flag):
 
     """
     Return a flag in the probability space given a flag in gaussian space
+
     """
 
     d = {}
@@ -425,13 +482,27 @@ def Truncation3D(nx,ny,nz,sims,flag):
 
     """
     Function that operates the truncation process for TPGs in 3D
-    nx, ny, nz : number of cell in x,y and z direction
-    sims : ndarray of size (nsim,nz,ny,nx) where nsim is the number of realizations
-    flag   : dictionnary containing for each facies a list of the thresholds (in gaussian space) for the two gaussian fields
-             exemple with 3 facies of ID : (1,2,3) :
-           {1: [[(-inf, -0.3), (-inf, 0)], [(0.3, inf), (-inf, 0.5)]],
-            2: [[(-inf, -0.3), (0, inf)]],
-            3: [[(-0.3, 0.3), (-inf, inf)], [(0.3, inf), (0.5, inf)]]}.
+
+    Parameters
+    ---------
+    nx : int
+        number of cells in x direction
+    ny : int
+        number of cells in y direction
+    nz : int
+        number of cells in z direction        
+    sims : ndarray of size (nsim, nz, ny, nx) 
+        simulations to apply the truncation
+    flag  : dictionnary 
+        It contains for each facies a list of the thresholds (in gaussian space) for the two gaussian fields
+        example with 3 facies of ID : (1,2,3)::
+            
+            {
+                1: [[(-inf, -0.3), (-inf, 0)], [(0.3, inf), (-inf, 0.5)]],
+                2: [[(-inf, -0.3), (0, inf)]],
+                3: [[(-0.3, 0.3), (-inf, inf)], [(0.3, inf), (0.5, inf)]]
+            }
+
     """
 
     nk = len(flag.keys())
@@ -462,31 +533,56 @@ def opti_vario(IK_covmodels,covmodels_to_fit,pk,flag,n=8,du=0.03,dv=0.03,c_reg=0
     in order to reproduce the IK_covmodels using a least-square method
     Very slow --> To improve
 
-    ## inputs ##
-    IK_covmodels : list of k indicator covmodels (geone.covModel) where k is the number of facies
-                   order in the list must be the same than the keys of the flag
-    covmodels_to_fit : list of 2 covmodels (geone.covModel) to infer. Parameters to infer should be specified with a string.
-                --> G1_to_opt = gcm.CovModel3D(elem=[("gaussian",{"w":1,"r":["rx1","rx1","rz1"]})],
-                                                alpha="alpha",beta=0,gamma=0)
-                    G2_to_opt = gcm.CovModel3D(elem=[("gaussian",{"w":1,"r":["rx2","rx2","rz2"]})],
-                                                alpha="alpha2",beta="beta2",gamma=0)
-                    covmodels_to_fit = [G1_to_opt,G2_to_opt]
-    pk : array-like of proportion for each facies (order in the array same that IK_covmodels)
-    flag : dictionnary containing for each facies a list of the thresholds (in gaussian space) for the two gaussian fields
-             exemple with 3 facies of ID : (1,2,3) :
-           {1: [[(-inf, -0.3), (-inf, 0)], [(0.3, inf), (-inf, 0.5)]],
-            2: [[(-inf, -0.3), (0, inf)]],
-            3: [[(-0.3, 0.3), (-inf, inf)], [(0.3, inf), (0.5, inf)]]}
-    n : int, number of points to use for inversion along each axis (3*n points will be used for each misfit calculation)
-    du,dv : float, precision to use in the calcul of the probability btw facies, values of 0.05 are generally enough.
-    c_reg : regularization coefficient to apply on radius parameters (radius of covmodels only), problem dependent.
-    print_infos : bool, print misfit and regularization objective functions each iteration
-    min_method : method to use for the minimization with minimize (only Nelder-mead is available)
-    ftol, xtol : tolerance ratio for convergence of objective function and parameter resp.
+    Parameters
+    ----------
+    IK_covmodels : list of size k
+        list of k indicator covmodels (geone.covModel) where k is the number of facies
+        order in the list must be the same than the keys of the flag
+    covmodels_to_fit : list of size 2
+        list of 2 covmodels (geone.covModel) to infer. Parameters to infer should be specified with a string.
+        Example:: 
 
-    ## outputs ##
-    results of the minimization.
-    covmodels_to_fit has also been updated (by reference) with best parameters
+        G1_to_opt = gcm.CovModel3D(elem=[("gaussian",{"w":1,"r":["rx1","rx1","rz1"]})], alpha="alpha",beta=0,gamma=0)
+        G2_to_opt = gcm.CovModel3D(elem=[("gaussian",{"w":1,"r":["rx2","rx2","rz2"]})], alpha="alpha2",beta="beta2",gamma=0)
+        covmodels_to_fit = [G1_to_opt,G2_to_opt]
+            
+    pk : array-like of size k
+        proportion for each facies (order in the list must be the same than the keys of the flag)
+    flag : dictionnary
+        dictionnary containing for each facies a list of the thresholds (in gaussian space) for the two gaussian fields
+
+        Example with 3 facies of ID : (1,2,3)::
+
+            {
+                1: [[(-inf, -0.3), (-inf, 0)], [(0.3, inf), (-inf, 0.5)]],
+                2: [[(-inf, -0.3), (0, inf)]],
+                3: [[(-0.3, 0.3), (-inf, inf)], [(0, inf), (0.5, inf)]]
+            }
+
+    n : int, optional
+        number of points to use to compute the variogram
+    du : float, optional
+        precision to use in the calcul of the probability btw facies,
+        values of 0.05 are generally enough.
+    dv : float, optional
+        precision to use in the calcul of the probability btw facies,
+        values of 0.05 are generally enough.
+    c_reg : float, optional
+         regularization coefficient to apply on radius parameters (radius of covmodels only),
+         problem dependent.
+    print_infos : bool, optional
+        if True, print informations about the optimization process
+    min_method : str, optional
+        method to use for the optimization, see scipy.optimize.minimize
+    ftol : float, optional
+        tolerance on the function value for the stop criterion, see scipy.optimize.minimize
+    xtol : float, optional
+        tolerance on the parameters for the stop criterion, see scipy.optimize.minimize
+
+    Returns
+    -------
+    scipy.optimize.OptimizeResult
+        result of the optimization process
     """
 
     C_flag = flag2Cflag(flag) # get C_flag
@@ -660,18 +756,52 @@ def run_tpgs(nsim,xg,yg,zg,data,Gk,flag,nit=100,nmax = 24,grf_method="fft",mask=
 
     """
     Run simulations using the Truncated plurigaussian (2 gaussian fields) methods : Covmodels must be provided !
-    nsim   : number of realizations
-    xg,yg,zg : 1D vector of edges coordinates
-    data   :(x,y,z,g1,g2,v), where x,y,z are the cartesian coordinates,
-             g1 and g2 are the values of first/second gaussian fields and v is the facies value
-    Gk     : list of 2 3D covmodels (geone object)
-    flag   : dictionnary containing for each facies a list of the thresholds (in gaussian space) for the two gaussian fields
-             exemple with 3 facies :
-           {1: [[(-inf, -0.3), (-inf, 0)], [(0.3, inf), (-inf, 0.5)]],
-            2: [[(-inf, -0.3), (0, inf)]],
-            3: [[(-0.3, 0.3), (-inf, inf)], [(0.3, inf), (0.5, inf)]]}
-    grf_method :  string, geostatistical method to realize gaussin fields (fft or sgs)
-    mask : bool, to delimit where to simulate (no computational effect if grf_method is fft)
+
+    Parameters
+    ----------
+    nsim : int
+        number of simulations
+    xg : 1D array
+        x coordinates of the grid (edges)
+    yg : 1D array
+        y coordinates of the grid (edges)
+    zg : 1D array
+        z coordinates of the grid (edges)
+    data : 2D array
+        (x, y, z, g1, g2, v), where x,y,z are the cartesian coordinates,
+        g1 and g2 are the values of first/second gaussian fields and v is the facies value
+    Gk : list of 2 3D covmodels (geone object)
+        list of 2 3D covmodels (geone object)
+    flag : dict
+        dictionnary containing for each facies a list of the thresholds (in gaussian space) for the two gaussian fields
+
+        Generic example for one facies::
+
+            {
+                f_i: [(x0, x1), (y0, y1)
+            }
+
+        Example with 3 facies::
+
+            {
+                1: [[(-inf, -0.3), (-inf, 0)], [(0.3, inf), (-inf, 0.5)]],
+                2: [[(-inf, -0.3), (0, inf)]],
+                3: [[(-0.3, 0.3), (-inf, inf)], [(0, inf), (0.5, inf)]]
+            }
+
+    nit : int
+        number of iterations for the gibbs sampler (used for the conditional simulations)
+    nmax : int
+        maximum number of neighbors to consider, lower values will speed up the simulation
+    grf_method : str
+        method to use for the grf simulation, either "fft" or "sgs"
+    mask : 3D array
+        mask to use for the simulation, if None, no mask is used
+
+    Returns
+    -------
+    sim : 4D array
+        4D array of the simulations (nsim, nz, ny, nx)
     """
 
     ## grid parameters
@@ -814,34 +944,55 @@ def run_tpgs(nsim,xg,yg,zg,data,Gk,flag,nit=100,nmax = 24,grf_method="fft",mask=
 
     ## kriging functions  ##
 def simple_kriging(x, xu, cov_model, mean):
+   
     """
-    Simple kriging - interpolates at locations xu the values v measured at locations x.
+    Performs kriging - interpolates at locations xu the values v measured at locations x.
     Covariance model given should be:
+
         - in same dimension as dimension of locations x, xu
         - in 1D, it is then used as an omni-directional covariance model
     (see below).
 
-    :param x:       (2-dimensional array of shape (n, d)) coordinates
-                        of the data points (n: number of points, d: dimension)
-                        Note: for data in 1D, it can be a 1-dimensional array of shape (n,)
-    :param xu:      (2-dimensional array of shape (nu, d)) coordinates
-                        of the points where the interpolation has to be done
-                        (nu: number of points, d: dimension same as for x),
-                        called unknown points
-                        Note: for data in 1D, it can be a 1-dimensional array of shape (nu,)
+    Parameters
+    ----------
+    x : 2-dimensional array of shape (n, d)
+        coordinates of the data points
+        (n: number of points, d: dimension)
+        Note: for data in 1D, it can be a 1-dimensional array of shape (n,)
+    v : 1-dimensional array of shape (n,)
+        values at data points
+    xu : 2-dimensional array of shape (nu, d)
+        coordinates of the points where the interpolation has to be done
+        (nu: number of points, d: dimension same as for x) called unknown points
+        Note: for data in 1D, it can be a 1-dimensional array of shape (nu,)
+    cov_model : CovModel1D or CovModel2D or CovModel3D or CovModel1D
+        Covariance model to use. 
+        Available covariance models classes are:
 
-    :param cov_model:   covariance model:
-                            - in same dimension as dimension of points (d), i.e.:
-                                - CovModel1D class if data in 1D (d=1)
-                                - CovModel2D class if data in 2D (d=2)
-                                - CovModel3D class if data in 3D (d=3)
-                            - or CovModel1D whatever dimension of points (d):
-                                - used as an omni-directional covariance model
+            - in same dimension as dimension of points (d), i.e.:
 
-    :return:        (w, vu_std) with:
-                        w:     (1-dimensional array of shape (x,)) weights at position xu
-                        vu_std: (1-dimensional array of shape (nu,)) kriged standard deviation at points xu
+                - CovModel1D class if data in 1D (d=1)
+                - CovModel2D class if data in 2D (d=2)
+                - CovModel3D class if data in 3D (d=3)
+            - or CovModel1D whatever dimension of points (d):
+
+                - used as an omni-directional covariance model
+    mean : None or float or ndarray
+        mean of the simulation (for simple kriging only)
+        Possible values are:
+        
+            - None   : mean of hard data values (stationary), i.e. mean of v
+            - float  : for stationary mean (set manually)
+            - ndarray: of of shape (nu,) for non stationary mean, mean at point xu
+        For ordinary kriging (method = 'ordinary_kriging') this parameter ignored (not used)   
+
+    Returns
+    -------
+    (weight, variance)
+        kriging weights
+        kriging variance
     """
+   
     # Get dimension (d) from x
     if np.asarray(x).ndim == 1:
         # x is a 1-dimensional array

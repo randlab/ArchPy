@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>x_valid module &mdash; ArchPy 1.0.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/twemoji.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
+        <script src="_static/twemoji.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="inputs module" href="inputs.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ArchPy
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README_rtd.html">Let's get started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">List of modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="base.html">base module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="infer.html">infer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html">inputs module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">x_valid module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#x_valid.X_valid"><code class="docutils literal notranslate"><span class="pre">X_valid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#x_valid.bh2array"><code class="docutils literal notranslate"><span class="pre">bh2array()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#x_valid.brier_func"><code class="docutils literal notranslate"><span class="pre">brier_func()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#x_valid.img_to_3D_colors"><code class="docutils literal notranslate"><span class="pre">img_to_3D_colors()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#x_valid.plot_confusion_matrix"><code class="docutils literal notranslate"><span class="pre">plot_confusion_matrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#x_valid.test_bh_1fold"><code class="docutils literal notranslate"><span class="pre">test_bh_1fold()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ArchPy</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">ArchPy</a></li>
+      <li class="breadcrumb-item active">x_valid module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/x_valid.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-x_valid">
+<span id="x-valid-module"></span><h1>x_valid module<a class="headerlink" href="#module-x_valid" title="Permalink to this heading"></a></h1>
+<p>This module contains functions used for the validation of ArchPy models
+For now it the validation mainly relies on cross-validation through the k-fold method</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="x_valid.X_valid">
+<span class="sig-prename descclassname"><span class="pre">x_valid.</span></span><span class="sig-name descname"><span class="pre">X_valid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nreal_un</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nreal_fa</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proba_correct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggregate_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weighting_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'same_weights'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folding_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'random'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aspect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#x_valid.X_valid" title="Permalink to this definition"></a></dt>
+<dd><p>Perform a Cross-validation on the given ArchTable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ArchTable</strong> (<a class="reference internal" href="base.html#base.Arch_table" title="base.Arch_table"><code class="xref py py-class docutils literal notranslate"><span class="pre">base.Arch_table</span></code></a> object) – The ArchTable to perform the X-validation on</p></li>
+<li><p><strong>k</strong> (<em>int</em>) – Number of folds</p></li>
+<li><p><strong>nreal_un</strong> (<em>int</em>) – Number of unit realizations to estimate score</p></li>
+<li><p><strong>nreal_fa</strong> (<em>int</em>) – Number of facies realiations to estimate score</p></li>
+<li><p><strong>brier</strong> (<em>bool</em>) – Return brier scores</p></li>
+<li><p><strong>proba_correct</strong> (<em>bool</em>) – Return proportion of correct cells per units/facies</p></li>
+<li><p><strong>aggregate_method</strong> (<em>str or None</em>) – To perform X-valid on mean model rather than on realizations
+This parameter is pass to the realizations_aggregation function
+Ignored if None</p></li>
+<li><p><strong>weighting_method</strong> (<em>str</em>) – Which method to use for applying the weights
+possible values are : same_weights, prop_weights, user_weights</p></li>
+<li><p><strong>folding_method</strong> (<em>string</em>) – Folding method to use to separate the data
+methods availables : “random”, “k_means” (to implement), “stratified” (to implement)</p></li>
+<li><p><strong>plot</strong> (<em>bool</em>) – Display plots</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – Seed</p></li>
+<li><p><strong>verbose</strong> (<em>0 or 1</em>) – Verbosity level</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>(score_folds, df_conf_norm_un, df_conf_norm_fa) where
+score_folds is a list of size k containing the scores for each fold.</p>
+<p>Each entry of the score_folds list is a tuple containing various scores:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>final score units</p></li>
+<li><p>final score facies</p></li>
+<li><p>distinct brier scores for each borehole (units and facies)</p></li>
+<li><p>proportion of correct cells for each borehole (units and facies)</p></li>
+<li><p>list of test boreholes</p></li>
+<li><p>list of train boreholes (nreal, nreal_fa, n_boreholes)</p></li>
+</ul>
+</div></blockquote>
+<p>df_conf_norm_un is a dataframe containing the normalized confusion matrix for each unit
+df_conf_norm_fa is a dataframe containing the normalized confusion matrix for each facies</p>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple of size 3</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="x_valid.bh2array">
+<span class="sig-prename descclassname"><span class="pre">x_valid.</span></span><span class="sig-name descname"><span class="pre">bh2array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typ</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'units'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#x_valid.bh2array" title="Permalink to this definition"></a></dt>
+<dd><p>Function to convert an ArchPy borehole to an array of IDs, either units or facies
+IDs are given by the facies/units ID</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ArchTable</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ArchPy.base.Arch_table</span></code>) – ArchPy table</p></li>
+<li><p><strong>bh</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ArchPy.base.borehole</span></code>) – ArchPy borehole</p></li>
+<li><p><strong>typ</strong> (<em>str</em>) – type of data to extract, either “units” or “facies”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>array of IDs</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="x_valid.brier_func">
+<span class="sig-prename descclassname"><span class="pre">x_valid.</span></span><span class="sig-name descname"><span class="pre">brier_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#x_valid.brier_func" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the Brier score given a vector of probabilities</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p</strong> (<em>sequence if float</em>) – vector of probabilities. Values must be between 0 and 1</p></li>
+<li><p><strong>i</strong> (<em>int</em>) – index of the true answer in vector</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Brier score</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="x_valid.img_to_3D_colors">
+<span class="sig-prename descclassname"><span class="pre">x_valid.</span></span><span class="sig-name descname"><span class="pre">img_to_3D_colors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#x_valid.img_to_3D_colors" title="Permalink to this definition"></a></dt>
+<dd><p>Replace value in an array using a dictionnary
+linking actual values to new values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arr</strong> (<em>ndarray</em>) – array of values to replace</p></li>
+<li><p><strong>dic</strong> (<em>dict</em>) – dictionnary linking actual values to new values</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>array of new values</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="x_valid.plot_confusion_matrix">
+<span class="sig-prename descclassname"><span class="pre">x_valid.</span></span><span class="sig-name descname"><span class="pre">plot_confusion_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Confusion</span> <span class="pre">matrix'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'plasma'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#x_valid.plot_confusion_matrix" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="x_valid.test_bh_1fold">
+<span class="sig-prename descclassname"><span class="pre">x_valid.</span></span><span class="sig-name descname"><span class="pre">test_bh_1fold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bhs_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bhs_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weighting_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'same_weight'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proba_correct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aspect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#x_valid.test_bh_1fold" title="Permalink to this definition"></a></dt>
+<dd><p>Perform a test on a single fold of a cross-validation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ArchTable</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ArchPy.base.Arch_table</span></code>) – ArchPy table to test</p></li>
+<li><p><strong>bhs_real</strong> (sequence of <code class="xref py py-class docutils literal notranslate"><span class="pre">ArchPy.base.borehole</span></code>) – “fake” boreholes sampled in the realizations of the ArchTable</p></li>
+<li><p><strong>bhs_test</strong> (sequence of <code class="xref py py-class docutils literal notranslate"><span class="pre">ArchPy.base.borehole</span></code>) – “real” boreholes to test</p></li>
+<li><p><strong>weighting_method</strong> (<em>str</em>) – method to weight the realizations, either “same_weight” or “weights”</p></li>
+<li><p><strong>dic_weights</strong> (<em>dict</em>) – dictionnary linking realization index to weight</p></li>
+<li><p><strong>plot</strong> (<em>bool</em>) – plot or not</p></li>
+<li><p><strong>brier</strong> (<em>bool</em>) – compute Brier score or not</p></li>
+<li><p><strong>proba_correct</strong> (<em>bool</em>) – compute probability of correct classification or not</p></li>
+<li><p><strong>aspect</strong> (<em>str</em>) – aspect ratio of the plot</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dictionnary of results</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="inputs.html" class="btn btn-neutral float-left" title="inputs module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, University of Neuchâtel.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

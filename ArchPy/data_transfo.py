@@ -5,8 +5,17 @@ from scipy.stats import uniform
 
 
 class distri():
+
     """
     Distribution : must have a direct function (cdf) and its inverse (ppf)
+
+    Parameters
+    ----------
+    f : function
+        cdf of the distribution
+    f_1 : function
+        inverse of the cdf of the distribution
+
     """
 
     def __init__(self,f,f_1):
@@ -19,11 +28,17 @@ class distri():
 def store_distri(data,t=0):
 
     """
-    data : data that we want to estimate the distribution
-    t :    threshold to take extreme values not in dataset into account (percentage of values that doesn't appear in the dataset)
-           For a dataset of ten values ranging from 1 to 10, a value of 0.2 indicates that
-           the distribution takes into account the values 0 and 11, even they are not in the dataset.
-    return : a distri object
+
+    Parameters
+    ----------
+    data : nd.array
+        data that we want to estimate the distribution
+    t : float
+        threshold to take extreme values not in dataset into account (percentage of values that doesn't appear in the dataset)
+        For a dataset of ten values ranging from 1 to 10, a value of 0.2 indicates that
+        the distribution takes into account the values 0 and 11, even they are not in the dataset.
+    return : distri object
+
     """
 
     class distri():
@@ -75,7 +90,20 @@ def store_distri(data,t=0):
 def NScore_trsf(data,di):
 
     """
-    transform data distributed as di into a normal distribution N(0,1)
+    Transform data distributed as di into a normal distribution N(0,1)
+
+    Parameters
+    ----------
+
+    data: nd.array
+        data that we want to transform
+    di: :class:`distri`
+        distribution of the data
+
+    Return
+    ------
+    norm_val: nd.array
+        data transformed into a normal distribution N(0,1)
     """
 
     f = di.f
@@ -97,6 +125,18 @@ def NScore_Btrsf(data_transformed,di):
 
     """
     Back transform normal distributed data into original distribution di
+
+    Parameters
+    ----------
+    data_transformed : nd.array
+        data normally distributed that we want to back transform
+    di: :class:`distri`
+        distribution of the data
+
+    Return
+    ------
+    x_retransformed : nd.array  
+        data back transformed into original distribution di
     """
 
     f_1 = di.f_1

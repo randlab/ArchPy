@@ -946,7 +946,7 @@ def import_project(project_name, ws, import_bhs=True, import_results=True, impor
             if unit.dic_facies["SubPile"] is not None:
                 unit.set_SubPile(d_piles[unit.dic_facies["SubPile"]])
     
-    ArchTable=ArchPy.base.Arch_table(dic_project["name"], working_directory=dic_project["ws"], seed = min(int(dic_project["seed"] / 1e6), 1),
+    ArchTable=ArchPy.base.Arch_table(dic_project["name"], working_directory=ws, seed = min(int(dic_project["seed"] / 1e6), 1),
                                       verbose=dic_project["verbose"], ncpu=dic_project["ncpu"])
     
     ArchTable.set_Pile_master(d_piles[dic_project["Pile_master"]])

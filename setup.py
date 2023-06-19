@@ -1,13 +1,12 @@
 import sys, platform
 import setuptools
-from ArchPy import __version__
 
 with open("README.md", "r") as file:
     long_desc = file.read()
 
 setuptools.setup(
     name='Geoarchpy',
-    version=__version__,
+    version='1.0.0',
     author="Ludovic Schorpp",
     author_email="ludovic.schorpp@unine.ch",
     description="Simpler geological and property models",

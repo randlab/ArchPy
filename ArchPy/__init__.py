@@ -4,4 +4,4 @@ import ArchPy.ineq
 import ArchPy.tpgs
 import ArchPy.inputs
 
-__version__ = '1.0.0'
+__version__ = '1.0.1'

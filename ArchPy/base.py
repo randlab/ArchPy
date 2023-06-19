@@ -4478,18 +4478,16 @@ class Arch_table():
                 unit = self.get_unit(ID=geol_map[iy, ix], type="ID", vb=0)
                 if unit is not None:
                     arr[iy, ix] = matplotlib.colors.to_rgb(unit.c)
-
-        grid.point_arrays['my point values'] = arr.reshape((nx*ny, 3),order="F")
         
         if plotter is None:
             p = pv.Plotter()
 
-            p.add_mesh(grid,"red",scalars="my point values",opacity=.5, rgb=True)
+            p.add_mesh(grid,"red", scalars=arr.reshape((nx*ny, 3),order="F"), opacity=.5, rgb=True)
             p.add_bounding_box()
             p.show()
         
         else:
-            plotter.add_mesh(grid,"red",scalars="my point values",opacity=.5, rgb=True)
+            plotter.add_mesh(grid,"red",scalars=arr.reshape((nx*ny, 3),order="F"), opacity=.5, rgb=True)
 
     def get_units_domains_realizations(self, iu=None, all_data=True, fill="ID", h_level="all"):
 

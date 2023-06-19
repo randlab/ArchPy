@@ -12,6 +12,7 @@ import scipy
 from scipy.ndimage import uniform_filter
 import copy
 import time
+import shapely
 import shapely.geometry
 import sys
 
@@ -463,8 +464,8 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, mask2D=None, seed=123456789, 
             all_data = eq_d
 
             varname=['x', 'y', 'z', 'code'] # list of variable names
-            hd=all_data.T
-            pt=img.PointSet(npt=hd.shape[1], nv=4, val=hd, varname=varname)
+            hd = all_data[:, :4].T
+            pt = img.PointSet(npt=hd.shape[1], nv=4, val=hd, varname=varname)
 
         else:
             sup_d=np.concatenate([xIneq_max, 0.5*np.ones([vIneq_max.shape[0], 1]), np.nan*np.ones([vIneq_max.shape[0], 2]), vIneq_max.reshape(-1, 1)], axis=1)
@@ -1685,12 +1686,19 @@ class Arch_table():
         #apply polygon
 
         # if polygon is a shapefile
-        if isinstance(polygon, str):
+        if isinstance(polygon, str):  # if polygon is a shapefile
+            import shapely
+            from shapely.geometry import Polygon, MultiPolygon
+
             if polygon.split(".")[-1] == "shp":
                 import geopandas as gp 
                 poly = gp.read_file(polygon)
-                polygon = Polygon(poly.geometry[0])
+                if poly.shape[0] == 1:
+                    polygon = Polygon(poly.geometry.iloc[0])
+                elif poly.shape[0] > 1:
+                    polygon = MultiPolygon(poly.geometry.values)
 
+        import shapely
         #if polygon is shapely Polygon
         if isinstance(polygon, (shapely.geometry.Polygon, shapely.geometry.MultiPolygon)):
             if self.verbose:
@@ -1995,15 +2003,18 @@ class Arch_table():
                 if (isinstance(i, borehole)) and (i not in self.list_bhs):
                     if self.check_bh_inside(i):
                         self.list_bhs.append(i)
+                        self.bhs_processed = 0  # reset flag of boreholes already processed
                         if self.verbose:
                             print("Borehole {} added".format(i.ID))
                 else:
                     if self.verbose:
                         print("object isn't a borehole object or object is already in the list")
+
         else: # boreholes not in a list
             if (isinstance(bhs, borehole)) and (bhs not in self.list_bhs):
                 if self.check_bh_inside(bhs):
                     self.list_bhs.append(bhs)
+                    self.bhs_processed = 0  # reset flag of boreholes already processed 
                     if self.verbose:
                         print("Borehole {} added".format(bhs.ID))
             else:
@@ -2133,6 +2144,12 @@ class Arch_table():
                         else:
                             unit_log = None
 
+                    if facies_log is not None:
+                        if facies_log:            
+                            facies_log[0] = (facies_log[0][0], self.top[cell_y,cell_x]-self.get_sz()/10)
+                        else:
+                            facies_log = None
+
                     if unit_log is not None or facies_log is not None:
                         fake_bh.append(borehole("fake","fake",x=x,y=y,z=self.top[cell_y,cell_x]-self.get_sz()/10,
                                                 depth=self.top[cell_y,cell_x]-self.bot[cell_y,cell_x],log_strati=unit_log,log_facies=facies_log))
@@ -2231,9 +2248,18 @@ class Arch_table():
             geological map to add. Values are units IDs
         """
 
-        self.geol_map = raster
-        if self.verbose:
-            print("Geological map added")
+        if isinstance(raster, str):
+            
+            geol_map = self.resample2grid(raster)
+            self.geol_map = geol_map
+            if self.verbose:
+                print("Geological map added")
+            return
+        
+        elif isinstance(raster, np.ndarray):
+            self.geol_map = raster
+            if self.verbose:
+                print("Geological map added")
 
     def geol_contours(self, step = 5):
         
@@ -3804,19 +3830,27 @@ class Arch_table():
 
 
     ### others funs ###
-    def orientation_map(self, unit, method="simple", iu=0, smooth=2):
+    def orientation_map(self, unit,
+                        azi_top="gradient", dip_top="gradient",
+                        azi_bot="gradient", dip_bot="gradient",
+                        iu=0, smooth=2):
 
         """
-        Compute an orientation map for a certain Unit object
-        from which we want to have the differents orientations
+        Compute orientation maps for a given unit (azimuth and dip)
 
         Parameters
         ----------
         unit: :class:`Unit` object
             unit object from which we want to have the orientation map
-        method: string
-            method to use to infer orientation map
-            (simple: vertically interpolate top/bot layer orientation)
+        azi_top: string or float
+            method to use to infer azimuth of the top of the unit
+        azi_bot: string or float
+            method to use to infer azi of the bottom of the unit
+            The angles are then interpolated between top and bottom (linear interpolation)
+        dip_top: string or float
+            same as azimuth but for dip
+        dip_bot: string or float
+            same as azimuth but for dip
         iu: int
             unit realization index (0, 1, ..., Nu)
         smooth: int
@@ -3850,6 +3884,16 @@ class Arch_table():
 
             return ang.reshape(ny-1, nx-1), dip
 
+        def azi_dip_JS(s):
+            
+            fy, fx = np.gradient(s, sy, sx)
+            fx = -fx
+            fy = -fy
+            azi = 180/np.pi *(np.pi/2 - np.arctan2(fy, fx))
+            dip = - 180/np.pi * (np.pi/2 - np.arcsin(1/np.sqrt(1+fx*fx+fy*fy)))
+
+            return azi, dip
+        
         xg=self.get_xgc()
         yg=self.get_ygc()
         zg=self.get_zgc()
@@ -3864,59 +3908,74 @@ class Arch_table():
             pile=self.get_pile_master()
         else:
             pile=unit.mummy_unit.SubPile
-        if method == "simple":
-            azi_bot=np.ones([ny, nx])
-            azi_top=np.ones([ny, nx])
-            dip_bot=np.ones([ny, nx])
-            dip_top=np.ones([ny, nx])
-            top    =running_mean_2D(self.Geol.surfaces_by_piles[pile.name][iu, unit.order-1], N=smooth)
-            bot    =running_mean_2D(self.Geol.surfaces_bot_by_piles[pile.name][iu, unit.order-1], N=smooth)
 
-            azi_top[1:, 1: ], dip_top[1:, 1: ]=azi_dip(top)
-            azi_bot[1:, 1: ], dip_bot[1:, 1: ]=azi_dip(bot)
-            azi_top[0,: ]=azi_top[1,: ]
-            azi_top[:, 0]=azi_top[:, 1]
-            azi_bot[0,: ]=azi_bot[1,: ]
-            azi_bot[:, 0]=azi_bot[:, 1]
-            dip_top[0,: ]=dip_top[1,: ]
-            dip_top[:, 0]=dip_top[:, 1]
-            dip_bot[0,: ]=dip_bot[1,: ]
-            dip_bot[:, 0]=dip_bot[:, 1]
+        # smoothing
+        top    =running_mean_2D(self.Geol.surfaces_by_piles[pile.name][iu, unit.order-1], N=smooth)
+        bot    =running_mean_2D(self.Geol.surfaces_bot_by_piles[pile.name][iu, unit.order-1], N=smooth)
 
-            azi=np.zeros([nz, ny, nx], dtype=np.float32)
-            mask=self.unit_mask(unit_name=unit.name, iu=iu)
-            for ix in range(nx):
-                for iy in range(ny): # TO FINISH
-                    t=np.where(mask[:, iy, ix]) # retrieve idx to indicate where layer exist vertically at certain location x
+        # compute angles for top and bottom
+        # top
+        if azi_top  == "gradient" and dip_top == "gradient":
+            azi_top, dip_top = azi_dip_JS(top)
+        elif azi_top == "gradient" and dip_top != "gradient":
+            azi_top = azi_dip_JS(top)[0]
+            dip_top = np.ones([ny, nx])*dip_top
+        elif azi_top != "gradient" and dip_top == "gradient":
+            azi_top = np.ones([ny, nx])*azi_top
+            dip_top = azi_dip_JS(top)[1]
+        else:
+            azi_top=np.ones([ny, nx])*azi_top
+            dip_top=np.ones([ny, nx])*dip_top
 
-                    if len(t[0])>0: # if layer exists at position ix iy
-                        i2=np.min(t)
-                        i1=np.max(t)
-                        vbot=azi_bot[iy, ix]
-                        vtop=azi_top[iy, ix]
+        # bottom
+        if azi_bot  == "gradient" and dip_bot == "gradient":
+            azi_bot, dip_bot = azi_dip_JS(bot)
+        elif azi_bot == "gradient" and dip_bot != "gradient":
+            azi_bot = azi_dip_JS(bot)[0]
+            dip_bot = np.ones([ny, nx])*dip_bot
+        elif azi_bot != "gradient" and dip_bot == "gradient":
+            azi_bot = np.ones([ny, nx])*azi_bot
+            dip_bot = azi_dip_JS(bot)[1]
+        else:
+            azi_bot=np.ones([ny, nx])*azi_bot
+            dip_bot=np.ones([ny, nx])*dip_bot
 
-                        if (np.abs(np.min((vbot, vtop)) - np.max((vbot, vtop)))) < (np.abs(360 + np.min((vbot, vtop)) - np.max((vbot, vtop)))):
-                            azi[:, iy, ix]=np.interp(zg, [zg[i2], zg[i1]], [vbot, vtop])
+        azi=np.zeros([nz, ny, nx], dtype=np.float32)
+        mask=self.unit_mask(unit_name=unit.name, iu=iu)
+        for ix in range(nx):
+            for iy in range(ny):  # TO FINISH
+                t=np.where(mask[:, iy, ix])  # retrieve idx to indicate where layer exist vertically at certain location x
+
+                if len(t[0])>0:  # if layer exists at position ix iy
+                    i2=np.min(t)
+                    i1=np.max(t)
+                    vbot=azi_bot[iy, ix]
+                    vtop=azi_top[iy, ix]
+
+                    if (np.abs(np.min((vbot, vtop)) - np.max((vbot, vtop)))) < (np.abs(360 + np.min((vbot, vtop)) - np.max((vbot, vtop)))):
+                        azi[:, iy, ix]=np.interp(zg, [zg[i2], zg[i1]], [vbot, vtop])
+                    else:
+                        if vbot < vtop:
+                            azi[:, iy, ix]=np.interp(zg, [zg[i2], zg[i1]], [vbot+360, vtop])
                         else:
-                            if vbot < vtop:
-                                azi[:, iy, ix]=np.interp(zg, [zg[i2], zg[i1]], [vbot+360, vtop])
-                            else:
-                                azi[:, iy, ix]=np.interp(zg, [zg[i2], zg[i1]], [vbot, vtop+360])
-            azi[mask!=1]=0
+                            azi[:, iy, ix]=np.interp(zg, [zg[i2], zg[i1]], [vbot, vtop+360])
+        azi[mask!=1]=0
 
-            dip=np.zeros([nz, ny, nx], dtype=np.float32)
-            for ix in range(nx):
-                for iy in range(ny):
-                    t=np.where(mask[:, iy, ix]) # retrieve idx to indicate where layer exist vertically at certain location x
+        dip=np.zeros([nz, ny, nx], dtype=np.float32)
+        for ix in range(nx):
+            for iy in range(ny):
+                t=np.where(mask[:, iy, ix]) # retrieve idx to indicate where layer exist vertically at certain location x
 
-                    if len(t[0])>0: # if layer exists at position ix iy
-                        i2=np.min(t)
-                        i1=np.max(t)
-                        dip[:, iy, ix]=np.interp(zg, [zg[i2], zg[i1]], [dip_bot[iy, ix], dip_top[iy, ix]])
+                if len(t[0])>0: # if layer exists at position ix iy
+                    i2=np.min(t)
+                    i1=np.max(t)
+                    dip[:, iy, ix]=np.interp(zg, [zg[i2], zg[i1]], [dip_bot[iy, ix], dip_top[iy, ix]])
 
-            dip[mask!=1]=0
+        dip[mask!=1]=0
 
         return azi, dip
+
+
 
     def extract_log_facies_bh(self, facies, bhx, bhy, bhz, depth):
 
@@ -5590,8 +5649,8 @@ class Pile():
 
         Parameters
         ----------
-        unit: Unit object
-            unit to add to the pile
+        unit: Unit object or list of Unit objects
+            unit(s) to add to the pile
         """
 
         try: #iterable
@@ -6035,6 +6094,7 @@ class Unit():
             - "SIS" :
                 - "neigh" : int, number of neighbors to use for the SIS
                 - r : float, radius of the neighborhood to use for the SIS
+                - probability : list of float, proportion of each facies to use for the SIS
             - TI                    : geone img, Training image(s) to use
                 - mps "classic" parameters (maxscan, thresh, neig (number of neighbours))
                 - npost                 : number of path postprocessing, default 1
@@ -6516,9 +6576,10 @@ class Unit():
         kwargs_def_MPS={"varname":"code", "nv":1, "dataImage":None, "distanceType":["categorical"], "outputVarFlag":None,
                          "xr": 1, "yr": 1, "zr": 1, "maxscan": 0.25, "neig": 24, "thresh": 0.05, "xloc": False, "yloc": False, "zloc": False,
                          "homo_usage": 1, "rot_usage": 1, "rotAziLoc": False, "rotAzi": 0, "rotDipLoc": False, "rotDip": 0, "rotPlungeLoc": False, "rotPlunge": 0,
-                          "radiusMode": "large_default", "rx": nx*sx, "ry": ny*sy, "rz": nz*sz, "anisotropyRatioMode": "one", "ax": 1, "ay": 1, "az": 1,
-                          "angle1": 0, "angle2": 0, "angle3": 0,
-                          "globalPdf": None, "localPdf": None, "probaUsage": 0, "localPdfRadius": 12., "deactivationDistance": 4., "constantThreshold": 1e-3, "npost":1}
+                         "azi_top":"gradient", "azi_bot":"gradient", "dip_top":"gradient", "dip_bot":"gradient",
+                         "radiusMode": "large_default", "rx": nx*sx, "ry": ny*sy, "rz": nz*sz, "anisotropyRatioMode": "one", "ax": 1, "ay": 1, "az": 1,
+                         "angle1": 0, "angle2": 0, "angle3": 0,
+                         "globalPdf": None, "localPdf": None, "probaUsage": 0, "localPdfRadius": 12., "deactivationDistance": 4., "constantThreshold": 1e-3, "npost":1}
 
         kwargs_def_TPGs={"neig": 20, "nit": 100, "grf_method": "fft"}
 
@@ -6583,7 +6644,7 @@ class Unit():
                         hd=np.array(hd)
                         facies=np.array(facies)
                             
-                        ### orientation map ###
+                        ### orientation map ###  -> to modify !!!!
                         if (kwargs["SIS_orientation"]) == "follow_surfaces": # if orientations must follow surfaces
                             # Warning: This option changes alpha and beta angles assuming that rz is smaller than rx and ry. Moreover, rx and ry must be similar.
 
@@ -6689,6 +6750,16 @@ class Unit():
                         hd=np.delete(hd, 0, axis=1) # remove 1st point (I didn't find a clever way to do it...)
                         pt=img.PointSet(npt=hd.shape[1], nv=4, val=hd)
                         pt.set_varname("code")
+
+                        # automatic inference of orientations
+                        if kwargs["rotAzi"] == "inference" and kwargs["rotDip"] == "inference":  # only if these two are set on inference
+                            azi, dip=ArchTable.orientation_map(self, azi_top = kwargs["azi_top"],  dip_top= kwargs["dip_top"],
+                                                               azi_bot=kwargs["azi_bot"], dip_bot=kwargs["dip_bot"], smooth=2)  # get azimuth and dip
+
+                            kwargs["rotAzi"] = azi
+                            kwargs["rotDip"] = dip
+                            kwargs["rotAziLoc"] = True
+                            kwargs["rotDipLoc"] = True
 
                         #DS research
                         snp=dsi.SearchNeighborhoodParameters(

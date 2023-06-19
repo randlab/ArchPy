@@ -1,0 +1,990 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Tutorial 1: the basics &#8212; ArchPy 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=0.7.0-1" />
+    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
+    <script src="../_static/twemoji.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <script src="../_static/js/petite-vue.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tutorial 2: hard data files" href="2_Hard_data.html" />
+    <link rel="prev" title="Tutorials" href="../tutorials.html" /> 
+  </head><body data-dark_mode_code_blocks="true">
+
+<div id="top_nav">
+    
+
+    <nav>
+        
+            
+        
+
+        <p id="toggle_sidebar">
+            <a href="#" title="Toggle sidebar">|||</a>
+        </p>
+        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.0.0 documentation</a></h1>
+
+        <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
+    <template v-if="mode == 'light'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_light"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M67.48,18.073c1.913,-1.912 1.913,-5.018 0,-6.931c-1.912,-1.912 -5.018,-1.912 -6.931,0l-6.798,6.799c-1.912,1.912 -1.912,5.018 0,6.931c1.913,1.912 5.018,1.912 6.931,-0l6.798,-6.799Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.728,61.108c1.912,-1.913 1.912,-5.018 -0,-6.931c-1.913,-1.913 -5.019,-1.913 -6.931,-0l-6.799,6.798c-1.912,1.913 -1.912,5.019 0,6.931c1.913,1.913 5.019,1.913 6.931,0l6.799,-6.798Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.682,54.177c-1.913,-1.913 -5.018,-1.913 -6.931,-0c-1.912,1.913 -1.912,5.018 0,6.931l6.798,6.798c1.913,1.913 5.019,1.913 6.931,0c1.913,-1.912 1.913,-5.018 0,-6.931l-6.798,-6.798Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M4.901,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,-0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M18.929,11.142c-1.912,-1.912 -5.018,-1.912 -6.931,0c-1.912,1.913 -1.912,5.019 0,6.931l6.799,6.799c1.912,1.912 5.018,1.912 6.931,-0c1.912,-1.913 1.912,-5.019 -0,-6.931l-6.799,-6.799Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.108,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c-0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c-0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'dark'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_dark"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.901,2.196 -4.901,4.901c0,2.705 2.197,4.901 4.901,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.662,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.989,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.732,61.103c1.91,-1.91 1.91,-5.011 0,-6.921l-0.009,-0.01c-1.91,-1.91 -5.012,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.909,1.91 5.011,1.91 6.92,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.672,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.52,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l-0,-0.01c-0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.901,2.196 -4.901,4.901c0,2.704 2.197,4.9 4.901,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.73,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 -0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.098,34.623c-2.699,0 -4.891,2.192 -4.891,4.892l-0,0.019c-0,2.699 2.192,4.891 4.891,4.891c2.7,0 4.892,-2.192 4.892,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.892,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'darkest'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_darkest"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><path d="M39.315,23.791c8.684,-0 15.734,7.05 15.734,15.733c0,8.684 -7.05,15.734 -15.734,15.734c-8.683,0 -15.733,-7.05 -15.733,-15.734c-0,-8.683 7.05,-15.733 15.733,-15.733Zm0,4.737c6.069,0 10.997,4.927 10.997,10.996c-0,6.069 -4.928,10.996 -10.997,10.996c-6.068,0 -10.996,-4.927 -10.996,-10.996c0,-6.069 4.928,-10.996 10.996,-10.996Z" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.216,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.9,2.196 -4.9,4.901c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.666,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.99,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.737,61.103c1.909,-1.91 1.909,-5.011 -0,-6.921l-0.01,-0.01c-1.91,-1.91 -5.011,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.91,1.91 5.011,1.91 6.921,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.676,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.524,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l0,-0.01c0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.216,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901c-0,2.704 2.196,4.9 4.9,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.734,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.103,34.623c-2.7,0 -4.892,2.192 -4.892,4.892l-0,0.019c-0,2.699 2.192,4.891 4.892,4.891c2.699,0 4.891,-2.192 4.891,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.891,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+</a>
+
+<script>
+(function() {
+    const LOCAL_STORAGE_KEY = 'piccoloThemeMode'
+
+    var initialMode = localStorage.getItem(LOCAL_STORAGE_KEY)
+
+    if (initialMode) {
+        // Make sure the value in local storage is valid
+        if (['light', 'dark', 'darkest'].indexOf(initialMode) == -1) {
+            initialMode = 'light'
+            localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+        }
+    } else {
+        // Check if the client prefers dark mode
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            initialMode = 'dark'
+        } else {
+            initialMode = 'light'
+        }
+        localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+    }
+
+    document.documentElement.dataset.mode = initialMode
+
+    PetiteVue.createApp({
+        'mode': initialMode,
+        handleClick() {
+            let currentMode = this.mode
+
+            if (currentMode == 'light') {
+                this.mode = 'dark'
+            } else if (currentMode == 'dark') {
+                this.mode = 'darkest'
+            } else if (currentMode == 'darkest') {
+                this.mode = 'light'
+            }
+
+            document.documentElement.dataset.mode = this.mode
+            localStorage.setItem(LOCAL_STORAGE_KEY, this.mode)
+
+            console.log(this.mode)
+        }
+    }).mount('#mode_toggle')
+})()
+</script>
+            <p class="mobile_search_link">
+                <a href="../search.html" title="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65 64" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+                        <path d="M14.873 40.009c-2.315-3.943-3.642-8.532-3.642-13.429C11.231 11.91 23.141 0 37.811 0s26.58 11.91 26.58 26.58-11.91 26.58-26.58 26.58a26.44 26.44 0 0 1-14.277-4.161L9.739 62.794a3.12 3.12 0 0 1-4.413 0L.913 58.382c-1.217-1.218-1.217-3.196 0-4.413l13.96-13.96zM37.811 8.054c10.225 0 18.526 8.301 18.526 18.526s-8.301 18.526-18.526 18.526-18.526-8.301-18.526-18.526S27.586 8.054 37.811 8.054z" fill="#fff" />
+                    </svg>
+                </a>
+            </p>
+        
+
+        <div class="searchbox_wrapper">
+            
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+    </nav>
+</div>
+
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../README_rtd.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 1: the basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2_Hard_data.html">Tutorial 2: hard data files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3_filling_and_saving.html">Tutorial 3: filling methods and saving a project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="4_load_project.html">Tutorial 4: load ArchPy project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1_many_hierarchical_units.html">Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_example.html">3D model example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mps_surfaces.html">Surfaces with MPS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_geological_map.html">Geological map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Article_example.html">Article ArchPy exemple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="x_valid_exemple1.html">Cross-validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inference_surfaces.html">Surface parameters inference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">List of modules</a></li>
+</ul>
+
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="Tutorial-1:-the-basics">
+<h1>Tutorial 1: the basics<a class="headerlink" href="#Tutorial-1:-the-basics" title="Permalink to this heading">¶</a></h1>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">geone</span>
+<span class="kn">import</span> <span class="nn">geone.covModel</span> <span class="k">as</span> <span class="nn">gcm</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">pyvista</span> <span class="k">as</span> <span class="nn">pv</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">ArchPy</span>
+<span class="k">except</span><span class="p">:</span> <span class="c1"># if ArchPy is not installed</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ArchPy not installed&quot;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../..&quot;</span><span class="p">)</span>
+    <span class="kn">import</span> <span class="nn">ArchPy</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ArchPy not installed
+</pre></div></div>
+</div>
+<p><strong>How to make basic geological models with ArchPy</strong></p>
+<p><strong>This notebook shows the most important features about ArchPy and its structure</strong></p>
+<p>It all begins by creating a project with the Arch_table class. This class is inside the base submodule of ArchPy.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ArchPy.base.Arch_table(name,</span> <span class="pre">working_directory,</span> <span class="pre">seed,</span> <span class="pre">verbose,</span> <span class="pre">ncpu)</span></code></p>
+<p>Arguments:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>- name will define a name for all files that this project will create and load.
+- The working_directory argument is the folder where to store ArchPy input/output files (folder must already exist).
+- seed is for reproducibility of the simulations
+- verbose can be 0 (few informations will be printed) or 1 (all informations will be printed)
+- ncpu : number of cpu to use, -1 for all minus 1. Note that ArchPy isn&#39;t parallelized and this parameter only influences some geone methods
+</pre></div>
+</div>
+<section id="Step-0:-Initialize-model">
+<h2>Step 0: Initialize model<a class="headerlink" href="#Step-0:-Initialize-model" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span> <span class="o">=</span> <span class="n">ArchPy</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">Arch_table</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Super_project&quot;</span><span class="p">,</span> <span class="n">working_directory</span><span class="o">=</span><span class="s2">&quot;working_dir&quot;</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p><strong>Once a project has been created, we can choose a simulation grid. This is done with the ``add_grid`` method by defining 3 parameters</strong></p>
+<p><code class="docutils literal notranslate"><span class="pre">dimensions</span></code> which is a tuple containing the number of cells in x, y and z direction <code class="docutils literal notranslate"><span class="pre">(nx,</span> <span class="pre">ny,</span> <span class="pre">nz)</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">spacing</span></code> which is a tuple containing the cell width in x, y and z direction <code class="docutils literal notranslate"><span class="pre">(sx,</span> <span class="pre">sy,</span> <span class="pre">sz)</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">origin</span></code> which is a tuple containing the origin coordinates in x, y and z direction <code class="docutils literal notranslate"><span class="pre">(ox,</span> <span class="pre">oy,</span> <span class="pre">oz)</span></code></p>
+<p>Note that others parameters can be passed such as a top, bot to define top and bottom of the simulation domain. Rasters can be passed directly. It is also possible to pass shapefiles for the delimitation of the domain.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nx</span> <span class="o">=</span> <span class="mi">50</span> <span class="c1">#number of cells in x</span>
+<span class="n">ny</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">nz</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">sx</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#cell width in x</span>
+<span class="n">sy</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">sz</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">ox</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># x coordinates of the origin</span>
+<span class="n">oy</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">oz</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">dimensions</span> <span class="o">=</span> <span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
+<span class="n">spacing</span> <span class="o">=</span> <span class="p">(</span><span class="n">sx</span><span class="p">,</span> <span class="n">sy</span><span class="p">,</span> <span class="n">sz</span><span class="p">)</span>
+<span class="n">origin</span> <span class="o">=</span> <span class="p">(</span><span class="n">ox</span><span class="p">,</span> <span class="n">oy</span><span class="p">,</span> <span class="n">oz</span><span class="p">)</span>
+
+<span class="n">T1</span><span class="o">.</span><span class="n">add_grid</span><span class="p">(</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">origin</span><span class="p">)</span> <span class="c1">#adding the grid</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+## Adding Grid ##
+## Grid added and is now simulation grid ##
+</pre></div></div>
+</div>
+</section>
+<section id="Step-1-:-defining-a-Stratigraphic-Pile">
+<h2>Step 1 : defining a Stratigraphic Pile<a class="headerlink" href="#Step-1-:-defining-a-Stratigraphic-Pile" title="Permalink to this heading">¶</a></h2>
+<p>The first step is done by creating a Stratigraphic Pile that will contain the different units. This can be done with <code class="docutils literal notranslate"><span class="pre">ArchPy.base.Pile</span></code>.</p>
+<p>Then this pile must be set as the Master pile of the project</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">P1</span> <span class="o">=</span> <span class="n">ArchPy</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">Pile</span><span class="p">(</span><span class="s2">&quot;Pile_1&quot;</span><span class="p">)</span> <span class="c1">#</span>
+
+<span class="c1">#The pile must be define as master pile of the project</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">set_Pile_master</span><span class="p">(</span><span class="n">P1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Pile sets as Pile master
+</pre></div></div>
+</div>
+</section>
+<section id="Step-2-:-Units-and-Surfaces">
+<h2>Step 2 : Units and Surfaces<a class="headerlink" href="#Step-2-:-Units-and-Surfaces" title="Permalink to this heading">¶</a></h2>
+<p>This is done with the classes <code class="docutils literal notranslate"><span class="pre">ArchPy.base.Unit</span></code> and <code class="docutils literal notranslate"><span class="pre">ArchPy.base.Surface</span></code></p>
+<p>For each unit, a surface must be defined. <strong>This surface delimits the top of the unit</strong>.</p>
+<p>A surface is caracterized by :</p>
+<ul class="simple">
+<li><p>contact type (onlap or erode), which influences how it interacts with other surfaces</p></li>
+<li><p>Surface dictionnary (dic_surf) wich includes all parameters and method interpolations</p>
+<ul>
+<li><p>int_method : interpolation method –&gt; grf, grf_ineq, MPS, kriging, …</p></li>
+<li><p>covmodel : covariance model to use if int_method is grf, grf_ineq, kriging</p></li>
+<li><p>mean : mean elevation for the unconditional simulation</p></li>
+</ul>
+</li>
+</ul>
+<p>A unit is caracterized by :</p>
+<ul class="simple">
+<li><p>A name</p></li>
+<li><p>an order that defines the unit position in the pile, ranging from 1 (youngest unit) to n (oldest unit).</p></li>
+<li><p>A surface object</p></li>
+<li><p>Unit dictionnary (dic_facies) which includes all the parameters and method for the filling of the unit.</p>
+<ul>
+<li><p>f_method : filling method (SIS, MPS, homogenous, SubPile or TPGs)</p></li>
+<li><p>f_covmodel : facies covmodels to use with the SIS</p></li>
+<li><p>probability : facies proportions, in the same order than the facies passed to the Unit.</p></li>
+<li><p>(see ArchPy documentation for all the parameters)</p></li>
+</ul>
+</li>
+</ul>
+<p>Here we will create <strong>2</strong> units which means that only oldest surface will be simulated, youngest will be set to top. A surface is however required in order to create a unit object, even if it is useless.</p>
+<p>Each surface will be filled with 2 lithofacies of different proportions using the SIS method.</p>
+<p>Finally, the units are added to the Pile.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Unit 1</span>
+
+<span class="c1">#Creation of the top unit U1</span>
+<span class="n">covmodel_SIS</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel3D</span><span class="p">(</span><span class="n">elem</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;spherical&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">5</span><span class="p">]}),</span>
+                                      <span class="p">(</span><span class="s2">&quot;exponential&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">5</span><span class="p">]})])</span>
+<span class="n">dic_facies_u1</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f_method&quot;</span> <span class="p">:</span> <span class="s2">&quot;SIS&quot;</span><span class="p">,</span> <span class="c1">#filling method</span>
+                 <span class="s2">&quot;f_covmodel&quot;</span> <span class="p">:</span> <span class="n">covmodel_SIS</span><span class="p">,</span> <span class="c1">#SIS covmodels</span>
+                 <span class="s2">&quot;probability&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]</span> <span class="c1">#facies proportions</span>
+                <span class="p">}</span> <span class="c1">#dictionnary for the unit filling</span>
+
+<span class="n">U1</span> <span class="o">=</span> <span class="n">ArchPy</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">Unit</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;U1&quot;</span><span class="p">,</span>
+                      <span class="n">order</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>       <span class="c1">#order in pile</span>
+                      <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;lightcoral&quot;</span><span class="p">,</span>
+                      <span class="n">surface</span><span class="o">=</span><span class="n">ArchPy</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">Surface</span><span class="p">(),</span>  <span class="c1"># top surface</span>
+                      <span class="n">ID</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                      <span class="n">dic_facies</span><span class="o">=</span><span class="n">dic_facies_u1</span>
+                     <span class="p">)</span>
+
+
+
+<span class="c1">## Unit 2</span>
+
+<span class="c1">#surface 2</span>
+<span class="n">covmodel_S2</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel2D</span><span class="p">(</span><span class="n">elem</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;cubic&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span><span class="mi">35</span><span class="p">]})])</span>
+<span class="n">dic_surf_s2</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;covmodel&quot;</span> <span class="p">:</span> <span class="n">covmodel_S2</span><span class="p">,</span> <span class="s2">&quot;int_method&quot;</span> <span class="p">:</span> <span class="s2">&quot;grf_ineq&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span> <span class="p">:</span> <span class="mf">2.5</span><span class="p">}</span>
+<span class="n">S2</span> <span class="o">=</span> <span class="n">ArchPy</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">Surface</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;S1&quot;</span><span class="p">,</span> <span class="n">dic_surf</span><span class="o">=</span><span class="n">dic_surf_s2</span><span class="p">)</span>
+
+<span class="c1">#dic facies 2</span>
+<span class="n">dic_facies_u2</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f_method&quot;</span> <span class="p">:</span> <span class="s2">&quot;SIS&quot;</span><span class="p">,</span> <span class="s2">&quot;f_covmodel&quot;</span> <span class="p">:</span> <span class="n">covmodel_SIS</span><span class="p">,</span> <span class="s2">&quot;probability&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">]}</span> <span class="c1">#use same dic facies as u1</span>
+
+<span class="n">U2</span> <span class="o">=</span> <span class="n">ArchPy</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">Unit</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;U2&quot;</span><span class="p">,</span>
+                      <span class="n">order</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>   <span class="c1">#order in pile</span>
+                      <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;lime&quot;</span><span class="p">,</span> <span class="c1">#color</span>
+                      <span class="n">surface</span><span class="o">=</span><span class="n">S2</span><span class="p">,</span> <span class="c1"># top surface</span>
+                      <span class="n">ID</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>     <span class="c1">#ID</span>
+                      <span class="n">dic_facies</span><span class="o">=</span><span class="n">dic_facies_u2</span> <span class="c1">#facies dictionnary</span>
+                     <span class="p">)</span>
+
+
+<span class="c1">#Adding the units to the Pile</span>
+<span class="n">P1</span><span class="o">.</span><span class="n">add_unit</span><span class="p">([</span><span class="n">U1</span><span class="p">,</span> <span class="n">U2</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Unit U1: covmodel for SIS added
+Unit U1: Surface added for interpolation
+Unit U2: covmodel for SIS added
+Unit U2: Surface added for interpolation
+Stratigraphic unit U1 added
+Stratigraphic unit U2 added
+</pre></div></div>
+</div>
+</section>
+<section id="Step-3-:-Facies">
+<h2>Step 3 : Facies<a class="headerlink" href="#Step-3-:-Facies" title="Permalink to this heading">¶</a></h2>
+<p><strong>It is know possible to defined some facies that will be added to the units</strong></p>
+<p>two facies (Sand and Clay) will be added to U1 and two others (Gravel, Sandy gravel) to U2.</p>
+<p>This can be done with <code class="docutils literal notranslate"><span class="pre">ArchPy.base.Facies</span></code>. A facies can then be passed to the unit with the <code class="docutils literal notranslate"><span class="pre">add_facies</span></code> method. Warning, this method is an “adding” method it does not remove previously added facies. They should be remove manually wiht the following code : unit.list_facies = [].</p>
+<p><strong>Warning : IDs must be different</strong></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Sand</span> <span class="o">=</span> <span class="n">ArchPy</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">Facies</span><span class="p">(</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Sand&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;yellow&quot;</span><span class="p">)</span>
+<span class="n">Clay</span> <span class="o">=</span> <span class="n">ArchPy</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">Facies</span><span class="p">(</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Clay&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;royalblue&quot;</span><span class="p">)</span>
+<span class="n">Gravel</span> <span class="o">=</span> <span class="n">ArchPy</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">Facies</span><span class="p">(</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Gravel&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;palegreen&quot;</span><span class="p">)</span>
+<span class="n">Sandy_gravel</span> <span class="o">=</span> <span class="n">ArchPy</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">Facies</span><span class="p">(</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Sandy_gravel&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;darkorange&quot;</span><span class="p">)</span>
+
+<span class="n">U1</span><span class="o">.</span><span class="n">add_facies</span><span class="p">([</span><span class="n">Sand</span><span class="p">,</span> <span class="n">Clay</span><span class="p">])</span>
+<span class="n">U2</span><span class="o">.</span><span class="n">add_facies</span><span class="p">([</span><span class="n">Gravel</span><span class="p">,</span> <span class="n">Sandy_gravel</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Facies Sand added to unit U1
+Facies Clay added to unit U1
+Facies Gravel added to unit U2
+Facies Sandy_gravel added to unit U2
+</pre></div></div>
+</div>
+</section>
+<section id="It-is-almost-finished,-last-step-:-Properties">
+<h2>It is almost finished, last step : Properties<a class="headerlink" href="#It-is-almost-finished,-last-step-:-Properties" title="Permalink to this heading">¶</a></h2>
+<p>Here we will create a property object with <code class="docutils literal notranslate"><span class="pre">ArchPy.base.Prop</span></code>.</p>
+<p>Property objects are directly added to the project and not to the facies.</p>
+<p>Arguments are : - name - facies (the facies in which to simulate the prop) - covmodels (covariance models for the simulation, one for each facies, same order of facies) - means (mean values for the simulation, one for each facies) - int_method (grf method –&gt; SGS or FFT), SGS will probably be faster if a lot of units and facies are defined - x (position of the hard data, if any) - v (values of the hard data, if any) - def_mean (default value to use if a facies have not been added to the “facies”
+arguments - vmin, vmax (min and max values for the properties, simulated values below (resp. above) will be capped.</p>
+<p>In this example one property is defined for the four facies, each with a different covariance models given in <code class="docutils literal notranslate"><span class="pre">list_covmodels</span></code>, a list of 3D covmodels objects (see geone doc.). The order of the covmodels must be consistant with the order of the facies in <code class="docutils literal notranslate"><span class="pre">list_facies</span></code>. The same applies for the <code class="docutils literal notranslate"><span class="pre">means</span></code> parameter.</p>
+<p>Finally the property is added to the project with the method <code class="docutils literal notranslate"><span class="pre">Arch_table.add_project</span></code></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#covmodels</span>
+<span class="n">cm_prop1</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel3D</span><span class="p">(</span><span class="n">elem</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;spherical&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mf">0.1</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">:[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">]}),</span>
+                                  <span class="p">(</span><span class="s2">&quot;cubic&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mf">0.1</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">:[</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">]})])</span>
+<span class="n">cm_prop2</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel3D</span><span class="p">(</span><span class="n">elem</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;cubic&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mf">0.2</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">:[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">5</span><span class="p">]})])</span>
+
+<span class="n">list_facies</span> <span class="o">=</span> <span class="p">[</span><span class="n">Sand</span><span class="p">,</span> <span class="n">Clay</span><span class="p">,</span> <span class="n">Gravel</span><span class="p">,</span> <span class="n">Sandy_gravel</span><span class="p">]</span> <span class="c1">#list of the facies to simulate</span>
+<span class="n">list_covmodels</span> <span class="o">=</span> <span class="p">[</span><span class="n">cm_prop2</span><span class="p">,</span> <span class="n">cm_prop1</span><span class="p">,</span> <span class="n">cm_prop2</span><span class="p">,</span> <span class="n">cm_prop1</span><span class="p">]</span> <span class="c1">#list of 3D covariance models</span>
+<span class="n">means</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">]</span> <span class="c1">#mean property values</span>
+<span class="n">K</span> <span class="o">=</span> <span class="n">ArchPy</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">Prop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">,</span>
+                     <span class="n">facies</span><span class="o">=</span><span class="n">list_facies</span><span class="p">,</span>
+                     <span class="n">covmodels</span><span class="o">=</span><span class="n">list_covmodels</span><span class="p">,</span>
+                     <span class="n">means</span><span class="o">=</span><span class="n">means</span><span class="p">,</span>
+                     <span class="n">int_method</span> <span class="o">=</span> <span class="s2">&quot;sgs&quot;</span><span class="p">,</span>
+                     <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span>
+                     <span class="n">vmax</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span>
+                    <span class="p">)</span>
+
+<span class="c1">#adding the property to project</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">add_prop</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Property K added
+</pre></div></div>
+</div>
+</section>
+<section id="Pre-processing">
+<h2>Pre-processing<a class="headerlink" href="#Pre-processing" title="Permalink to this heading">¶</a></h2>
+<p>Now everything is set up, it is possible to pre-process the Hard Data. As there is none, this step can be skipped. A warning is printed indicating that no borehole have been found</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">process_bhs</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+##### ORDERING UNITS #####
+Pile Pile_1: ordering units
+Stratigraphic units have been sorted according to order
+hierarchical relations set
+No borehole found - no hd extracted
+</pre></div></div>
+</div>
+</section>
+<section id="Simulations">
+<h2>Simulations<a class="headerlink" href="#Simulations" title="Permalink to this heading">¶</a></h2>
+<p>The three level of simulations can then be simulated with the following commands :</p>
+<p><code class="docutils literal notranslate"><span class="pre">compute_surf(nreal)</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">compute_facies(nreal)</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">compute_prop(nreal)</span></code></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_surf</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Boreholes not processed, fully unconditional simulations will be tempted
+########## PILE Pile_1 ##########
+Pile Pile_1: ordering units
+Stratigraphic units have been sorted according to order
+
+#### COMPUTING SURFACE OF UNIT U2
+U2: time elapsed for computing surface 0.004004001617431641 s
+
+#### COMPUTING SURFACE OF UNIT U1
+U1: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.004004001617431641 s
+
+#### COMPUTING SURFACE OF UNIT U2
+U2: time elapsed for computing surface 0.0030019283294677734 s
+
+#### COMPUTING SURFACE OF UNIT U1
+U1: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.005004167556762695 s
+
+#### COMPUTING SURFACE OF UNIT U2
+U2: time elapsed for computing surface 0.0020034313201904297 s
+
+#### COMPUTING SURFACE OF UNIT U1
+U1: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.004004001617431641 s
+
+#### COMPUTING SURFACE OF UNIT U2
+U2: time elapsed for computing surface 0.0020020008087158203 s
+
+#### COMPUTING SURFACE OF UNIT U1
+U1: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.004003047943115234 s
+
+#### COMPUTING SURFACE OF UNIT U2
+U2: time elapsed for computing surface 0.0030031204223632812 s
+
+#### COMPUTING SURFACE OF UNIT U1
+U1: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.004004001617431641 s
+
+#### COMPUTING SURFACE OF UNIT U2
+U2: time elapsed for computing surface 0.0030024051666259766 s
+
+#### COMPUTING SURFACE OF UNIT U1
+U1: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.005004405975341797 s
+
+#### COMPUTING SURFACE OF UNIT U2
+U2: time elapsed for computing surface 0.0020024776458740234 s
+
+#### COMPUTING SURFACE OF UNIT U1
+U1: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.005003690719604492 s
+
+#### COMPUTING SURFACE OF UNIT U2
+U2: time elapsed for computing surface 0.0020020008087158203 s
+
+#### COMPUTING SURFACE OF UNIT U1
+U1: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.004003047943115234 s
+
+#### COMPUTING SURFACE OF UNIT U2
+U2: time elapsed for computing surface 0.0020020008087158203 s
+
+#### COMPUTING SURFACE OF UNIT U1
+U1: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.004003763198852539 s
+
+#### COMPUTING SURFACE OF UNIT U2
+U2: time elapsed for computing surface 0.002004861831665039 s
+
+#### COMPUTING SURFACE OF UNIT U1
+U1: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.004002809524536133 s
+
+#### COMPUTING SURFACE OF UNIT U2
+U2: time elapsed for computing surface 0.002002239227294922 s
+
+#### COMPUTING SURFACE OF UNIT U1
+U1: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.004002809524536133 s
+
+#### COMPUTING SURFACE OF UNIT U2
+U2: time elapsed for computing surface 0.002002716064453125 s
+
+#### COMPUTING SURFACE OF UNIT U1
+U1: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.004003763198852539 s
+
+#### COMPUTING SURFACE OF UNIT U2
+U2: time elapsed for computing surface 0.0020008087158203125 s
+
+#### COMPUTING SURFACE OF UNIT U1
+U1: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.0040035247802734375 s
+
+#### COMPUTING SURFACE OF UNIT U2
+U2: time elapsed for computing surface 0.002002716064453125 s
+
+#### COMPUTING SURFACE OF UNIT U1
+U1: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.00400233268737793 s
+
+#### COMPUTING SURFACE OF UNIT U2
+U2: time elapsed for computing surface 0.003003358840942383 s
+
+#### COMPUTING SURFACE OF UNIT U1
+U1: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.005004405975341797 s
+
+#### COMPUTING SURFACE OF UNIT U2
+U2: time elapsed for computing surface 0.0020017623901367188 s
+
+#### COMPUTING SURFACE OF UNIT U1
+U1: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.0050048828125 s
+
+#### COMPUTING SURFACE OF UNIT U2
+U2: time elapsed for computing surface 0.002002239227294922 s
+
+#### COMPUTING SURFACE OF UNIT U1
+U1: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.005002737045288086 s
+
+#### COMPUTING SURFACE OF UNIT U2
+U2: time elapsed for computing surface 0.0020020008087158203 s
+
+#### COMPUTING SURFACE OF UNIT U1
+U1: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.0050051212310791016 s
+
+#### COMPUTING SURFACE OF UNIT U2
+U2: time elapsed for computing surface 0.0020020008087158203 s
+
+#### COMPUTING SURFACE OF UNIT U1
+U1: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.005004405975341797 s
+
+#### COMPUTING SURFACE OF UNIT U2
+U2: time elapsed for computing surface 0.002002239227294922 s
+
+#### COMPUTING SURFACE OF UNIT U1
+U1: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.005004167556762695 s
+##########################
+
+
+### 0.16214966773986816: Total time elapsed for computing surfaces ###
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_facies</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+### Unit U1: facies simulation with SIS method ####
+### Unit U1 - realization 0 ###
+Only one facies covmodels for multiples facies, adapt sill to right proportions
+### Unit U1 - realization 1 ###
+### Unit U1 - realization 2 ###
+### Unit U1 - realization 3 ###
+### Unit U1 - realization 4 ###
+### Unit U1 - realization 5 ###
+### Unit U1 - realization 6 ###
+### Unit U1 - realization 7 ###
+### Unit U1 - realization 8 ###
+### Unit U1 - realization 9 ###
+### Unit U1 - realization 10 ###
+### Unit U1 - realization 11 ###
+### Unit U1 - realization 12 ###
+### Unit U1 - realization 13 ###
+### Unit U1 - realization 14 ###
+### Unit U1 - realization 15 ###
+### Unit U1 - realization 16 ###
+### Unit U1 - realization 17 ###
+### Unit U1 - realization 18 ###
+### Unit U1 - realization 19 ###
+Time elapsed 15.84 s
+
+### Unit U2: facies simulation with SIS method ####
+### Unit U2 - realization 0 ###
+Only one facies covmodels for multiples facies, adapt sill to right proportions
+### Unit U2 - realization 1 ###
+### Unit U2 - realization 2 ###
+### Unit U2 - realization 3 ###
+### Unit U2 - realization 4 ###
+### Unit U2 - realization 5 ###
+### Unit U2 - realization 6 ###
+### Unit U2 - realization 7 ###
+### Unit U2 - realization 8 ###
+### Unit U2 - realization 9 ###
+### Unit U2 - realization 10 ###
+### Unit U2 - realization 11 ###
+### Unit U2 - realization 12 ###
+### Unit U2 - realization 13 ###
+### Unit U2 - realization 14 ###
+### Unit U2 - realization 15 ###
+### Unit U2 - realization 16 ###
+### Unit U2 - realization 17 ###
+### Unit U2 - realization 18 ###
+### Unit U2 - realization 19 ###
+Time elapsed 16.74 s
+
+### 32.58: Total time elapsed for computing facies ###
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_prop</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+### 40 K property models will be modeled ###
+### 1 K models done
+### 2 K models done
+### 3 K models done
+### 4 K models done
+### 5 K models done
+### 6 K models done
+### 7 K models done
+### 8 K models done
+### 9 K models done
+### 10 K models done
+### 11 K models done
+### 12 K models done
+### 13 K models done
+### 14 K models done
+### 15 K models done
+### 16 K models done
+### 17 K models done
+### 18 K models done
+### 19 K models done
+### 20 K models done
+### 21 K models done
+### 22 K models done
+### 23 K models done
+### 24 K models done
+### 25 K models done
+### 26 K models done
+### 27 K models done
+### 28 K models done
+### 29 K models done
+### 30 K models done
+### 31 K models done
+### 32 K models done
+### 33 K models done
+### 34 K models done
+### 35 K models done
+### 36 K models done
+### 37 K models done
+### 38 K models done
+### 39 K models done
+### 40 K models done
+</pre></div></div>
+</div>
+</section>
+<section id="Retrieve-results">
+<h2>Retrieve results<a class="headerlink" href="#Retrieve-results" title="Permalink to this heading">¶</a></h2>
+<p>Results can be retrieved with different functions of Arch_table : <code class="docutils literal notranslate"><span class="pre">.get_units_domains_realizations()</span></code>, <code class="docutils literal notranslate"><span class="pre">.get_facies</span></code>, <code class="docutils literal notranslate"><span class="pre">getprop(property)</span></code></p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">unit_domains</span> <span class="o">=</span> <span class="n">T1</span><span class="o">.</span><span class="n">get_units_domains_realizations</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">facies_reals</span> <span class="o">=</span> <span class="n">T1</span><span class="o">.</span><span class="n">get_facies</span>
+<span class="n">K</span> <span class="o">=</span> <span class="n">T1</span><span class="o">.</span><span class="n">getprop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Plots">
+<h2>Plots<a class="headerlink" href="#Plots" title="Permalink to this heading">¶</a></h2>
+<p>ArchPy offers multiple plotting functionnalities at different level such as :</p>
+<p><code class="docutils literal notranslate"><span class="pre">plot_unit(iu)</span></code>, <code class="docutils literal notranslate"><span class="pre">plot_facies(iu,</span> <span class="pre">ifa)</span></code>, <code class="docutils literal notranslate"><span class="pre">plot_prop(property,</span> <span class="pre">iu,</span> <span class="pre">ifa,</span> <span class="pre">ip)</span></code>, <code class="docutils literal notranslate"><span class="pre">plot_proba</span> <span class="pre">(object)</span></code>, <code class="docutils literal notranslate"><span class="pre">plot_mean(property,</span> <span class="pre">type</span> <span class="pre">=</span> <span class="pre">arithmetic)</span></code>, etc.</p>
+<p>Slice can always be drawn with the slicex, slicey and slicez arguments. slices are drawn at fraction of the x, y and z axis. For example, slicez = 0.3 indicates to draw a slice along xy plane and cutting z at 0.3 of zmax.</p>
+<p>here iu, ifa and ip are index for the different type of realizations made. iu = 1 for example indicating to plot the results related to the 2nd unit realization. Similarly, ifa and ip stand for the results associtated with the ifa facies and ip property realizations.</p>
+<p>e.g <code class="docutils literal notranslate"><span class="pre">T1.plot_prop(&quot;K&quot;,</span> <span class="pre">iu=5,</span> <span class="pre">ifa=1,</span> <span class="pre">ip=0)</span></code> indicates to plot the 1st property realization made on the 2nd facies simulation itself realized on the 6th unit realization.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pv</span><span class="o">.</span><span class="n">set_jupyter_backend</span><span class="p">(</span><span class="s1">&#39;static&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_units</span><span class="p">(</span><span class="n">iu</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+C:\Users\schorppl\Anaconda3\envs\hydro\lib\site-packages\pyvista\core\grid.py:511: PyVistaDeprecationWarning: `dims` argument is deprecated. Please use `dimensions`.
+  &#39;`dims` argument is deprecated. Please use `dimensions`.&#39;, PyVistaDeprecationWarning
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_1_the_very_basics_25_1.png" src="../_images/notebooks_1_the_very_basics_25_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#plot probability of observing unit 1</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">plot_proba</span><span class="p">(</span><span class="s2">&quot;U1&quot;</span><span class="p">,</span> <span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="n">slicez</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_1_the_very_basics_26_0.png" src="../_images/notebooks_1_the_very_basics_26_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#plotting facies</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">plot_facies</span><span class="p">(</span><span class="n">iu</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ifa</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_1_the_very_basics_27_0.png" src="../_images/notebooks_1_the_very_basics_27_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_proba</span><span class="p">(</span><span class="n">Sand</span><span class="p">,</span><span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_1_the_very_basics_28_0.png" src="../_images/notebooks_1_the_very_basics_28_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#plot prop</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">plot_prop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="n">iu</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ifa</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ip</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_1_the_very_basics_29_0.png" src="../_images/notebooks_1_the_very_basics_29_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#mean prop value</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">plot_mean_prop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;arithmetic&quot;</span><span class="p">,</span> <span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_1_the_very_basics_30_0.png" src="../_images/notebooks_1_the_very_basics_30_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Standard deviation</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">plot_mean_prop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;std&quot;</span><span class="p">,</span><span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_1_the_very_basics_31_0.png" src="../_images/notebooks_1_the_very_basics_31_0.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents<span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:<span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Tutorial 1: the basics</a><ul>
+<li><a class="reference internal" href="#Step-0:-Initialize-model">Step 0: Initialize model</a></li>
+<li><a class="reference internal" href="#Step-1-:-defining-a-Stratigraphic-Pile">Step 1 : defining a Stratigraphic Pile</a></li>
+<li><a class="reference internal" href="#Step-2-:-Units-and-Surfaces">Step 2 : Units and Surfaces</a></li>
+<li><a class="reference internal" href="#Step-3-:-Facies">Step 3 : Facies</a></li>
+<li><a class="reference internal" href="#It-is-almost-finished,-last-step-:-Properties">It is almost finished, last step : Properties</a></li>
+<li><a class="reference internal" href="#Pre-processing">Pre-processing</a></li>
+<li><a class="reference internal" href="#Simulations">Simulations</a></li>
+<li><a class="reference internal" href="#Retrieve-results">Retrieve results</a></li>
+<li><a class="reference internal" href="#Plots">Plots</a></li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
+    
+
+      <div class="clearer"></div>
+    </div>
+    <div class="button_nav_wrapper">
+        <div class="button_nav">
+            <div class="left">
+                
+                <a href="../tutorials.html">
+                    <span class="icon">&lt;</span><span>Tutorials</span></a>
+                
+            </div>
+
+            <div class="right">
+                
+                    <a href="2_Hard_data.html"><span>Tutorial 2: hard data files</span><span class="icon">&gt;</span></a>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+
+<p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>
+  </body>
+</html>

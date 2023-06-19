@@ -1,0 +1,1337 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Tutorial 3: filling methods and saving a project &#8212; ArchPy 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=0.7.0-1" />
+    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
+    <script src="../_static/twemoji.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <script src="../_static/js/petite-vue.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tutorial 4: load ArchPy project" href="4_load_project.html" />
+    <link rel="prev" title="Tutorial 2: hard data files" href="2_Hard_data.html" /> 
+  </head><body data-dark_mode_code_blocks="true">
+
+<div id="top_nav">
+    
+
+    <nav>
+        
+            
+        
+
+        <p id="toggle_sidebar">
+            <a href="#" title="Toggle sidebar">|||</a>
+        </p>
+        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.0.0 documentation</a></h1>
+
+        <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
+    <template v-if="mode == 'light'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_light"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M67.48,18.073c1.913,-1.912 1.913,-5.018 0,-6.931c-1.912,-1.912 -5.018,-1.912 -6.931,0l-6.798,6.799c-1.912,1.912 -1.912,5.018 0,6.931c1.913,1.912 5.018,1.912 6.931,-0l6.798,-6.799Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.728,61.108c1.912,-1.913 1.912,-5.018 -0,-6.931c-1.913,-1.913 -5.019,-1.913 -6.931,-0l-6.799,6.798c-1.912,1.913 -1.912,5.019 0,6.931c1.913,1.913 5.019,1.913 6.931,0l6.799,-6.798Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.682,54.177c-1.913,-1.913 -5.018,-1.913 -6.931,-0c-1.912,1.913 -1.912,5.018 0,6.931l6.798,6.798c1.913,1.913 5.019,1.913 6.931,0c1.913,-1.912 1.913,-5.018 0,-6.931l-6.798,-6.798Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M4.901,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,-0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M18.929,11.142c-1.912,-1.912 -5.018,-1.912 -6.931,0c-1.912,1.913 -1.912,5.019 0,6.931l6.799,6.799c1.912,1.912 5.018,1.912 6.931,-0c1.912,-1.913 1.912,-5.019 -0,-6.931l-6.799,-6.799Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.108,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c-0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c-0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'dark'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_dark"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.901,2.196 -4.901,4.901c0,2.705 2.197,4.901 4.901,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.662,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.989,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.732,61.103c1.91,-1.91 1.91,-5.011 0,-6.921l-0.009,-0.01c-1.91,-1.91 -5.012,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.909,1.91 5.011,1.91 6.92,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.672,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.52,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l-0,-0.01c-0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.901,2.196 -4.901,4.901c0,2.704 2.197,4.9 4.901,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.73,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 -0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.098,34.623c-2.699,0 -4.891,2.192 -4.891,4.892l-0,0.019c-0,2.699 2.192,4.891 4.891,4.891c2.7,0 4.892,-2.192 4.892,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.892,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'darkest'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_darkest"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><path d="M39.315,23.791c8.684,-0 15.734,7.05 15.734,15.733c0,8.684 -7.05,15.734 -15.734,15.734c-8.683,0 -15.733,-7.05 -15.733,-15.734c-0,-8.683 7.05,-15.733 15.733,-15.733Zm0,4.737c6.069,0 10.997,4.927 10.997,10.996c-0,6.069 -4.928,10.996 -10.997,10.996c-6.068,0 -10.996,-4.927 -10.996,-10.996c0,-6.069 4.928,-10.996 10.996,-10.996Z" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.216,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.9,2.196 -4.9,4.901c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.666,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.99,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.737,61.103c1.909,-1.91 1.909,-5.011 -0,-6.921l-0.01,-0.01c-1.91,-1.91 -5.011,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.91,1.91 5.011,1.91 6.921,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.676,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.524,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l0,-0.01c0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.216,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901c-0,2.704 2.196,4.9 4.9,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.734,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.103,34.623c-2.7,0 -4.892,2.192 -4.892,4.892l-0,0.019c-0,2.699 2.192,4.891 4.892,4.891c2.699,0 4.891,-2.192 4.891,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.891,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+</a>
+
+<script>
+(function() {
+    const LOCAL_STORAGE_KEY = 'piccoloThemeMode'
+
+    var initialMode = localStorage.getItem(LOCAL_STORAGE_KEY)
+
+    if (initialMode) {
+        // Make sure the value in local storage is valid
+        if (['light', 'dark', 'darkest'].indexOf(initialMode) == -1) {
+            initialMode = 'light'
+            localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+        }
+    } else {
+        // Check if the client prefers dark mode
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            initialMode = 'dark'
+        } else {
+            initialMode = 'light'
+        }
+        localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+    }
+
+    document.documentElement.dataset.mode = initialMode
+
+    PetiteVue.createApp({
+        'mode': initialMode,
+        handleClick() {
+            let currentMode = this.mode
+
+            if (currentMode == 'light') {
+                this.mode = 'dark'
+            } else if (currentMode == 'dark') {
+                this.mode = 'darkest'
+            } else if (currentMode == 'darkest') {
+                this.mode = 'light'
+            }
+
+            document.documentElement.dataset.mode = this.mode
+            localStorage.setItem(LOCAL_STORAGE_KEY, this.mode)
+
+            console.log(this.mode)
+        }
+    }).mount('#mode_toggle')
+})()
+</script>
+            <p class="mobile_search_link">
+                <a href="../search.html" title="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65 64" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+                        <path d="M14.873 40.009c-2.315-3.943-3.642-8.532-3.642-13.429C11.231 11.91 23.141 0 37.811 0s26.58 11.91 26.58 26.58-11.91 26.58-26.58 26.58a26.44 26.44 0 0 1-14.277-4.161L9.739 62.794a3.12 3.12 0 0 1-4.413 0L.913 58.382c-1.217-1.218-1.217-3.196 0-4.413l13.96-13.96zM37.811 8.054c10.225 0 18.526 8.301 18.526 18.526s-8.301 18.526-18.526 18.526-18.526-8.301-18.526-18.526S27.586 8.054 37.811 8.054z" fill="#fff" />
+                    </svg>
+                </a>
+            </p>
+        
+
+        <div class="searchbox_wrapper">
+            
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+    </nav>
+</div>
+
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../README_rtd.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="1_the_very_basics.html">Tutorial 1: the basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2_Hard_data.html">Tutorial 2: hard data files</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 3: filling methods and saving a project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="4_load_project.html">Tutorial 4: load ArchPy project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1_many_hierarchical_units.html">Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_example.html">3D model example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mps_surfaces.html">Surfaces with MPS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_geological_map.html">Geological map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Article_example.html">Article ArchPy exemple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="x_valid_exemple1.html">Cross-validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inference_surfaces.html">Surface parameters inference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">List of modules</a></li>
+</ul>
+
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="Tutorial-3:-filling-methods-and-saving-a-project">
+<h1>Tutorial 3: filling methods and saving a project<a class="headerlink" href="#Tutorial-3:-filling-methods-and-saving-a-project" title="Permalink to this heading">¶</a></h1>
+<p>In this example a simple geological model will be built using MPS, TPG and SIS as filling method. The results will then be saved.</p>
+<p>Note : to use MPS, a valid DeeSse license is required (commercial or academic).</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">colors</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">geone</span>
+<span class="kn">import</span> <span class="nn">geone.covModel</span> <span class="k">as</span> <span class="nn">gcm</span>
+<span class="kn">import</span> <span class="nn">geone.imgplot3d</span> <span class="k">as</span> <span class="nn">imgplt3</span>
+<span class="kn">import</span> <span class="nn">pyvista</span> <span class="k">as</span> <span class="nn">pv</span>
+<span class="n">pv</span><span class="o">.</span><span class="n">set_jupyter_backend</span><span class="p">(</span><span class="s1">&#39;static&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="c1">#For loading ArchPy, the path where ArchPy is must be added with sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../../&quot;</span><span class="p">)</span>
+<span class="c1">#my modules</span>
+<span class="kn">from</span> <span class="nn">ArchPy.base</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#ArchPy main functions</span>
+<span class="kn">from</span> <span class="nn">ArchPy.tpgs</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#Truncated plurigaussians</span>
+</pre></div>
+</div>
+</div>
+<p>ArchPy integrates multiple filling method such as Multiple-Point Statistics (MPS), Truncated PluriGaussian (TPG), Sequential Indicator Simulations (SIS) and SubPile which will be showed in another notebook.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">P1</span> <span class="o">=</span> <span class="n">Pile</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;P1&quot;</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#creating the pile</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#creating the grid</span>
+
+<span class="c1">#grid</span>
+<span class="n">sx</span> <span class="o">=</span> <span class="mf">0.15</span>
+<span class="n">sy</span> <span class="o">=</span> <span class="mf">0.15</span>
+<span class="n">sz</span> <span class="o">=</span> <span class="mf">.15</span>
+<span class="n">x1</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">y1</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">z1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">6</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">y0</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">z0</span> <span class="o">=</span> <span class="o">-</span><span class="mi">15</span>
+<span class="n">nx</span> <span class="o">=</span> <span class="mi">133</span>
+<span class="n">ny</span> <span class="o">=</span> <span class="mi">67</span>
+<span class="n">nz</span> <span class="o">=</span> <span class="mi">62</span>
+
+<span class="c1">#coordinates vectors</span>
+<span class="n">xg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span><span class="n">x1</span><span class="p">,</span><span class="n">nx</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">yg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span><span class="n">y1</span><span class="p">,</span><span class="n">ny</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">zg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">z0</span><span class="p">,</span><span class="n">z1</span><span class="p">,</span><span class="n">nz</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">dimensions</span> <span class="o">=</span> <span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
+<span class="n">spacing</span> <span class="o">=</span> <span class="p">(</span><span class="n">sx</span><span class="p">,</span> <span class="n">sy</span><span class="p">,</span> <span class="n">sz</span><span class="p">)</span>
+<span class="n">origin</span> <span class="o">=</span> <span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">z0</span><span class="p">)</span>
+
+<span class="c1">#setting a top and a bot</span>
+<span class="n">top</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">ny</span><span class="p">,</span><span class="n">nx</span><span class="p">])</span><span class="o">*-</span><span class="mi">6</span>
+<span class="n">bot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">ny</span><span class="p">,</span><span class="n">nx</span><span class="p">])</span><span class="o">*</span><span class="n">z0</span>
+</pre></div>
+</div>
+</div>
+<p><strong>In this example one unit (D) will be simulated with TPG and another (B) with MPS.</strong></p>
+<p>Before creating the units, we can define all the simulation parameters, let’s begin with the TPG. TPG here are the truncation of two gaussian random fields (GRF), this implies that the inputs are a truncation flag (defining how to truncate the GRF) and two covariance models (one for each GRF).</p>
+<p>There are some tools to infer the covariance models directly from the indicator variograms but they are not optimum and still in development. Thus, they will be not detailed here.</p>
+<p>Below the <code class="docutils literal notranslate"><span class="pre">flag</span></code> is defined and the two covariance models also <code class="docutils literal notranslate"><span class="pre">G_cm</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## setup TPGs for D unit</span>
+
+<span class="c1">#flag</span>
+<span class="c1">#thresholds</span>
+<span class="n">t2g1</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.3</span>
+<span class="n">t3g1</span> <span class="o">=</span> <span class="mf">.3</span>
+<span class="n">t1g2</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">t2g2</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+<span class="c1">#dictionnaries show where a certain facies is present.</span>
+<span class="c1"># The structure is a list of list containing 2 tuples of size 2 that indicates the limits of the gaussian fields</span>
+<span class="c1"># e.g. [[(lower_boundary1_g1,upper_boundary1_g1),(lower_boundary1_g2,upper_boundary1_g2)]] --&gt; this indicates one cuboid and multiple can be defined</span>
+<span class="n">dic1</span> <span class="o">=</span> <span class="p">[[(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span><span class="n">t2g1</span><span class="p">),(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span><span class="n">t1g2</span><span class="p">)]]</span> <span class="c1"># this facies is present between -inf to -0.3 of the 1st gaussian field and between -inf to 0 of the 2</span>
+<span class="n">dic2</span> <span class="o">=</span> <span class="p">[[(</span><span class="n">t3g1</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">),(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span><span class="n">t2g2</span><span class="p">)]]</span>
+<span class="n">dic3</span> <span class="o">=</span> <span class="p">[[(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span><span class="n">t2g1</span><span class="p">),(</span><span class="n">t1g2</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)]]</span>
+<span class="n">dic4</span> <span class="o">=</span> <span class="p">[[(</span><span class="n">t2g1</span><span class="p">,</span><span class="n">t3g1</span><span class="p">),(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)],[(</span><span class="n">t3g1</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">),(</span><span class="n">t2g2</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)]]</span>
+
+<span class="n">flag</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span><span class="n">dic1</span><span class="p">,</span>
+        <span class="mi">2</span><span class="p">:</span><span class="n">dic2</span><span class="p">,</span>
+        <span class="mi">3</span><span class="p">:</span><span class="n">dic3</span><span class="p">,</span>
+        <span class="mi">5</span><span class="p">:</span><span class="n">dic4</span><span class="p">}</span>
+
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plot_flag</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.7</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Flag in Gaussian space&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plot_flag</span><span class="p">(</span><span class="n">Gspace2Pspace</span><span class="p">(</span><span class="n">flag</span><span class="p">),</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.7</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Flag in proba space&quot;</span><span class="p">)</span>
+
+<span class="c1">## Gaussian random fields covariance models</span>
+<span class="n">G1</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel3D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;cubic&quot;</span><span class="p">,{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mf">1.</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">:[</span><span class="mf">5.</span><span class="p">,</span><span class="mf">5.</span><span class="p">,</span><span class="mf">2.</span><span class="p">]}),</span>
+                         <span class="p">(</span><span class="s2">&quot;nugget&quot;</span><span class="p">,{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mf">0.0</span><span class="p">})],</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;G1&quot;</span><span class="p">)</span>
+<span class="n">G2</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel3D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;spherical&quot;</span><span class="p">,{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mf">1.</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">:[</span><span class="mf">10.</span><span class="p">,</span><span class="mf">10.</span><span class="p">,</span><span class="mf">5.</span><span class="p">]}),</span>
+                         <span class="p">(</span><span class="s2">&quot;nugget&quot;</span><span class="p">,{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mf">0.0</span><span class="p">})],</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;G2&quot;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">G_cm</span> <span class="o">=</span> <span class="p">[</span><span class="n">G1</span><span class="p">,</span><span class="n">G2</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3_filling_and_saving_6_0.png" src="../_images/notebooks_3_filling_and_saving_6_0.png" />
+</div>
+</div>
+<p><strong>Now we can set up the parameters for the MPS simulations</strong></p>
+<p>First a 3D Training image is necessary. Here some channels. <strong>The values of the TI must match the facies ID</strong> in the unit where the MPS will be done. It is necessary to modify the TI values in consequence. We can use the <code class="docutils literal notranslate"><span class="pre">ArchPy.Arr_replace</span></code> function for that.</p>
+<p>Secondly, various MPS parameters can be chosen (rotation, homotethy softproba, …), they are passed directly in the dic_facies of the concerned unit (B here).</p>
+<p>There are many parameters available and if you want to have an exhaustive view of the capabilities of the MPS algorithm (Deesse) you can see <a class="reference external" href="https://github.com/randlab/geone">Geone</a>. ArchPy integrates not all but many of the Deesse parameters.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load TI</span>
+<span class="n">TI_B</span> <span class="o">=</span> <span class="s2">&quot;../../data/TIs/channels3D/ti_channels3D_4f_100x100x60.vtk&quot;</span>
+<span class="n">TI_B</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">readImageVtk</span><span class="p">(</span><span class="n">TI_B</span><span class="p">)</span>
+
+<span class="c1">#in this example B has four facies which have as ID (1,2,3,5)</span>
+<span class="n">TI_B</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">Arr_replace</span><span class="p">(</span><span class="n">TI_B</span><span class="o">.</span><span class="n">val</span><span class="p">,{</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">:</span><span class="mi">5</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">imgplt3</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">TI_B</span><span class="p">,</span><span class="n">filtering_value</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\grid.py:511: PyVistaDeprecationWarning: `dims` argument is deprecated. Please use `dimensions`.
+  &#39;`dims` argument is deprecated. Please use `dimensions`.&#39;, PyVistaDeprecationWarning
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3_filling_and_saving_9_1.png" src="../_images/notebooks_3_filling_and_saving_9_1.png" />
+</div>
+</div>
+<section id="Creating-the-units">
+<h2>Creating the units<a class="headerlink" href="#Creating-the-units" title="Permalink to this heading">¶</a></h2>
+<section id="Unit-D">
+<h3>Unit D<a class="headerlink" href="#Unit-D" title="Permalink to this heading">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#D unit</span>
+
+<span class="n">covmodelD</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel2D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;cubic&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;w&#39;</span><span class="p">:</span><span class="mf">0.6</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">:[</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">]})])</span>
+<span class="n">dic_s_D</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;int_method&quot;</span> <span class="p">:</span> <span class="s2">&quot;grf_ineq&quot;</span><span class="p">,</span><span class="s2">&quot;covmodel&quot;</span> <span class="p">:</span> <span class="n">covmodelD</span><span class="p">}</span>
+<span class="n">dic_f_D</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f_method&quot;</span> <span class="p">:</span> <span class="s2">&quot;TPGs&quot;</span><span class="p">,</span><span class="s2">&quot;Flag&quot;</span> <span class="p">:</span> <span class="n">flag</span><span class="p">,</span><span class="s2">&quot;G_cm&quot;</span><span class="p">:</span><span class="n">G_cm</span><span class="p">,</span><span class="s2">&quot;grf_method&quot;</span><span class="p">:</span><span class="s2">&quot;sgs&quot;</span><span class="p">}</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;gold&quot;</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">,</span><span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">,</span><span class="n">dic_surf</span><span class="o">=</span><span class="n">dic_s_D</span><span class="p">)</span>
+         <span class="p">,</span><span class="n">dic_facies</span><span class="o">=</span><span class="n">dic_f_D</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Unit D: Surface added for interpolation
+</pre></div></div>
+</div>
+</section>
+<section id="Unit-C">
+<h3>Unit C<a class="headerlink" href="#Unit-C" title="Permalink to this heading">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">covmodelC</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel2D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;cubic&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;w&#39;</span><span class="p">:</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">:[</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">]})])</span>
+<span class="n">dic_s_C</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;int_method&quot;</span> <span class="p">:</span> <span class="s2">&quot;grf_ineq&quot;</span><span class="p">,</span><span class="s2">&quot;covmodel&quot;</span> <span class="p">:</span> <span class="n">covmodelC</span><span class="p">}</span>
+
+<span class="n">covmodel_SIS_C1</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel3D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;exponential&quot;</span><span class="p">,{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mf">.25</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">:[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">3</span><span class="p">]})],</span><span class="n">alpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;vario_SIS&quot;</span><span class="p">)</span> <span class="c1"># input variogram</span>
+<span class="n">covmodel_SIS_C2</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel3D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;exponential&quot;</span><span class="p">,{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mf">.21</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">:[</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">5</span><span class="p">]})],</span><span class="n">alpha</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span><span class="n">beta</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;vario_SIS&quot;</span><span class="p">)</span> <span class="c1"># input variogram</span>
+<span class="n">lst_covmodelC</span><span class="o">=</span><span class="p">[</span><span class="n">covmodel_SIS_C1</span><span class="p">,</span> <span class="n">covmodel_SIS_C2</span><span class="p">]</span> <span class="c1"># list of covmodels to pass at the function</span>
+
+<span class="n">dic_f_C</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f_method&quot;</span> <span class="p">:</span> <span class="s2">&quot;SIS&quot;</span><span class="p">,</span><span class="s2">&quot;neig&quot;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span><span class="s2">&quot;f_covmodel&quot;</span><span class="p">:</span><span class="n">lst_covmodelC</span><span class="p">}</span> <span class="c1">#facies dic (params)</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;C&quot;</span><span class="p">,</span>
+         <span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+         <span class="n">ID</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+         <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span>
+         <span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">,</span>
+         <span class="n">dic_facies</span><span class="o">=</span><span class="n">dic_f_C</span><span class="p">,</span>
+         <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">dic_surf</span><span class="o">=</span><span class="n">dic_s_C</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Unit C: Surface added for interpolation
+</pre></div></div>
+</div>
+</section>
+<section id="Unit-B">
+<h3>Unit B<a class="headerlink" href="#Unit-B" title="Permalink to this heading">¶</a></h3>
+<p>Below we create the B unit. Used MPS parameters are :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">xr</span></code>, <code class="docutils literal notranslate"><span class="pre">yr</span></code>, <code class="docutils literal notranslate"><span class="pre">zr</span></code> : x, y and z homotethy ratio. This served to redimensionate the TI to match simulation grid. Little numbers reduce the size of the TI and produce smaller “features”.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">maxscan</span></code> : The fraction of the TI to scan. This indicates how many the TI will be scanned by Deesse before choosing a value. Setting to lower values increase the speed but reduce the quality of the simulation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">thresh</span></code> : threshold criterion to accept a certain value. This indicates to Deesse at which point we want to respect TI, if <code class="docutils literal notranslate"><span class="pre">thresh</span></code> is very low, only values to perfectly match with patterns in the TI will be accepted. Lower values increas the quality but reduce the speed of the sims.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rot_usage</span></code> : flag to indicate to Deesse which method to use for the rotation of the TI</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rotAzi</span></code> : Azimuth rotation of the TI. Here 90 simply means that the TI has been turn by a quarter.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">probaUsage</span></code> : flag to indicate which method to use for the proba constraints. 1 is for global pdf, 2 for local pdf</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">globalPdf</span></code> : the global pdf to use if probaUsage is set to 1. Order of the values corresponds to the order of the values in the TI.</p></li>
+</ul>
+<p>For others see ArchPy documentation in Unit description.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#B unit</span>
+<span class="n">covmodelB</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel2D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;cubic&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;w&#39;</span><span class="p">:</span><span class="mf">0.6</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">:[</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">]})])</span>
+<span class="n">dic_s_B</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;int_method&quot;</span> <span class="p">:</span> <span class="s2">&quot;grf_ineq&quot;</span><span class="p">,</span><span class="s2">&quot;covmodel&quot;</span> <span class="p">:</span> <span class="n">covmodelB</span><span class="p">}</span>
+<span class="n">dic_f_B</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f_method&quot;</span><span class="p">:</span><span class="s2">&quot;MPS&quot;</span><span class="p">,</span> <span class="s2">&quot;TI&quot;</span><span class="p">:</span><span class="n">TI_B</span><span class="p">,</span> <span class="s2">&quot;xr&quot;</span><span class="p">:</span><span class="mf">0.5</span><span class="p">,</span><span class="s2">&quot;yr&quot;</span><span class="p">:</span><span class="mf">0.5</span><span class="p">,</span><span class="s2">&quot;zr&quot;</span><span class="p">:</span><span class="mf">0.3</span><span class="p">,</span> <span class="s2">&quot;maxscan&quot;</span><span class="p">:</span><span class="mf">0.1</span><span class="p">,</span> <span class="s2">&quot;thresh&quot;</span><span class="p">:</span><span class="mf">0.05</span><span class="p">,</span>
+           <span class="s2">&quot;rot_usage&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;rotAzi&quot;</span><span class="p">:</span><span class="mi">90</span><span class="p">,</span> <span class="s2">&quot;globalPdf&quot;</span><span class="p">:(</span><span class="mf">0.33</span><span class="p">,</span><span class="mf">0.37</span><span class="p">,</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.1</span><span class="p">),</span><span class="s2">&quot;probaUsage&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;B&quot;</span><span class="p">,</span>
+         <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+         <span class="n">ID</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+         <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span>
+         <span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">,</span>
+         <span class="n">dic_facies</span><span class="o">=</span><span class="n">dic_f_B</span><span class="p">,</span>
+         <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">,</span><span class="n">dic_surf</span><span class="o">=</span><span class="n">dic_s_B</span><span class="p">)</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Unit B: TI added
+Unit B: Surface added for interpolation
+</pre></div></div>
+</div>
+</section>
+<section id="Unit-A">
+<h3>Unit A<a class="headerlink" href="#Unit-A" title="Permalink to this heading">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">covmodel_er</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel2D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;spherical&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;w&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">:[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">]})])</span>
+<span class="n">dic_s_A</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;int_method&quot;</span><span class="p">:</span><span class="s2">&quot;grf_ineq&quot;</span><span class="p">,</span><span class="s2">&quot;covmodel&quot;</span><span class="p">:</span> <span class="n">covmodel_er</span><span class="p">}</span>
+<span class="n">dic_f_A</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f_method&quot;</span><span class="p">:</span><span class="s2">&quot;homogenous&quot;</span><span class="p">}</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">,</span>
+         <span class="n">order</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+         <span class="n">ID</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+         <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span>
+         <span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">,</span>
+         <span class="n">dic_facies</span><span class="o">=</span><span class="n">dic_f_A</span><span class="p">,</span>
+         <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">dic_surf</span> <span class="o">=</span> <span class="n">dic_s_A</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;erode&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Unit A: Surface added for interpolation
+</pre></div></div>
+</div>
+</section>
+<section id="Adding-units-to-Pile">
+<h3>Adding units to Pile<a class="headerlink" href="#Adding-units-to-Pile" title="Permalink to this heading">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Master pile</span>
+<span class="n">P1</span><span class="o">.</span><span class="n">add_unit</span><span class="p">([</span><span class="n">D</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">A</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Stratigraphic unit D added
+Stratigraphic unit C added
+Stratigraphic unit B added
+Stratigraphic unit A added
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Facies-and-Properties">
+<h2>Facies and Properties<a class="headerlink" href="#Facies-and-Properties" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Facies</span>
+<span class="n">facies_1</span> <span class="o">=</span> <span class="n">Facies</span><span class="p">(</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Sand&quot;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;yellow&quot;</span><span class="p">)</span>
+<span class="n">facies_2</span> <span class="o">=</span> <span class="n">Facies</span><span class="p">(</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Gravel&quot;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightgreen&quot;</span><span class="p">)</span>
+<span class="n">facies_3</span> <span class="o">=</span> <span class="n">Facies</span><span class="p">(</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;GM&quot;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;blueviolet&quot;</span><span class="p">)</span>
+<span class="n">facies_4</span> <span class="o">=</span> <span class="n">Facies</span><span class="p">(</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Clay&quot;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+<span class="n">facies_5</span> <span class="o">=</span> <span class="n">Facies</span><span class="p">(</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;SM&quot;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;brown&quot;</span><span class="p">)</span>
+<span class="n">facies_6</span> <span class="o">=</span> <span class="n">Facies</span><span class="p">(</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Silt&quot;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;goldenrod&quot;</span><span class="p">)</span>
+<span class="n">facies_7</span> <span class="o">=</span> <span class="n">Facies</span><span class="p">(</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;basement&quot;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+
+<span class="n">A</span><span class="o">.</span><span class="n">add_facies</span><span class="p">([</span><span class="n">facies_7</span><span class="p">])</span>
+<span class="n">B</span><span class="o">.</span><span class="n">add_facies</span><span class="p">([</span><span class="n">facies_1</span><span class="p">,</span><span class="n">facies_2</span><span class="p">,</span><span class="n">facies_3</span><span class="p">,</span><span class="n">facies_5</span><span class="p">])</span>
+<span class="n">D</span><span class="o">.</span><span class="n">add_facies</span><span class="p">([</span><span class="n">facies_1</span><span class="p">,</span><span class="n">facies_2</span><span class="p">,</span><span class="n">facies_3</span><span class="p">,</span><span class="n">facies_5</span><span class="p">])</span>
+<span class="n">C</span><span class="o">.</span><span class="n">add_facies</span><span class="p">([</span><span class="n">facies_4</span><span class="p">,</span><span class="n">facies_6</span><span class="p">])</span>
+
+
+<span class="c1"># covmodels for the property model</span>
+<span class="n">covmodelK</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel3D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;exponential&quot;</span><span class="p">,{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mf">0.3</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">:[</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">1</span><span class="p">]})],</span><span class="n">alpha</span><span class="o">=-</span><span class="mi">20</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;K_vario&quot;</span><span class="p">)</span>
+<span class="n">covmodelK2</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel3D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;spherical&quot;</span><span class="p">,{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mf">0.1</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">:[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">]})],</span><span class="n">alpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;K_vario_2&quot;</span><span class="p">)</span>
+<span class="n">covmodelPoro</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel3D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;exponential&quot;</span><span class="p">,{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mf">0.005</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">:[</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">]})],</span><span class="n">alpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;poro_vario&quot;</span><span class="p">)</span>
+
+<span class="n">permea</span> <span class="o">=</span> <span class="n">Prop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">,[</span><span class="n">facies_1</span><span class="p">,</span><span class="n">facies_2</span><span class="p">,</span><span class="n">facies_3</span><span class="p">,</span><span class="n">facies_4</span><span class="p">,</span><span class="n">facies_5</span><span class="p">,</span><span class="n">facies_6</span><span class="p">,</span><span class="n">facies_7</span><span class="p">],</span>
+                  <span class="p">[</span><span class="n">covmodelK2</span><span class="p">,</span><span class="n">covmodelK</span><span class="p">,</span><span class="n">covmodelK</span><span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="n">covmodelK2</span><span class="p">,</span><span class="n">covmodelK</span><span class="p">,</span><span class="kc">None</span><span class="p">],</span>
+                  <span class="n">means</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">3.5</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mf">4.5</span><span class="p">,</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span><span class="o">-</span><span class="mf">5.5</span><span class="p">,</span><span class="o">-</span><span class="mf">6.5</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">],</span>
+                  <span class="n">int_method</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sgs&quot;</span><span class="p">,</span><span class="s2">&quot;sgs&quot;</span><span class="p">,</span><span class="s2">&quot;sgs&quot;</span><span class="p">,</span><span class="s2">&quot;homogenous&quot;</span><span class="p">,</span><span class="s2">&quot;sgs&quot;</span><span class="p">,</span><span class="s2">&quot;sgs&quot;</span><span class="p">,</span><span class="s2">&quot;homogenous&quot;</span><span class="p">],</span>
+                  <span class="n">def_mean</span><span class="o">=-</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">poro</span> <span class="o">=</span> <span class="n">Prop</span><span class="p">(</span><span class="s2">&quot;Porosity&quot;</span><span class="p">,</span>
+            <span class="p">[</span><span class="n">facies_1</span><span class="p">,</span><span class="n">facies_3</span><span class="p">,</span><span class="n">facies_4</span><span class="p">],</span>
+            <span class="p">[</span><span class="n">covmodelPoro</span><span class="p">,</span><span class="n">covmodelPoro</span><span class="p">,</span><span class="n">covmodelPoro</span><span class="p">],</span>
+             <span class="n">means</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.2</span><span class="p">],</span>
+             <span class="n">int_method</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sgs&quot;</span><span class="p">,</span><span class="s2">&quot;sgs&quot;</span><span class="p">,</span><span class="s2">&quot;sgs&quot;</span><span class="p">],</span>
+             <span class="n">def_mean</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+             <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Facies basement added to unit A
+Facies Sand added to unit B
+Facies Gravel added to unit B
+Facies GM added to unit B
+Facies SM added to unit B
+Facies Sand added to unit D
+Facies Gravel added to unit D
+Facies GM added to unit D
+Facies SM added to unit D
+Facies Clay added to unit C
+Facies Silt added to unit C
+</pre></div></div>
+</div>
+</section>
+<section id="Boreholes">
+<h2>Boreholes<a class="headerlink" href="#Boreholes" title="Permalink to this heading">¶</a></h2>
+<p>Only Unit data are used</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#logs strati</span>
+<span class="n">log_strati1</span> <span class="o">=</span> <span class="p">[(</span><span class="n">C</span><span class="p">,</span><span class="o">-</span><span class="mf">6.01</span><span class="p">),(</span><span class="n">B</span><span class="p">,</span><span class="o">-</span><span class="mi">8</span><span class="p">),(</span><span class="n">A</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">)]</span>
+<span class="n">log_strati2</span> <span class="o">=</span> <span class="p">[(</span><span class="n">C</span><span class="p">,</span><span class="o">-</span><span class="mf">6.01</span><span class="p">),(</span><span class="n">B</span><span class="p">,</span><span class="o">-</span><span class="mf">8.5</span><span class="p">),(</span><span class="n">A</span><span class="p">,</span><span class="o">-</span><span class="mf">10.5</span><span class="p">)]</span>
+<span class="n">log_strati3</span> <span class="o">=</span> <span class="p">[(</span><span class="n">D</span><span class="p">,</span><span class="o">-</span><span class="mf">6.01</span><span class="p">),(</span><span class="n">B</span><span class="p">,</span><span class="o">-</span><span class="mi">8</span><span class="p">),(</span><span class="n">A</span><span class="p">,</span><span class="o">-</span><span class="mf">10.5</span><span class="p">)]</span>
+<span class="n">log_strati4</span> <span class="o">=</span> <span class="p">[(</span><span class="n">D</span><span class="p">,</span><span class="o">-</span><span class="mf">6.01</span><span class="p">),(</span><span class="n">B</span><span class="p">,</span><span class="o">-</span><span class="mi">9</span><span class="p">),(</span><span class="n">A</span><span class="p">,</span><span class="o">-</span><span class="mi">11</span><span class="p">)]</span>
+<span class="n">log_strati5</span> <span class="o">=</span> <span class="p">[(</span><span class="n">D</span><span class="p">,</span><span class="o">-</span><span class="mf">6.01</span><span class="p">),(</span><span class="n">C</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">),(</span><span class="n">A</span><span class="p">,</span><span class="o">-</span><span class="mi">12</span><span class="p">)]</span>
+<span class="n">log_strati6</span> <span class="o">=</span> <span class="p">[(</span><span class="n">D</span><span class="p">,</span><span class="o">-</span><span class="mf">6.01</span><span class="p">),(</span><span class="n">A</span><span class="p">,</span><span class="o">-</span><span class="mi">9</span><span class="p">)]</span>
+
+<span class="c1">#create boreholes</span>
+<span class="n">bh1</span> <span class="o">=</span> <span class="n">borehole</span><span class="p">(</span><span class="s2">&quot;b1&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">log_strati1</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">depth</span> <span class="o">=</span><span class="mi">9</span><span class="p">,</span><span class="n">log_strati</span><span class="o">=</span><span class="n">log_strati1</span><span class="p">)</span>
+<span class="n">bh2</span> <span class="o">=</span> <span class="n">borehole</span><span class="p">(</span><span class="s2">&quot;b2&quot;</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">log_strati2</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">depth</span> <span class="o">=</span><span class="mi">8</span><span class="p">,</span><span class="n">log_strati</span><span class="o">=</span><span class="n">log_strati2</span><span class="p">)</span>
+<span class="n">bh3</span> <span class="o">=</span> <span class="n">borehole</span><span class="p">(</span><span class="s2">&quot;b3&quot;</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">log_strati3</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">depth</span> <span class="o">=</span><span class="mi">7</span><span class="p">,</span><span class="n">log_strati</span><span class="o">=</span><span class="n">log_strati3</span><span class="p">)</span>
+<span class="n">bh4</span> <span class="o">=</span> <span class="n">borehole</span><span class="p">(</span><span class="s2">&quot;b4&quot;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">log_strati4</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">depth</span> <span class="o">=</span><span class="mi">8</span><span class="p">,</span><span class="n">log_strati</span><span class="o">=</span><span class="n">log_strati4</span><span class="p">)</span>
+<span class="n">bh5</span> <span class="o">=</span> <span class="n">borehole</span><span class="p">(</span><span class="s2">&quot;b5&quot;</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">log_strati5</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">depth</span> <span class="o">=</span><span class="mi">8</span><span class="p">,</span><span class="n">log_strati</span><span class="o">=</span><span class="n">log_strati5</span><span class="p">)</span>
+<span class="n">bh6</span> <span class="o">=</span> <span class="n">borehole</span><span class="p">(</span><span class="s2">&quot;b6&quot;</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="mi">19</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">log_strati6</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">depth</span> <span class="o">=</span><span class="mi">6</span><span class="p">,</span><span class="n">log_strati</span><span class="o">=</span><span class="n">log_strati6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Define-a-domain-polygon">
+<h2>Define a domain polygon<a class="headerlink" href="#Define-a-domain-polygon" title="Permalink to this heading">¶</a></h2>
+<p>Polygon is a 2D array of size ny, nx with values of 0 and 1. 0 is to indicate an area not to be simulated and 1 the inverse.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">domain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">ny</span><span class="p">,</span><span class="n">nx</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+<span class="n">domain</span><span class="p">[:</span> <span class="mi">5</span><span class="p">]</span><span class="o">=</span> <span class="mi">0</span>
+<span class="n">domain</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.image.AxesImage at 0x181aaf90748&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3_filling_and_saving_26_1.png" src="../_images/notebooks_3_filling_and_saving_26_1.png" />
+</div>
+</div>
+</section>
+<section id="Creating-project-and-grid">
+<h2>Creating project and grid<a class="headerlink" href="#Creating-project-and-grid" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ws</span> <span class="o">=</span> <span class="s2">&quot;3_fillAndSave&quot;</span> <span class="c1">#working directory</span>
+<span class="n">T1</span> <span class="o">=</span> <span class="n">Arch_table</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Exemple_3&quot;</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">working_directory</span><span class="o">=</span><span class="n">ws</span><span class="p">)</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">set_Pile_master</span><span class="p">(</span><span class="n">P1</span><span class="p">)</span> <span class="c1">#setting master pile</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">add_grid</span><span class="p">(</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="n">top</span><span class="p">,</span><span class="n">bot</span><span class="o">=</span><span class="n">bot</span><span class="p">,</span><span class="n">polygon</span><span class="o">=</span><span class="n">domain</span><span class="p">)</span> <span class="c1">#grid</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">rem_all_bhs</span><span class="p">()</span> <span class="c1">#remove previous boreholes if any (not useful in this example)</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">add_bh</span><span class="p">([</span><span class="n">bh1</span><span class="p">,</span><span class="n">bh2</span><span class="p">,</span><span class="n">bh3</span><span class="p">,</span><span class="n">bh4</span><span class="p">,</span><span class="n">bh5</span><span class="p">,</span><span class="n">bh6</span><span class="p">])</span> <span class="c1">#add boreholes (they are put in a list)</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">add_prop</span><span class="p">([</span><span class="n">permea</span><span class="p">,</span> <span class="n">poro</span><span class="p">])</span> <span class="c1">#add properties</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Pile sets as Pile master
+## Adding Grid ##
+## Grid added and is now simulation grid ##
+boreholes removed
+Borehole 1 goes below model limits, borehole 1 depth cut
+Borehole 1 added
+Borehole 2 added
+Borehole 3 added
+Borehole 4 added
+Borehole 5 added
+Borehole 6 added
+Property K added
+Property Porosity added
+</pre></div></div>
+</div>
+</section>
+<section id="Processing-HDs">
+<h2>Processing HDs<a class="headerlink" href="#Processing-HDs" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">process_bhs</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+##### ORDERING UNITS #####
+Pile P1: ordering units
+Stratigraphic units have been sorted according to order
+hierarchical relations set
+
+ ## Computing distributions for Normal Score Transform ##
+
+Processing ended successfully
+</pre></div></div>
+</div>
+</section>
+<section id="Unit-simulations">
+<h2>Unit simulations<a class="headerlink" href="#Unit-simulations" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_surf</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">fl_top</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+########## PILE P1 ##########
+Pile P1: ordering units
+Stratigraphic units have been sorted according to order
+
+#### COMPUTING SURFACE OF UNIT A
+A: time elapsed for computing surface 0.014467000961303711 s
+
+#### COMPUTING SURFACE OF UNIT B
+B: time elapsed for computing surface 0.03903388977050781 s
+
+#### COMPUTING SURFACE OF UNIT C
+C: time elapsed for computing surface 0.053048133850097656 s
+
+#### COMPUTING SURFACE OF UNIT D
+D: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.04303884506225586 s
+
+#### COMPUTING SURFACE OF UNIT A
+A: time elapsed for computing surface 0.01901721954345703 s
+
+#### COMPUTING SURFACE OF UNIT B
+B: time elapsed for computing surface 0.038034915924072266 s
+
+#### COMPUTING SURFACE OF UNIT C
+C: time elapsed for computing surface 0.0520474910736084 s
+
+#### COMPUTING SURFACE OF UNIT D
+D: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.043038368225097656 s
+##########################
+
+
+### 0.32074427604675293: Total time elapsed for computing surfaces ###
+</pre></div></div>
+</div>
+</section>
+<section id="Plots">
+<h2>Plots<a class="headerlink" href="#Plots" title="Permalink to this heading">¶</a></h2>
+<p><strong>Plotting units</strong></p>
+<p>ArchPy integrates multiple plotting utilities that mostly rely on Pyvista and Geone. Below are some examples</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pv</span><span class="o">.</span><span class="n">set_jupyter_backend</span><span class="p">(</span><span class="s1">&#39;static&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">()</span>
+<span class="n">v_ex</span> <span class="o">=</span> <span class="mf">0.3</span>
+
+<span class="n">T1</span><span class="o">.</span><span class="n">plot_units</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">))</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">plot_bhs</span><span class="p">(</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\grid.py:511: PyVistaDeprecationWarning: `dims` argument is deprecated. Please use `dimensions`.
+  &#39;`dims` argument is deprecated. Please use `dimensions`.&#39;, PyVistaDeprecationWarning
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3_filling_and_saving_36_1.png" src="../_images/notebooks_3_filling_and_saving_36_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#cross section</span>
+<span class="c1">#first a list of points must be defined</span>
+<span class="n">p1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">p2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
+<span class="n">p3</span> <span class="o">=</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span><span class="mi">9</span><span class="p">]</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">plot_cross_section</span><span class="p">([</span><span class="n">p1</span><span class="p">,</span><span class="n">p3</span><span class="p">],</span><span class="n">iu</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">ratio_aspect</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dist_max</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">.4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3_filling_and_saving_37_0.png" src="../_images/notebooks_3_filling_and_saving_37_0.png" />
+</div>
+</div>
+<p>ArchPy also integrates probability plotting functions which allow to plot any ArchPy object such as units or facies</p>
+<div class="admonition warning">
+<p>For the following command, a DeeSse license is mandatory. If you don’t have one, skip this notebook</p>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_facies</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">verbose_methods</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+### Unit D: facies simulation with TPGs method ####
+### Unit D - realization 0 ###
+### Unit D - realization 1 ###
+Time elapsed 4.99 s
+
+### Unit C: facies simulation with SIS method ####
+### Unit C - realization 0 ###
+### Unit C - realization 1 ###
+Time elapsed 3.5 s
+
+### Unit B: facies simulation with MPS method ####
+### Unit B - realization 0 ###
+### Unit B - realization 1 ###
+Time elapsed 176.37 s
+
+### Unit A: facies simulation with homogenous method ####
+### Unit A - realization 0 ###
+### Unit A - realization 1 ###
+Time elapsed 0.03 s
+
+### 184.89: Total time elapsed for computing facies ###
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_facies</span><span class="p">(</span><span class="n">v_ex</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3_filling_and_saving_41_0.png" src="../_images/notebooks_3_filling_and_saving_41_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_facies</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">inside_units</span><span class="o">=</span><span class="p">[</span><span class="n">B</span><span class="p">],</span> <span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3_filling_and_saving_42_0.png" src="../_images/notebooks_3_filling_and_saving_42_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_facies</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">,</span> <span class="n">slicex</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">slicey</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">slicez</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3_filling_and_saving_43_0.png" src="../_images/notebooks_3_filling_and_saving_43_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_prop</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+### 20 K property models will be modeled ###
+### 5 K models done
+### 10 K models done
+### 15 K models done
+### 20 K models done
+### 20 Porosity property models will be modeled ###
+### 5 Porosity models done
+### 10 Porosity models done
+### 15 Porosity models done
+### 20 Porosity models done
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_prop</span><span class="p">(</span><span class="n">permea</span><span class="o">.</span><span class="n">name</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">slicex</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">slicey</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">slicez</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3_filling_and_saving_45_0.png" src="../_images/notebooks_3_filling_and_saving_45_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_mean_prop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+../..\ArchPy\base.py:4637: RuntimeWarning: Mean of empty slice
+  arr=np.nanmean(prop.reshape(-1,self.get_nz(),self.get_ny(),self.get_nx()),axis=0)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3_filling_and_saving_46_1.png" src="../_images/notebooks_3_filling_and_saving_46_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_mean_prop</span><span class="p">(</span><span class="s2">&quot;Porosity&quot;</span><span class="p">,</span> <span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3_filling_and_saving_47_0.png" src="../_images/notebooks_3_filling_and_saving_47_0.png" />
+</div>
+</div>
+</section>
+<section id="Saving-results">
+<h2>Saving results<a class="headerlink" href="#Saving-results" title="Permalink to this heading">¶</a></h2>
+<p>ArchPy supports the saving of the results and the inputs parameters. This is done using pickle in binary files to save space. There is five results files differentiated by their file extension: - <code class="docutils literal notranslate"><span class="pre">.sf</span></code> : top surface results. They are stored as values in a dictionnary where keys are the different Piles used (especially if more than 1 level of hierarchy is used). Surfaces are then attached to the Piles where their unit belongs. - <code class="docutils literal notranslate"><span class="pre">.sfb</span></code> : identical to <code class="docutils literal notranslate"><span class="pre">.sf</span></code> except that these are botom
+surfaces. - <code class="docutils literal notranslate"><span class="pre">.unt</span></code> : units domains realizations (nreal_units, nz, ny, nx) where values are units ID. - <code class="docutils literal notranslate"><span class="pre">.fac</span></code> : facies domains realizations (nreal_units, nreal_facies, nz, ny, nx) where values are facies ID. - <code class="docutils literal notranslate"><span class="pre">.pro</span></code> : property simulations dictionnary with prop name as keys and values are nd array –&gt; (nreal_units, nreal_facies, nreal_prop, nz, ny, nx).</p>
+<p>Finally, inputs parameters (i.e. the whole Stratigraphic Pile) are stored in a yaml file.</p>
+<p>This is simply done by using the <code class="docutils literal notranslate"><span class="pre">ArchPy.inputs.save_project</span></code> function.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ArchPy</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">save_project</span><span class="p">(</span><span class="n">T1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Project saved successfully
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+True
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#list of files</span>
+<span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s2">&quot;3_fillAndSave/&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;B_dic_facies_TI.gslib&#39;,
+ &#39;Exemple_3.bot.npy&#39;,
+ &#39;Exemple_3.fac&#39;,
+ &#39;Exemple_3.fd&#39;,
+ &#39;Exemple_3.lbh&#39;,
+ &#39;Exemple_3.msk.npy&#39;,
+ &#39;Exemple_3.pro&#39;,
+ &#39;Exemple_3.sf&#39;,
+ &#39;Exemple_3.sfb&#39;,
+ &#39;Exemple_3.top.npy&#39;,
+ &#39;Exemple_3.ud&#39;,
+ &#39;Exemple_3.unt&#39;,
+ &#39;Exemple_3.yaml&#39;]
+</pre></div></div>
+</div>
+<p>If we inspect the files inside the working directory (<strong>ws</strong>) we can see that many files have been created. Indeed this function everything. For example, the first object is the TI, as ArchPy doesn’t know where is the original file, it prefers to create a new one and store it in the <strong>ws</strong>.</p>
+<p>ArchPy stores simple informations in the <code class="docutils literal notranslate"><span class="pre">project_name.yaml</span></code> file and larger or complex data (nd array, geone image, …) into external files.</p>
+<p>e.g. : - Grid has also been stored where top and bot are <code class="docutils literal notranslate"><span class="pre">.npy</span></code> files. - Boreholes files are also stored (<code class="docutils literal notranslate"><span class="pre">.lbh</span></code>, <code class="docutils literal notranslate"><span class="pre">.fd</span></code> and <code class="docutils literal notranslate"><span class="pre">.ud</span></code>).</p>
+<p>Let’s see now what is inside the yaml file.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">yaml</span> <span class="c1">#requires yaml</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">T1</span><span class="o">.</span><span class="n">ws</span><span class="p">,</span><span class="n">T1</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s2">&quot;.yaml&quot;</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">yaml_file</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\ipykernel_launcher.py:4: YAMLLoadWarning: calling yaml.load() without Loader=... is deprecated, as the default Loader is unsafe. Please read https://msg.pyyaml.org/load for full details.
+  after removing the cwd from sys.path.
+</pre></div></div>
+</div>
+<p>We see that all the objects, parameters are stored in a text format.</p>
+<p>Ongoing work is done to load these parameters automatically which will allow to create ArchPy files externally to python. However, it is possible to load results already with <code class="docutils literal notranslate"><span class="pre">ArchPy.inputs.load_results</span></code> but this requires an ArchTable project.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">yaml_file</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;Facies&#39;: {&#39;Clay&#39;: {&#39;ID&#39;: 4, &#39;color&#39;: &#39;blue&#39;},
+  &#39;GM&#39;: {&#39;ID&#39;: 3, &#39;color&#39;: &#39;blueviolet&#39;},
+  &#39;Gravel&#39;: {&#39;ID&#39;: 2, &#39;color&#39;: &#39;lightgreen&#39;},
+  &#39;SM&#39;: {&#39;ID&#39;: 5, &#39;color&#39;: &#39;brown&#39;},
+  &#39;Sand&#39;: {&#39;ID&#39;: 1, &#39;color&#39;: &#39;yellow&#39;},
+  &#39;Silt&#39;: {&#39;ID&#39;: 6, &#39;color&#39;: &#39;goldenrod&#39;},
+  &#39;basement&#39;: {&#39;ID&#39;: 7, &#39;color&#39;: &#39;red&#39;}},
+ &#39;Pile_master&#39;: &#39;P1&#39;,
+ &#39;Piles&#39;: {&#39;P1&#39;: {&#39;list_units&#39;: [&#39;D&#39;, &#39;C&#39;, &#39;B&#39;, &#39;A&#39;],
+   &#39;name&#39;: &#39;P1&#39;,
+   &#39;seed&#39;: 1,
+   &#39;verbose&#39;: 1}},
+ &#39;Results&#39;: {&#39;facies&#39;: &#39;Exemple_3.fac&#39;,
+  &#39;properties&#39;: &#39;Exemple_3.pro&#39;,
+  &#39;surfaces&#39;: &#39;Exemple_3.sf&#39;,
+  &#39;surfaces_bot&#39;: &#39;Exemple_3.sfb&#39;,
+  &#39;units&#39;: &#39;Exemple_3.unt&#39;},
+ &#39;Units&#39;: {&#39;A&#39;: {&#39;ID&#39;: 4,
+   &#39;color&#39;: &#39;red&#39;,
+   &#39;dic_facies&#39;: {&#39;f_method&#39;: &#39;homogenous&#39;},
+   &#39;list_facies&#39;: [&#39;basement&#39;],
+   &#39;name&#39;: &#39;A&#39;,
+   &#39;order&#39;: 4,
+   &#39;surface&#39;: {&#39;contact&#39;: &#39;erode&#39;,
+    &#39;dic_surf&#39;: {&#39;N_transfo&#39;: False,
+     &#39;bandwidth_mult&#39;: 1,
+     &#39;covmodel&#39;: {&#39;alpha&#39;: 0.0,
+      &#39;elem&#39;: [(&#39;spherical&#39;, {&#39;r&#39;: [10.0, 10.0], &#39;w&#39;: 1.0})]},
+     &#39;int_method&#39;: &#39;grf_ineq&#39;,
+     &#39;tau&#39;: 0},
+    &#39;name&#39;: &#39;Surface_1&#39;}},
+  &#39;B&#39;: {&#39;ID&#39;: 3,
+   &#39;color&#39;: &#39;green&#39;,
+   &#39;dic_facies&#39;: {&#39;TI&#39;: &#39;B_dic_facies_TI.gslib&#39;,
+    &#39;angle1&#39;: 0,
+    &#39;angle2&#39;: 0,
+    &#39;angle3&#39;: 0,
+    &#39;anisotropyRatioMode&#39;: &#39;one&#39;,
+    &#39;ax&#39;: 1,
+    &#39;ay&#39;: 1,
+    &#39;az&#39;: 1,
+    &#39;constantThreshold&#39;: 0.001,
+    &#39;dataImage&#39;: None,
+    &#39;deactivationDistance&#39;: 4.0,
+    &#39;distanceType&#39;: [&#39;categorical&#39;],
+    &#39;f_method&#39;: &#39;MPS&#39;,
+    &#39;globalPdf&#39;: [0.33, 0.37, 0.2, 0.1],
+    &#39;homo_usage&#39;: 1,
+    &#39;localPdf&#39;: None,
+    &#39;localPdfRadius&#39;: 12.0,
+    &#39;maxscan&#39;: 0.1,
+    &#39;neig&#39;: 24,
+    &#39;npost&#39;: 1,
+    &#39;nv&#39;: 1,
+    &#39;outputVarFlag&#39;: None,
+    &#39;probaUsage&#39;: 1,
+    &#39;radiusMode&#39;: &#39;large_default&#39;,
+    &#39;rotAzi&#39;: 90,
+    &#39;rotAziLoc&#39;: False,
+    &#39;rotDip&#39;: 0,
+    &#39;rotDipLoc&#39;: False,
+    &#39;rotPlunge&#39;: 0,
+    &#39;rotPlungeLoc&#39;: False,
+    &#39;rot_usage&#39;: 1,
+    &#39;rx&#39;: 19.950000792741776,
+    &#39;ry&#39;: 10.05000039935112,
+    &#39;rz&#39;: 9.299976348876953,
+    &#39;thresh&#39;: 0.05,
+    &#39;varname&#39;: &#39;code&#39;,
+    &#39;xloc&#39;: False,
+    &#39;xr&#39;: 0.5,
+    &#39;yloc&#39;: False,
+    &#39;yr&#39;: 0.5,
+    &#39;zloc&#39;: False,
+    &#39;zr&#39;: 0.3},
+   &#39;list_facies&#39;: [&#39;Sand&#39;, &#39;Gravel&#39;, &#39;GM&#39;, &#39;SM&#39;],
+   &#39;name&#39;: &#39;B&#39;,
+   &#39;order&#39;: 3,
+   &#39;surface&#39;: {&#39;contact&#39;: &#39;onlap&#39;,
+    &#39;dic_surf&#39;: {&#39;N_transfo&#39;: False,
+     &#39;bandwidth_mult&#39;: 1,
+     &#39;covmodel&#39;: {&#39;alpha&#39;: 0.0,
+      &#39;elem&#39;: [(&#39;cubic&#39;, {&#39;r&#39;: [6.0, 6.0], &#39;w&#39;: 0.6})]},
+     &#39;int_method&#39;: &#39;grf_ineq&#39;,
+     &#39;tau&#39;: 0},
+    &#39;name&#39;: &#39;Surface_1&#39;}},
+  &#39;C&#39;: {&#39;ID&#39;: 2,
+   &#39;color&#39;: &#39;blue&#39;,
+   &#39;dic_facies&#39;: {&#39;SIS_orientation&#39;: False,
+    &#39;azimuth&#39;: 0,
+    &#39;dip&#39;: 0,
+    &#39;f_covmodel&#39;: [{&#39;alpha&#39;: 0.0,
+      &#39;beta&#39;: 0.0,
+      &#39;elem&#39;: [(&#39;exponential&#39;, {&#39;r&#39;: [10.0, 10.0, 3.0], &#39;w&#39;: 0.25})],
+      &#39;gamma&#39;: 0.0},
+     {&#39;alpha&#39;: 45.0,
+      &#39;beta&#39;: 30.0,
+      &#39;elem&#39;: [(&#39;exponential&#39;, {&#39;r&#39;: [20.0, 20.0, 5.0], &#39;w&#39;: 0.21})],
+      &#39;gamma&#39;: 0.0}],
+    &#39;f_method&#39;: &#39;SIS&#39;,
+    &#39;neig&#39;: 10,
+    &#39;plunge&#39;: 0,
+    &#39;probability&#39;: None,
+    &#39;r&#39;: 1},
+   &#39;list_facies&#39;: [&#39;Clay&#39;, &#39;Silt&#39;],
+   &#39;name&#39;: &#39;C&#39;,
+   &#39;order&#39;: 2,
+   &#39;surface&#39;: {&#39;contact&#39;: &#39;onlap&#39;,
+    &#39;dic_surf&#39;: {&#39;N_transfo&#39;: False,
+     &#39;bandwidth_mult&#39;: 1,
+     &#39;covmodel&#39;: {&#39;alpha&#39;: 0.0,
+      &#39;elem&#39;: [(&#39;cubic&#39;, {&#39;r&#39;: [8.0, 8.0], &#39;w&#39;: 0.2})]},
+     &#39;int_method&#39;: &#39;grf_ineq&#39;,
+     &#39;tau&#39;: 0},
+    &#39;name&#39;: &#39;Surface_1&#39;}},
+  &#39;D&#39;: {&#39;ID&#39;: 1,
+   &#39;color&#39;: &#39;gold&#39;,
+   &#39;dic_facies&#39;: {&#39;Flag&#39;: {1: [[(-inf, -0.3), (-inf, 0)]],
+     2: [[(0.3, inf), (-inf, 0.5)]],
+     3: [[(-inf, -0.3), (0, inf)]],
+     5: [[(-0.3, 0.3), (-inf, inf)], [(0.3, inf), (0.5, inf)]]},
+    &#39;G_cm&#39;: [{&#39;alpha&#39;: 0.0,
+      &#39;beta&#39;: 0.0,
+      &#39;elem&#39;: [(&#39;cubic&#39;, {&#39;r&#39;: [5.0, 5.0, 2.0], &#39;w&#39;: 1.0}),
+       (&#39;nugget&#39;, {&#39;w&#39;: 0.0})],
+      &#39;gamma&#39;: 0.0},
+     {&#39;alpha&#39;: 30.0,
+      &#39;beta&#39;: 0.0,
+      &#39;elem&#39;: [(&#39;spherical&#39;, {&#39;r&#39;: [10.0, 10.0, 5.0], &#39;w&#39;: 1.0}),
+       (&#39;nugget&#39;, {&#39;w&#39;: 0.0})],
+      &#39;gamma&#39;: 0.0}],
+    &#39;f_method&#39;: &#39;TPGs&#39;,
+    &#39;grf_method&#39;: &#39;sgs&#39;,
+    &#39;neig&#39;: 20,
+    &#39;nit&#39;: 100},
+   &#39;list_facies&#39;: [&#39;Sand&#39;, &#39;Gravel&#39;, &#39;GM&#39;, &#39;SM&#39;],
+   &#39;name&#39;: &#39;D&#39;,
+   &#39;order&#39;: 1,
+   &#39;surface&#39;: {&#39;contact&#39;: &#39;onlap&#39;,
+    &#39;dic_surf&#39;: {&#39;N_transfo&#39;: False,
+     &#39;bandwidth_mult&#39;: 1,
+     &#39;covmodel&#39;: {&#39;alpha&#39;: 0.0,
+      &#39;elem&#39;: [(&#39;cubic&#39;, {&#39;r&#39;: [6.0, 6.0], &#39;w&#39;: 0.6})]},
+     &#39;int_method&#39;: &#39;grf_ineq&#39;,
+     &#39;tau&#39;: 0},
+    &#39;name&#39;: &#39;Surface_1&#39;}}},
+ &#39;boreholes&#39;: {&#39;facies_data&#39;: &#39;Exemple_3.fd&#39;,
+  &#39;list_bhs&#39;: &#39;Exemple_3.lbh&#39;,
+  &#39;units_data&#39;: &#39;Exemple_3.ud&#39;},
+ &#39;facies_computed&#39;: 1,
+ &#39;grid&#39;: {&#39;bot&#39;: &#39;Exemple_3.bot&#39;,
+  &#39;dimensions&#39;: (133, 67, 62),
+  &#39;mask&#39;: &#39;Exemple_3.msk&#39;,
+  &#39;origin&#39;: (0.0, 0.0, -15.0),
+  &#39;spacing&#39;: (0.15, 0.15, 0.15),
+  &#39;top&#39;: &#39;Exemple_3.top&#39;},
+ &#39;name&#39;: &#39;Exemple_3&#39;,
+ &#39;ncpu&#39;: -1,
+ &#39;prop_computed&#39;: 1,
+ &#39;properties&#39;: {&#39;K&#39;: {&#39;covmodels&#39;: [{&#39;alpha&#39;: 0,
+     &#39;beta&#39;: 0.0,
+     &#39;elem&#39;: [(&#39;spherical&#39;, {&#39;r&#39;: [3.0, 3.0, 1.0], &#39;w&#39;: 0.1})],
+     &#39;gamma&#39;: 0.0},
+    {&#39;alpha&#39;: -20,
+     &#39;beta&#39;: 0.0,
+     &#39;elem&#39;: [(&#39;exponential&#39;, {&#39;r&#39;: [5.0, 5.0, 1.0], &#39;w&#39;: 0.3})],
+     &#39;gamma&#39;: 0.0},
+    {&#39;alpha&#39;: -20.0,
+     &#39;beta&#39;: 0.0,
+     &#39;elem&#39;: [(&#39;exponential&#39;, {&#39;r&#39;: [5.0, 5.0, 1.0], &#39;w&#39;: 0.3})],
+     &#39;gamma&#39;: 0.0},
+    None,
+    {&#39;alpha&#39;: 0.0,
+     &#39;beta&#39;: 0.0,
+     &#39;elem&#39;: [(&#39;spherical&#39;, {&#39;r&#39;: [3.0, 3.0, 1.0], &#39;w&#39;: 0.1})],
+     &#39;gamma&#39;: 0.0},
+    {&#39;alpha&#39;: -20.0,
+     &#39;beta&#39;: 0.0,
+     &#39;elem&#39;: [(&#39;exponential&#39;, {&#39;r&#39;: [5.0, 5.0, 1.0], &#39;w&#39;: 0.3})],
+     &#39;gamma&#39;: 0.0},
+    None],
+   &#39;def_mean&#39;: -5,
+   &#39;facies&#39;: [&#39;Sand&#39;, &#39;Gravel&#39;, &#39;GM&#39;, &#39;Clay&#39;, &#39;SM&#39;, &#39;Silt&#39;, &#39;basement&#39;],
+   &#39;int_method&#39;: [&#39;sgs&#39;,
+    &#39;sgs&#39;,
+    &#39;sgs&#39;,
+    &#39;homogenous&#39;,
+    &#39;sgs&#39;,
+    &#39;sgs&#39;,
+    &#39;homogenous&#39;],
+   &#39;means&#39;: [-3.5, -2.0, -4.5, -8.0, -5.5, -6.5, -10.0],
+   &#39;name&#39;: &#39;K&#39;,
+   &#39;vmax&#39;: None,
+   &#39;vmin&#39;: None},
+  &#39;Porosity&#39;: {&#39;covmodels&#39;: [{&#39;alpha&#39;: 0,
+     &#39;beta&#39;: 0.0,
+     &#39;elem&#39;: [(&#39;exponential&#39;, {&#39;r&#39;: [5.0, 5.0, 5.0], &#39;w&#39;: 0.005})],
+     &#39;gamma&#39;: 0.0},
+    {&#39;alpha&#39;: 0.0,
+     &#39;beta&#39;: 0.0,
+     &#39;elem&#39;: [(&#39;exponential&#39;, {&#39;r&#39;: [5.0, 5.0, 5.0], &#39;w&#39;: 0.005})],
+     &#39;gamma&#39;: 0.0},
+    {&#39;alpha&#39;: 0.0,
+     &#39;beta&#39;: 0.0,
+     &#39;elem&#39;: [(&#39;exponential&#39;, {&#39;r&#39;: [5.0, 5.0, 5.0], &#39;w&#39;: 0.005})],
+     &#39;gamma&#39;: 0.0}],
+   &#39;def_mean&#39;: 0.3,
+   &#39;facies&#39;: [&#39;Sand&#39;, &#39;GM&#39;, &#39;Clay&#39;],
+   &#39;int_method&#39;: [&#39;sgs&#39;, &#39;sgs&#39;, &#39;sgs&#39;],
+   &#39;means&#39;: [0.4, 0.3, 0.2],
+   &#39;name&#39;: &#39;Porosity&#39;,
+   &#39;vmax&#39;: None,
+   &#39;vmin&#39;: 0}},
+ &#39;seed&#39;: 1000000,
+ &#39;surfaces_computed&#39;: 1,
+ &#39;verbose&#39;: 1,
+ &#39;ws&#39;: &#39;3_fillAndSave&#39;}
+</pre></div></div>
+</div>
+<p><strong>This concludes this notebook about filling methods and saving methods</strong></p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents<span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:<span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Tutorial 3: filling methods and saving a project</a><ul>
+<li><a class="reference internal" href="#Creating-the-units">Creating the units</a><ul>
+<li><a class="reference internal" href="#Unit-D">Unit D</a></li>
+<li><a class="reference internal" href="#Unit-C">Unit C</a></li>
+<li><a class="reference internal" href="#Unit-B">Unit B</a></li>
+<li><a class="reference internal" href="#Unit-A">Unit A</a></li>
+<li><a class="reference internal" href="#Adding-units-to-Pile">Adding units to Pile</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Facies-and-Properties">Facies and Properties</a></li>
+<li><a class="reference internal" href="#Boreholes">Boreholes</a></li>
+<li><a class="reference internal" href="#Define-a-domain-polygon">Define a domain polygon</a></li>
+<li><a class="reference internal" href="#Creating-project-and-grid">Creating project and grid</a></li>
+<li><a class="reference internal" href="#Processing-HDs">Processing HDs</a></li>
+<li><a class="reference internal" href="#Unit-simulations">Unit simulations</a></li>
+<li><a class="reference internal" href="#Plots">Plots</a></li>
+<li><a class="reference internal" href="#Saving-results">Saving results</a></li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
+    
+
+      <div class="clearer"></div>
+    </div>
+    <div class="button_nav_wrapper">
+        <div class="button_nav">
+            <div class="left">
+                
+                <a href="2_Hard_data.html">
+                    <span class="icon">&lt;</span><span>Tutorial 2: hard data files</span></a>
+                
+            </div>
+
+            <div class="right">
+                
+                    <a href="4_load_project.html"><span>Tutorial 4: load ArchPy project</span><span class="icon">&gt;</span></a>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+
+<p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>
+  </body>
+</html>

@@ -33,9 +33,10 @@ The following python packages are absolutely necessary:
    - sklearn
    - pandas
    - shapely < 2.0
+   - scikit-learn
 
 These are not required but highly recommanded.
-   - PyVista, ver. = 0.32 (ArchPy does not support 0.33 for the moment).
+   - PyVista, ver. = 0.37
    - pyyaml (for export uses)
    - Rasterio (to use rasters)
    - Geopandas (to use shapefile)

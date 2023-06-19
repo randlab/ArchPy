@@ -14,6 +14,8 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../../'))
 sys.path.insert(0, os.path.abspath('../../ArchPy'))
+sys.path.insert(0, os.path.abspath('../../examples'))
+
 # sys.path.append("C:/Users/schorppl/switchdrive/Thèse/prog/sphinx/ArchPy")
 
 import base
@@ -41,7 +43,11 @@ extensions = [
 			'sphinx.ext.duration',
 			'myst_parser',
             'sphinxemoji.sphinxemoji',
+            "nbsphinx",
+            'sphinx_gallery.load_style',
 ]
+
+source_suffix = [".rst", ".md"]
 
 sphinxemoji_style = 'twemoji'
 autosectionlabel_prefix_document = True
@@ -70,14 +76,17 @@ autodoc_default_options = {
 # a list of builtin themes.
 #
 # html_theme = 'alabaster'
-html_theme = 'sphinx_rtd_theme'
+# html_theme = 'sphinx_rtd_theme'
+html_theme = 'piccolo_theme'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-
+html_css_files = [
+    'css/custom.css',
+]
 
 # def setup(app):
 #     app.add_stylesheet('theme_overrides.css')

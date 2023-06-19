@@ -1,0 +1,653 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>&lt;no title&gt; &#8212; ArchPy 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=0.7.0-1" />
+    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
+    <script src="../_static/twemoji.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <script src="../_static/js/petite-vue.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body data-dark_mode_code_blocks="true">
+
+<div id="top_nav">
+    
+
+    <nav>
+        
+            
+        
+
+        <p id="toggle_sidebar">
+            <a href="#" title="Toggle sidebar">|||</a>
+        </p>
+        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.0.0 documentation</a></h1>
+
+        <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
+    <template v-if="mode == 'light'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_light"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M67.48,18.073c1.913,-1.912 1.913,-5.018 0,-6.931c-1.912,-1.912 -5.018,-1.912 -6.931,0l-6.798,6.799c-1.912,1.912 -1.912,5.018 0,6.931c1.913,1.912 5.018,1.912 6.931,-0l6.798,-6.799Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.728,61.108c1.912,-1.913 1.912,-5.018 -0,-6.931c-1.913,-1.913 -5.019,-1.913 -6.931,-0l-6.799,6.798c-1.912,1.913 -1.912,5.019 0,6.931c1.913,1.913 5.019,1.913 6.931,0l6.799,-6.798Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.682,54.177c-1.913,-1.913 -5.018,-1.913 -6.931,-0c-1.912,1.913 -1.912,5.018 0,6.931l6.798,6.798c1.913,1.913 5.019,1.913 6.931,0c1.913,-1.912 1.913,-5.018 0,-6.931l-6.798,-6.798Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M4.901,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,-0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M18.929,11.142c-1.912,-1.912 -5.018,-1.912 -6.931,0c-1.912,1.913 -1.912,5.019 0,6.931l6.799,6.799c1.912,1.912 5.018,1.912 6.931,-0c1.912,-1.913 1.912,-5.019 -0,-6.931l-6.799,-6.799Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.108,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c-0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c-0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'dark'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_dark"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.901,2.196 -4.901,4.901c0,2.705 2.197,4.901 4.901,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.662,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.989,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.732,61.103c1.91,-1.91 1.91,-5.011 0,-6.921l-0.009,-0.01c-1.91,-1.91 -5.012,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.909,1.91 5.011,1.91 6.92,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.672,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.52,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l-0,-0.01c-0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.901,2.196 -4.901,4.901c0,2.704 2.197,4.9 4.901,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.73,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 -0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.098,34.623c-2.699,0 -4.891,2.192 -4.891,4.892l-0,0.019c-0,2.699 2.192,4.891 4.891,4.891c2.7,0 4.892,-2.192 4.892,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.892,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'darkest'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_darkest"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><path d="M39.315,23.791c8.684,-0 15.734,7.05 15.734,15.733c0,8.684 -7.05,15.734 -15.734,15.734c-8.683,0 -15.733,-7.05 -15.733,-15.734c-0,-8.683 7.05,-15.733 15.733,-15.733Zm0,4.737c6.069,0 10.997,4.927 10.997,10.996c-0,6.069 -4.928,10.996 -10.997,10.996c-6.068,0 -10.996,-4.927 -10.996,-10.996c0,-6.069 4.928,-10.996 10.996,-10.996Z" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.216,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.9,2.196 -4.9,4.901c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.666,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.99,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.737,61.103c1.909,-1.91 1.909,-5.011 -0,-6.921l-0.01,-0.01c-1.91,-1.91 -5.011,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.91,1.91 5.011,1.91 6.921,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.676,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.524,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l0,-0.01c0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.216,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901c-0,2.704 2.196,4.9 4.9,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.734,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.103,34.623c-2.7,0 -4.892,2.192 -4.892,4.892l-0,0.019c-0,2.699 2.192,4.891 4.892,4.891c2.699,0 4.891,-2.192 4.891,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.891,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+</a>
+
+<script>
+(function() {
+    const LOCAL_STORAGE_KEY = 'piccoloThemeMode'
+
+    var initialMode = localStorage.getItem(LOCAL_STORAGE_KEY)
+
+    if (initialMode) {
+        // Make sure the value in local storage is valid
+        if (['light', 'dark', 'darkest'].indexOf(initialMode) == -1) {
+            initialMode = 'light'
+            localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+        }
+    } else {
+        // Check if the client prefers dark mode
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            initialMode = 'dark'
+        } else {
+            initialMode = 'light'
+        }
+        localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+    }
+
+    document.documentElement.dataset.mode = initialMode
+
+    PetiteVue.createApp({
+        'mode': initialMode,
+        handleClick() {
+            let currentMode = this.mode
+
+            if (currentMode == 'light') {
+                this.mode = 'dark'
+            } else if (currentMode == 'dark') {
+                this.mode = 'darkest'
+            } else if (currentMode == 'darkest') {
+                this.mode = 'light'
+            }
+
+            document.documentElement.dataset.mode = this.mode
+            localStorage.setItem(LOCAL_STORAGE_KEY, this.mode)
+
+            console.log(this.mode)
+        }
+    }).mount('#mode_toggle')
+})()
+</script>
+            <p class="mobile_search_link">
+                <a href="../search.html" title="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65 64" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+                        <path d="M14.873 40.009c-2.315-3.943-3.642-8.532-3.642-13.429C11.231 11.91 23.141 0 37.811 0s26.58 11.91 26.58 26.58-11.91 26.58-26.58 26.58a26.44 26.44 0 0 1-14.277-4.161L9.739 62.794a3.12 3.12 0 0 1-4.413 0L.913 58.382c-1.217-1.218-1.217-3.196 0-4.413l13.96-13.96zM37.811 8.054c10.225 0 18.526 8.301 18.526 18.526s-8.301 18.526-18.526 18.526-18.526-8.301-18.526-18.526S27.586 8.054 37.811 8.054z" fill="#fff" />
+                    </svg>
+                </a>
+            </p>
+        
+
+        <div class="searchbox_wrapper">
+            
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+    </nav>
+</div>
+
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README_rtd.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">List of modules</a></li>
+</ul>
+
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">colors</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
+<span class="kn">import</span> <span class="nn">geone</span>
+<span class="kn">import</span> <span class="nn">geone.covModel</span> <span class="k">as</span> <span class="nn">gcm</span>
+<span class="kn">import</span> <span class="nn">geone.geosclassicinterface</span> <span class="k">as</span> <span class="nn">gci</span>
+<span class="kn">import</span> <span class="nn">geone.imgplot3d</span> <span class="k">as</span> <span class="nn">imgplt3</span>
+<span class="kn">import</span> <span class="nn">pyvista</span> <span class="k">as</span> <span class="nn">pv</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">shapely</span>
+<span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gp</span>
+<span class="kn">import</span> <span class="nn">rasterio</span>
+<span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">Polygon</span><span class="p">,</span> <span class="n">MultiPolygon</span>
+
+<span class="c1">#my modules</span>
+<span class="kn">import</span> <span class="nn">ArchPy</span>
+<span class="kn">from</span> <span class="nn">ArchPy.base</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ArchPy_call_function</span><span class="p">(</span><span class="n">select_location</span> <span class="o">=</span> <span class="s2">&quot;polygon&quot;</span><span class="p">,</span> <span class="n">nreal_units</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">nreal_facies</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">nreal_prop</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                         <span class="n">workspace</span> <span class="o">=</span> <span class="s2">&quot;ArchPy_workspace&quot;</span><span class="p">,</span> <span class="n">modelname</span> <span class="o">=</span> <span class="s2">&quot;model1&quot;</span><span class="p">,</span>
+                         <span class="n">bh_file</span> <span class="o">=</span> <span class="s2">&quot;model1.lbh&quot;</span><span class="p">,</span> <span class="n">unit_file</span> <span class="o">=</span> <span class="s2">&quot;model1.ud&quot;</span><span class="p">,</span> <span class="n">facies_file</span><span class="o">=</span> <span class="s2">&quot;model1.fd&quot;</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    ArchPy all in one function to call a model, select a region, change the grid size, etc.</span>
+
+<span class="sd">    ## inputs ##</span>
+<span class="sd">    select_location : string, how to select the region to model.</span>
+<span class="sd">                      &quot;polygon&quot;, &quot;all&quot;, &quot;zones&quot; and default are valid options</span>
+
+<span class="sd">    workspace       : Folder where the ArchPy model is</span>
+<span class="sd">    nreal_units     : int, number of realizations for units</span>
+<span class="sd">    nreal_facies    : int, number of realizations for facies</span>
+<span class="sd">    nreal_prop      : int, number of realizations for properties</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#load files</span>
+    <span class="n">ud</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="n">unit_file</span><span class="p">))</span>  <span class="c1"># unit data</span>
+    <span class="n">fd</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="n">facies_file</span><span class="p">))</span>
+    <span class="n">bhs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="n">bh_file</span><span class="p">))</span>
+
+    <span class="n">default_grid</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1">## Selection of the modeling zone</span>
+    <span class="k">if</span> <span class="n">select_location</span> <span class="o">==</span> <span class="s2">&quot;polygon&quot;</span><span class="p">:</span>
+
+        <span class="c1"># choose a matplolib GUI</span>
+        <span class="o">%</span><span class="k">matplotlib</span> tk
+
+        <span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+        <span class="c1"># plot boreholes locations</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">bhs</span><span class="o">.</span><span class="n">bh_x</span><span class="p">,</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_y</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+        <span class="n">Lx</span> <span class="o">=</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="n">Ly</span> <span class="o">=</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_y</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_y</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+
+        <span class="c1"># adjust ax limits</span>
+        <span class="n">mult</span> <span class="o">=</span> <span class="mf">0.05</span>
+        <span class="n">inc_x</span> <span class="o">=</span> <span class="n">Lx</span> <span class="o">*</span> <span class="n">mult</span>
+        <span class="n">inc_y</span> <span class="o">=</span> <span class="n">Ly</span> <span class="o">*</span> <span class="n">mult</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="n">bhs</span><span class="o">.</span><span class="n">bh_x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">-</span> <span class="n">inc_x</span><span class="p">,</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="n">inc_x</span><span class="p">),</span>
+               <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="n">bhs</span><span class="o">.</span><span class="n">bh_y</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">-</span> <span class="n">inc_y</span><span class="p">,</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_y</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="n">inc_y</span><span class="p">))</span>
+
+        <span class="c1">#draw polygon on ax</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">ArchPy</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">drawPoly</span><span class="p">()</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">typ</span><span class="o">=</span><span class="s2">&quot;polygon&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">block</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>  <span class="c1"># to stop the code until the polygon is drawn</span>
+
+        <span class="c1">#to use drawn polygon</span>
+        <span class="n">poly_data</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">list_p</span>
+
+        <span class="c1">#use ginput instead --&gt; if polygon does not work</span>
+        <span class="c1">#poly_data = [plt.ginput(n=-1, timeout=0)]</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>  <span class="c1"># close figure</span>
+
+    <span class="k">elif</span> <span class="n">select_location</span> <span class="o">==</span> <span class="s2">&quot;zones&quot;</span><span class="p">:</span>  <span class="c1"># predifined zones TO DO</span>
+        <span class="k">pass</span>
+
+    <span class="k">elif</span> <span class="n">select_location</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span><span class="p">:</span>
+        <span class="n">ox</span> <span class="o">=</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="n">oy</span> <span class="o">=</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_y</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="n">y1</span> <span class="o">=</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_y</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="n">Lx</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">-</span> <span class="n">ox</span>
+        <span class="n">Ly</span> <span class="o">=</span> <span class="n">y1</span> <span class="o">-</span> <span class="n">oy</span>
+        <span class="n">mult</span> <span class="o">=</span> <span class="mf">0.05</span>
+        <span class="n">inc_x</span> <span class="o">=</span> <span class="n">Lx</span> <span class="o">*</span> <span class="n">mult</span>
+        <span class="n">inc_y</span> <span class="o">=</span> <span class="n">Ly</span> <span class="o">*</span> <span class="n">mult</span>
+
+        <span class="n">ox</span> <span class="o">-=</span> <span class="n">inc_x</span>
+        <span class="n">oy</span> <span class="o">-=</span> <span class="n">inc_y</span>
+        <span class="n">x1</span> <span class="o">+=</span> <span class="n">inc_x</span>
+        <span class="n">y1</span> <span class="o">+=</span> <span class="n">inc_y</span>
+
+        <span class="n">poly_data</span> <span class="o">=</span> <span class="p">([[[</span><span class="n">ox</span><span class="p">,</span> <span class="n">oy</span><span class="p">],</span> <span class="p">[</span><span class="n">ox</span><span class="p">,</span> <span class="n">y1</span><span class="p">],</span> <span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">],</span> <span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">oy</span><span class="p">],</span> <span class="p">[</span><span class="n">ox</span><span class="p">,</span> <span class="n">oy</span><span class="p">]]])</span>
+
+    <span class="k">elif</span> <span class="n">select_location</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
+        <span class="n">default_grid</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">pass</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span> <span class="p">(</span><span class="s2">&quot;invalid selection location method&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">select_location</span> <span class="o">!=</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
+
+        <span class="c1"># create multipolygon shapely  --&gt; get coordinates from the polygon and create a shapely polygon object</span>
+        <span class="n">l_p</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">poly_data</span><span class="p">:</span>
+            <span class="n">l_p</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Polygon</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+        <span class="n">p1</span> <span class="o">=</span> <span class="n">MultiPolygon</span><span class="p">(</span><span class="n">l_p</span><span class="p">)</span>
+
+
+        <span class="c1">## Select boreholes that are inside the polygon</span>
+        <span class="c1"># set cell id as names to grid cells and create shapely point object from borehole locations</span>
+        <span class="n">bhs_points</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">i</span><span class="o">=</span><span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ix</span><span class="p">,</span><span class="n">iy</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bhs</span><span class="o">.</span><span class="n">bh_x</span><span class="p">,</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_y</span><span class="p">):</span>
+            <span class="n">po</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span> <span class="n">iy</span><span class="p">)</span>
+            <span class="n">po</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="n">bhs_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">po</span><span class="p">)</span>
+
+        <span class="c1">#check position, only keep points inside polygon</span>
+        <span class="n">l</span><span class="o">=</span><span class="p">[]</span>
+        <span class="k">for</span> <span class="n">po</span> <span class="ow">in</span> <span class="n">bhs_points</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">po</span><span class="o">.</span><span class="n">intersects</span><span class="p">(</span><span class="n">p1</span><span class="p">):</span>
+                <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+
+        <span class="c1"># operate selection</span>
+        <span class="n">bhs_sel</span> <span class="o">=</span> <span class="n">bhs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">l</span><span class="p">)]</span>
+        <span class="n">fd_sel</span> <span class="o">=</span> <span class="n">fd</span><span class="p">[</span><span class="n">fd</span><span class="p">[</span><span class="s2">&quot;bh_ID&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">bhs_sel</span><span class="p">[</span><span class="s2">&quot;bh_ID&quot;</span><span class="p">])]</span> <span class="c1"># facies data selection</span>
+        <span class="n">ud_sel</span> <span class="o">=</span> <span class="n">ud</span><span class="p">[</span><span class="n">ud</span><span class="p">[</span><span class="s2">&quot;bh_ID&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">bhs_sel</span><span class="p">[</span><span class="s2">&quot;bh_ID&quot;</span><span class="p">])]</span> <span class="c1"># unit data selection</span>
+
+        <span class="c1"># return to standard display</span>
+        <span class="o">%</span><span class="k">matplotlib</span> inline
+
+        <span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">bhs</span><span class="o">.</span><span class="n">bh_x</span><span class="p">,</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_y</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">bhs_sel</span><span class="o">.</span><span class="n">bh_x</span><span class="p">,</span> <span class="n">bhs_sel</span><span class="o">.</span><span class="n">bh_y</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+
+        <span class="c1">#plot extent</span>
+        <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">xy</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+
+        <span class="n">Lx</span> <span class="o">=</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+        <span class="n">Ly</span> <span class="o">=</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_y</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_y</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+
+        <span class="c1"># adjust ax limits</span>
+        <span class="n">mult</span> <span class="o">=</span> <span class="mf">0.1</span>
+        <span class="n">inc_x</span> <span class="o">=</span> <span class="n">Lx</span> <span class="o">*</span> <span class="n">mult</span>
+        <span class="n">inc_y</span> <span class="o">=</span> <span class="n">Ly</span> <span class="o">*</span> <span class="n">mult</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="n">bhs</span><span class="o">.</span><span class="n">bh_x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">-</span> <span class="n">inc_x</span><span class="p">,</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="n">inc_x</span><span class="p">),</span>
+               <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="n">bhs</span><span class="o">.</span><span class="n">bh_y</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">-</span> <span class="n">inc_y</span><span class="p">,</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_y</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="n">inc_y</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+        <span class="n">import_grid</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># flag for import_project function to not import the grid</span>
+
+        <span class="n">Lx_domain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">Ly_domain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> Grid settings (Please enter desired numbers)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Lx = </span><span class="si">{}</span><span class="s2"> / Ly = </span><span class="si">{}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">Lx_domain</span><span class="p">,</span> <span class="n">Ly_domain</span><span class="p">))</span>
+        <span class="n">sx</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;sx = &quot;</span><span class="p">))</span>
+        <span class="n">sy</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;sy = &quot;</span><span class="p">))</span>
+        <span class="n">sz</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;sz = &quot;</span><span class="p">))</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;max/min altitudes in boreholes </span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">min</span><span class="p">([</span><span class="n">iz</span> <span class="o">-</span> <span class="n">idepth</span> <span class="k">for</span> <span class="n">iz</span><span class="p">,</span> <span class="n">idepth</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bhs_sel</span><span class="o">.</span><span class="n">bh_z</span><span class="p">,</span> <span class="n">bhs_sel</span><span class="o">.</span><span class="n">bh_depth</span><span class="p">)]),</span>
+                                                            <span class="nb">max</span><span class="p">([</span><span class="n">iz</span> <span class="k">for</span> <span class="n">iz</span> <span class="ow">in</span> <span class="n">bhs_sel</span><span class="o">.</span><span class="n">bh_z</span><span class="p">])))</span>
+        <span class="n">oz</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;oz = &quot;</span><span class="p">))</span>
+        <span class="n">z1</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;zmax = &quot;</span><span class="p">))</span>
+        <span class="n">xg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p1</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="n">sx</span><span class="p">,</span><span class="n">sx</span><span class="p">)</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xg</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
+        <span class="n">yg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p1</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="n">sy</span><span class="p">,</span><span class="n">sy</span><span class="p">)</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">yg</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
+        <span class="n">zg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">oz</span><span class="p">,</span><span class="n">z1</span><span class="o">+</span><span class="n">sz</span><span class="p">,</span><span class="n">sz</span><span class="p">)</span>
+        <span class="n">nz</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">zg</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
+        <span class="n">dimensions</span> <span class="o">=</span> <span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
+        <span class="n">spacing</span> <span class="o">=</span> <span class="p">(</span><span class="n">sx</span><span class="p">,</span> <span class="n">sy</span><span class="p">,</span> <span class="n">sz</span><span class="p">)</span>
+        <span class="n">origin</span> <span class="o">=</span> <span class="p">(</span><span class="n">p1</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p1</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">oz</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">import_grid</span> <span class="o">=</span> <span class="kc">True</span>
+
+
+    <span class="c1">#load arch table object from existing pile</span>
+    <span class="n">T1</span> <span class="o">=</span> <span class="n">ArchPy</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">import_project</span><span class="p">(</span><span class="n">modelname</span><span class="p">,</span> <span class="n">ws</span><span class="o">=</span><span class="n">workspace</span><span class="p">,</span>
+                                      <span class="n">import_bhs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">import_grid</span><span class="o">=</span><span class="n">import_grid</span><span class="p">,</span> <span class="n">import_results</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># remove facies from table to keep only ones that are</span>
+    <span class="n">list_facies</span> <span class="o">=</span> <span class="n">T1</span><span class="o">.</span><span class="n">get_all_facies</span><span class="p">()</span>
+    <span class="n">T1</span><span class="o">.</span><span class="n">rem_all_facies_from_units</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">import_grid</span><span class="p">:</span>
+        <span class="n">T1</span><span class="o">.</span><span class="n">add_grid</span><span class="p">(</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">polygon</span><span class="o">=</span><span class="n">p1</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bot</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">db</span><span class="p">,</span> <span class="n">list_bhs</span> <span class="o">=</span> <span class="n">load_bh_files</span><span class="p">(</span><span class="n">bhs_sel</span><span class="p">,</span> <span class="n">fd_sel</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(),</span> <span class="n">ud_sel</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(),</span> <span class="n">altitude</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">db</span><span class="p">,</span> <span class="n">list_bhs</span> <span class="o">=</span> <span class="n">load_bh_files</span><span class="p">(</span><span class="n">bhs</span><span class="p">,</span> <span class="n">fd</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(),</span> <span class="n">ud</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(),</span> <span class="n">altitude</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1">## The following lines are needed to adjust units and facies if they are present in the db.</span>
+    <span class="c1">## If a unit is not present, it is removed from the pile to avoid issues</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">unit</span> <span class="ow">in</span> <span class="n">T1</span><span class="o">.</span><span class="n">get_all_units</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">unit</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">db</span><span class="o">.</span><span class="n">Strat_ID</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">pile</span> <span class="ow">in</span> <span class="n">T1</span><span class="o">.</span><span class="n">get_piles</span><span class="p">():</span>
+                <span class="n">pile</span><span class="o">.</span><span class="n">remove_unit</span><span class="p">(</span><span class="n">unit</span><span class="p">)</span>
+
+    <span class="c1"># Facies</span>
+    <span class="k">for</span> <span class="n">unit</span> <span class="ow">in</span> <span class="n">t</span><span class="p">[</span><span class="s2">&quot;Strat_ID&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">T1</span><span class="o">.</span><span class="n">get_unit</span><span class="p">(</span><span class="n">unit</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">facies_in_unit</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">Strat_ID</span> <span class="o">==</span> <span class="n">unit</span><span class="p">]</span><span class="o">.</span><span class="n">Facies_ID</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">fa</span> <span class="ow">in</span> <span class="n">list_facies</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">fa</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">facies_in_unit</span><span class="p">:</span>
+                    <span class="n">T1</span><span class="o">.</span><span class="n">get_unit</span><span class="p">(</span><span class="n">unit</span><span class="p">)</span><span class="o">.</span><span class="n">add_facies</span><span class="p">(</span><span class="n">fa</span><span class="p">)</span>
+
+    <span class="c1">#extract and add boreholes to the main object</span>
+    <span class="n">all_boreholes</span> <span class="o">=</span> <span class="n">extract_bhs</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">list_bhs</span><span class="p">,</span> <span class="n">T1</span><span class="p">,</span> <span class="n">units_to_ignore</span><span class="o">=</span><span class="p">())</span>
+    <span class="n">T1</span><span class="o">.</span><span class="n">add_bh</span><span class="p">(</span><span class="n">all_boreholes</span><span class="p">)</span>
+
+    <span class="c1"># process data</span>
+    <span class="n">T1</span><span class="o">.</span><span class="n">bhs_processed</span><span class="o">=</span><span class="mi">0</span>  <span class="c1"># reinitialize flag that indicates that data have been processed</span>
+    <span class="n">T1</span><span class="o">.</span><span class="n">erase_hd</span><span class="p">()</span>  <span class="c1"># erase previous process data</span>
+    <span class="n">T1</span><span class="o">.</span><span class="n">process_bhs</span><span class="p">()</span>  <span class="c1"># process data</span>
+
+    <span class="c1">#simulations</span>
+    <span class="n">T1</span><span class="o">.</span><span class="n">compute_surf</span><span class="p">(</span><span class="n">nreal_units</span><span class="p">)</span>
+    <span class="n">T1</span><span class="o">.</span><span class="n">compute_facies</span><span class="p">(</span><span class="n">nreal_facies</span><span class="p">)</span>
+    <span class="n">T1</span><span class="o">.</span><span class="n">compute_prop</span><span class="p">(</span><span class="n">nreal_prop</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">T1</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span> <span class="o">=</span> <span class="n">ArchPy_call_function</span><span class="p">(</span><span class="n">select_location</span><span class="o">=</span><span class="s2">&quot;polygon&quot;</span><span class="p">,</span> <span class="n">nreal_units</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nreal_facies</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nreal_prop</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Select your region
+Use left button to select you area(s)
+Polygon added - please press esc if you want to draw another or close the window when you have finished
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_interface_2_1.png" src="../_images/notebooks_interface_2_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+ Grid settings (Please enter desired numbers)
+Lx = 160.08 / Ly = 84.29
+sx = 1
+sy = 1
+sz = 1
+max/min altitudes in boreholes -14.01/-6.01
+oz = -16
+zmax = -6
+### IMPORTING PROJECT model1 IN ArchPy_workspace DIRECTORY ###
+
+Unit A: Surface added for interpolation
+Facies basement added to unit A
+The SubPile object is not an Arch_table object
+Unit B: Surface added for interpolation
+Facies Sand added to unit B
+Facies Gravel added to unit B
+Facies GM added to unit B
+Facies SM added to unit B
+Unit B1: Surface added for interpolation
+Facies Sand added to unit B1
+Facies Gravel added to unit B1
+Facies GM added to unit B1
+Facies SM added to unit B1
+Unit B2: Surface added for interpolation
+Facies Sand added to unit B2
+Facies Gravel added to unit B2
+Facies GM added to unit B2
+Facies SM added to unit B2
+Unit B3: Surface added for interpolation
+Facies Sand added to unit B3
+Facies Gravel added to unit B3
+Facies GM added to unit B3
+Facies SM added to unit B3
+Unit C: Surface added for interpolation
+Facies Clay added to unit C
+Facies Silt added to unit C
+Unit D: Surface added for interpolation
+Facies Sand added to unit D
+Facies Gravel added to unit D
+Facies GM added to unit D
+Facies SM added to unit D
+Stratigraphic unit D added
+Stratigraphic unit C added
+Stratigraphic unit B added
+Stratigraphic unit A added
+Stratigraphic unit B3 added
+Stratigraphic unit B2 added
+Stratigraphic unit B1 added
+Pile sets as Pile master
+Property K added
+
+
+ ### SUCCESSFUL IMPORT ###
+
+All facies have been removed from units
+## Adding Grid ##
+Polygon is a shapely instance - discretization activated
+## Grid added and is now simulation grid ##
+Unit B removed from Pile P1
+Facies Clay added to unit C
+Facies Silt added to unit C
+No unit with that name/ID B3
+No unit with that name/ID B2
+Facies basement added to unit A
+Facies Sand added to unit D
+Facies Gravel added to unit D
+Facies GM added to unit D
+Facies SM added to unit D
+No unit with that name/ID B1
+Borehole 2 added
+Borehole 3 added
+Borehole 4 added
+Borehole 5 added
+Hard data reset
+##### ORDERING UNITS #####
+Pile P1: ordering units
+Stratigraphic units have been sorted according to order
+Discrepency in the orders for units A and C
+Changing orders for that they range from 1 to n
+hierarchical relations set
+
+ ## Computing distributions for Normal Score Transform ##
+
+Processing ended successfully
+########## PILE P1 ##########
+Pile P1: ordering units
+Stratigraphic units have been sorted according to order
+
+#### COMPUTING SURFACE OF UNIT A
+A: time elapsed for computing surface 0.010515213012695312 s
+
+#### COMPUTING SURFACE OF UNIT C
+C: time elapsed for computing surface 0.07934856414794922 s
+
+#### COMPUTING SURFACE OF UNIT D
+D: time elapsed for computing surface 7.152557373046875e-07 s
+
+Time elapsed for getting domains 0.024376630783081055 s
+##########################
+
+
+### 0.11546659469604492: Total time elapsed for computing surfaces ###
+
+### Unit D: facies simulation with TPGs method ####
+### Unit D - realization 0 ###
+Time elapsed 0.38 s
+
+### Unit C: facies simulation with SIS method ####
+### Unit C - realization 0 ###
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
+
+### List of errors ####
+Facies Gravel: 1 points
+Facies GM: 1 points
+
+
+Only one facies covmodels for multiples facies, adapt sill to right proportions
+Time elapsed 0.03 s
+
+### Unit A: facies simulation with homogenous method ####
+### Unit A - realization 0 ###
+Time elapsed 0.0 s
+
+### 0.4: Total time elapsed for computing facies ###
+### 1 K property models will be modeled ###
+homogenous method chosen ! Warning: Some HD can be not respected
+homogenous method chosen ! Warning: Some HD can be not respected
+### 1 K models done
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_bhs</span><span class="p">(</span><span class="s2">&quot;facies&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+ERROR:root:Cannot create GLX context.  Aborting.
+libGL error: MESA-LOADER: failed to open iris: /usr/lib/dri/iris_dri.so: cannot open shared object file: No such file or directory (search paths /usr/lib/x86_64-linux-gnu/dri:\$${ORIGIN}/dri:/usr/lib/dri, suffix _dri)
+libGL error: failed to load driver: iris
+libGL error: MESA-LOADER: failed to open swrast: /usr/lib/dri/swrast_dri.so: cannot open shared object file: No such file or directory (search paths /usr/lib/x86_64-linux-gnu/dri:\$${ORIGIN}/dri:/usr/lib/dri, suffix _dri)
+libGL error: failed to load driver: swrast
+<span class="ansi-red-fg">2023-03-13 11:09:12.895 ( 254.601s) [        5CEF4440]vtkXOpenGLRenderWindow.:651    ERR| vtkXOpenGLRenderWindow (0x41cb220): Cannot create GLX context.  Aborting.</span>
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_units</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_facies</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "38a8fc026f964423bfdc09bd802ef058", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_prop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "bb5010f2b37b4b0a8084a9077813b696", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+    
+
+      <div class="clearer"></div>
+    </div>
+    <div class="button_nav_wrapper">
+        <div class="button_nav">
+            <div class="left">
+                
+            </div>
+
+            <div class="right">
+                
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+
+<p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>
+  </body>
+</html>

@@ -1,51 +1,53 @@
 Introduction
 ============
 
-ArchPy package is a tool to create, manipulate and vizualize 3D geological and petro-physical models of the subsurface.
-It relies on a hierarchical approach to generate geological and petrophyiscal models at different spatial scales.
-Three main levels can be distinguished: 
-
-   -  Units: Biggest geological features, this level corresponds to the 
-      stratigraphical geological units that are distinct by their depositional time.
-      They are defined by 2D surfaces that bound their bottom and top.
-   -  Facies: Smaller and more scattered geological features, they represent the geological heterogeneity at a more local scale 
-      and are generally simulated using 3D indicator simulations (SIS, TPGs, MPS, ...)
-   -  Properties: these represent the physical properties of the subsurface such as permeability or electrical conductivity and are continuous.
-      They represent a very local but critical heterogeneity that has to be taken into account into physical simulations (groundwater, geophysical, transport, etc.)
+`ArchPy` package is a tool to create, manipulate and vizualize 3D geological and petro-physical models of the subsurface.
+It relies on a hierarchical approach to generate these models at different spatial scales.
+The input data consists of a set of borehole data and a stratigraphic pile. 
+The stratigraphic pile describes formally and in a compact manner how the model should be constructed,
+such as the relations between the geological features or the modelling parameters.
 
 ArchPy offers a variety of capabilities such as:
 
-   - blabla
-   - blabla 2
+   - Various interpolation methods (GRF, Kriging, Spline, etc.)
+   - Various simulation methods (MPS, SIS, TPGs, etc.)
+   - Integration of hierarchy in the modelling process at different spatial scales
+   - Input/Output capabilities to read and write borehole data, stratigraphic pile and models
+   - Automatic inference of conditioning point 
+   - Automatic inference of surface parameters
+   - Can handle raster and shapefile data
+   - Can handle 3D geological map
+   - Cross-validation capabilities
+   - and many more...
 
-ArchPy is a pure  Swiss product (|:fondue:|), produced by the `Randlab <https://www.unine.ch/philippe.renard/de/home.html>`_ at University of Neuchâtel.
+`ArchPy` is a pure  Swiss product (|:fondue:|), produced by the `Randlab <https://www.unine.ch/philippe.renard/de/home.html>`_ at University of Neuchâtel.
  
 Installation
 ------------
 
-ArchPy is available on `Pypi <https://pypi.org/project/geoarchpy>`_ and can be installed with pip::
+`ArchPy` is available on `Pypi <https://pypi.org/project/geoarchpy>`_ and can be installed with pip::
 
    pip install geoarchpy
 
 OR 
 
-ArchPy can be installed locally with::
+`ArchPy` can be installed locally with::
 
    pip install .
 
 
 when in the main directory.
 
-Alternatively, it is possible to add ArchPy path directly in the python script with sys::
+Alternatively, it is possible to add `ArchPy` path directly in the python script with sys::
 
    sys.path.append("path where ArchPy is") 
 
-and then import ArchPy.
+and then import `ArchPy`.
 
 Requirements
 ------------
 
-The following python packages are absolutely necessary:
+ArchPy requires the following packages:
 
    - `Geone <https://github.com/randlab/geone>`_
    - matplotlib
@@ -54,8 +56,9 @@ The following python packages are absolutely necessary:
    - sklearn
    - pandas
    - shapely < 2.0
+   - scikit-learn
 
-These are not required but highly recommanded:
+The following packages are optional but are required for some functionalities:
 
    - PyVista (for 3D vizualisation)
    - pyyaml (for export uses)
@@ -78,14 +81,27 @@ Notebook examples
    - 08_inference : little guide how to use archpy inference tools to estimate surface parameters (no facies parameters for now)
    - 09_interface : little example of an interface to call an preexisting archpy model.
  
+
+Members of the project
+----------------------
+
+ArchPy is developped, tested and supported by a group of people from the Randlab. These include:
+
+   - Ludovic Schorpp 
+   - Alexis Neven
+   - Julien Straubhaar
+   - Philippe Renard
+
+
 How to cite
 -----------
 
- A paper was published on the ArchPy concept and its different capabilities.
- The paper was written with the version 0.1 of ArchPy.
+ A paper was published on the `ArchPy` concept and its different capabilities.
+ The paper was written with the version 0.1 of `ArchPy`.
  It is available with the following `Link <https://www.frontiersin.org/articles/10.3389/feart.2022.884075/>`_.
+
 
 Contact
 -------
  
- For any questions regarding ArchPy, please feel free to contact me at <ludovic.schorpp@unine.ch>
+ For any questions regarding `ArchPy`, please feel free to contact me at <ludovic.schorpp@unine.ch>

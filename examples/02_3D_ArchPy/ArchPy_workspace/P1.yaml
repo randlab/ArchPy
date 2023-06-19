@@ -1,0 +1,1040 @@
+Facies:
+  Clay:
+    ID: 4
+    color: blue
+  GM:
+    ID: 3
+    color: blueviolet
+  Gravel:
+    ID: 2
+    color: lightgreen
+  SM:
+    ID: 5
+    color: brown
+  Sand:
+    ID: 1
+    color: yellow
+  Silt:
+    ID: 6
+    color: goldenrod
+  basement:
+    ID: 7
+    color: red
+Pile_master: P1
+Piles:
+  P1:
+    list_units:
+    - D
+    - C
+    - B
+    - A
+    name: P1
+    seed: 1
+    verbose: 1
+  PB:
+    list_units:
+    - B3
+    - B2
+    - B1
+    name: PB
+    seed: 1
+    verbose: 1
+Results:
+  facies: P1.fac
+  properties: P1.pro
+  surfaces: P1.sf
+  surfaces_bot: P1.sfb
+  units: P1.unt
+Units:
+  A:
+    ID: 5
+    color: red
+    dic_facies:
+      f_method: homogenous
+    list_facies:
+    - basement
+    name: A
+    order: 4
+    surface:
+      contact: onlap
+      dic_surf:
+        N_transfo: false
+        bandwidth_mult: 1
+        covmodel:
+          alpha: 0.0
+          elem:
+          - !!python/tuple
+            - cubic
+            - r:
+              - 60.0
+              - 60.0
+              w: 0.6
+        int_method: grf_ineq
+        tau: 0
+      name: Surface_1
+  B:
+    ID: 3
+    color: green
+    dic_facies:
+      SubPile: PB
+      f_method: SubPile
+    list_facies:
+    - Sand
+    - Gravel
+    - GM
+    - SM
+    name: B
+    order: 3
+    surface:
+      contact: onlap
+      dic_surf:
+        N_transfo: false
+        bandwidth_mult: 1
+        covmodel:
+          alpha: 0.0
+          elem:
+          - !!python/tuple
+            - cubic
+            - r:
+              - 60.0
+              - 60.0
+              w: 0.6
+        int_method: grf_ineq
+        tau: 0
+      name: Surface_1
+  B1:
+    ID: 8
+    color: palegreen
+    dic_facies:
+      SIS_orientation: false
+      azimuth: 0
+      dip: 0
+      f_covmodel:
+        alpha: 0.0
+        beta: 0.0
+        elem:
+        - !!python/tuple
+          - exponential
+          - r:
+            - 5.0
+            - 5.0
+            - 5.0
+            w: 0.25
+        gamma: 0.0
+      f_method: SIS
+      neig: 10
+      plunge: 0
+      probability: null
+      r: 1
+    list_facies:
+    - Sand
+    - Gravel
+    - GM
+    - SM
+    name: B1
+    order: 3
+    surface:
+      contact: onlap
+      dic_surf:
+        N_transfo: false
+        bandwidth_mult: 1
+        covmodel:
+          alpha: 0.0
+          elem:
+          - !!python/tuple
+            - cubic
+            - r:
+              - 60.0
+              - 60.0
+              w: 0.6
+        int_method: grf_ineq
+        tau: 0
+      name: Surface_1
+  B2:
+    ID: 7
+    color: limegreen
+    dic_facies:
+      SIS_orientation: false
+      azimuth: 0
+      dip: 0
+      f_covmodel:
+        alpha: 0.0
+        beta: 0.0
+        elem:
+        - !!python/tuple
+          - exponential
+          - r:
+            - 5.0
+            - 5.0
+            - 5.0
+            w: 0.25
+        gamma: 0.0
+      f_method: SIS
+      neig: 10
+      plunge: 0
+      probability: null
+      r: 1
+    list_facies:
+    - Sand
+    - Gravel
+    - GM
+    - SM
+    name: B2
+    order: 2
+    surface:
+      contact: erode
+      dic_surf:
+        N_transfo: false
+        bandwidth_mult: 1
+        covmodel:
+          alpha: 0.0
+          elem:
+          - !!python/tuple
+            - cubic
+            - r:
+              - 60.0
+              - 60.0
+              w: 0.6
+        int_method: grf_ineq
+        tau: 0
+      name: Surface_1
+  B3:
+    ID: 6
+    color: forestgreen
+    dic_facies:
+      SIS_orientation: false
+      azimuth: 0
+      dip: 0
+      f_covmodel:
+        alpha: 0.0
+        beta: 0.0
+        elem:
+        - !!python/tuple
+          - exponential
+          - r:
+            - 5.0
+            - 5.0
+            - 5.0
+            w: 0.25
+        gamma: 0.0
+      f_method: SIS
+      neig: 10
+      plunge: 0
+      probability: null
+      r: 1
+    list_facies:
+    - Sand
+    - Gravel
+    - GM
+    - SM
+    name: B3
+    order: 1
+    surface:
+      contact: onlap
+      dic_surf:
+        N_transfo: false
+        bandwidth_mult: 1
+        covmodel:
+          alpha: 0.0
+          elem:
+          - !!python/tuple
+            - cubic
+            - r:
+              - 60.0
+              - 60.0
+              w: 0.6
+        int_method: grf_ineq
+        tau: 0
+      name: Surface_1
+  C:
+    ID: 2
+    color: blue
+    dic_facies:
+      SIS_orientation: false
+      azimuth: 0
+      dip: 0
+      f_covmodel:
+        alpha: 0.0
+        beta: 0.0
+        elem:
+        - !!python/tuple
+          - exponential
+          - r:
+            - 10.0
+            - 10.0
+            - 3.0
+            w: 0.25
+        gamma: 0.0
+      f_method: SIS
+      neig: 10
+      plunge: 0
+      probability: null
+      r: 1
+    list_facies:
+    - Clay
+    - Silt
+    name: C
+    order: 2
+    surface:
+      contact: onlap
+      dic_surf:
+        N_transfo: false
+        bandwidth_mult: 1
+        covmodel:
+          alpha: 0.0
+          elem:
+          - !!python/tuple
+            - cubic
+            - r:
+              - 80.0
+              - 80.0
+              w: 0.2
+        int_method: grf_ineq
+        tau: 0
+      name: Surface_1
+  D:
+    ID: 1
+    color: gold
+    dic_facies:
+      Flag:
+        1:
+        - - !!python/tuple
+            - -.inf
+            - -0.3
+          - !!python/tuple
+            - -.inf
+            - 0
+        2:
+        - - !!python/tuple
+            - 0.3
+            - .inf
+          - !!python/tuple
+            - -.inf
+            - 0.5
+        3:
+        - - !!python/tuple
+            - -.inf
+            - -0.3
+          - !!python/tuple
+            - 0
+            - .inf
+        5:
+        - - !!python/tuple
+            - -0.3
+            - 0.3
+          - !!python/tuple
+            - -.inf
+            - .inf
+        - - !!python/tuple
+            - 0.3
+            - .inf
+          - !!python/tuple
+            - 0.5
+            - .inf
+      G_cm:
+      - alpha: 0.0
+        beta: 0.0
+        elem:
+        - !!python/tuple
+          - cubic
+          - r:
+            - 50.0
+            - 50.0
+            - 20.0
+            w: 1.0
+        - !!python/tuple
+          - nugget
+          - w: 0.0
+        gamma: 0.0
+      - alpha: 30.0
+        beta: 0.0
+        elem:
+        - !!python/tuple
+          - cubic
+          - r:
+            - 50.0
+            - 50.0
+            - 20.0
+            w: 1.0
+        - !!python/tuple
+          - nugget
+          - w: 0.0
+        gamma: 0.0
+      f_method: TPGs
+      grf_method: sgs
+      neig: 20
+      nit: 100
+    list_facies:
+    - Sand
+    - Gravel
+    - GM
+    - SM
+    name: D
+    order: 1
+    surface:
+      contact: onlap
+      dic_surf:
+        N_transfo: false
+        bandwidth_mult: 1
+        covmodel:
+          alpha: 0.0
+          elem:
+          - !!python/tuple
+            - cubic
+            - r:
+              - 60.0
+              - 60.0
+              w: 0.6
+        int_method: grf_ineq
+        tau: 0
+      name: Surface_1
+boreholes:
+  facies_data: P1.fd
+  list_bhs: P1.lbh
+  units_data: P1.ud
+facies_computed: 1
+grid:
+  bot: P1.bot
+  dimensions: !!python/tuple
+  - 133
+  - 67
+  - 62
+  mask: P1.msk
+  origin: !!python/tuple
+  - 0.0
+  - 0.0
+  - -15.0
+  spacing: !!python/tuple
+  - 1.5
+  - 1.5
+  - 0.15
+  top: P1.top
+name: P1
+ncpu: -1
+prop_computed: 1
+properties:
+  K:
+    covmodels:
+    - alpha: 0
+      beta: 0.0
+      elem:
+      - !!python/tuple
+        - spherical
+        - r:
+          - 3.0
+          - 3.0
+          - 1.0
+          w: 0.1
+      gamma: 0.0
+    - alpha: -20
+      beta: 0.0
+      elem:
+      - !!python/tuple
+        - exponential
+        - r:
+          - 5.0
+          - 5.0
+          - 1.0
+          w: 0.3
+      gamma: 0.0
+    - alpha: -20.0
+      beta: 0.0
+      elem:
+      - !!python/tuple
+        - exponential
+        - r:
+          - 5.0
+          - 5.0
+          - 1.0
+          w: 0.3
+      gamma: 0.0
+    - null
+    - alpha: 0.0
+      beta: 0.0
+      elem:
+      - !!python/tuple
+        - spherical
+        - r:
+          - 3.0
+          - 3.0
+          - 1.0
+          w: 0.1
+      gamma: 0.0
+    - alpha: -20.0
+      beta: 0.0
+      elem:
+      - !!python/tuple
+        - exponential
+        - r:
+          - 5.0
+          - 5.0
+          - 1.0
+          w: 0.3
+      gamma: 0.0
+    - null
+    def_mean: -5
+    facies:
+    - Sand
+    - Gravel
+    - GM
+    - Clay
+    - SM
+    - Silt
+    - basement
+    int_method:
+    - sgs
+    - sgs
+    - sgs
+    - homogenous
+    - sgs
+    - sgs
+    - homogenous
+    means:
+    - -3.5
+    - -2.0
+    - -4.5
+    - -8.0
+    - -5.5
+    - -6.5
+    - -10.0
+    name: K
+    v:
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    - -1.0
+    vmax: null
+    vmin: null
+    x:
+    - - 0.0
+      - 5.0
+      - -10.0
+    - - 1.5
+      - 5.0
+      - -10.0
+    - - 3.0
+      - 5.0
+      - -10.0
+    - - 4.5
+      - 5.0
+      - -10.0
+    - - 6.0
+      - 5.0
+      - -10.0
+    - - 7.5
+      - 5.0
+      - -10.0
+    - - 9.0
+      - 5.0
+      - -10.0
+    - - 10.5
+      - 5.0
+      - -10.0
+    - - 12.0
+      - 5.0
+      - -10.0
+    - - 13.5
+      - 5.0
+      - -10.0
+    - - 15.0
+      - 5.0
+      - -10.0
+    - - 16.5
+      - 5.0
+      - -10.0
+    - - 18.0
+      - 5.0
+      - -10.0
+    - - 19.5
+      - 5.0
+      - -10.0
+    - - 21.0
+      - 5.0
+      - -10.0
+    - - 22.5
+      - 5.0
+      - -10.0
+    - - 24.0
+      - 5.0
+      - -10.0
+    - - 25.5
+      - 5.0
+      - -10.0
+    - - 27.0
+      - 5.0
+      - -10.0
+    - - 28.5
+      - 5.0
+      - -10.0
+    - - 30.0
+      - 5.0
+      - -10.0
+    - - 31.5
+      - 5.0
+      - -10.0
+    - - 33.0
+      - 5.0
+      - -10.0
+    - - 34.5
+      - 5.0
+      - -10.0
+    - - 36.0
+      - 5.0
+      - -10.0
+    - - 37.5
+      - 5.0
+      - -10.0
+    - - 39.0
+      - 5.0
+      - -10.0
+    - - 40.5
+      - 5.0
+      - -10.0
+    - - 42.0
+      - 5.0
+      - -10.0
+    - - 43.5
+      - 5.0
+      - -10.0
+    - - 45.0
+      - 5.0
+      - -10.0
+    - - 46.5
+      - 5.0
+      - -10.0
+    - - 48.0
+      - 5.0
+      - -10.0
+    - - 49.5
+      - 5.0
+      - -10.0
+    - - 51.0
+      - 5.0
+      - -10.0
+    - - 52.5
+      - 5.0
+      - -10.0
+    - - 54.0
+      - 5.0
+      - -10.0
+    - - 55.5
+      - 5.0
+      - -10.0
+    - - 57.0
+      - 5.0
+      - -10.0
+    - - 58.5
+      - 5.0
+      - -10.0
+    - - 60.0
+      - 5.0
+      - -10.0
+    - - 61.5
+      - 5.0
+      - -10.0
+    - - 63.0
+      - 5.0
+      - -10.0
+    - - 64.5
+      - 5.0
+      - -10.0
+    - - 66.0
+      - 5.0
+      - -10.0
+    - - 67.5
+      - 5.0
+      - -10.0
+    - - 69.0
+      - 5.0
+      - -10.0
+    - - 70.5
+      - 5.0
+      - -10.0
+    - - 72.0
+      - 5.0
+      - -10.0
+    - - 73.5
+      - 5.0
+      - -10.0
+    - - 75.0
+      - 5.0
+      - -10.0
+    - - 76.5
+      - 5.0
+      - -10.0
+    - - 78.0
+      - 5.0
+      - -10.0
+    - - 79.5
+      - 5.0
+      - -10.0
+    - - 81.0
+      - 5.0
+      - -10.0
+    - - 82.5
+      - 5.0
+      - -10.0
+    - - 84.0
+      - 5.0
+      - -10.0
+    - - 85.5
+      - 5.0
+      - -10.0
+    - - 87.0
+      - 5.0
+      - -10.0
+    - - 88.5
+      - 5.0
+      - -10.0
+    - - 90.0
+      - 5.0
+      - -10.0
+    - - 91.5
+      - 5.0
+      - -10.0
+    - - 93.0
+      - 5.0
+      - -10.0
+    - - 94.5
+      - 5.0
+      - -10.0
+    - - 96.0
+      - 5.0
+      - -10.0
+    - - 97.5
+      - 5.0
+      - -10.0
+    - - 99.0
+      - 5.0
+      - -10.0
+    - - 100.5
+      - 5.0
+      - -10.0
+    - - 102.0
+      - 5.0
+      - -10.0
+    - - 103.5
+      - 5.0
+      - -10.0
+    - - 105.0
+      - 5.0
+      - -10.0
+    - - 106.5
+      - 5.0
+      - -10.0
+    - - 108.0
+      - 5.0
+      - -10.0
+    - - 109.5
+      - 5.0
+      - -10.0
+    - - 111.0
+      - 5.0
+      - -10.0
+    - - 112.5
+      - 5.0
+      - -10.0
+    - - 114.0
+      - 5.0
+      - -10.0
+    - - 115.5
+      - 5.0
+      - -10.0
+    - - 117.0
+      - 5.0
+      - -10.0
+    - - 118.5
+      - 5.0
+      - -10.0
+    - - 120.0
+      - 5.0
+      - -10.0
+    - - 121.5
+      - 5.0
+      - -10.0
+    - - 123.0
+      - 5.0
+      - -10.0
+    - - 124.5
+      - 5.0
+      - -10.0
+    - - 126.0
+      - 5.0
+      - -10.0
+    - - 127.5
+      - 5.0
+      - -10.0
+    - - 129.0
+      - 5.0
+      - -10.0
+    - - 130.5
+      - 5.0
+      - -10.0
+    - - 132.0
+      - 5.0
+      - -10.0
+    - - 133.5
+      - 5.0
+      - -10.0
+    - - 135.0
+      - 5.0
+      - -10.0
+    - - 136.5
+      - 5.0
+      - -10.0
+    - - 138.0
+      - 5.0
+      - -10.0
+    - - 139.5
+      - 5.0
+      - -10.0
+    - - 141.0
+      - 5.0
+      - -10.0
+    - - 142.5
+      - 5.0
+      - -10.0
+    - - 144.0
+      - 5.0
+      - -10.0
+    - - 145.5
+      - 5.0
+      - -10.0
+    - - 147.0
+      - 5.0
+      - -10.0
+    - - 148.5
+      - 5.0
+      - -10.0
+    - - 150.0
+      - 5.0
+      - -10.0
+    - - 151.5
+      - 5.0
+      - -10.0
+    - - 153.0
+      - 5.0
+      - -10.0
+    - - 154.5
+      - 5.0
+      - -10.0
+    - - 156.0
+      - 5.0
+      - -10.0
+    - - 157.5
+      - 5.0
+      - -10.0
+    - - 159.0
+      - 5.0
+      - -10.0
+    - - 160.5
+      - 5.0
+      - -10.0
+    - - 162.0
+      - 5.0
+      - -10.0
+    - - 163.5
+      - 5.0
+      - -10.0
+    - - 165.0
+      - 5.0
+      - -10.0
+    - - 166.5
+      - 5.0
+      - -10.0
+    - - 168.0
+      - 5.0
+      - -10.0
+    - - 169.5
+      - 5.0
+      - -10.0
+    - - 171.0
+      - 5.0
+      - -10.0
+    - - 172.5
+      - 5.0
+      - -10.0
+    - - 174.0
+      - 5.0
+      - -10.0
+    - - 175.5
+      - 5.0
+      - -10.0
+    - - 177.0
+      - 5.0
+      - -10.0
+    - - 178.5
+      - 5.0
+      - -10.0
+    - - 180.0
+      - 5.0
+      - -10.0
+    - - 181.5
+      - 5.0
+      - -10.0
+    - - 183.0
+      - 5.0
+      - -10.0
+    - - 184.5
+      - 5.0
+      - -10.0
+    - - 186.0
+      - 5.0
+      - -10.0
+    - - 187.5
+      - 5.0
+      - -10.0
+    - - 189.0
+      - 5.0
+      - -10.0
+    - - 190.5
+      - 5.0
+      - -10.0
+    - - 192.0
+      - 5.0
+      - -10.0
+    - - 193.5
+      - 5.0
+      - -10.0
+    - - 195.0
+      - 5.0
+      - -10.0
+    - - 196.5
+      - 5.0
+      - -10.0
+    - - 198.0
+      - 5.0
+      - -10.0
+seed: 1000000
+surfaces_computed: 1
+verbose: 1
+ws: ArchPy_workspace

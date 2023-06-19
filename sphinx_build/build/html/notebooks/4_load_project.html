@@ -1,0 +1,632 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Tutorial 4: load ArchPy project &#8212; ArchPy 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=0.7.0-1" />
+    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
+    <script src="../_static/twemoji.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <script src="../_static/js/petite-vue.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Hierarchical modeling with ArchPy" href="1_many_hierarchical_units.html" />
+    <link rel="prev" title="Tutorial 3: filling methods and saving a project" href="3_filling_and_saving.html" /> 
+  </head><body data-dark_mode_code_blocks="true">
+
+<div id="top_nav">
+    
+
+    <nav>
+        
+            
+        
+
+        <p id="toggle_sidebar">
+            <a href="#" title="Toggle sidebar">|||</a>
+        </p>
+        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.0.0 documentation</a></h1>
+
+        <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
+    <template v-if="mode == 'light'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_light"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M67.48,18.073c1.913,-1.912 1.913,-5.018 0,-6.931c-1.912,-1.912 -5.018,-1.912 -6.931,0l-6.798,6.799c-1.912,1.912 -1.912,5.018 0,6.931c1.913,1.912 5.018,1.912 6.931,-0l6.798,-6.799Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.728,61.108c1.912,-1.913 1.912,-5.018 -0,-6.931c-1.913,-1.913 -5.019,-1.913 -6.931,-0l-6.799,6.798c-1.912,1.913 -1.912,5.019 0,6.931c1.913,1.913 5.019,1.913 6.931,0l6.799,-6.798Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.682,54.177c-1.913,-1.913 -5.018,-1.913 -6.931,-0c-1.912,1.913 -1.912,5.018 0,6.931l6.798,6.798c1.913,1.913 5.019,1.913 6.931,0c1.913,-1.912 1.913,-5.018 0,-6.931l-6.798,-6.798Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M4.901,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,-0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M18.929,11.142c-1.912,-1.912 -5.018,-1.912 -6.931,0c-1.912,1.913 -1.912,5.019 0,6.931l6.799,6.799c1.912,1.912 5.018,1.912 6.931,-0c1.912,-1.913 1.912,-5.019 -0,-6.931l-6.799,-6.799Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.108,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c-0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c-0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'dark'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_dark"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.901,2.196 -4.901,4.901c0,2.705 2.197,4.901 4.901,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.662,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.989,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.732,61.103c1.91,-1.91 1.91,-5.011 0,-6.921l-0.009,-0.01c-1.91,-1.91 -5.012,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.909,1.91 5.011,1.91 6.92,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.672,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.52,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l-0,-0.01c-0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.901,2.196 -4.901,4.901c0,2.704 2.197,4.9 4.901,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.73,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 -0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.098,34.623c-2.699,0 -4.891,2.192 -4.891,4.892l-0,0.019c-0,2.699 2.192,4.891 4.891,4.891c2.7,0 4.892,-2.192 4.892,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.892,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'darkest'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_darkest"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><path d="M39.315,23.791c8.684,-0 15.734,7.05 15.734,15.733c0,8.684 -7.05,15.734 -15.734,15.734c-8.683,0 -15.733,-7.05 -15.733,-15.734c-0,-8.683 7.05,-15.733 15.733,-15.733Zm0,4.737c6.069,0 10.997,4.927 10.997,10.996c-0,6.069 -4.928,10.996 -10.997,10.996c-6.068,0 -10.996,-4.927 -10.996,-10.996c0,-6.069 4.928,-10.996 10.996,-10.996Z" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.216,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.9,2.196 -4.9,4.901c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.666,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.99,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.737,61.103c1.909,-1.91 1.909,-5.011 -0,-6.921l-0.01,-0.01c-1.91,-1.91 -5.011,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.91,1.91 5.011,1.91 6.921,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.676,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.524,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l0,-0.01c0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.216,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901c-0,2.704 2.196,4.9 4.9,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.734,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.103,34.623c-2.7,0 -4.892,2.192 -4.892,4.892l-0,0.019c-0,2.699 2.192,4.891 4.892,4.891c2.699,0 4.891,-2.192 4.891,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.891,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+</a>
+
+<script>
+(function() {
+    const LOCAL_STORAGE_KEY = 'piccoloThemeMode'
+
+    var initialMode = localStorage.getItem(LOCAL_STORAGE_KEY)
+
+    if (initialMode) {
+        // Make sure the value in local storage is valid
+        if (['light', 'dark', 'darkest'].indexOf(initialMode) == -1) {
+            initialMode = 'light'
+            localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+        }
+    } else {
+        // Check if the client prefers dark mode
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            initialMode = 'dark'
+        } else {
+            initialMode = 'light'
+        }
+        localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+    }
+
+    document.documentElement.dataset.mode = initialMode
+
+    PetiteVue.createApp({
+        'mode': initialMode,
+        handleClick() {
+            let currentMode = this.mode
+
+            if (currentMode == 'light') {
+                this.mode = 'dark'
+            } else if (currentMode == 'dark') {
+                this.mode = 'darkest'
+            } else if (currentMode == 'darkest') {
+                this.mode = 'light'
+            }
+
+            document.documentElement.dataset.mode = this.mode
+            localStorage.setItem(LOCAL_STORAGE_KEY, this.mode)
+
+            console.log(this.mode)
+        }
+    }).mount('#mode_toggle')
+})()
+</script>
+            <p class="mobile_search_link">
+                <a href="../search.html" title="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65 64" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+                        <path d="M14.873 40.009c-2.315-3.943-3.642-8.532-3.642-13.429C11.231 11.91 23.141 0 37.811 0s26.58 11.91 26.58 26.58-11.91 26.58-26.58 26.58a26.44 26.44 0 0 1-14.277-4.161L9.739 62.794a3.12 3.12 0 0 1-4.413 0L.913 58.382c-1.217-1.218-1.217-3.196 0-4.413l13.96-13.96zM37.811 8.054c10.225 0 18.526 8.301 18.526 18.526s-8.301 18.526-18.526 18.526-18.526-8.301-18.526-18.526S27.586 8.054 37.811 8.054z" fill="#fff" />
+                    </svg>
+                </a>
+            </p>
+        
+
+        <div class="searchbox_wrapper">
+            
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+    </nav>
+</div>
+
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../README_rtd.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="1_the_very_basics.html">Tutorial 1: the basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2_Hard_data.html">Tutorial 2: hard data files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3_filling_and_saving.html">Tutorial 3: filling methods and saving a project</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 4: load ArchPy project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1_many_hierarchical_units.html">Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_example.html">3D model example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mps_surfaces.html">Surfaces with MPS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_geological_map.html">Geological map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Article_example.html">Article ArchPy exemple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="x_valid_exemple1.html">Cross-validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inference_surfaces.html">Surface parameters inference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">List of modules</a></li>
+</ul>
+
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="Tutorial-4:-load-ArchPy-project">
+<h1>Tutorial 4: load ArchPy project<a class="headerlink" href="#Tutorial-4:-load-ArchPy-project" title="Permalink to this heading">¶</a></h1>
+<p>This notebook demonstrates how to import an ArchPy using a yaml file as input</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">colors</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">geone</span>
+<span class="kn">import</span> <span class="nn">geone.covModel</span> <span class="k">as</span> <span class="nn">gcm</span>
+<span class="kn">import</span> <span class="nn">geone.imgplot3d</span> <span class="k">as</span> <span class="nn">imgplt3</span>
+<span class="kn">import</span> <span class="nn">pyvista</span> <span class="k">as</span> <span class="nn">pv</span>
+<span class="n">pv</span><span class="o">.</span><span class="n">set_jupyter_backend</span><span class="p">(</span><span class="s1">&#39;static&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c1">#For loading ArchPy, the path where ArchPy is must be added with sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../../&quot;</span><span class="p">)</span>
+<span class="c1">#my modules</span>
+<span class="kn">from</span> <span class="nn">ArchPy.base</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#ArchPy main functions</span>
+<span class="kn">from</span> <span class="nn">ArchPy.tpgs</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#Truncated plurigaussians</span>
+<span class="kn">from</span> <span class="nn">ArchPy.inputs</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#Truncated plurigaussians</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#load file</span>
+<span class="n">ws</span> <span class="o">=</span> <span class="s2">&quot;3_fillAndSave&quot;</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="s2">&quot;Exemple_3.yaml&quot;</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">dic_project</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dic_project</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{&#39;Facies&#39;: {&#39;Clay&#39;: {&#39;ID&#39;: 4, &#39;color&#39;: &#39;blue&#39;},
+  &#39;GM&#39;: {&#39;ID&#39;: 3, &#39;color&#39;: &#39;blueviolet&#39;},
+  &#39;Gravel&#39;: {&#39;ID&#39;: 2, &#39;color&#39;: &#39;lightgreen&#39;},
+  &#39;SM&#39;: {&#39;ID&#39;: 5, &#39;color&#39;: &#39;brown&#39;},
+  &#39;Sand&#39;: {&#39;ID&#39;: 1, &#39;color&#39;: &#39;yellow&#39;},
+  &#39;Silt&#39;: {&#39;ID&#39;: 6, &#39;color&#39;: &#39;goldenrod&#39;},
+  &#39;basement&#39;: {&#39;ID&#39;: 7, &#39;color&#39;: &#39;red&#39;}},
+ &#39;Pile_master&#39;: &#39;P1&#39;,
+ &#39;Piles&#39;: {&#39;P1&#39;: {&#39;list_units&#39;: [&#39;D&#39;, &#39;C&#39;, &#39;B&#39;, &#39;A&#39;],
+   &#39;name&#39;: &#39;P1&#39;,
+   &#39;seed&#39;: 1,
+   &#39;verbose&#39;: 1}},
+ &#39;Results&#39;: {&#39;facies&#39;: &#39;Exemple_3.fac&#39;,
+  &#39;properties&#39;: &#39;Exemple_3.pro&#39;,
+  &#39;surfaces&#39;: &#39;Exemple_3.sf&#39;,
+  &#39;surfaces_bot&#39;: &#39;Exemple_3.sfb&#39;,
+  &#39;units&#39;: &#39;Exemple_3.unt&#39;},
+ &#39;Units&#39;: {&#39;A&#39;: {&#39;ID&#39;: 4,
+   &#39;color&#39;: &#39;red&#39;,
+   &#39;dic_facies&#39;: {&#39;f_method&#39;: &#39;homogenous&#39;},
+   &#39;list_facies&#39;: [&#39;basement&#39;],
+   &#39;name&#39;: &#39;A&#39;,
+   &#39;order&#39;: 4,
+   &#39;surface&#39;: {&#39;contact&#39;: &#39;erode&#39;,
+    &#39;dic_surf&#39;: {&#39;N_transfo&#39;: False,
+     &#39;bandwidth_mult&#39;: 1,
+     &#39;covmodel&#39;: {&#39;alpha&#39;: 0.0,
+      &#39;elem&#39;: [(&#39;spherical&#39;, {&#39;r&#39;: [10.0, 10.0], &#39;w&#39;: 1.0})]},
+     &#39;int_method&#39;: &#39;grf_ineq&#39;,
+     &#39;tau&#39;: 0},
+    &#39;name&#39;: &#39;Surface_1&#39;}},
+  &#39;B&#39;: {&#39;ID&#39;: 3,
+   &#39;color&#39;: &#39;green&#39;,
+   &#39;dic_facies&#39;: {&#39;TI&#39;: &#39;B_dic_facies_TI.gslib&#39;,
+    &#39;angle1&#39;: 0,
+    &#39;angle2&#39;: 0,
+    &#39;angle3&#39;: 0,
+    &#39;anisotropyRatioMode&#39;: &#39;one&#39;,
+    &#39;ax&#39;: 1,
+    &#39;ay&#39;: 1,
+    &#39;az&#39;: 1,
+    &#39;constantThreshold&#39;: 0.001,
+    &#39;dataImage&#39;: None,
+    &#39;deactivationDistance&#39;: 4.0,
+    &#39;distanceType&#39;: [&#39;categorical&#39;],
+    &#39;f_method&#39;: &#39;MPS&#39;,
+    &#39;globalPdf&#39;: [0.33, 0.37, 0.2, 0.1],
+    &#39;homo_usage&#39;: 1,
+    &#39;localPdf&#39;: None,
+    &#39;localPdfRadius&#39;: 12.0,
+    &#39;maxscan&#39;: 0.1,
+    &#39;neig&#39;: 24,
+    &#39;npost&#39;: 1,
+    &#39;nv&#39;: 1,
+    &#39;outputVarFlag&#39;: None,
+    &#39;probaUsage&#39;: 1,
+    &#39;radiusMode&#39;: &#39;large_default&#39;,
+    &#39;rotAzi&#39;: 90,
+    &#39;rotAziLoc&#39;: False,
+    &#39;rotDip&#39;: 0,
+    &#39;rotDipLoc&#39;: False,
+    &#39;rotPlunge&#39;: 0,
+    &#39;rotPlungeLoc&#39;: False,
+    &#39;rot_usage&#39;: 1,
+    &#39;rx&#39;: 19.950000792741776,
+    &#39;ry&#39;: 10.05000039935112,
+    &#39;rz&#39;: 9.299976348876953,
+    &#39;thresh&#39;: 0.05,
+    &#39;varname&#39;: &#39;code&#39;,
+    &#39;xloc&#39;: False,
+    &#39;xr&#39;: 0.5,
+    &#39;yloc&#39;: False,
+    &#39;yr&#39;: 0.5,
+    &#39;zloc&#39;: False,
+    &#39;zr&#39;: 0.3},
+   &#39;list_facies&#39;: [&#39;Sand&#39;, &#39;Gravel&#39;, &#39;GM&#39;, &#39;SM&#39;],
+   &#39;name&#39;: &#39;B&#39;,
+   &#39;order&#39;: 3,
+   &#39;surface&#39;: {&#39;contact&#39;: &#39;onlap&#39;,
+    &#39;dic_surf&#39;: {&#39;N_transfo&#39;: False,
+     &#39;bandwidth_mult&#39;: 1,
+     &#39;covmodel&#39;: {&#39;alpha&#39;: 0.0,
+      &#39;elem&#39;: [(&#39;cubic&#39;, {&#39;r&#39;: [6.0, 6.0], &#39;w&#39;: 0.6})]},
+     &#39;int_method&#39;: &#39;grf_ineq&#39;,
+     &#39;tau&#39;: 0},
+    &#39;name&#39;: &#39;Surface_1&#39;}},
+  &#39;C&#39;: {&#39;ID&#39;: 2,
+   &#39;color&#39;: &#39;blue&#39;,
+   &#39;dic_facies&#39;: {&#39;SIS_orientation&#39;: False,
+    &#39;azimuth&#39;: 0,
+    &#39;dip&#39;: 0,
+    &#39;f_covmodel&#39;: [{&#39;alpha&#39;: 0.0,
+      &#39;beta&#39;: 0.0,
+      &#39;elem&#39;: [(&#39;exponential&#39;, {&#39;r&#39;: [10.0, 10.0, 3.0], &#39;w&#39;: 0.25})],
+      &#39;gamma&#39;: 0.0},
+     {&#39;alpha&#39;: 45.0,
+      &#39;beta&#39;: 30.0,
+      &#39;elem&#39;: [(&#39;exponential&#39;, {&#39;r&#39;: [20.0, 20.0, 5.0], &#39;w&#39;: 0.21})],
+      &#39;gamma&#39;: 0.0}],
+    &#39;f_method&#39;: &#39;SIS&#39;,
+    &#39;neig&#39;: 10,
+    &#39;plunge&#39;: 0,
+    &#39;probability&#39;: None,
+    &#39;r&#39;: 1},
+   &#39;list_facies&#39;: [&#39;Clay&#39;, &#39;Silt&#39;],
+   &#39;name&#39;: &#39;C&#39;,
+   &#39;order&#39;: 2,
+   &#39;surface&#39;: {&#39;contact&#39;: &#39;onlap&#39;,
+    &#39;dic_surf&#39;: {&#39;N_transfo&#39;: False,
+     &#39;bandwidth_mult&#39;: 1,
+     &#39;covmodel&#39;: {&#39;alpha&#39;: 0.0,
+      &#39;elem&#39;: [(&#39;cubic&#39;, {&#39;r&#39;: [8.0, 8.0], &#39;w&#39;: 0.2})]},
+     &#39;int_method&#39;: &#39;grf_ineq&#39;,
+     &#39;tau&#39;: 0},
+    &#39;name&#39;: &#39;Surface_1&#39;}},
+  &#39;D&#39;: {&#39;ID&#39;: 1,
+   &#39;color&#39;: &#39;gold&#39;,
+   &#39;dic_facies&#39;: {&#39;Flag&#39;: {1: [[(-inf, -0.3), (-inf, 0)]],
+     2: [[(0.3, inf), (-inf, 0.5)]],
+     3: [[(-inf, -0.3), (0, inf)]],
+     5: [[(-0.3, 0.3), (-inf, inf)], [(0.3, inf), (0.5, inf)]]},
+    &#39;G_cm&#39;: [{&#39;alpha&#39;: 0.0,
+      &#39;beta&#39;: 0.0,
+      &#39;elem&#39;: [(&#39;cubic&#39;, {&#39;r&#39;: [5.0, 5.0, 2.0], &#39;w&#39;: 1.0}),
+       (&#39;nugget&#39;, {&#39;w&#39;: 0.0})],
+      &#39;gamma&#39;: 0.0},
+     {&#39;alpha&#39;: 30.0,
+      &#39;beta&#39;: 0.0,
+      &#39;elem&#39;: [(&#39;spherical&#39;, {&#39;r&#39;: [10.0, 10.0, 5.0], &#39;w&#39;: 1.0}),
+       (&#39;nugget&#39;, {&#39;w&#39;: 0.0})],
+      &#39;gamma&#39;: 0.0}],
+    &#39;f_method&#39;: &#39;TPGs&#39;,
+    &#39;grf_method&#39;: &#39;sgs&#39;,
+    &#39;neig&#39;: 20,
+    &#39;nit&#39;: 100},
+   &#39;list_facies&#39;: [&#39;Sand&#39;, &#39;Gravel&#39;, &#39;GM&#39;, &#39;SM&#39;],
+   &#39;name&#39;: &#39;D&#39;,
+   &#39;order&#39;: 1,
+   &#39;surface&#39;: {&#39;contact&#39;: &#39;onlap&#39;,
+    &#39;dic_surf&#39;: {&#39;N_transfo&#39;: False,
+     &#39;bandwidth_mult&#39;: 1,
+     &#39;covmodel&#39;: {&#39;alpha&#39;: 0.0,
+      &#39;elem&#39;: [(&#39;cubic&#39;, {&#39;r&#39;: [6.0, 6.0], &#39;w&#39;: 0.6})]},
+     &#39;int_method&#39;: &#39;grf_ineq&#39;,
+     &#39;tau&#39;: 0},
+    &#39;name&#39;: &#39;Surface_1&#39;}}},
+ &#39;boreholes&#39;: {&#39;facies_data&#39;: &#39;Exemple_3.fd&#39;,
+  &#39;list_bhs&#39;: &#39;Exemple_3.lbh&#39;,
+  &#39;units_data&#39;: &#39;Exemple_3.ud&#39;},
+ &#39;facies_computed&#39;: 1,
+ &#39;grid&#39;: {&#39;bot&#39;: &#39;Exemple_3.bot&#39;,
+  &#39;dimensions&#39;: (133, 67, 62),
+  &#39;mask&#39;: &#39;Exemple_3.msk&#39;,
+  &#39;origin&#39;: (0.0, 0.0, -15.0),
+  &#39;spacing&#39;: (0.15, 0.15, 0.15),
+  &#39;top&#39;: &#39;Exemple_3.top&#39;},
+ &#39;name&#39;: &#39;Exemple_3&#39;,
+ &#39;ncpu&#39;: -1,
+ &#39;prop_computed&#39;: 1,
+ &#39;properties&#39;: {&#39;K&#39;: {&#39;covmodels&#39;: [{&#39;alpha&#39;: 0,
+     &#39;beta&#39;: 0.0,
+     &#39;elem&#39;: [(&#39;spherical&#39;, {&#39;r&#39;: [3.0, 3.0, 1.0], &#39;w&#39;: 0.1})],
+     &#39;gamma&#39;: 0.0},
+    {&#39;alpha&#39;: -20,
+     &#39;beta&#39;: 0.0,
+     &#39;elem&#39;: [(&#39;exponential&#39;, {&#39;r&#39;: [5.0, 5.0, 1.0], &#39;w&#39;: 0.3})],
+     &#39;gamma&#39;: 0.0},
+    {&#39;alpha&#39;: -20.0,
+     &#39;beta&#39;: 0.0,
+     &#39;elem&#39;: [(&#39;exponential&#39;, {&#39;r&#39;: [5.0, 5.0, 1.0], &#39;w&#39;: 0.3})],
+     &#39;gamma&#39;: 0.0},
+    None,
+    {&#39;alpha&#39;: 0.0,
+     &#39;beta&#39;: 0.0,
+     &#39;elem&#39;: [(&#39;spherical&#39;, {&#39;r&#39;: [3.0, 3.0, 1.0], &#39;w&#39;: 0.1})],
+     &#39;gamma&#39;: 0.0},
+    {&#39;alpha&#39;: -20.0,
+     &#39;beta&#39;: 0.0,
+     &#39;elem&#39;: [(&#39;exponential&#39;, {&#39;r&#39;: [5.0, 5.0, 1.0], &#39;w&#39;: 0.3})],
+     &#39;gamma&#39;: 0.0},
+    None],
+   &#39;def_mean&#39;: -5,
+   &#39;facies&#39;: [&#39;Sand&#39;, &#39;Gravel&#39;, &#39;GM&#39;, &#39;Clay&#39;, &#39;SM&#39;, &#39;Silt&#39;, &#39;basement&#39;],
+   &#39;int_method&#39;: [&#39;sgs&#39;,
+    &#39;sgs&#39;,
+    &#39;sgs&#39;,
+    &#39;homogenous&#39;,
+    &#39;sgs&#39;,
+    &#39;sgs&#39;,
+    &#39;homogenous&#39;],
+   &#39;means&#39;: [-3.5, -2.0, -4.5, -8.0, -5.5, -6.5, -10.0],
+   &#39;name&#39;: &#39;K&#39;,
+   &#39;vmax&#39;: None,
+   &#39;vmin&#39;: None},
+  &#39;Porosity&#39;: {&#39;covmodels&#39;: [{&#39;alpha&#39;: 0,
+     &#39;beta&#39;: 0.0,
+     &#39;elem&#39;: [(&#39;exponential&#39;, {&#39;r&#39;: [5.0, 5.0, 5.0], &#39;w&#39;: 0.005})],
+     &#39;gamma&#39;: 0.0},
+    {&#39;alpha&#39;: 0.0,
+     &#39;beta&#39;: 0.0,
+     &#39;elem&#39;: [(&#39;exponential&#39;, {&#39;r&#39;: [5.0, 5.0, 5.0], &#39;w&#39;: 0.005})],
+     &#39;gamma&#39;: 0.0},
+    {&#39;alpha&#39;: 0.0,
+     &#39;beta&#39;: 0.0,
+     &#39;elem&#39;: [(&#39;exponential&#39;, {&#39;r&#39;: [5.0, 5.0, 5.0], &#39;w&#39;: 0.005})],
+     &#39;gamma&#39;: 0.0}],
+   &#39;def_mean&#39;: 0.3,
+   &#39;facies&#39;: [&#39;Sand&#39;, &#39;GM&#39;, &#39;Clay&#39;],
+   &#39;int_method&#39;: [&#39;sgs&#39;, &#39;sgs&#39;, &#39;sgs&#39;],
+   &#39;means&#39;: [0.4, 0.3, 0.2],
+   &#39;name&#39;: &#39;Porosity&#39;,
+   &#39;vmax&#39;: None,
+   &#39;vmin&#39;: 0}},
+ &#39;seed&#39;: 1000000,
+ &#39;surfaces_computed&#39;: 1,
+ &#39;verbose&#39;: 1,
+ &#39;ws&#39;: &#39;3_fillAndSave&#39;}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#The only requirements are model name (here P1) and working directory</span>
+<span class="n">T1</span> <span class="o">=</span> <span class="n">import_project</span><span class="p">(</span><span class="s2">&quot;Exemple_3&quot;</span><span class="p">,</span> <span class="n">ws</span><span class="o">=</span><span class="n">ws</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+### IMPORTING PROJECT Exemple_3 IN 3_fillAndSave DIRECTORY ###
+
+Unit A: Surface added for interpolation
+Facies basement added to unit A
+Unit B: TI added
+Unit B: Surface added for interpolation
+Facies Sand added to unit B
+Facies Gravel added to unit B
+Facies GM added to unit B
+Facies SM added to unit B
+Unit C: Surface added for interpolation
+Facies Clay added to unit C
+Facies Silt added to unit C
+Unit D: Surface added for interpolation
+Facies Sand added to unit D
+Facies Gravel added to unit D
+Facies GM added to unit D
+Facies SM added to unit D
+Stratigraphic unit D added
+Stratigraphic unit C added
+Stratigraphic unit B added
+Stratigraphic unit A added
+Pile sets as Pile master
+Property K added
+Property Porosity added
+## Adding Grid ##
+## Grid added and is now simulation grid ##
+None facies name not found in ArchTable
+None facies name not found in ArchTable
+None facies name not found in ArchTable
+None facies name not found in ArchTable
+None facies name not found in ArchTable
+None facies name not found in ArchTable
+None facies name not found in ArchTable
+None facies name not found in ArchTable
+None facies name not found in ArchTable
+None facies name not found in ArchTable
+None facies name not found in ArchTable
+None facies name not found in ArchTable
+None facies name not found in ArchTable
+None facies name not found in ArchTable
+None facies name not found in ArchTable
+None facies name not found in ArchTable
+None facies name not found in ArchTable
+Borehole 1 added
+Borehole 2 added
+Borehole 3 added
+Borehole 4 added
+Borehole 5 added
+Borehole 6 added
+
+
+ ##LOADING RESULTS##
+
+
+#### Units loaded ####
+#### Facies loaded ####
+#### Properties loaded ####
+#### Surfaces loaded ####
+#### Bottom surfaces loaded ####
+
+
+ ### SUCCESSFUL IMPORT ###
+
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">list_bhs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">log_facies</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#T1.plot_bhs()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_units</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\grid.py:511: PyVistaDeprecationWarning: `dims` argument is deprecated. Please use `dimensions`.
+  &#39;`dims` argument is deprecated. Please use `dimensions`.&#39;, PyVistaDeprecationWarning
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_4_load_project_7_1.png" src="../_images/notebooks_4_load_project_7_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_mean_prop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+../..\ArchPy\base.py:4637: RuntimeWarning: Mean of empty slice
+  arr=np.nanmean(prop.reshape(-1,self.get_nz(),self.get_ny(),self.get_nx()),axis=0)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_4_load_project_8_1.png" src="../_images/notebooks_4_load_project_8_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_facies</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_4_load_project_9_0.png" src="../_images/notebooks_4_load_project_9_0.png" />
+</div>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+    
+
+      <div class="clearer"></div>
+    </div>
+    <div class="button_nav_wrapper">
+        <div class="button_nav">
+            <div class="left">
+                
+                <a href="3_filling_and_saving.html">
+                    <span class="icon">&lt;</span><span>Tutorial 3: filling methods and saving a project</span></a>
+                
+            </div>
+
+            <div class="right">
+                
+                    <a href="1_many_hierarchical_units.html"><span>Hierarchical modeling with ArchPy</span><span class="icon">&gt;</span></a>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+
+<p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>
+  </body>
+</html>

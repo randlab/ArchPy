@@ -1,0 +1,731 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Hierarchical modeling with ArchPy &#8212; ArchPy 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=0.7.0-1" />
+    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
+    <script src="../_static/twemoji.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <script src="../_static/js/petite-vue.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="3D model example" href="3D_ArchPy_example.html" />
+    <link rel="prev" title="Tutorial 4: load ArchPy project" href="4_load_project.html" /> 
+  </head><body data-dark_mode_code_blocks="true">
+
+<div id="top_nav">
+    
+
+    <nav>
+        
+            
+        
+
+        <p id="toggle_sidebar">
+            <a href="#" title="Toggle sidebar">|||</a>
+        </p>
+        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.0.0 documentation</a></h1>
+
+        <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
+    <template v-if="mode == 'light'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_light"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M67.48,18.073c1.913,-1.912 1.913,-5.018 0,-6.931c-1.912,-1.912 -5.018,-1.912 -6.931,0l-6.798,6.799c-1.912,1.912 -1.912,5.018 0,6.931c1.913,1.912 5.018,1.912 6.931,-0l6.798,-6.799Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.728,61.108c1.912,-1.913 1.912,-5.018 -0,-6.931c-1.913,-1.913 -5.019,-1.913 -6.931,-0l-6.799,6.798c-1.912,1.913 -1.912,5.019 0,6.931c1.913,1.913 5.019,1.913 6.931,0l6.799,-6.798Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.682,54.177c-1.913,-1.913 -5.018,-1.913 -6.931,-0c-1.912,1.913 -1.912,5.018 0,6.931l6.798,6.798c1.913,1.913 5.019,1.913 6.931,0c1.913,-1.912 1.913,-5.018 0,-6.931l-6.798,-6.798Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M4.901,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,-0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M18.929,11.142c-1.912,-1.912 -5.018,-1.912 -6.931,0c-1.912,1.913 -1.912,5.019 0,6.931l6.799,6.799c1.912,1.912 5.018,1.912 6.931,-0c1.912,-1.913 1.912,-5.019 -0,-6.931l-6.799,-6.799Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.108,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c-0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c-0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'dark'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_dark"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.901,2.196 -4.901,4.901c0,2.705 2.197,4.901 4.901,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.662,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.989,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.732,61.103c1.91,-1.91 1.91,-5.011 0,-6.921l-0.009,-0.01c-1.91,-1.91 -5.012,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.909,1.91 5.011,1.91 6.92,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.672,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.52,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l-0,-0.01c-0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.901,2.196 -4.901,4.901c0,2.704 2.197,4.9 4.901,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.73,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 -0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.098,34.623c-2.699,0 -4.891,2.192 -4.891,4.892l-0,0.019c-0,2.699 2.192,4.891 4.891,4.891c2.7,0 4.892,-2.192 4.892,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.892,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'darkest'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_darkest"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><path d="M39.315,23.791c8.684,-0 15.734,7.05 15.734,15.733c0,8.684 -7.05,15.734 -15.734,15.734c-8.683,0 -15.733,-7.05 -15.733,-15.734c-0,-8.683 7.05,-15.733 15.733,-15.733Zm0,4.737c6.069,0 10.997,4.927 10.997,10.996c-0,6.069 -4.928,10.996 -10.997,10.996c-6.068,0 -10.996,-4.927 -10.996,-10.996c0,-6.069 4.928,-10.996 10.996,-10.996Z" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.216,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.9,2.196 -4.9,4.901c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.666,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.99,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.737,61.103c1.909,-1.91 1.909,-5.011 -0,-6.921l-0.01,-0.01c-1.91,-1.91 -5.011,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.91,1.91 5.011,1.91 6.921,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.676,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.524,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l0,-0.01c0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.216,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901c-0,2.704 2.196,4.9 4.9,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.734,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.103,34.623c-2.7,0 -4.892,2.192 -4.892,4.892l-0,0.019c-0,2.699 2.192,4.891 4.892,4.891c2.699,0 4.891,-2.192 4.891,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.891,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+</a>
+
+<script>
+(function() {
+    const LOCAL_STORAGE_KEY = 'piccoloThemeMode'
+
+    var initialMode = localStorage.getItem(LOCAL_STORAGE_KEY)
+
+    if (initialMode) {
+        // Make sure the value in local storage is valid
+        if (['light', 'dark', 'darkest'].indexOf(initialMode) == -1) {
+            initialMode = 'light'
+            localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+        }
+    } else {
+        // Check if the client prefers dark mode
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            initialMode = 'dark'
+        } else {
+            initialMode = 'light'
+        }
+        localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+    }
+
+    document.documentElement.dataset.mode = initialMode
+
+    PetiteVue.createApp({
+        'mode': initialMode,
+        handleClick() {
+            let currentMode = this.mode
+
+            if (currentMode == 'light') {
+                this.mode = 'dark'
+            } else if (currentMode == 'dark') {
+                this.mode = 'darkest'
+            } else if (currentMode == 'darkest') {
+                this.mode = 'light'
+            }
+
+            document.documentElement.dataset.mode = this.mode
+            localStorage.setItem(LOCAL_STORAGE_KEY, this.mode)
+
+            console.log(this.mode)
+        }
+    }).mount('#mode_toggle')
+})()
+</script>
+            <p class="mobile_search_link">
+                <a href="../search.html" title="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65 64" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+                        <path d="M14.873 40.009c-2.315-3.943-3.642-8.532-3.642-13.429C11.231 11.91 23.141 0 37.811 0s26.58 11.91 26.58 26.58-11.91 26.58-26.58 26.58a26.44 26.44 0 0 1-14.277-4.161L9.739 62.794a3.12 3.12 0 0 1-4.413 0L.913 58.382c-1.217-1.218-1.217-3.196 0-4.413l13.96-13.96zM37.811 8.054c10.225 0 18.526 8.301 18.526 18.526s-8.301 18.526-18.526 18.526-18.526-8.301-18.526-18.526S27.586 8.054 37.811 8.054z" fill="#fff" />
+                    </svg>
+                </a>
+            </p>
+        
+
+        <div class="searchbox_wrapper">
+            
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+    </nav>
+</div>
+
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../README_rtd.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="1_the_very_basics.html">Tutorial 1: the basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2_Hard_data.html">Tutorial 2: hard data files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3_filling_and_saving.html">Tutorial 3: filling methods and saving a project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="4_load_project.html">Tutorial 4: load ArchPy project</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_example.html">3D model example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mps_surfaces.html">Surfaces with MPS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_geological_map.html">Geological map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Article_example.html">Article ArchPy exemple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="x_valid_exemple1.html">Cross-validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inference_surfaces.html">Surface parameters inference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">List of modules</a></li>
+</ul>
+
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="Hierarchical-modeling-with-ArchPy">
+<h1>Hierarchical modeling with ArchPy<a class="headerlink" href="#Hierarchical-modeling-with-ArchPy" title="Permalink to this heading">¶</a></h1>
+<p>This notebook demonstrates the capabilities of ArchPy to simulate any level of hierarchy.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">geone</span>
+<span class="kn">import</span> <span class="nn">geone.covModel</span> <span class="k">as</span> <span class="nn">gcm</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">pyvista</span> <span class="k">as</span> <span class="nn">pv</span>
+<span class="n">pv</span><span class="o">.</span><span class="n">set_jupyter_backend</span><span class="p">(</span><span class="s1">&#39;static&#39;</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">ArchPy</span>
+<span class="k">except</span><span class="p">:</span> <span class="c1"># if ArchPy is not installed</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ArchPy not installed&quot;</span><span class="p">)</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../..&quot;</span><span class="p">)</span>
+    <span class="kn">import</span> <span class="nn">ArchPy</span>
+
+
+<span class="kn">from</span> <span class="nn">ArchPy.base</span> <span class="kn">import</span> <span class="n">Unit</span><span class="p">,</span> <span class="n">Facies</span><span class="p">,</span> <span class="n">Prop</span><span class="p">,</span> <span class="n">Pile</span><span class="p">,</span> <span class="n">Arch_table</span><span class="p">,</span> <span class="n">Surface</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ArchPy not installed
+</pre></div></div>
+</div>
+<section id="Project-and-grid">
+<h2>Project and grid<a class="headerlink" href="#Project-and-grid" title="Permalink to this heading">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span> <span class="o">=</span> <span class="n">Arch_table</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Hierarchy_is_fun&quot;</span><span class="p">,</span> <span class="n">working_directory</span><span class="o">=</span><span class="s2">&quot;Hierarch&quot;</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="n">sx</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">sy</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">sz</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">nx</span> <span class="o">=</span> <span class="mi">250</span>
+<span class="n">ny</span> <span class="o">=</span> <span class="mi">250</span>
+<span class="n">nz</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">ox</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">oy</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">oz</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">dimensions</span> <span class="o">=</span> <span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
+<span class="n">spacing</span> <span class="o">=</span> <span class="p">(</span><span class="n">sx</span><span class="p">,</span> <span class="n">sy</span><span class="p">,</span> <span class="n">sz</span><span class="p">)</span>
+<span class="n">origin</span> <span class="o">=</span> <span class="p">(</span><span class="n">ox</span><span class="p">,</span> <span class="n">oy</span><span class="p">,</span> <span class="n">oz</span><span class="p">)</span>
+
+<span class="n">T1</span><span class="o">.</span><span class="n">add_grid</span><span class="p">(</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">origin</span><span class="p">)</span> <span class="c1">#adding the grid</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+## Adding Grid ##
+## Grid added and is now simulation grid ##
+</pre></div></div>
+</div>
+<p>This exemple is purely technical and have no other purpose to test ArchPy capabilities.</p>
+<p>ArchPy can then simulate sub-units inside other bigger units by setting the <code class="docutils literal notranslate"><span class="pre">f_method</span></code> (in unit <code class="docutils literal notranslate"><span class="pre">dic_facies</span></code>) to <code class="docutils literal notranslate"><span class="pre">SubPile</span></code>. <strong>It is then necessary to provide an ArchPy ``Pile`` object in the ``dic_facies``</strong>. Below are many different examples with various hierarchical level.</p>
+</section>
+<section id="Let's-create-a-lot-of-units,-sub-units,-...">
+<h2>Let’s create a lot of units, sub-units, …<a class="headerlink" href="#Let's-create-a-lot-of-units,-sub-units,-..." title="Permalink to this heading">¶</a></h2>
+<section id="C-unit">
+<h3>C unit<a class="headerlink" href="#C-unit" title="Permalink to this heading">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Let&#39;s use the same covmodels for all units for simplicity</span>
+<span class="n">cm</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel2D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;cubic&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">:[</span><span class="mi">55</span><span class="p">,</span><span class="mi">55</span><span class="p">]})])</span>
+
+
+<span class="c1">#SubPile C32</span>
+<span class="n">C322</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="s2">&quot;C322&quot;</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.2</span><span class="p">),</span> <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(),</span><span class="n">ID</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">C321</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="s2">&quot;C321&quot;</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.2</span><span class="p">),</span>
+            <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;SC321&quot;</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;erode&quot;</span><span class="p">,</span> <span class="n">dic_surf</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;int_method&#39;</span><span class="p">:</span> <span class="s1">&#39;grf_ineq&#39;</span><span class="p">,</span> <span class="s1">&#39;covmodel&#39;</span><span class="p">:</span> <span class="n">cm</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span><span class="mf">48.5</span><span class="p">}),</span> <span class="n">ID</span><span class="o">=</span><span class="mi">21</span>
+           <span class="p">)</span>
+
+<span class="n">PC32</span> <span class="o">=</span> <span class="n">Pile</span><span class="p">(</span><span class="s2">&quot;C32&quot;</span><span class="p">)</span>
+<span class="n">PC32</span><span class="o">.</span><span class="n">add_unit</span><span class="p">([</span><span class="n">C322</span><span class="p">,</span><span class="n">C321</span><span class="p">])</span>
+
+<span class="c1">#Subpile C3</span>
+<span class="n">C32</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="s2">&quot;C32&quot;</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(),</span><span class="n">ID</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span><span class="n">dic_facies</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;f_method&quot;</span><span class="p">:</span><span class="s2">&quot;SubPile&quot;</span><span class="p">,</span> <span class="s2">&quot;SubPile&quot;</span><span class="p">:</span><span class="n">PC32</span><span class="p">}</span>
+         <span class="p">)</span>
+<span class="n">C31</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="s2">&quot;C31&quot;</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
+           <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;SC31&quot;</span><span class="p">,</span> <span class="n">contact</span><span class="o">=</span><span class="s2">&quot;erode&quot;</span><span class="p">,</span> <span class="n">dic_surf</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;int_method&#39;</span><span class="p">:</span> <span class="s1">&#39;grf_ineq&#39;</span><span class="p">,</span> <span class="s1">&#39;covmodel&#39;</span><span class="p">:</span> <span class="n">cm</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span><span class="mi">47</span><span class="p">}),</span>
+           <span class="n">ID</span><span class="o">=</span><span class="mi">8</span>
+         <span class="p">)</span>
+
+
+<span class="n">PC3</span> <span class="o">=</span> <span class="n">Pile</span><span class="p">(</span><span class="s2">&quot;PC3&quot;</span><span class="p">)</span>
+<span class="n">PC3</span><span class="o">.</span><span class="n">add_unit</span><span class="p">([</span><span class="n">C32</span><span class="p">,</span> <span class="n">C31</span><span class="p">])</span>
+
+
+<span class="c1">#SubPile C1</span>
+<span class="n">C12</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="s2">&quot;C12&quot;</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(),</span><span class="n">ID</span><span class="o">=</span><span class="mi">9</span>
+         <span class="p">)</span>
+<span class="n">C11</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="s2">&quot;C11&quot;</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span>
+           <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;SC11&quot;</span><span class="p">,</span> <span class="n">contact</span><span class="o">=</span><span class="s2">&quot;erode&quot;</span><span class="p">,</span> <span class="n">dic_surf</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;int_method&#39;</span><span class="p">:</span> <span class="s1">&#39;grf_ineq&#39;</span><span class="p">,</span> <span class="s1">&#39;covmodel&#39;</span><span class="p">:</span> <span class="n">cm</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span><span class="mi">36</span><span class="p">}),</span>
+           <span class="n">ID</span><span class="o">=</span><span class="mi">10</span>
+         <span class="p">)</span>
+
+<span class="n">PC1</span> <span class="o">=</span> <span class="n">Pile</span><span class="p">(</span><span class="s2">&quot;PC1&quot;</span><span class="p">)</span>
+<span class="n">PC1</span><span class="o">.</span><span class="n">add_unit</span><span class="p">([</span><span class="n">C12</span><span class="p">,</span> <span class="n">C11</span><span class="p">])</span>
+
+
+<span class="c1">#subpile C</span>
+<span class="n">C3</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="s2">&quot;C3&quot;</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.8</span><span class="p">),</span> <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(),</span><span class="n">ID</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">dic_facies</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;f_method&quot;</span><span class="p">:</span><span class="s2">&quot;SubPile&quot;</span><span class="p">,</span> <span class="s2">&quot;SubPile&quot;</span><span class="p">:</span><span class="n">PC3</span><span class="p">}</span>
+         <span class="p">)</span>
+<span class="n">C2</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="s2">&quot;C2&quot;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.8</span><span class="p">),</span>
+          <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;SC2&quot;</span><span class="p">,</span> <span class="n">contact</span><span class="o">=</span><span class="s2">&quot;erode&quot;</span><span class="p">,</span> <span class="n">dic_surf</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;int_method&#39;</span><span class="p">:</span> <span class="s1">&#39;grf_ineq&#39;</span><span class="p">,</span> <span class="s1">&#39;covmodel&#39;</span><span class="p">:</span> <span class="n">cm</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span><span class="mi">45</span><span class="p">}),</span>
+          <span class="n">ID</span> <span class="o">=</span> <span class="mi">5</span>
+         <span class="p">)</span>
+<span class="n">C1</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.8</span><span class="p">),</span>
+          <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;SC1&quot;</span><span class="p">,</span> <span class="n">contact</span><span class="o">=</span><span class="s2">&quot;erode&quot;</span><span class="p">,</span> <span class="n">dic_surf</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;int_method&#39;</span><span class="p">:</span> <span class="s1">&#39;grf_ineq&#39;</span><span class="p">,</span> <span class="s1">&#39;covmodel&#39;</span><span class="p">:</span> <span class="n">cm</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span><span class="mi">39</span><span class="p">}),</span>
+          <span class="n">ID</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+          <span class="n">dic_facies</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;f_method&quot;</span><span class="p">:</span><span class="s2">&quot;SubPile&quot;</span><span class="p">,</span> <span class="s2">&quot;SubPile&quot;</span><span class="p">:</span><span class="n">PC1</span><span class="p">}</span>
+         <span class="p">)</span>
+<span class="n">PC</span> <span class="o">=</span> <span class="n">Pile</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;PC&quot;</span><span class="p">)</span>
+<span class="n">PC</span><span class="o">.</span><span class="n">add_unit</span><span class="p">([</span><span class="n">C3</span><span class="p">,</span> <span class="n">C2</span><span class="p">,</span> <span class="n">C1</span><span class="p">])</span>
+
+
+<span class="n">C</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(),</span><span class="n">ID</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">dic_facies</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;f_method&quot;</span><span class="p">:</span><span class="s2">&quot;SubPile&quot;</span><span class="p">,</span> <span class="s2">&quot;SubPile&quot;</span><span class="p">:</span><span class="n">PC</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Unit C322: Surface added for interpolation
+Unit C321: Surface added for interpolation
+Stratigraphic unit C322 added
+Stratigraphic unit C321 added
+Unit C32: Surface added for interpolation
+Unit C31: Surface added for interpolation
+Stratigraphic unit C32 added
+Stratigraphic unit C31 added
+Unit C12: Surface added for interpolation
+Unit C11: Surface added for interpolation
+Stratigraphic unit C12 added
+Stratigraphic unit C11 added
+Unit C3: Surface added for interpolation
+Unit C2: Surface added for interpolation
+Unit C1: Surface added for interpolation
+Stratigraphic unit C3 added
+Stratigraphic unit C2 added
+Stratigraphic unit C1 added
+Unit C: Surface added for interpolation
+</pre></div></div>
+</div>
+</section>
+<section id="B-unit">
+<h3>B unit<a class="headerlink" href="#B-unit" title="Permalink to this heading">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#SubPile PB</span>
+<span class="n">B4</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="s2">&quot;B4&quot;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.8</span><span class="p">),</span> <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(),</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">11</span><span class="p">)</span>
+<span class="n">B3</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="s2">&quot;B3&quot;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.8</span><span class="p">),</span>
+          <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;SB3&quot;</span><span class="p">,</span> <span class="n">contact</span><span class="o">=</span><span class="s2">&quot;erode&quot;</span><span class="p">,</span> <span class="n">dic_surf</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;int_method&#39;</span><span class="p">:</span> <span class="s1">&#39;grf_ineq&#39;</span><span class="p">,</span> <span class="s1">&#39;covmodel&#39;</span><span class="p">:</span> <span class="n">cm</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span><span class="mi">29</span><span class="p">}),</span>
+          <span class="n">ID</span> <span class="o">=</span> <span class="mi">12</span>
+         <span class="p">)</span>
+<span class="n">B2</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="s2">&quot;B2&quot;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.8</span><span class="p">),</span>
+          <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;SB2&quot;</span><span class="p">,</span> <span class="n">contact</span><span class="o">=</span><span class="s2">&quot;erode&quot;</span><span class="p">,</span> <span class="n">dic_surf</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;int_method&#39;</span><span class="p">:</span> <span class="s1">&#39;grf_ineq&#39;</span><span class="p">,</span> <span class="s1">&#39;covmodel&#39;</span><span class="p">:</span> <span class="n">cm</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span><span class="mi">25</span><span class="p">}),</span>
+          <span class="n">ID</span> <span class="o">=</span> <span class="mi">13</span>
+         <span class="p">)</span>
+<span class="n">B1</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="s2">&quot;B1&quot;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.8</span><span class="p">),</span>
+          <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;SB1&quot;</span><span class="p">,</span> <span class="n">contact</span><span class="o">=</span><span class="s2">&quot;erode&quot;</span><span class="p">,</span> <span class="n">dic_surf</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;int_method&#39;</span><span class="p">:</span> <span class="s1">&#39;grf_ineq&#39;</span><span class="p">,</span> <span class="s1">&#39;covmodel&#39;</span><span class="p">:</span> <span class="n">cm</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span><span class="mi">21</span><span class="p">}),</span>
+          <span class="n">ID</span> <span class="o">=</span> <span class="mi">14</span>
+         <span class="p">)</span>
+
+<span class="n">PB</span> <span class="o">=</span> <span class="n">Pile</span><span class="p">(</span><span class="s2">&quot;PB&quot;</span><span class="p">)</span>
+<span class="n">PB</span><span class="o">.</span><span class="n">add_unit</span><span class="p">([</span><span class="n">B4</span><span class="p">,</span><span class="n">B3</span><span class="p">,</span><span class="n">B2</span><span class="p">,</span><span class="n">B1</span><span class="p">])</span>
+
+<span class="c1">#unit B</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+         <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;SB&quot;</span><span class="p">,</span> <span class="n">contact</span><span class="o">=</span><span class="s2">&quot;erode&quot;</span><span class="p">,</span> <span class="n">dic_surf</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;int_method&#39;</span><span class="p">:</span> <span class="s1">&#39;grf_ineq&#39;</span><span class="p">,</span> <span class="s1">&#39;covmodel&#39;</span><span class="p">:</span> <span class="n">cm</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span><span class="mi">33</span><span class="p">}),</span>
+         <span class="n">ID</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+         <span class="n">dic_facies</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;f_method&quot;</span><span class="p">:</span><span class="s2">&quot;SubPile&quot;</span><span class="p">,</span> <span class="s2">&quot;SubPile&quot;</span><span class="p">:</span><span class="n">PB</span><span class="p">}</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Unit B4: Surface added for interpolation
+Unit B3: Surface added for interpolation
+Unit B2: Surface added for interpolation
+Unit B1: Surface added for interpolation
+Stratigraphic unit B4 added
+Stratigraphic unit B3 added
+Stratigraphic unit B2 added
+Stratigraphic unit B1 added
+Unit B: Surface added for interpolation
+</pre></div></div>
+</div>
+</section>
+<section id="A-unit">
+<h3>A unit<a class="headerlink" href="#A-unit" title="Permalink to this heading">¶</a></h3>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Subpile PA1</span>
+<span class="n">A13</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="s2">&quot;A13&quot;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.4</span><span class="p">),</span> <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(),</span> <span class="n">ID</span> <span class="o">=</span> <span class="mi">17</span><span class="p">)</span>
+<span class="n">A12</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="s2">&quot;A12&quot;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.25</span><span class="p">),</span>
+         <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;SA12&quot;</span><span class="p">,</span> <span class="n">contact</span><span class="o">=</span><span class="s2">&quot;erode&quot;</span><span class="p">,</span> <span class="n">dic_surf</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;int_method&#39;</span><span class="p">:</span> <span class="s1">&#39;grf_ineq&#39;</span><span class="p">,</span> <span class="s1">&#39;covmodel&#39;</span><span class="p">:</span> <span class="n">cm</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">}),</span>
+         <span class="n">ID</span><span class="o">=</span><span class="mi">18</span>
+        <span class="p">)</span>
+<span class="n">A11</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="s2">&quot;A11&quot;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span><span class="mf">0.05</span><span class="p">,</span><span class="mf">0.05</span><span class="p">,</span><span class="mf">0.05</span><span class="p">),</span>
+         <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;SA11&quot;</span><span class="p">,</span> <span class="n">contact</span><span class="o">=</span><span class="s2">&quot;erode&quot;</span><span class="p">,</span> <span class="n">dic_surf</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;int_method&#39;</span><span class="p">:</span> <span class="s1">&#39;grf_ineq&#39;</span><span class="p">,</span> <span class="s1">&#39;covmodel&#39;</span><span class="p">:</span> <span class="n">cm</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">}),</span>
+         <span class="n">ID</span><span class="o">=</span><span class="mi">19</span>
+        <span class="p">)</span>
+
+<span class="n">PA1</span> <span class="o">=</span> <span class="n">Pile</span><span class="p">(</span><span class="s2">&quot;PA1&quot;</span><span class="p">)</span>
+<span class="n">PA1</span><span class="o">.</span><span class="n">add_unit</span><span class="p">([</span><span class="n">A13</span><span class="p">,</span><span class="n">A12</span><span class="p">,</span><span class="n">A11</span><span class="p">])</span>
+
+<span class="c1"># subpile PA</span>
+<span class="n">A2</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="s2">&quot;A2&quot;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.8</span><span class="p">),</span> <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(),</span> <span class="n">ID</span> <span class="o">=</span> <span class="mi">15</span><span class="p">)</span>
+<span class="n">A1</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="s2">&quot;A1&quot;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.6</span><span class="p">),</span>
+         <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;SA1&quot;</span><span class="p">,</span> <span class="n">contact</span><span class="o">=</span><span class="s2">&quot;erode&quot;</span><span class="p">,</span> <span class="n">dic_surf</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;int_method&#39;</span><span class="p">:</span> <span class="s1">&#39;grf_ineq&#39;</span><span class="p">,</span> <span class="s1">&#39;covmodel&#39;</span><span class="p">:</span> <span class="n">cm</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span><span class="mi">8</span><span class="p">}),</span>
+         <span class="n">ID</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+         <span class="n">dic_facies</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;f_method&quot;</span><span class="p">:</span><span class="s2">&quot;SubPile&quot;</span><span class="p">,</span> <span class="s2">&quot;SubPile&quot;</span><span class="p">:</span><span class="n">PA1</span><span class="p">}</span>
+        <span class="p">)</span>
+
+<span class="n">PA</span> <span class="o">=</span> <span class="n">Pile</span><span class="p">(</span><span class="s2">&quot;PA&quot;</span><span class="p">)</span>
+<span class="n">PA</span><span class="o">.</span><span class="n">add_unit</span><span class="p">([</span><span class="n">A2</span><span class="p">,</span><span class="n">A1</span><span class="p">])</span>
+
+<span class="n">A</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+         <span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;SA&quot;</span><span class="p">,</span> <span class="n">contact</span><span class="o">=</span><span class="s2">&quot;erode&quot;</span><span class="p">,</span> <span class="n">dic_surf</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;int_method&#39;</span><span class="p">:</span> <span class="s1">&#39;grf_ineq&#39;</span><span class="p">,</span> <span class="s1">&#39;covmodel&#39;</span><span class="p">:</span> <span class="n">cm</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span><span class="mi">17</span><span class="p">}),</span>
+         <span class="n">ID</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+         <span class="n">dic_facies</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;f_method&quot;</span><span class="p">:</span><span class="s2">&quot;SubPile&quot;</span><span class="p">,</span> <span class="s2">&quot;SubPile&quot;</span><span class="p">:</span><span class="n">PA</span><span class="p">}</span>
+        <span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Unit A13: Surface added for interpolation
+Unit A12: Surface added for interpolation
+Unit A11: Surface added for interpolation
+Stratigraphic unit A13 added
+Stratigraphic unit A12 added
+Stratigraphic unit A11 added
+Unit A2: Surface added for interpolation
+Unit A1: Surface added for interpolation
+Stratigraphic unit A2 added
+Stratigraphic unit A1 added
+Unit A: Surface added for interpolation
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">P1</span> <span class="o">=</span> <span class="n">Pile</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Master_pile&quot;</span><span class="p">)</span>
+<span class="n">P1</span><span class="o">.</span><span class="n">add_unit</span><span class="p">([</span><span class="n">C</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">A</span><span class="p">])</span>
+
+<span class="n">T1</span><span class="o">.</span><span class="n">set_Pile_master</span><span class="p">(</span><span class="n">P1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Stratigraphic unit C added
+Stratigraphic unit B added
+Stratigraphic unit A added
+Pile sets as Pile master
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">process_bhs</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+##### ORDERING UNITS #####
+Pile Master_pile: ordering units
+Stratigraphic units have been sorted according to order
+Pile PC: ordering units
+Stratigraphic units have been sorted according to order
+Pile PC3: ordering units
+Stratigraphic units have been sorted according to order
+Pile C32: ordering units
+Stratigraphic units have been sorted according to order
+Pile PC1: ordering units
+Stratigraphic units have been sorted according to order
+Pile PB: ordering units
+Stratigraphic units have been sorted according to order
+Pile PA: ordering units
+Stratigraphic units have been sorted according to order
+Pile PA1: ordering units
+Stratigraphic units have been sorted according to order
+units A11 and A12 have the same order
+Changing orders for that they range from 1 to n
+hierarchical relations set
+No borehole found - no hd extracted
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_surf</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Boreholes not processed, fully unconditional simulations will be tempted
+########## PILE Master_pile ##########
+Pile Master_pile: ordering units
+Stratigraphic units have been sorted according to order
+
+#### COMPUTING SURFACE OF UNIT A
+A: time elapsed for computing surface 0.06405782699584961 s
+
+#### COMPUTING SURFACE OF UNIT B
+B: time elapsed for computing surface 0.06505918502807617 s
+
+#### COMPUTING SURFACE OF UNIT C
+C: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.23421239852905273 s
+##########################
+
+########## PILE PC ##########
+Pile PC: ordering units
+Stratigraphic units have been sorted according to order
+
+#### COMPUTING SURFACE OF UNIT C1
+C1: time elapsed for computing surface 0.057051897048950195 s
+
+#### COMPUTING SURFACE OF UNIT C2
+C2: time elapsed for computing surface 0.06005525588989258 s
+
+#### COMPUTING SURFACE OF UNIT C3
+C3: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.22720646858215332 s
+##########################
+
+########## PILE PC3 ##########
+Pile PC3: ordering units
+Stratigraphic units have been sorted according to order
+
+#### COMPUTING SURFACE OF UNIT C31
+C31: time elapsed for computing surface 0.05905342102050781 s
+
+#### COMPUTING SURFACE OF UNIT C32
+C32: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.15414047241210938 s
+##########################
+
+########## PILE C32 ##########
+Pile C32: ordering units
+Stratigraphic units have been sorted according to order
+
+#### COMPUTING SURFACE OF UNIT C321
+C321: time elapsed for computing surface 0.06305694580078125 s
+
+#### COMPUTING SURFACE OF UNIT C322
+C322: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.1531391143798828 s
+##########################
+
+########## PILE PC1 ##########
+Pile PC1: ordering units
+Stratigraphic units have been sorted according to order
+
+#### COMPUTING SURFACE OF UNIT C11
+C11: time elapsed for computing surface 0.059053897857666016 s
+
+#### COMPUTING SURFACE OF UNIT C12
+C12: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.15013647079467773 s
+##########################
+
+########## PILE PB ##########
+Pile PB: ordering units
+Stratigraphic units have been sorted according to order
+
+#### COMPUTING SURFACE OF UNIT B1
+B1: time elapsed for computing surface 0.058052778244018555 s
+
+#### COMPUTING SURFACE OF UNIT B2
+B2: time elapsed for computing surface 0.05805253982543945 s
+
+#### COMPUTING SURFACE OF UNIT B3
+B3: time elapsed for computing surface 0.05905342102050781 s
+
+#### COMPUTING SURFACE OF UNIT B4
+B4: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.3092811107635498 s
+##########################
+
+########## PILE PA ##########
+Pile PA: ordering units
+Stratigraphic units have been sorted according to order
+
+#### COMPUTING SURFACE OF UNIT A1
+A1: time elapsed for computing surface 0.06005430221557617 s
+
+#### COMPUTING SURFACE OF UNIT A2
+A2: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.1561422348022461 s
+##########################
+
+########## PILE PA1 ##########
+Pile PA1: ordering units
+Stratigraphic units have been sorted according to order
+
+#### COMPUTING SURFACE OF UNIT A11
+A11: time elapsed for computing surface 0.06405830383300781 s
+
+#### COMPUTING SURFACE OF UNIT A12
+A12: time elapsed for computing surface 0.05505013465881348 s
+
+#### COMPUTING SURFACE OF UNIT A13
+A13: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.2202000617980957 s
+##########################
+
+
+### 2.6303908824920654: Total time elapsed for computing surfaces ###
+</pre></div></div>
+</div>
+<p>Note : Pyvista does not support rgba code, this explains the difference between the colors of the pyvsita plot and mtplotlib</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_units</span><span class="p">(</span><span class="n">h_level</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\grid.py:511: PyVistaDeprecationWarning: `dims` argument is deprecated. Please use `dimensions`.
+  &#39;`dims` argument is deprecated. Please use `dimensions`.&#39;, PyVistaDeprecationWarning
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_1_many_hierarchical_units_16_1.png" src="../_images/notebooks_1_many_hierarchical_units_16_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_cross_section</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">100</span><span class="p">,</span><span class="mi">200</span><span class="p">)],</span><span class="n">ratio_aspect</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_1_many_hierarchical_units_17_0.png" src="../_images/notebooks_1_many_hierarchical_units_17_0.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents<span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:<span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Hierarchical modeling with ArchPy</a><ul>
+<li><a class="reference internal" href="#Project-and-grid">Project and grid</a></li>
+<li><a class="reference internal" href="#Let's-create-a-lot-of-units,-sub-units,-...">Let’s create a lot of units, sub-units, …</a><ul>
+<li><a class="reference internal" href="#C-unit">C unit</a></li>
+<li><a class="reference internal" href="#B-unit">B unit</a></li>
+<li><a class="reference internal" href="#A-unit">A unit</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
+    
+
+      <div class="clearer"></div>
+    </div>
+    <div class="button_nav_wrapper">
+        <div class="button_nav">
+            <div class="left">
+                
+                <a href="4_load_project.html">
+                    <span class="icon">&lt;</span><span>Tutorial 4: load ArchPy project</span></a>
+                
+            </div>
+
+            <div class="right">
+                
+                    <a href="3D_ArchPy_example.html"><span>3D model example</span><span class="icon">&gt;</span></a>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+
+<p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>
+  </body>
+</html>

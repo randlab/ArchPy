@@ -1,85 +1,141 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>inputs module &mdash; ArchPy 1.0.0 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/twemoji.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
-        <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
-        <script src="_static/twemoji.js"></script>
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>inputs module &#8212; ArchPy 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=0.7.0-1" />
+    <link rel="stylesheet" type="text/css" href="_static/twemoji.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
+    <script src="_static/twemoji.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="_static/js/theme.js"></script>
+    <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="x_valid module" href="x_valid.html" />
     <link rel="prev" title="infer module" href="infer.html" /> 
-</head>
+  </head><body data-dark_mode_code_blocks="true">
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+<div id="top_nav">
+    
 
-          
-          
-          <a href="index.html" class="icon icon-home">
-            ArchPy
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+    <nav>
+        
+            
+        
+
+        <p id="toggle_sidebar">
+            <a href="#" title="Toggle sidebar">|||</a>
+        </p>
+        <h1><a href="index.html" title="Go to homepage">ArchPy 1.0.0 documentation</a></h1>
+
+        <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
+    <template v-if="mode == 'light'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_light"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M67.48,18.073c1.913,-1.912 1.913,-5.018 0,-6.931c-1.912,-1.912 -5.018,-1.912 -6.931,0l-6.798,6.799c-1.912,1.912 -1.912,5.018 0,6.931c1.913,1.912 5.018,1.912 6.931,-0l6.798,-6.799Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.728,61.108c1.912,-1.913 1.912,-5.018 -0,-6.931c-1.913,-1.913 -5.019,-1.913 -6.931,-0l-6.799,6.798c-1.912,1.913 -1.912,5.019 0,6.931c1.913,1.913 5.019,1.913 6.931,0l6.799,-6.798Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.682,54.177c-1.913,-1.913 -5.018,-1.913 -6.931,-0c-1.912,1.913 -1.912,5.018 0,6.931l6.798,6.798c1.913,1.913 5.019,1.913 6.931,0c1.913,-1.912 1.913,-5.018 0,-6.931l-6.798,-6.798Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M4.901,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,-0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M18.929,11.142c-1.912,-1.912 -5.018,-1.912 -6.931,0c-1.912,1.913 -1.912,5.019 0,6.931l6.799,6.799c1.912,1.912 5.018,1.912 6.931,-0c1.912,-1.913 1.912,-5.019 -0,-6.931l-6.799,-6.799Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.108,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c-0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c-0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'dark'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_dark"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.901,2.196 -4.901,4.901c0,2.705 2.197,4.901 4.901,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.662,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.989,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.732,61.103c1.91,-1.91 1.91,-5.011 0,-6.921l-0.009,-0.01c-1.91,-1.91 -5.012,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.909,1.91 5.011,1.91 6.92,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.672,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.52,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l-0,-0.01c-0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.901,2.196 -4.901,4.901c0,2.704 2.197,4.9 4.901,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.73,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 -0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.098,34.623c-2.699,0 -4.891,2.192 -4.891,4.892l-0,0.019c-0,2.699 2.192,4.891 4.891,4.891c2.7,0 4.892,-2.192 4.892,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.892,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'darkest'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_darkest"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><path d="M39.315,23.791c8.684,-0 15.734,7.05 15.734,15.733c0,8.684 -7.05,15.734 -15.734,15.734c-8.683,0 -15.733,-7.05 -15.733,-15.734c-0,-8.683 7.05,-15.733 15.733,-15.733Zm0,4.737c6.069,0 10.997,4.927 10.997,10.996c-0,6.069 -4.928,10.996 -10.997,10.996c-6.068,0 -10.996,-4.927 -10.996,-10.996c0,-6.069 4.928,-10.996 10.996,-10.996Z" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.216,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.9,2.196 -4.9,4.901c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.666,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.99,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.737,61.103c1.909,-1.91 1.909,-5.011 -0,-6.921l-0.01,-0.01c-1.91,-1.91 -5.011,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.91,1.91 5.011,1.91 6.921,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.676,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.524,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l0,-0.01c0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.216,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901c-0,2.704 2.196,4.9 4.9,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.734,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.103,34.623c-2.7,0 -4.892,2.192 -4.892,4.892l-0,0.019c-0,2.699 2.192,4.891 4.892,4.891c2.699,0 4.891,-2.192 4.891,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.891,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+</a>
+
+<script>
+(function() {
+    const LOCAL_STORAGE_KEY = 'piccoloThemeMode'
+
+    var initialMode = localStorage.getItem(LOCAL_STORAGE_KEY)
+
+    if (initialMode) {
+        // Make sure the value in local storage is valid
+        if (['light', 'dark', 'darkest'].indexOf(initialMode) == -1) {
+            initialMode = 'light'
+            localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+        }
+    } else {
+        // Check if the client prefers dark mode
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            initialMode = 'dark'
+        } else {
+            initialMode = 'light'
+        }
+        localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+    }
+
+    document.documentElement.dataset.mode = initialMode
+
+    PetiteVue.createApp({
+        'mode': initialMode,
+        handleClick() {
+            let currentMode = this.mode
+
+            if (currentMode == 'light') {
+                this.mode = 'dark'
+            } else if (currentMode == 'dark') {
+                this.mode = 'darkest'
+            } else if (currentMode == 'darkest') {
+                this.mode = 'light'
+            }
+
+            document.documentElement.dataset.mode = this.mode
+            localStorage.setItem(LOCAL_STORAGE_KEY, this.mode)
+
+            console.log(this.mode)
+        }
+    }).mount('#mode_toggle')
+})()
+</script>
+            <p class="mobile_search_link">
+                <a href="search.html" title="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65 64" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+                        <path d="M14.873 40.009c-2.315-3.943-3.642-8.532-3.642-13.429C11.231 11.91 23.141 0 37.811 0s26.58 11.91 26.58 26.58-11.91 26.58-26.58 26.58a26.44 26.44 0 0 1-14.277-4.161L9.739 62.794a3.12 3.12 0 0 1-4.413 0L.913 58.382c-1.217-1.218-1.217-3.196 0-4.413l13.96-13.96zM37.811 8.054c10.225 0 18.526 8.301 18.526 18.526s-8.301 18.526-18.526 18.526-18.526-8.301-18.526-18.526S27.586 8.054 37.811 8.054z" fill="#fff" />
+                    </svg>
+                </a>
+            </p>
+        
+
+        <div class="searchbox_wrapper">
+            
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+    </nav>
+</div>
+
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="README_rtd.html">Let's get started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="README_rtd.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">List of modules</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="base.html">base module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="infer.html">infer module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">inputs module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.bhs_analysis"><code class="docutils literal notranslate"><span class="pre">bhs_analysis()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.create_d_f_covmodels"><code class="docutils literal notranslate"><span class="pre">create_d_f_covmodels()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.create_d_facies"><code class="docutils literal notranslate"><span class="pre">create_d_facies()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.create_d_pile"><code class="docutils literal notranslate"><span class="pre">create_d_pile()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.create_d_piles"><code class="docutils literal notranslate"><span class="pre">create_d_piles()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.create_d_prop"><code class="docutils literal notranslate"><span class="pre">create_d_prop()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.create_d_properties"><code class="docutils literal notranslate"><span class="pre">create_d_properties()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.create_d_unit"><code class="docutils literal notranslate"><span class="pre">create_d_unit()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.create_d_units"><code class="docutils literal notranslate"><span class="pre">create_d_units()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.drawPoly"><code class="docutils literal notranslate"><span class="pre">drawPoly</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#inputs.drawPoly.draw"><code class="docutils literal notranslate"><span class="pre">drawPoly.draw()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#inputs.drawPoly.f"><code class="docutils literal notranslate"><span class="pre">drawPoly.f()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#inputs.drawPoly.f_rect"><code class="docutils literal notranslate"><span class="pre">drawPoly.f_rect()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.extract_bhs"><code class="docutils literal notranslate"><span class="pre">extract_bhs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.imp_cm"><code class="docutils literal notranslate"><span class="pre">imp_cm()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.import_d_facies"><code class="docutils literal notranslate"><span class="pre">import_d_facies()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.import_d_piles"><code class="docutils literal notranslate"><span class="pre">import_d_piles()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.import_d_prop"><code class="docutils literal notranslate"><span class="pre">import_d_prop()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.import_d_units"><code class="docutils literal notranslate"><span class="pre">import_d_units()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.import_project"><code class="docutils literal notranslate"><span class="pre">import_project()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.load_bh_files"><code class="docutils literal notranslate"><span class="pre">load_bh_files()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.load_results"><code class="docutils literal notranslate"><span class="pre">load_results()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.save_project"><code class="docutils literal notranslate"><span class="pre">save_project()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.save_results"><code class="docutils literal notranslate"><span class="pre">save_results()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#inputs.write_bh_files"><code class="docutils literal notranslate"><span class="pre">write_bh_files()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">inputs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="x_valid.html">x_valid module</a></li>
 </ul>
 </li>
@@ -87,35 +143,19 @@
 
         </div>
       </div>
-    </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">ArchPy</a>
-      </nav>
 
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="modules.html">ArchPy</a></li>
-      <li class="breadcrumb-item active">inputs module</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="_sources/inputs.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
   <section id="module-inputs">
-<span id="inputs-module"></span><h1>inputs module<a class="headerlink" href="#module-inputs" title="Permalink to this heading"></a></h1>
+<span id="inputs-module"></span><h1>inputs module<a class="headerlink" href="#module-inputs" title="Permalink to this heading">¶</a></h1>
 <p>This module contains functions to load and save ArchPy models and results.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.bhs_analysis">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">bhs_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Strat_ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Strat_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Facies_ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Facies_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bot_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bot'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.bhs_analysis" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">bhs_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Strat_ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Strat_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Facies_ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Facies_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bot_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bot'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.bhs_analysis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to plot the facies proportions in boreholes and return the values in a dataframe</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -139,54 +179,54 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.create_d_f_covmodels">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_f_covmodels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_f_covmodels" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_f_covmodels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_f_covmodels" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.create_d_facies">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_facies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_facies" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_facies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_facies" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.create_d_pile">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_pile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_pile" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_pile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_pile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.create_d_piles">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_piles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_piles" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_piles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_piles" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.create_d_prop">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_prop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_prop" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_prop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_prop" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.create_d_properties">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_properties" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_properties" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.create_d_unit">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_unit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ws</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_unit" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_unit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ws</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_unit" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.create_d_units">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_units</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_units" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_units</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_units" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="inputs.drawPoly">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">drawPoly</span></span><a class="headerlink" href="#inputs.drawPoly" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">drawPoly</span></span><a class="headerlink" href="#inputs.drawPoly" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class to draw a polygon on a specified figure (ax) and return the coordinates of the polygon.
 First the object must be create and after the draw function can be called.
 It takes as inputs a figure (ax) and a type of drawing (rectangle or polygon)</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="inputs.drawPoly.draw">
-<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typ</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rectangle'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.drawPoly.draw" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typ</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rectangle'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.drawPoly.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw a polygon on a specified figure (ax) and return the coordinates of the polygon.
 It takes as inputs a figure (ax) and a type of drawing (rectangle or polygon)</p>
 <dl class="field-list simple">
@@ -202,19 +242,19 @@ Can be “rectangle” or “polygon”.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="inputs.drawPoly.f">
-<span class="sig-name descname"><span class="pre">f</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.drawPoly.f" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">f</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.drawPoly.f" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="inputs.drawPoly.f_rect">
-<span class="sig-name descname"><span class="pre">f_rect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclick</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">erelease</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.drawPoly.f_rect" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">f_rect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclick</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">erelease</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.drawPoly.f_rect" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.extract_bhs">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">extract_bhs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_bhs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units_to_ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facies_to_ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extract_units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extract_facies</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore2None</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_gaps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.extract_bhs" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">extract_bhs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_bhs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units_to_ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facies_to_ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extract_units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extract_facies</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore2None</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_gaps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.extract_bhs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of ArchTable boreholes from final database of load_bh_files</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -243,7 +283,7 @@ the unit/facies is considered as the one above. The default is True.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.imp_cm">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">imp_cm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">covmodel_dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.imp_cm" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">imp_cm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">covmodel_dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.imp_cm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to import a geone covmodel given the dictionnary written in the yaml file</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -269,7 +309,7 @@ the unit/facies is considered as the one above. The default is True.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.import_d_facies">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">import_d_facies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic_project</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.import_d_facies" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">import_d_facies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic_project</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.import_d_facies" title="Permalink to this definition">¶</a></dt>
 <dd><p>Import a dictionary of facies objects from the dictionary of
 the project that was imported from the yaml file</p>
 <dl class="field-list simple">
@@ -287,7 +327,7 @@ the project that was imported from the yaml file</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.import_d_piles">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">import_d_piles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_units</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.import_d_piles" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">import_d_piles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_units</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.import_d_piles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Import a dictionary of pile objects from the given dictionary project</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -301,7 +341,7 @@ the project that was imported from the yaml file</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.import_d_prop">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">import_d_prop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_fa</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.import_d_prop" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">import_d_prop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_fa</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.import_d_prop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Import a dictionary of property objects</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -315,7 +355,7 @@ the project that was imported from the yaml file</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.import_d_units">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">import_d_units</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_facies</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ws</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.import_d_units" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">import_d_units</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_facies</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ws</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.import_d_units" title="Permalink to this definition">¶</a></dt>
 <dd><p>Import a dictionary of unit objects</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -336,7 +376,7 @@ the project that was imported from the yaml file</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.import_project">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">import_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ws</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">import_bhs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">import_results</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">import_grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.import_project" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">import_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ws</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">import_bhs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">import_results</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">import_grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.import_project" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load an ArchPy project (Arch_table)
 with the specified name (project_name)
 and in the working_directory (ws)</p>
@@ -362,7 +402,7 @@ and in the working_directory (ws)</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.load_bh_files">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">load_bh_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_bhs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facies_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lbhs_bh_id_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_bh_id_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fa_bh_id_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_top_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_bot_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bot'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Strat'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fa_top_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fa_bot_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bot'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fa_ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'facies_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bhx_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_x'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bhy_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_y'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bhz_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_z'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bh_depth_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_depth'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_units_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_facies_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.load_bh_files" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">load_bh_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_bhs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facies_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lbhs_bh_id_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_bh_id_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fa_bh_id_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_top_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_bot_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bot'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Strat'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fa_top_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fa_bot_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bot'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fa_ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'facies_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bhx_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_x'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bhy_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_y'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bhz_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_z'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bh_depth_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_depth'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_units_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_facies_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.load_bh_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function merges unit and facies
 databases in only one,
 each row of the output dataframe corresponds
@@ -399,7 +439,7 @@ to a layer information about units and facies</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.load_results">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">load_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surfs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surfs_bot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facies</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">props</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.load_results" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">load_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surfs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surfs_bot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facies</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">props</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.load_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load ArchTable results.
 If external results must be imported, path of these files (e.g. surf argument) can be passed directly
 All files must be pickle binary files with appropriate format (see below).</p>
@@ -436,7 +476,7 @@ with prop values as values.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.save_project">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">save_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.save_project" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">save_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.save_project" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save an Arch_table object in a yaml file and other supplementary files
 (images, numpy arrays, gslib files) in a folder.</p>
 <dl class="field-list simple">
@@ -451,47 +491,93 @@ with prop values as values.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.save_results">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">save_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.save_results" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">save_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.save_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save ArchTable results</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.write_bh_files">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">write_bh_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.write_bh_files" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">write_bh_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.write_bh_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write input files from an existing ArchTable project</p>
 </dd></dl>
 
 </section>
 
 
-           </div>
+            <div class="clearer"></div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="infer.html" class="btn btn-neutral float-left" title="infer module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="x_valid.html" class="btn btn-neutral float-right" title="x_valid module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright 2023, University of Neuchâtel.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
         </div>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents<span></a></p>
+        </div>
 
-</body>
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:<span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">inputs module</a><ul>
+<li><a class="reference internal" href="#inputs.bhs_analysis"><code class="docutils literal notranslate"><span class="pre">bhs_analysis()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.create_d_f_covmodels"><code class="docutils literal notranslate"><span class="pre">create_d_f_covmodels()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.create_d_facies"><code class="docutils literal notranslate"><span class="pre">create_d_facies()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.create_d_pile"><code class="docutils literal notranslate"><span class="pre">create_d_pile()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.create_d_piles"><code class="docutils literal notranslate"><span class="pre">create_d_piles()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.create_d_prop"><code class="docutils literal notranslate"><span class="pre">create_d_prop()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.create_d_properties"><code class="docutils literal notranslate"><span class="pre">create_d_properties()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.create_d_unit"><code class="docutils literal notranslate"><span class="pre">create_d_unit()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.create_d_units"><code class="docutils literal notranslate"><span class="pre">create_d_units()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.drawPoly"><code class="docutils literal notranslate"><span class="pre">drawPoly</span></code></a><ul>
+<li><a class="reference internal" href="#inputs.drawPoly.draw"><code class="docutils literal notranslate"><span class="pre">drawPoly.draw()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.drawPoly.f"><code class="docutils literal notranslate"><span class="pre">drawPoly.f()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.drawPoly.f_rect"><code class="docutils literal notranslate"><span class="pre">drawPoly.f_rect()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#inputs.extract_bhs"><code class="docutils literal notranslate"><span class="pre">extract_bhs()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.imp_cm"><code class="docutils literal notranslate"><span class="pre">imp_cm()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.import_d_facies"><code class="docutils literal notranslate"><span class="pre">import_d_facies()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.import_d_piles"><code class="docutils literal notranslate"><span class="pre">import_d_piles()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.import_d_prop"><code class="docutils literal notranslate"><span class="pre">import_d_prop()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.import_d_units"><code class="docutils literal notranslate"><span class="pre">import_d_units()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.import_project"><code class="docutils literal notranslate"><span class="pre">import_project()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.load_bh_files"><code class="docutils literal notranslate"><span class="pre">load_bh_files()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.load_results"><code class="docutils literal notranslate"><span class="pre">load_results()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.save_project"><code class="docutils literal notranslate"><span class="pre">save_project()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.save_results"><code class="docutils literal notranslate"><span class="pre">save_results()</span></code></a></li>
+<li><a class="reference internal" href="#inputs.write_bh_files"><code class="docutils literal notranslate"><span class="pre">write_bh_files()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
+    
+
+      <div class="clearer"></div>
+    </div>
+    <div class="button_nav_wrapper">
+        <div class="button_nav">
+            <div class="left">
+                
+                <a href="infer.html">
+                    <span class="icon">&lt;</span><span>infer module</span></a>
+                
+            </div>
+
+            <div class="right">
+                
+                    <a href="x_valid.html"><span>x_valid module</span><span class="icon">&gt;</span></a>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+
+<p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>
+  </body>
 </html>

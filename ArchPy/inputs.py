@@ -689,7 +689,8 @@ def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()
                             log_facies.append((None, z))
                         facies_name_prev=facies_name
                 else:
-                    print("{} facies name not found in ArchTable".format(facies_name))
+                    if vb:
+                        print("{} facies name not found in ArchTable".format(facies_name))
             else:  # unit to ignore
                 if ignore2None:
                     if prev_ignore_flag:

@@ -1,0 +1,1526 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Geological map &#8212; ArchPy 1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=0.7.0-1" />
+    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
+    <script src="../_static/twemoji.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <script src="../_static/js/petite-vue.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Article ArchPy exemple" href="Article_example.html" />
+    <link rel="prev" title="Surfaces with MPS" href="mps_surfaces.html" /> 
+  </head><body data-dark_mode_code_blocks="true">
+
+<div id="top_nav">
+    
+
+    <nav>
+        
+            
+        
+
+        <p id="toggle_sidebar">
+            <a href="#" title="Toggle sidebar">|||</a>
+        </p>
+        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.0.0 documentation</a></h1>
+
+        <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
+    <template v-if="mode == 'light'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_light"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M67.48,18.073c1.913,-1.912 1.913,-5.018 0,-6.931c-1.912,-1.912 -5.018,-1.912 -6.931,0l-6.798,6.799c-1.912,1.912 -1.912,5.018 0,6.931c1.913,1.912 5.018,1.912 6.931,-0l6.798,-6.799Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.728,61.108c1.912,-1.913 1.912,-5.018 -0,-6.931c-1.913,-1.913 -5.019,-1.913 -6.931,-0l-6.799,6.798c-1.912,1.913 -1.912,5.019 0,6.931c1.913,1.913 5.019,1.913 6.931,0l6.799,-6.798Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.682,54.177c-1.913,-1.913 -5.018,-1.913 -6.931,-0c-1.912,1.913 -1.912,5.018 0,6.931l6.798,6.798c1.913,1.913 5.019,1.913 6.931,0c1.913,-1.912 1.913,-5.018 0,-6.931l-6.798,-6.798Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M4.901,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,-0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M18.929,11.142c-1.912,-1.912 -5.018,-1.912 -6.931,0c-1.912,1.913 -1.912,5.019 0,6.931l6.799,6.799c1.912,1.912 5.018,1.912 6.931,-0c1.912,-1.913 1.912,-5.019 -0,-6.931l-6.799,-6.799Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.108,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c-0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c-0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'dark'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_dark"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.901,2.196 -4.901,4.901c0,2.705 2.197,4.901 4.901,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.662,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.989,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.732,61.103c1.91,-1.91 1.91,-5.011 0,-6.921l-0.009,-0.01c-1.91,-1.91 -5.012,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.909,1.91 5.011,1.91 6.92,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.672,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.52,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l-0,-0.01c-0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.901,2.196 -4.901,4.901c0,2.704 2.197,4.9 4.901,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.73,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 -0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.098,34.623c-2.699,0 -4.891,2.192 -4.891,4.892l-0,0.019c-0,2.699 2.192,4.891 4.891,4.891c2.7,0 4.892,-2.192 4.892,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.892,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'darkest'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_darkest"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><path d="M39.315,23.791c8.684,-0 15.734,7.05 15.734,15.733c0,8.684 -7.05,15.734 -15.734,15.734c-8.683,0 -15.733,-7.05 -15.733,-15.734c-0,-8.683 7.05,-15.733 15.733,-15.733Zm0,4.737c6.069,0 10.997,4.927 10.997,10.996c-0,6.069 -4.928,10.996 -10.997,10.996c-6.068,0 -10.996,-4.927 -10.996,-10.996c0,-6.069 4.928,-10.996 10.996,-10.996Z" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.216,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.9,2.196 -4.9,4.901c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.666,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.99,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.737,61.103c1.909,-1.91 1.909,-5.011 -0,-6.921l-0.01,-0.01c-1.91,-1.91 -5.011,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.91,1.91 5.011,1.91 6.921,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.676,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.524,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l0,-0.01c0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.216,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901c-0,2.704 2.196,4.9 4.9,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.734,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.103,34.623c-2.7,0 -4.892,2.192 -4.892,4.892l-0,0.019c-0,2.699 2.192,4.891 4.892,4.891c2.699,0 4.891,-2.192 4.891,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.891,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+</a>
+
+<script>
+(function() {
+    const LOCAL_STORAGE_KEY = 'piccoloThemeMode'
+
+    var initialMode = localStorage.getItem(LOCAL_STORAGE_KEY)
+
+    if (initialMode) {
+        // Make sure the value in local storage is valid
+        if (['light', 'dark', 'darkest'].indexOf(initialMode) == -1) {
+            initialMode = 'light'
+            localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+        }
+    } else {
+        // Check if the client prefers dark mode
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            initialMode = 'dark'
+        } else {
+            initialMode = 'light'
+        }
+        localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+    }
+
+    document.documentElement.dataset.mode = initialMode
+
+    PetiteVue.createApp({
+        'mode': initialMode,
+        handleClick() {
+            let currentMode = this.mode
+
+            if (currentMode == 'light') {
+                this.mode = 'dark'
+            } else if (currentMode == 'dark') {
+                this.mode = 'darkest'
+            } else if (currentMode == 'darkest') {
+                this.mode = 'light'
+            }
+
+            document.documentElement.dataset.mode = this.mode
+            localStorage.setItem(LOCAL_STORAGE_KEY, this.mode)
+
+            console.log(this.mode)
+        }
+    }).mount('#mode_toggle')
+})()
+</script>
+            <p class="mobile_search_link">
+                <a href="../search.html" title="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65 64" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+                        <path d="M14.873 40.009c-2.315-3.943-3.642-8.532-3.642-13.429C11.231 11.91 23.141 0 37.811 0s26.58 11.91 26.58 26.58-11.91 26.58-26.58 26.58a26.44 26.44 0 0 1-14.277-4.161L9.739 62.794a3.12 3.12 0 0 1-4.413 0L.913 58.382c-1.217-1.218-1.217-3.196 0-4.413l13.96-13.96zM37.811 8.054c10.225 0 18.526 8.301 18.526 18.526s-8.301 18.526-18.526 18.526-18.526-8.301-18.526-18.526S27.586 8.054 37.811 8.054z" fill="#fff" />
+                    </svg>
+                </a>
+            </p>
+        
+
+        <div class="searchbox_wrapper">
+            
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+    </nav>
+</div>
+
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../README_rtd.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="1_the_very_basics.html">Tutorial 1: the basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2_Hard_data.html">Tutorial 2: hard data files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3_filling_and_saving.html">Tutorial 3: filling methods and saving a project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="4_load_project.html">Tutorial 4: load ArchPy project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1_many_hierarchical_units.html">Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_example.html">3D model example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mps_surfaces.html">Surfaces with MPS</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Geological map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Article_example.html">Article ArchPy exemple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="x_valid_exemple1.html">Cross-validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inference_surfaces.html">Surface parameters inference</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">List of modules</a></li>
+</ul>
+
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="Geological-map">
+<h1>Geological map<a class="headerlink" href="#Geological-map" title="Permalink to this heading">¶</a></h1>
+<p>This notebooks presents how to use a geological map with ArchPy models</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">colors</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">geone</span>
+<span class="kn">import</span> <span class="nn">geone.covModel</span> <span class="k">as</span> <span class="nn">gcm</span>
+<span class="kn">import</span> <span class="nn">geone.imgplot3d</span> <span class="k">as</span> <span class="nn">imgplt3</span>
+<span class="kn">import</span> <span class="nn">pyvista</span> <span class="k">as</span> <span class="nn">pv</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../../&quot;</span><span class="p">)</span>
+<span class="c1">#my modules</span>
+<span class="kn">from</span> <span class="nn">ArchPy.base</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">ArchPy.tpgs</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PD</span> <span class="o">=</span> <span class="n">Pile</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;PD&quot;</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">PB</span> <span class="o">=</span> <span class="n">Pile</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;PB&quot;</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">P1</span> <span class="o">=</span> <span class="n">Pile</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;P1&quot;</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#grid</span>
+<span class="n">sx</span> <span class="o">=</span> <span class="mf">1.5</span>
+<span class="n">sy</span> <span class="o">=</span> <span class="mf">0.75</span>
+<span class="n">sz</span> <span class="o">=</span> <span class="mf">.15</span>
+<span class="n">x1</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">y1</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">z1</span> <span class="o">=</span> <span class="o">-</span><span class="mi">4</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">y0</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">z0</span> <span class="o">=</span> <span class="o">-</span><span class="mi">15</span>
+<span class="n">nx</span> <span class="o">=</span> <span class="mi">66</span>
+<span class="n">ny</span> <span class="o">=</span> <span class="mi">67</span>
+<span class="n">nz</span> <span class="o">=</span> <span class="mi">75</span>
+
+<span class="k">def</span> <span class="nf">topo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">/=</span> <span class="mi">30</span>
+    <span class="n">y</span> <span class="o">/=</span> <span class="mi">30</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">/</span><span class="mi">7</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">+</span> \
+    <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span><span class="o">+</span> \
+    <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="c1">#res[res&lt;0] = 0</span>
+    <span class="k">return</span> <span class="n">res</span>
+
+<span class="n">x</span>  <span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">nx</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">ny</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span><span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">top</span> <span class="o">=</span> <span class="n">topo</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+<span class="n">top</span> <span class="o">-=</span> <span class="mi">6</span>
+
+<span class="n">dimensions</span> <span class="o">=</span> <span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
+<span class="n">spacing</span> <span class="o">=</span> <span class="p">(</span><span class="n">sx</span><span class="p">,</span> <span class="n">sy</span><span class="p">,</span> <span class="n">sz</span><span class="p">)</span>
+<span class="n">origin</span> <span class="o">=</span> <span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">z0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.colorbar.Colorbar at 0x23da439e808&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3D_ArchPy_geological_map_4_1.png" src="../_images/notebooks_3D_ArchPy_geological_map_4_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#units covmodel</span>
+<span class="n">covmodelD</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel2D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;cubic&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;w&#39;</span><span class="p">:</span><span class="mf">5.6</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">:[</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span><span class="p">]})])</span>
+<span class="n">covmodelD1</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel2D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;cubic&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;w&#39;</span><span class="p">:</span><span class="mf">5.2</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">:[</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span><span class="p">]})])</span>
+<span class="n">covmodelC</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel2D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;cubic&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;w&#39;</span><span class="p">:</span><span class="mf">5.2</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">:[</span><span class="mi">40</span><span class="p">,</span><span class="mi">40</span><span class="p">]})])</span>
+<span class="n">covmodelB</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel2D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;cubic&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;w&#39;</span><span class="p">:</span><span class="mf">5.6</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">:[</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span><span class="p">]})])</span>
+<span class="n">covmodel_er</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel2D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;spherical&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;w&#39;</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">:[</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">]})])</span>
+
+<span class="c1">## facies covmodel</span>
+<span class="n">covmodel_SIS_C</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel3D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;exponential&quot;</span><span class="p">,{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mf">.25</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">:[</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">15</span><span class="p">]})],</span><span class="n">alpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;vario_SIS&quot;</span><span class="p">)</span> <span class="c1"># input variogram</span>
+<span class="n">covmodel_SIS_D</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel3D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;exponential&quot;</span><span class="p">,{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mf">.25</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">:[</span><span class="mi">25</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">25</span><span class="p">]})],</span><span class="n">alpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;vario_SIS&quot;</span><span class="p">)</span> <span class="c1"># input variogram</span>
+<span class="n">lst_covmodelC</span><span class="o">=</span><span class="p">[</span><span class="n">covmodel_SIS_C</span><span class="p">]</span> <span class="c1"># list of covmodels to pass at the function</span>
+<span class="n">lst_covmodelD</span><span class="o">=</span><span class="p">[</span><span class="n">covmodel_SIS_D</span><span class="p">]</span>
+
+
+<span class="c1">#create Lithologies</span>
+<span class="n">dic_s_D</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;int_method&quot;</span> <span class="p">:</span> <span class="s2">&quot;grf_ineq&quot;</span><span class="p">,</span><span class="s2">&quot;covmodel&quot;</span> <span class="p">:</span> <span class="n">covmodelD</span><span class="p">}</span>
+<span class="n">dic_f_D</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f_method&quot;</span><span class="p">:</span><span class="s2">&quot;SubPile&quot;</span><span class="p">,</span> <span class="s2">&quot;SubPile&quot;</span><span class="p">:</span> <span class="n">PD</span><span class="p">}</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;gold&quot;</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">,</span><span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">,</span><span class="n">dic_surf</span><span class="o">=</span><span class="n">dic_s_D</span><span class="p">)</span>
+         <span class="p">,</span><span class="n">dic_facies</span><span class="o">=</span><span class="n">dic_f_D</span><span class="p">)</span>
+
+<span class="n">dic_s_C</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;int_method&quot;</span> <span class="p">:</span> <span class="s2">&quot;grf_ineq&quot;</span><span class="p">,</span><span class="s2">&quot;covmodel&quot;</span> <span class="p">:</span> <span class="n">covmodelC</span><span class="p">}</span>
+<span class="n">dic_f_C</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f_method&quot;</span> <span class="p">:</span> <span class="s2">&quot;SIS&quot;</span><span class="p">,</span><span class="s2">&quot;neig&quot;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span><span class="s2">&quot;f_covmodel&quot;</span><span class="p">:</span><span class="n">covmodel_SIS_C</span><span class="p">}</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;C&quot;</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">,</span><span class="n">dic_facies</span><span class="o">=</span><span class="n">dic_f_C</span><span class="p">,</span><span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">dic_surf</span><span class="o">=</span><span class="n">dic_s_C</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">))</span>
+
+<span class="n">dic_s_B</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;int_method&quot;</span> <span class="p">:</span> <span class="s2">&quot;grf_ineq&quot;</span><span class="p">,</span><span class="s2">&quot;covmodel&quot;</span> <span class="p">:</span> <span class="n">covmodelB</span><span class="p">}</span>
+<span class="n">dic_f_B</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f_method&quot;</span><span class="p">:</span><span class="s2">&quot;SubPile&quot;</span><span class="p">,</span><span class="s2">&quot;SubPile&quot;</span><span class="p">:</span><span class="n">PB</span><span class="p">}</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;purple&quot;</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">,</span><span class="n">dic_facies</span><span class="o">=</span><span class="n">dic_f_B</span><span class="p">,</span><span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">,</span><span class="n">dic_surf</span><span class="o">=</span><span class="n">dic_s_B</span><span class="p">))</span>
+
+<span class="n">dic_s_A</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;int_method&quot;</span><span class="p">:</span><span class="s2">&quot;grf_ineq&quot;</span><span class="p">,</span><span class="s2">&quot;covmodel&quot;</span><span class="p">:</span> <span class="n">covmodelB</span><span class="p">}</span>
+<span class="n">dic_f_A</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f_method&quot;</span><span class="p">:</span><span class="s2">&quot;homogenous&quot;</span><span class="p">}</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">,</span><span class="n">dic_facies</span><span class="o">=</span><span class="n">dic_f_A</span><span class="p">,</span><span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">dic_surf</span> <span class="o">=</span> <span class="n">dic_s_A</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">))</span>
+
+<span class="c1">#Master pile</span>
+<span class="n">P1</span><span class="o">.</span><span class="n">add_unit</span><span class="p">([</span><span class="n">D</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">A</span><span class="p">])</span>
+
+<span class="c1"># PB</span>
+<span class="n">ds_B3</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;int_method&quot;</span><span class="p">:</span><span class="s2">&quot;grf_ineq&quot;</span><span class="p">,</span><span class="s2">&quot;covmodel&quot;</span><span class="p">:</span><span class="n">covmodelB</span><span class="p">}</span>
+<span class="n">df_B3</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f_method&quot;</span><span class="p">:</span><span class="s2">&quot;SIS&quot;</span><span class="p">,</span> <span class="s2">&quot;neig&quot;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span><span class="s2">&quot;f_covmodel&quot;</span><span class="p">:</span><span class="n">covmodel_SIS_D</span><span class="p">}</span>
+<span class="n">B3</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;B3&quot;</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;forestgreen&quot;</span><span class="p">,</span><span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">dic_surf</span><span class="o">=</span><span class="n">ds_B3</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">),</span><span class="n">dic_facies</span><span class="o">=</span><span class="n">df_B3</span><span class="p">)</span>
+
+<span class="n">ds_B2</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;int_method&quot;</span><span class="p">:</span><span class="s2">&quot;grf_ineq&quot;</span><span class="p">,</span><span class="s2">&quot;covmodel&quot;</span><span class="p">:</span><span class="n">covmodelB</span><span class="p">}</span>
+<span class="n">df_B2</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f_method&quot;</span><span class="p">:</span><span class="s2">&quot;SIS&quot;</span><span class="p">,</span><span class="s2">&quot;neig&quot;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span><span class="s2">&quot;f_covmodel&quot;</span><span class="p">:</span><span class="n">covmodel_SIS_D</span><span class="p">}</span>
+<span class="n">B2</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;B2&quot;</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;limegreen&quot;</span><span class="p">,</span><span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">dic_surf</span><span class="o">=</span><span class="n">ds_B2</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;erode&quot;</span><span class="p">),</span><span class="n">dic_facies</span><span class="o">=</span><span class="n">df_B2</span><span class="p">)</span>
+
+<span class="n">ds_B1</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;int_method&quot;</span><span class="p">:</span><span class="s2">&quot;grf_ineq&quot;</span><span class="p">,</span><span class="s2">&quot;covmodel&quot;</span><span class="p">:</span><span class="n">covmodelB</span><span class="p">}</span>
+<span class="n">df_B1</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f_method&quot;</span><span class="p">:</span><span class="s2">&quot;SIS&quot;</span><span class="p">,</span><span class="s2">&quot;neig&quot;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span><span class="s2">&quot;f_covmodel&quot;</span><span class="p">:</span><span class="n">covmodel_SIS_D</span><span class="p">}</span>
+<span class="n">B1</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;B1&quot;</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">ID</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;palegreen&quot;</span><span class="p">,</span><span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">dic_surf</span><span class="o">=</span><span class="n">ds_B1</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">),</span><span class="n">dic_facies</span><span class="o">=</span><span class="n">df_B1</span><span class="p">)</span>
+
+<span class="c1">## Subpile</span>
+<span class="n">PB</span><span class="o">.</span><span class="n">add_unit</span><span class="p">([</span><span class="n">B3</span><span class="p">,</span><span class="n">B2</span><span class="p">,</span><span class="n">B1</span><span class="p">])</span>
+
+
+<span class="c1"># PD</span>
+<span class="n">ds_D2</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;int_method&quot;</span><span class="p">:</span><span class="s2">&quot;grf_ineq&quot;</span><span class="p">,</span><span class="s2">&quot;covmodel&quot;</span><span class="p">:</span><span class="n">covmodelD1</span><span class="p">}</span>
+<span class="n">df_D2</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f_method&quot;</span><span class="p">:</span><span class="s2">&quot;SIS&quot;</span><span class="p">,</span><span class="s2">&quot;neig&quot;</span> <span class="p">:</span> <span class="mi">20</span><span class="p">,</span><span class="s2">&quot;f_covmodel&quot;</span><span class="p">:</span><span class="n">covmodel_SIS_D</span><span class="p">}</span>
+<span class="n">D2</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;D2&quot;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ID</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkgoldenrod&quot;</span><span class="p">,</span><span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">dic_surf</span><span class="o">=</span><span class="n">ds_D2</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">),</span><span class="n">dic_facies</span><span class="o">=</span><span class="n">df_D2</span><span class="p">)</span>
+
+<span class="n">ds_D1</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;int_method&quot;</span><span class="p">:</span><span class="s2">&quot;grf_ineq&quot;</span><span class="p">,</span><span class="s2">&quot;covmodel&quot;</span><span class="p">:</span><span class="n">covmodelD1</span><span class="p">}</span>
+<span class="n">df_D1</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f_method&quot;</span><span class="p">:</span><span class="s2">&quot;SIS&quot;</span><span class="p">,</span><span class="s2">&quot;neig&quot;</span> <span class="p">:</span> <span class="mi">20</span><span class="p">,</span><span class="s2">&quot;f_covmodel&quot;</span><span class="p">:</span><span class="n">covmodel_SIS_D</span><span class="p">}</span>
+<span class="n">D1</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;D1&quot;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ID</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;yellow&quot;</span><span class="p">,</span><span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">dic_surf</span><span class="o">=</span><span class="n">ds_D1</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">),</span><span class="n">dic_facies</span><span class="o">=</span><span class="n">df_D1</span><span class="p">)</span>
+
+<span class="n">PD</span><span class="o">.</span><span class="n">add_unit</span><span class="p">([</span><span class="n">D2</span><span class="p">,</span> <span class="n">D1</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Unit D: Surface added for interpolation
+Unit C: covmodel for SIS added
+Unit C: Surface added for interpolation
+Unit B: Surface added for interpolation
+Unit A: Surface added for interpolation
+Stratigraphic unit D added
+Stratigraphic unit C added
+Stratigraphic unit B added
+Stratigraphic unit A added
+Unit B3: covmodel for SIS added
+Unit B3: Surface added for interpolation
+Unit B2: covmodel for SIS added
+Unit B2: Surface added for interpolation
+Unit B1: covmodel for SIS added
+Unit B1: Surface added for interpolation
+Stratigraphic unit B3 added
+Stratigraphic unit B2 added
+Stratigraphic unit B1 added
+Unit D2: covmodel for SIS added
+Unit D2: Surface added for interpolation
+Unit D1: covmodel for SIS added
+Unit D1: Surface added for interpolation
+Stratigraphic unit D2 added
+Stratigraphic unit D1 added
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># covmodels for the property model</span>
+<span class="n">covmodelK</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel3D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;exponential&quot;</span><span class="p">,{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mf">0.3</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">:[</span><span class="mi">30</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">10</span><span class="p">]})],</span><span class="n">alpha</span><span class="o">=-</span><span class="mi">20</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;K_vario&quot;</span><span class="p">)</span>
+<span class="n">covmodelK2</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">CovModel3D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;spherical&quot;</span><span class="p">,{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mf">0.1</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">:[</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span> <span class="mi">5</span><span class="p">]})],</span><span class="n">alpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;K_vario_2&quot;</span><span class="p">)</span>
+
+<span class="n">facies_1</span> <span class="o">=</span> <span class="n">Facies</span><span class="p">(</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Sand&quot;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;yellow&quot;</span><span class="p">)</span>
+<span class="n">facies_2</span> <span class="o">=</span> <span class="n">Facies</span><span class="p">(</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Gravel&quot;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;lightgreen&quot;</span><span class="p">)</span>
+<span class="n">facies_3</span> <span class="o">=</span> <span class="n">Facies</span><span class="p">(</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;GM&quot;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;blueviolet&quot;</span><span class="p">)</span>
+<span class="n">facies_4</span> <span class="o">=</span> <span class="n">Facies</span><span class="p">(</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Clay&quot;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+<span class="n">facies_5</span> <span class="o">=</span> <span class="n">Facies</span><span class="p">(</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;SM&quot;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;brown&quot;</span><span class="p">)</span>
+<span class="n">facies_6</span> <span class="o">=</span> <span class="n">Facies</span><span class="p">(</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Silt&quot;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;goldenrod&quot;</span><span class="p">)</span>
+<span class="n">facies_7</span> <span class="o">=</span> <span class="n">Facies</span><span class="p">(</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;basement&quot;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+
+<span class="n">A</span><span class="o">.</span><span class="n">add_facies</span><span class="p">([</span><span class="n">facies_7</span><span class="p">])</span>
+<span class="n">B</span><span class="o">.</span><span class="n">add_facies</span><span class="p">([</span><span class="n">facies_1</span><span class="p">,</span><span class="n">facies_2</span><span class="p">,</span><span class="n">facies_3</span><span class="p">,</span><span class="n">facies_5</span><span class="p">])</span>
+<span class="n">D</span><span class="o">.</span><span class="n">add_facies</span><span class="p">([</span><span class="n">facies_1</span><span class="p">,</span><span class="n">facies_2</span><span class="p">,</span><span class="n">facies_3</span><span class="p">,</span><span class="n">facies_5</span><span class="p">])</span>
+<span class="n">C</span><span class="o">.</span><span class="n">add_facies</span><span class="p">([</span><span class="n">facies_4</span><span class="p">,</span><span class="n">facies_6</span><span class="p">])</span>
+
+<span class="c1">#add same facies than B</span>
+<span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">PB</span><span class="o">.</span><span class="n">list_units</span><span class="p">:</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">add_facies</span><span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">list_facies</span><span class="p">)</span>
+
+<span class="c1">#same for D</span>
+<span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">PD</span><span class="o">.</span><span class="n">list_units</span><span class="p">:</span>
+    <span class="n">d</span><span class="o">.</span><span class="n">add_facies</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">list_facies</span><span class="p">)</span>
+
+<span class="n">permea</span> <span class="o">=</span> <span class="n">Prop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">,[</span><span class="n">facies_1</span><span class="p">,</span><span class="n">facies_2</span><span class="p">,</span><span class="n">facies_3</span><span class="p">,</span><span class="n">facies_4</span><span class="p">,</span><span class="n">facies_5</span><span class="p">,</span><span class="n">facies_6</span><span class="p">,</span><span class="n">facies_7</span><span class="p">],</span>
+                  <span class="p">[</span><span class="n">covmodelK2</span><span class="p">,</span><span class="n">covmodelK</span><span class="p">,</span><span class="n">covmodelK</span><span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="n">covmodelK2</span><span class="p">,</span><span class="n">covmodelK</span><span class="p">,</span><span class="kc">None</span><span class="p">],</span>
+                  <span class="n">means</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">3.5</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mf">4.5</span><span class="p">,</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span><span class="o">-</span><span class="mf">5.5</span><span class="p">,</span><span class="o">-</span><span class="mf">6.5</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">],</span>
+                  <span class="n">int_method</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sgs&quot;</span><span class="p">,</span><span class="s2">&quot;sgs&quot;</span><span class="p">,</span><span class="s2">&quot;sgs&quot;</span><span class="p">,</span><span class="s2">&quot;homogenous&quot;</span><span class="p">,</span><span class="s2">&quot;sgs&quot;</span><span class="p">,</span><span class="s2">&quot;sgs&quot;</span><span class="p">,</span><span class="s2">&quot;homogenous&quot;</span><span class="p">],</span>
+                  <span class="n">def_mean</span><span class="o">=-</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Facies basement added to unit A
+Facies Sand added to unit B
+Facies Gravel added to unit B
+Facies GM added to unit B
+Facies SM added to unit B
+Facies Sand added to unit D
+Facies Gravel added to unit D
+Facies GM added to unit D
+Facies SM added to unit D
+Facies Clay added to unit C
+Facies Silt added to unit C
+Facies Sand added to unit B3
+Facies Gravel added to unit B3
+Facies GM added to unit B3
+Facies SM added to unit B3
+Facies Sand added to unit B2
+Facies Gravel added to unit B2
+Facies GM added to unit B2
+Facies SM added to unit B2
+Facies Sand added to unit B1
+Facies Gravel added to unit B1
+Facies GM added to unit B1
+Facies SM added to unit B1
+Facies Sand added to unit D2
+Facies Gravel added to unit D2
+Facies GM added to unit D2
+Facies SM added to unit D2
+Facies Sand added to unit D1
+Facies Gravel added to unit D1
+Facies GM added to unit D1
+Facies SM added to unit D1
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#top = np.ones([ny,nx])*-6</span>
+<span class="n">bot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">ny</span><span class="p">,</span><span class="n">nx</span><span class="p">])</span><span class="o">*</span><span class="n">z0</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#logs strati</span>
+<span class="n">log_strati1</span> <span class="o">=</span> <span class="p">[(</span><span class="n">C</span><span class="p">,</span><span class="o">-</span><span class="mf">6.01</span><span class="p">),(</span><span class="n">B3</span><span class="p">,</span><span class="o">-</span><span class="mi">8</span><span class="p">),(</span><span class="n">B2</span><span class="p">,</span><span class="o">-</span><span class="mi">9</span><span class="p">),(</span><span class="n">B1</span><span class="p">,</span><span class="o">-</span><span class="mf">9.5</span><span class="p">),(</span><span class="n">A</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">)]</span>
+<span class="n">log_strati2</span> <span class="o">=</span> <span class="p">[(</span><span class="n">C</span><span class="p">,</span><span class="o">-</span><span class="mf">5.01</span><span class="p">),(</span><span class="n">B3</span><span class="p">,</span><span class="o">-</span><span class="mf">8.5</span><span class="p">),(</span><span class="n">B2</span><span class="p">,</span><span class="o">-</span><span class="mf">9.5</span><span class="p">),(</span><span class="n">A</span><span class="p">,</span><span class="o">-</span><span class="mf">10.5</span><span class="p">)]</span>
+<span class="n">log_strati3</span> <span class="o">=</span> <span class="p">[(</span><span class="n">D2</span><span class="p">,</span><span class="o">-</span><span class="mf">6.01</span><span class="p">),</span> <span class="p">(</span><span class="n">D1</span><span class="p">,</span> <span class="o">-</span><span class="mi">7</span><span class="p">),</span> <span class="p">(</span><span class="n">B3</span><span class="p">,</span><span class="o">-</span><span class="mi">8</span><span class="p">),(</span><span class="n">B2</span><span class="p">,</span><span class="o">-</span><span class="mf">8.5</span><span class="p">),(</span><span class="n">B1</span><span class="p">,</span><span class="o">-</span><span class="mf">9.5</span><span class="p">),(</span><span class="n">A</span><span class="p">,</span><span class="o">-</span><span class="mf">10.5</span><span class="p">)]</span>
+<span class="n">log_strati4</span> <span class="o">=</span> <span class="p">[(</span><span class="n">D2</span><span class="p">,</span><span class="o">-</span><span class="mf">6.01</span><span class="p">),</span> <span class="p">(</span><span class="n">D1</span><span class="p">,</span> <span class="o">-</span><span class="mi">7</span><span class="p">),</span> <span class="p">(</span><span class="n">B3</span><span class="p">,</span><span class="o">-</span><span class="mi">9</span><span class="p">),(</span><span class="n">B2</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">),(</span><span class="n">A</span><span class="p">,</span><span class="o">-</span><span class="mi">11</span><span class="p">)]</span>
+<span class="n">log_strati5</span> <span class="o">=</span> <span class="p">[(</span><span class="n">D2</span><span class="p">,</span><span class="o">-</span><span class="mf">6.01</span><span class="p">),</span> <span class="p">(</span><span class="n">D1</span><span class="p">,</span> <span class="o">-</span><span class="mi">7</span><span class="p">),</span> <span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">),(</span><span class="n">A</span><span class="p">,</span><span class="o">-</span><span class="mi">12</span><span class="p">)]</span>
+<span class="n">log_strati6</span> <span class="o">=</span> <span class="p">[(</span><span class="n">D2</span><span class="p">,</span><span class="o">-</span><span class="mf">6.01</span><span class="p">),</span> <span class="p">(</span><span class="n">D1</span><span class="p">,</span> <span class="o">-</span><span class="mi">7</span><span class="p">),</span> <span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="o">-</span><span class="mi">9</span><span class="p">)]</span>
+
+<span class="c1"># logs facies</span>
+<span class="n">log_facies1</span> <span class="o">=</span> <span class="p">[(</span><span class="n">facies_4</span><span class="p">,</span><span class="o">-</span><span class="mf">6.01</span><span class="p">),(</span><span class="n">facies_6</span><span class="p">,</span><span class="o">-</span><span class="mf">6.5</span><span class="p">),(</span><span class="n">facies_4</span><span class="p">,</span><span class="o">-</span><span class="mi">7</span><span class="p">),(</span><span class="n">facies_6</span><span class="p">,</span><span class="o">-</span><span class="mf">7.5</span><span class="p">),</span> <span class="c1"># facies in unit C</span>
+               <span class="p">(</span><span class="n">facies_1</span><span class="p">,</span><span class="o">-</span><span class="mi">8</span><span class="p">),(</span><span class="n">facies_5</span><span class="p">,</span><span class="o">-</span><span class="mf">8.5</span><span class="p">),(</span><span class="n">facies_2</span><span class="p">,</span><span class="o">-</span><span class="mi">9</span><span class="p">),(</span><span class="n">facies_3</span><span class="p">,</span><span class="o">-</span><span class="mf">9.3</span><span class="p">),</span>  <span class="c1"># facies in unit B</span>
+               <span class="p">(</span><span class="n">facies_7</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">)]</span>
+<span class="n">log_facies2</span> <span class="o">=</span> <span class="p">[(</span><span class="n">facies_4</span><span class="p">,</span><span class="o">-</span><span class="mf">6.01</span><span class="p">),(</span><span class="n">facies_6</span><span class="p">,</span><span class="o">-</span><span class="mf">7.3</span><span class="p">),(</span><span class="n">facies_4</span><span class="p">,</span><span class="o">-</span><span class="mf">7.6</span><span class="p">),(</span><span class="n">facies_6</span><span class="p">,</span><span class="o">-</span><span class="mi">8</span><span class="p">),</span>
+               <span class="p">(</span><span class="n">facies_2</span><span class="p">,</span><span class="o">-</span><span class="mf">8.5</span><span class="p">),(</span><span class="n">facies_1</span><span class="p">,</span><span class="o">-</span><span class="mf">8.8</span><span class="p">),(</span><span class="n">facies_2</span><span class="p">,</span><span class="o">-</span><span class="mi">9</span><span class="p">),(</span><span class="n">facies_3</span><span class="p">,</span><span class="o">-</span><span class="mf">9.2</span><span class="p">),(</span><span class="n">facies_1</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">),</span>
+               <span class="p">(</span><span class="n">facies_7</span><span class="p">,</span><span class="o">-</span><span class="mf">10.5</span><span class="p">)]</span>
+<span class="n">log_facies3</span> <span class="o">=</span> <span class="p">[(</span><span class="n">facies_1</span><span class="p">,</span><span class="o">-</span><span class="mf">6.015</span><span class="p">),(</span><span class="n">facies_2</span><span class="p">,</span><span class="o">-</span><span class="mf">6.8</span><span class="p">),(</span><span class="n">facies_5</span><span class="p">,</span><span class="o">-</span><span class="mi">7</span><span class="p">),(</span><span class="n">facies_3</span><span class="p">,</span><span class="o">-</span><span class="mf">7.3</span><span class="p">),(</span><span class="n">facies_1</span><span class="p">,</span><span class="o">-</span><span class="mf">7.5</span><span class="p">),</span>
+               <span class="p">(</span><span class="n">facies_2</span><span class="p">,</span><span class="o">-</span><span class="mi">8</span><span class="p">),(</span><span class="n">facies_1</span><span class="p">,</span><span class="o">-</span><span class="mf">8.8</span><span class="p">),(</span><span class="n">facies_2</span><span class="p">,</span><span class="o">-</span><span class="mi">9</span><span class="p">),(</span><span class="n">facies_3</span><span class="p">,</span><span class="o">-</span><span class="mf">9.2</span><span class="p">),(</span><span class="n">facies_1</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">),</span>
+              <span class="p">(</span><span class="n">facies_7</span><span class="p">,</span><span class="o">-</span><span class="mf">10.5</span><span class="p">)]</span>
+<span class="n">log_facies4</span> <span class="o">=</span> <span class="p">[(</span><span class="n">facies_1</span><span class="p">,</span><span class="o">-</span><span class="mf">6.01</span><span class="p">),(</span><span class="n">facies_2</span><span class="p">,</span><span class="o">-</span><span class="mf">7.5</span><span class="p">),(</span><span class="n">facies_5</span><span class="p">,</span><span class="o">-</span><span class="mf">7.8</span><span class="p">),(</span><span class="n">facies_3</span><span class="p">,</span><span class="o">-</span><span class="mi">8</span><span class="p">),(</span><span class="n">facies_5</span><span class="p">,</span><span class="o">-</span><span class="mf">8.3</span><span class="p">),(</span><span class="n">facies_1</span><span class="p">,</span><span class="o">-</span><span class="mf">8.7</span><span class="p">),</span>
+               <span class="p">(</span><span class="n">facies_2</span><span class="p">,</span><span class="o">-</span><span class="mi">9</span><span class="p">),(</span><span class="n">facies_1</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">),(</span><span class="n">facies_2</span><span class="p">,</span><span class="o">-</span><span class="mf">10.5</span><span class="p">),</span>
+               <span class="p">(</span><span class="n">facies_7</span><span class="p">,</span><span class="o">-</span><span class="mi">11</span><span class="p">)]</span>
+<span class="n">log_facies5</span> <span class="o">=</span> <span class="p">[(</span><span class="n">facies_5</span><span class="p">,</span><span class="o">-</span><span class="mf">6.01</span><span class="p">),(</span><span class="n">facies_1</span><span class="p">,</span><span class="o">-</span><span class="mf">7.5</span><span class="p">),(</span><span class="n">facies_3</span><span class="p">,</span><span class="o">-</span><span class="mf">7.8</span><span class="p">),(</span><span class="n">facies_2</span><span class="p">,</span><span class="o">-</span><span class="mi">8</span><span class="p">),(</span><span class="n">facies_1</span><span class="p">,</span><span class="o">-</span><span class="mf">8.3</span><span class="p">),(</span><span class="n">facies_2</span><span class="p">,</span><span class="o">-</span><span class="mf">8.7</span><span class="p">),(</span><span class="n">facies_1</span><span class="p">,</span><span class="o">-</span><span class="mi">9</span><span class="p">),(</span><span class="n">facies_5</span><span class="p">,</span><span class="o">-</span><span class="mf">9.5</span><span class="p">),</span>
+               <span class="p">(</span><span class="n">facies_4</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">),(</span><span class="n">facies_6</span><span class="p">,</span><span class="o">-</span><span class="mf">10.4</span><span class="p">),(</span><span class="n">facies_4</span><span class="p">,</span><span class="o">-</span><span class="mi">11</span><span class="p">),</span>
+               <span class="p">(</span><span class="n">facies_7</span><span class="p">,</span><span class="o">-</span><span class="mi">12</span><span class="p">)]</span>
+<span class="n">log_facies6</span> <span class="o">=</span> <span class="p">[(</span><span class="n">facies_1</span><span class="p">,</span><span class="o">-</span><span class="mf">6.01</span><span class="p">),(</span><span class="n">facies_2</span><span class="p">,</span><span class="o">-</span><span class="mf">8.3</span><span class="p">),(</span><span class="n">facies_3</span><span class="p">,</span><span class="o">-</span><span class="mf">8.5</span><span class="p">),(</span><span class="n">facies_2</span><span class="p">,</span><span class="o">-</span><span class="mf">8.7</span><span class="p">),</span>
+               <span class="p">(</span><span class="n">facies_7</span><span class="p">,</span><span class="o">-</span><span class="mi">9</span><span class="p">)]</span>
+
+<span class="c1">#create boreholes</span>
+<span class="n">bh1</span> <span class="o">=</span> <span class="n">borehole</span><span class="p">(</span><span class="s2">&quot;b1&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">log_strati1</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">depth</span> <span class="o">=</span><span class="mi">9</span><span class="p">,</span><span class="n">log_strati</span><span class="o">=</span><span class="n">log_strati1</span><span class="p">,</span><span class="n">log_facies</span><span class="o">=</span><span class="n">log_facies1</span><span class="p">)</span>
+<span class="n">bh2</span> <span class="o">=</span> <span class="n">borehole</span><span class="p">(</span><span class="s2">&quot;b2&quot;</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">log_strati2</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">depth</span> <span class="o">=</span><span class="mi">8</span><span class="p">,</span><span class="n">log_strati</span><span class="o">=</span><span class="n">log_strati2</span><span class="p">,</span><span class="n">log_facies</span><span class="o">=</span><span class="n">log_facies2</span><span class="p">)</span>
+<span class="n">bh3</span> <span class="o">=</span> <span class="n">borehole</span><span class="p">(</span><span class="s2">&quot;b3&quot;</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">log_strati3</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">depth</span> <span class="o">=</span><span class="mi">7</span><span class="p">,</span><span class="n">log_strati</span><span class="o">=</span><span class="n">log_strati3</span><span class="p">,</span><span class="n">log_facies</span><span class="o">=</span><span class="n">log_facies3</span><span class="p">)</span>
+<span class="n">bh4</span> <span class="o">=</span> <span class="n">borehole</span><span class="p">(</span><span class="s2">&quot;b4&quot;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">log_strati4</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">depth</span> <span class="o">=</span><span class="mi">8</span><span class="p">,</span><span class="n">log_strati</span><span class="o">=</span><span class="n">log_strati4</span><span class="p">,</span><span class="n">log_facies</span><span class="o">=</span><span class="n">log_facies4</span><span class="p">)</span>
+<span class="n">bh5</span> <span class="o">=</span> <span class="n">borehole</span><span class="p">(</span><span class="s2">&quot;b5&quot;</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="mi">75</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">log_strati5</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">depth</span> <span class="o">=</span><span class="mi">8</span><span class="p">,</span><span class="n">log_strati</span><span class="o">=</span><span class="n">log_strati5</span><span class="p">,</span><span class="n">log_facies</span><span class="o">=</span><span class="n">log_facies5</span><span class="p">)</span>
+<span class="n">bh6</span> <span class="o">=</span> <span class="n">borehole</span><span class="p">(</span><span class="s2">&quot;b6&quot;</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="n">x</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">log_strati6</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">depth</span> <span class="o">=</span><span class="mi">6</span><span class="p">,</span><span class="n">log_strati</span><span class="o">=</span><span class="n">log_strati6</span><span class="p">,</span><span class="n">log_facies</span><span class="o">=</span><span class="n">log_facies6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span> <span class="o">=</span> <span class="n">Arch_table</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;P1&quot;</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">set_Pile_master</span><span class="p">(</span><span class="n">P1</span><span class="p">)</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">hierarchy_relations</span><span class="p">()</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">add_grid</span><span class="p">(</span><span class="n">dimensions</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="n">top</span><span class="p">,</span><span class="n">bot</span><span class="o">=</span><span class="n">bot</span><span class="p">)</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">rem_all_bhs</span><span class="p">()</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">add_bh</span><span class="p">([</span><span class="n">bh1</span><span class="p">,</span><span class="n">bh2</span><span class="p">,</span><span class="n">bh3</span><span class="p">,</span><span class="n">bh4</span><span class="p">,</span><span class="n">bh5</span><span class="p">,</span><span class="n">bh6</span><span class="p">])</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">add_prop</span><span class="p">([</span><span class="n">permea</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Pile sets as Pile master
+hierarchical relations set
+## Adding Grid ##
+## Grid added and is now simulation grid ##
+boreholes removed
+Borehole 1 goes below model limits, borehole 1 depth cut
+Borehole 1 added
+Borehole 2 added
+Borehole 3 added
+Borehole 4 goes below model limits, borehole 4 depth cut
+Borehole 4 added
+Borehole 5 added
+Borehole 6 added
+Property K added
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_bhs</span><span class="p">(</span><span class="n">plot_top</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">plot_bot</span><span class="o">=</span><span class="kc">True</span><span class="p">,)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "8e72cc68a0ad433e88c6cfa3f20ad7a3", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">process_bhs</span><span class="p">()</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">compute_surf</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+##### ORDERING UNITS #####
+Pile P1: ordering units
+Stratigraphic units have been sorted according to order
+Discrepency in the orders for units A and B
+Changing orders for that they range from 1 to n
+Pile PD: ordering units
+Stratigraphic units have been sorted according to order
+Pile PB: ordering units
+Stratigraphic units have been sorted according to order
+hierarchical relations set
+First altitude in log facies of bh 2 is not set at the top of the borehole, altitude changed
+First altitude in log facies of bh 3 is not set at the top of the borehole, altitude changed
+
+ ## Computing distributions for Normal Score Transform ##
+
+Processing ended successfully
+########## PILE P1 ##########
+Pile P1: ordering units
+Stratigraphic units have been sorted according to order
+
+#### COMPUTING SURFACE OF UNIT A
+A: time elapsed for computing surface 0.005003452301025391 s
+
+#### COMPUTING SURFACE OF UNIT B
+B: time elapsed for computing surface 0.03387880325317383 s
+
+#### COMPUTING SURFACE OF UNIT C
+C: time elapsed for computing surface 0.038895368576049805 s
+
+#### COMPUTING SURFACE OF UNIT D
+D: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.04388141632080078 s
+##########################
+
+########## PILE PD ##########
+Pile PD: ordering units
+Stratigraphic units have been sorted according to order
+
+#### COMPUTING SURFACE OF UNIT D1
+D1: time elapsed for computing surface 0.0249326229095459 s
+
+#### COMPUTING SURFACE OF UNIT D2
+D2: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.02194046974182129 s
+##########################
+
+########## PILE PB ##########
+Pile PB: ordering units
+Stratigraphic units have been sorted according to order
+
+#### COMPUTING SURFACE OF UNIT B1
+B1: time elapsed for computing surface 0.02792525291442871 s
+
+#### COMPUTING SURFACE OF UNIT B2
+B2: time elapsed for computing surface 0.007978439331054688 s
+
+#### COMPUTING SURFACE OF UNIT B3
+B3: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.02792525291442871 s
+##########################
+
+
+### 0.2622978687286377: Total time elapsed for computing surfaces ###
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pv</span><span class="o">.</span><span class="n">set_jupyter_backend</span><span class="p">(</span><span class="s1">&#39;static&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_units</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3D_ArchPy_geological_map_14_0.png" src="../_images/notebooks_3D_ArchPy_geological_map_14_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">geol_map</span> <span class="o">=</span> <span class="n">T1</span><span class="o">.</span><span class="n">compute_geol_map</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">geol_map</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.image.AxesImage at 0x23daf9439c8&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3D_ArchPy_geological_map_15_1.png" src="../_images/notebooks_3D_ArchPy_geological_map_15_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">add_geological_map</span><span class="p">(</span><span class="n">geol_map</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Geological map added
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">()</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">plot_bhs</span><span class="p">(</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">plot_geol_map</span><span class="p">(</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">up</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">add_bounding_box</span><span class="p">()</span>
+<span class="n">p</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3D_ArchPy_geological_map_17_0.png" src="../_images/notebooks_3D_ArchPy_geological_map_17_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">process_geological_map</span><span class="p">(</span><span class="n">typ</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Geological map extracted - processus ended successfully
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">geol_map</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(67, 66)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">reprocess</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Hard data reset
+##### ORDERING UNITS #####
+Pile P1: ordering units
+Stratigraphic units have been sorted according to order
+Pile PD: ordering units
+Stratigraphic units have been sorted according to order
+Pile PB: ordering units
+Stratigraphic units have been sorted according to order
+hierarchical relations set
+Multiples boreholes [1, &#39;raster_bh&#39;] were found inside the same cell, the deepest will be kept
+Multiples boreholes [4, &#39;raster_bh&#39;] were found inside the same cell, the deepest will be kept
+
+ ## Computing distributions for Normal Score Transform ##
+
+Processing ended successfully
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">order_Piles</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+##### ORDERING UNITS #####
+Pile P1: ordering units
+Stratigraphic units have been sorted according to order
+Pile PD: ordering units
+Stratigraphic units have been sorted according to order
+Pile PB: ordering units
+Stratigraphic units have been sorted according to order
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">hierarchy_relations</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+hierarchical relations set
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">dic_surf</span><span class="p">[</span><span class="s2">&quot;krig_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ordinary_kriging&quot;</span>
+<span class="n">C</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">dic_surf</span><span class="p">[</span><span class="s2">&quot;nit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">B</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">dic_surf</span><span class="p">[</span><span class="s2">&quot;nit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">A</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">dic_surf</span><span class="p">[</span><span class="s2">&quot;nit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">50</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_surf</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+########## PILE P1 ##########
+Pile P1: ordering units
+Stratigraphic units have been sorted according to order
+
+#### COMPUTING SURFACE OF UNIT A
+A: time elapsed for computing surface 0.42540931701660156 s
+
+#### COMPUTING SURFACE OF UNIT B
+B: time elapsed for computing surface 0.40478968620300293 s
+
+#### COMPUTING SURFACE OF UNIT C
+C: time elapsed for computing surface 0.4029226303100586 s
+
+#### COMPUTING SURFACE OF UNIT D
+D: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.04487943649291992 s
+
+#### COMPUTING SURFACE OF UNIT A
+A: time elapsed for computing surface 0.42685914039611816 s
+
+#### COMPUTING SURFACE OF UNIT B
+B: time elapsed for computing surface 0.4009268283843994 s
+
+#### COMPUTING SURFACE OF UNIT C
+C: time elapsed for computing surface 0.3949573040008545 s
+
+#### COMPUTING SURFACE OF UNIT D
+D: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.03690052032470703 s
+
+#### COMPUTING SURFACE OF UNIT A
+A: time elapsed for computing surface 0.44814085960388184 s
+
+#### COMPUTING SURFACE OF UNIT B
+B: time elapsed for computing surface 0.39844632148742676 s
+
+#### COMPUTING SURFACE OF UNIT C
+C: time elapsed for computing surface 0.4029204845428467 s
+
+#### COMPUTING SURFACE OF UNIT D
+D: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.04388165473937988 s
+
+#### COMPUTING SURFACE OF UNIT A
+A: time elapsed for computing surface 0.43461060523986816 s
+
+#### COMPUTING SURFACE OF UNIT B
+B: time elapsed for computing surface 0.41976118087768555 s
+
+#### COMPUTING SURFACE OF UNIT C
+C: time elapsed for computing surface 0.40463781356811523 s
+
+#### COMPUTING SURFACE OF UNIT D
+D: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.04388236999511719 s
+
+#### COMPUTING SURFACE OF UNIT A
+A: time elapsed for computing surface 0.42985033988952637 s
+
+#### COMPUTING SURFACE OF UNIT B
+B: time elapsed for computing surface 0.41246628761291504 s
+
+#### COMPUTING SURFACE OF UNIT C
+C: time elapsed for computing surface 0.40636563301086426 s
+
+#### COMPUTING SURFACE OF UNIT D
+D: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.0413966178894043 s
+##########################
+
+########## PILE PD ##########
+Pile PD: ordering units
+Stratigraphic units have been sorted according to order
+
+#### COMPUTING SURFACE OF UNIT D1
+D1: time elapsed for computing surface 0.3595468997955322 s
+
+#### COMPUTING SURFACE OF UNIT D2
+D2: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.021941184997558594 s
+
+#### COMPUTING SURFACE OF UNIT D1
+D1: time elapsed for computing surface 0.3480703830718994 s
+
+#### COMPUTING SURFACE OF UNIT D2
+D2: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.021939992904663086 s
+
+#### COMPUTING SURFACE OF UNIT D1
+D1: time elapsed for computing surface 0.3476877212524414 s
+
+#### COMPUTING SURFACE OF UNIT D2
+D2: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.017951488494873047 s
+
+#### COMPUTING SURFACE OF UNIT D1
+D1: time elapsed for computing surface 0.3540060520172119 s
+
+#### COMPUTING SURFACE OF UNIT D2
+D2: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.02003788948059082 s
+
+#### COMPUTING SURFACE OF UNIT D1
+D1: time elapsed for computing surface 0.3517577648162842 s
+
+#### COMPUTING SURFACE OF UNIT D2
+D2: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.018948793411254883 s
+##########################
+
+########## PILE PB ##########
+Pile PB: ordering units
+Stratigraphic units have been sorted according to order
+
+#### COMPUTING SURFACE OF UNIT B1
+B1: time elapsed for computing surface 0.13164758682250977 s
+
+#### COMPUTING SURFACE OF UNIT B2
+B2: time elapsed for computing surface 0.12666106224060059 s
+
+#### COMPUTING SURFACE OF UNIT B3
+B3: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.028922080993652344 s
+
+#### COMPUTING SURFACE OF UNIT B1
+B1: time elapsed for computing surface 0.1356372833251953 s
+
+#### COMPUTING SURFACE OF UNIT B2
+B2: time elapsed for computing surface 0.1436166763305664 s
+
+#### COMPUTING SURFACE OF UNIT B3
+B3: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.03091740608215332 s
+
+#### COMPUTING SURFACE OF UNIT B1
+B1: time elapsed for computing surface 0.13065338134765625 s
+
+#### COMPUTING SURFACE OF UNIT B2
+B2: time elapsed for computing surface 0.14028239250183105 s
+
+#### COMPUTING SURFACE OF UNIT B3
+B3: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.03291201591491699 s
+
+#### COMPUTING SURFACE OF UNIT B1
+B1: time elapsed for computing surface 0.13265609741210938 s
+
+#### COMPUTING SURFACE OF UNIT B2
+B2: time elapsed for computing surface 0.1396324634552002 s
+
+#### COMPUTING SURFACE OF UNIT B3
+B3: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.03191494941711426 s
+
+#### COMPUTING SURFACE OF UNIT B1
+B1: time elapsed for computing surface 0.1402895450592041 s
+
+#### COMPUTING SURFACE OF UNIT B2
+B2: time elapsed for computing surface 0.1376361846923828 s
+
+#### COMPUTING SURFACE OF UNIT B3
+B3: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.03293275833129883 s
+##########################
+
+
+### 9.90597677230835: Total time elapsed for computing surfaces ###
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">()</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">plot_units</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">plot_geol_map</span><span class="p">(</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">up</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">add_bounding_box</span><span class="p">()</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">plot_bhs</span><span class="p">(</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3D_ArchPy_geological_map_26_0.png" src="../_images/notebooks_3D_ArchPy_geological_map_26_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">=</span><span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">()</span>
+
+<span class="n">T1</span><span class="o">.</span><span class="n">plot_bhs</span><span class="p">(</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">plot_units</span><span class="p">(</span><span class="n">iu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">),</span> <span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">))</span>
+
+<span class="n">p</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3D_ArchPy_geological_map_27_0.png" src="../_images/notebooks_3D_ArchPy_geological_map_27_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_proba</span><span class="p">(</span><span class="n">D</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3D_ArchPy_geological_map_28_0.png" src="../_images/notebooks_3D_ArchPy_geological_map_28_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_facies</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose_methods</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+### Unit D: facies simulation with SubPile method ####
+SubPile filling method, nothing happened
+Time elapsed 0.0 s
+
+### Unit C: facies simulation with SIS method ####
+### Unit C - realization 0 ###
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
+
+### List of errors ####
+Facies Sand: 1 points
+Facies Gravel: 2 points
+Facies SM: 4 points
+
+
+Only one facies covmodels for multiples facies, adapt sill to right proportions
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+### Unit C - realization 1 ###
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+### Unit C - realization 2 ###
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
+
+### List of errors ####
+Facies Sand: 1 points
+Facies Gravel: 2 points
+
+
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+### Unit C - realization 3 ###
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
+
+### List of errors ####
+Facies Sand: 1 points
+Facies Gravel: 2 points
+Facies basement: 1 points
+
+
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+### Unit C - realization 4 ###
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+Time elapsed 4.34 s
+
+### Unit B: facies simulation with SubPile method ####
+SubPile filling method, nothing happened
+Time elapsed 0.0 s
+
+### Unit A: facies simulation with homogenous method ####
+### Unit A - realization 0 ###
+### Unit A - realization 1 ###
+### Unit A - realization 2 ###
+### Unit A - realization 3 ###
+### Unit A - realization 4 ###
+Time elapsed 0.03 s
+
+### Unit D2: facies simulation with SIS method ####
+### Unit D2 - realization 0 ###
+Only one facies covmodels for multiples facies, adapt sill to right proportions
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+
+Warnings encountered (1 times in all):
+#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+### Unit D2 - realization 1 ###
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+
+Warnings encountered (1 times in all):
+#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+### Unit D2 - realization 2 ###
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+
+Warnings encountered (1 times in all):
+#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+### Unit D2 - realization 3 ###
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+
+Warnings encountered (1 times in all):
+#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+### Unit D2 - realization 4 ###
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+
+Warnings encountered (1 times in all):
+#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+Time elapsed 4.17 s
+
+### Unit D1: facies simulation with SIS method ####
+### Unit D1 - realization 0 ###
+Only one facies covmodels for multiples facies, adapt sill to right proportions
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+
+Warnings encountered (1 times in all):
+#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+### Unit D1 - realization 1 ###
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
+
+### List of errors ####
+Facies basement: 2 points
+
+
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+
+Warnings encountered (1 times in all):
+#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+### Unit D1 - realization 2 ###
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
+
+### List of errors ####
+Facies Clay: 1 points
+Facies basement: 3 points
+
+
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+
+Warnings encountered (1 times in all):
+#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+### Unit D1 - realization 3 ###
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
+
+### List of errors ####
+Facies Clay: 1 points
+
+
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+
+Warnings encountered (1 times in all):
+#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+### Unit D1 - realization 4 ###
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
+
+### List of errors ####
+Facies basement: 3 points
+
+
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+
+Warnings encountered (1 times in all):
+#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+Time elapsed 4.32 s
+
+### Unit B3: facies simulation with SIS method ####
+### Unit B3 - realization 0 ###
+Only one facies covmodels for multiples facies, adapt sill to right proportions
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+
+Warnings encountered (1 times in all):
+#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+### Unit B3 - realization 1 ###
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
+
+### List of errors ####
+Facies Silt: 1 points
+
+
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+
+Warnings encountered (1 times in all):
+#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+### Unit B3 - realization 2 ###
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+
+Warnings encountered (1 times in all):
+#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+### Unit B3 - realization 3 ###
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+
+Warnings encountered (1 times in all):
+#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+### Unit B3 - realization 4 ###
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
+
+### List of errors ####
+Facies Silt: 2 points
+
+
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+
+Warnings encountered (1 times in all):
+#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+Time elapsed 3.47 s
+
+### Unit B2: facies simulation with SIS method ####
+### Unit B2 - realization 0 ###
+Only one facies covmodels for multiples facies, adapt sill to right proportions
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+### Unit B2 - realization 1 ###
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+
+Warnings encountered (1 times in all):
+#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+### Unit B2 - realization 2 ###
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+
+Warnings encountered (1 times in all):
+#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+### Unit B2 - realization 3 ###
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+### Unit B2 - realization 4 ###
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+
+Warnings encountered (1 times in all):
+#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+Time elapsed 3.04 s
+
+### Unit B1: facies simulation with SIS method ####
+### Unit B1 - realization 0 ###
+Only one facies covmodels for multiples facies, adapt sill to right proportions
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+### Unit B1 - realization 1 ###
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+### Unit B1 - realization 2 ###
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+### Unit B1 - realization 3 ###
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+### Unit B1 - realization 4 ###
+Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
+Geos-Classic run complete
+Time elapsed 3.11 s
+
+### 22.48: Total time elapsed for computing facies ###
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_facies</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3D_ArchPy_geological_map_30_0.png" src="../_images/notebooks_3D_ArchPy_geological_map_30_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_facies</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">inside_units</span><span class="o">=</span><span class="p">[</span><span class="n">C</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3D_ArchPy_geological_map_31_0.png" src="../_images/notebooks_3D_ArchPy_geological_map_31_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#prop hd</span>
+
+<span class="n">ix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">nx</span><span class="o">*</span><span class="n">sx</span><span class="o">+</span><span class="mi">0</span><span class="p">,</span> <span class="n">sx</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ix</span><span class="p">)</span>
+<span class="n">x_hd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">ix</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">*-</span><span class="mi">10</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">*-</span><span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">permea</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">permea</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">permea</span><span class="o">.</span><span class="n">add_hd</span><span class="p">(</span><span class="n">x_hd</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_prop</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+### 10 K property models will be modeled ###
+homogenous method chosen ! Warning: Some HD can be not respected
+homogenous method chosen ! Warning: Some HD can be not respected
+### 2 K models done
+homogenous method chosen ! Warning: Some HD can be not respected
+homogenous method chosen ! Warning: Some HD can be not respected
+### 4 K models done
+homogenous method chosen ! Warning: Some HD can be not respected
+homogenous method chosen ! Warning: Some HD can be not respected
+### 6 K models done
+homogenous method chosen ! Warning: Some HD can be not respected
+homogenous method chosen ! Warning: Some HD can be not respected
+### 8 K models done
+homogenous method chosen ! Warning: Some HD can be not respected
+homogenous method chosen ! Warning: Some HD can be not respected
+### 10 K models done
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_units</span><span class="p">(</span><span class="n">slicex</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">slicey</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">slicez</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3D_ArchPy_geological_map_36_0.png" src="../_images/notebooks_3D_ArchPy_geological_map_36_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_prop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="n">slicex</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">slicey</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">slicez</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3D_ArchPy_geological_map_37_0.png" src="../_images/notebooks_3D_ArchPy_geological_map_37_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_mean_prop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3D_ArchPy_geological_map_38_0.png" src="../_images/notebooks_3D_ArchPy_geological_map_38_0.png" />
+</div>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+    
+
+      <div class="clearer"></div>
+    </div>
+    <div class="button_nav_wrapper">
+        <div class="button_nav">
+            <div class="left">
+                
+                <a href="mps_surfaces.html">
+                    <span class="icon">&lt;</span><span>Surfaces with MPS</span></a>
+                
+            </div>
+
+            <div class="right">
+                
+                    <a href="Article_example.html"><span>Article ArchPy exemple</span><span class="icon">&gt;</span></a>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+
+<p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>
+  </body>
+</html>

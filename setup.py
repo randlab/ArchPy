@@ -17,7 +17,6 @@ setuptools.setup(
                       'numpy',
                       'pyvista==0.37.0',
                       'scipy',
-                      'numba',
                       'scikit-learn',
                       'pyyaml',
                       'pandas',

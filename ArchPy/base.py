@@ -4606,7 +4606,8 @@ class Arch_table():
 
 
     def plot_units(self, iu=0, v_ex=1, plotter=None, h_level="all", slicex=None, slicey=None, slicez=None,
-                   filtering_value=None, scalar_bar_kwargs=None, show_scalar_bar=True):
+                   excludedVal=None,
+                    scalar_bar_kwargs=None, show_scalar_bar=True, **kwargs):
 
         """
         plot units domain for a specific realization iu
@@ -4629,12 +4630,12 @@ class Arch_table():
             fraction of y axis where to slice
         slicez: float or sequence of floats
             fraction of z axis where to slice
-        filtering_value: float
-            value to filter on
         scalar_bar_kwargs: dict
             kwargs to pass to the scalar bar
         show_scalar_bar: bool
-            show scalar bar or not          
+            show scalar bar or not 
+        kwargs:dict
+            kwargs to pass to geone.imgplot.drawImage3D_slice or geone.imgplot.drawImage3D_surface         
         """
 
         #ensure hierarchy_relations have been set
@@ -4654,16 +4655,23 @@ class Arch_table():
 
         stratis_domain=self.get_units_domains_realizations(iu=iu, fill="ID", h_level=h_level).astype(np.float32)
         lst_ID=np.unique(stratis_domain)
+        new_lst_ID = []
+        if excludedVal is None:
+            excludedVal=[]
+        if isinstance(excludedVal, int):
+            excludedVal=[excludedVal]
 
         ## change values
         new_id=1
         for i in lst_ID:
             if i != 0:
-                s=self.get_unit(ID=i, type="ID")
-                stratis_domain[stratis_domain == i]=new_id
-                colors.append(s.c)
-                d[new_id +0.5]=s.name
-                new_id += 1
+                if i not in excludedVal:
+                    s=self.get_unit(ID=i, type="ID")
+            #         stratis_domain[stratis_domain == i]=new_id
+                    colors.append(s.c)
+                    d[new_id - 0.5]=s.name
+                    new_id += 1
+                    new_lst_ID.append(i)
 
         #plot
         stratis_domain[stratis_domain==0]=np.nan  # remove where no formations are present
@@ -4698,13 +4706,11 @@ class Arch_table():
 
         if slicex is not None or slicey is not None or slicez is not None:
             imgplt3.drawImage3D_slice(im, plotter=p, slice_normal_x=cx, slice_normal_y=cy, slice_normal_z=cz,
-                                    custom_scalar_bar_for_equidistant_categories=True,
-                                    custom_colors=colors, scalar_bar_annotations=d, filtering_value=filtering_value,
-                                    scalar_bar_kwargs=scalar_bar_kwargs, show_scalar_bar = show_scalar_bar)
+                                    categ=True, categVal=new_lst_ID, categCol=colors, scalar_bar_annotations=d,
+                                    scalar_bar_kwargs=scalar_bar_kwargs, show_scalar_bar = show_scalar_bar, **kwargs)
         else:
-            imgplt3.drawImage3D_surface(im, plotter=p, custom_scalar_bar_for_equidistant_categories=True,
-                                                custom_colors=colors, scalar_bar_annotations=d, filtering_value=filtering_value,
-                                                scalar_bar_kwargs=scalar_bar_kwargs, show_scalar_bar = show_scalar_bar)
+            imgplt3.drawImage3D_surface(im, plotter=p, categ=True, categVal=new_lst_ID, categCol=colors, scalar_bar_annotations=d,
+                                        scalar_bar_kwargs=scalar_bar_kwargs, show_scalar_bar = show_scalar_bar, **kwargs)
 
         if plotter is None:
             p.add_bounding_box()
@@ -4712,7 +4718,9 @@ class Arch_table():
             p.show()
 
 
-    def plot_proba(self, obj, v_ex=1, plotter=None, slicex=None, slicey=None, slicez=None, filtering_interval=[0.01, 1], scalar_bar_kwargs=None):
+    def plot_proba(self, obj, v_ex=1, plotter=None, filtering_interval=[0.01, 1.00],
+                   slicex=None, slicey=None, slicez=None,
+                   scalar_bar_kwargs=None, excludedVal=None, **kwargs):
 
         """
         Plot the probability of occurence of a specific unit or facies
@@ -4733,11 +4741,12 @@ class Arch_table():
             fraction of y axis where to slice
         slicez: float or sequence of floats
             fraction of z axis where to slice
-        filtering_interval: sequence of floats
-            interval of values to plot
         scalar_bar_kwargs: dict
             kwargs to pass to the scalar bar
-
+        excludedVal: float or sequence of floats
+            values to exclude from the plot
+        kwargs:dict
+            kwargs to pass to geone.imgplot.drawImage3D_slice or geone.imgplot.drawImage3D_surface
         """
 
         nx=self.get_nx()
@@ -4812,15 +4821,30 @@ class Arch_table():
             cz=None
 
         if arr.any(): #if values are found
+            
+            # filter values
+            if filtering_interval is not None:
+                if isinstance(filtering_interval, list):
+                    if len(filtering_interval) == 2:
+                        if filtering_interval[0] < filtering_interval[1]:
+                            arr[arr < filtering_interval[0]] = np.nan
+                            arr[arr > filtering_interval[1]] = np.nan
+                        else:
+                            print("filtering_interval[0] must be smaller than filtering_interval[1]")
+                    else:
+                        print("filtering_interval must be a list of two values")
+                else:
+                    print("filtering_interval must be a list of two values")
+
             if plotter is None:
                 p=pv.Plotter()
             else:
                 p=plotter
 
             if slicex is not None or slicey is not None or slicez is not None:
-                imgplt3.drawImage3D_slice(im, plotter=p, slice_normal_x=cx, slice_normal_y=cy, slice_normal_z=cz, filtering_interval=filtering_interval, scalar_bar_kwargs=scalar_bar_kwargs)
+                imgplt3.drawImage3D_slice(im, plotter=p, slice_normal_x=cx, slice_normal_y=cy, slice_normal_z=cz, scalar_bar_kwargs=scalar_bar_kwargs, excludedVal=excludedVal, **kwargs)
             else:
-                imgplt3.drawImage3D_surface(im, plotter=p, filtering_interval=filtering_interval, scalar_bar_kwargs=scalar_bar_kwargs)
+                imgplt3.drawImage3D_surface(im, plotter=p, scalar_bar_kwargs=scalar_bar_kwargs, excludedVal=excludedVal,  **kwargs)
 
             if plotter is None:
                 p.add_bounding_box()
@@ -4831,9 +4855,9 @@ class Arch_table():
             print("No values found for this unit")
 
 
-    def plot_facies(self, iu=0, ifa=0, v_ex=1, inside_units=None,
-                    plotter=None, slicex=None, slicey=None, slicez=None, filtering_value=None,
-                    scalar_bar_kwargs=None, show_scalar_bar=True):
+    def plot_facies(self, iu=0, ifa=0, v_ex=1, inside_units=None, excludedVal=None,
+                    plotter=None, slicex=None, slicey=None, slicez=None,
+                    scalar_bar_kwargs=None, show_scalar_bar=True, **kwargs):
 
         """
         Plot the facies realizations over the domain with the colors attributed to facies
@@ -4856,13 +4880,12 @@ class Arch_table():
             fraction of y axis where to slice
         slicez: float or sequence of floats
             fraction of z axis where to slice
-        filtering_value: array-like
-            values to plot, these values DOES NOT correspond to facies IDs
         scalar_bar_kwargs: dict
             kwargs for the scalar bar
         show_scalar_bar: bool
             if True, show the scalar bar
-
+        kwargs:dict
+            kwargs to pass to geone.imgplot.drawImage3D_slice or geone.imgplot.drawImage3D_surface
         """
 
         fa_domains=self.get_facies(iu, ifa, all_data=False).astype(np.float32)
@@ -4882,7 +4905,6 @@ class Arch_table():
             fa_domains[mask_all != 1]=0
 
         d={}
-        d_ID={} # dic of values given ID
         colors=[]
         nx=self.get_nx()
         ny=self.get_ny()
@@ -4894,16 +4916,23 @@ class Arch_table():
         y0=self.get_oy()
         z0=self.get_oz()
         lst_ID=np.unique(fa_domains)
+        new_lst_ID = []
+        if excludedVal is None:
+            excludedVal=[]
+        if isinstance(excludedVal, int):
+            excludedVal=[excludedVal]
 
+        ## create a dictionnary to map the facies ID to the facies name
         new_id=1
         for i in lst_ID:
             if i != 0:
-                fa=self.get_facies_obj(ID=i, type="ID")
-                fa_domains[fa_domains == fa.ID]=new_id
-                d_ID[fa.ID]=new_id
-                colors.append(fa.c)
-                d[new_id + 0.5]=fa.name
-                new_id += 1
+                if i not in excludedVal:
+                    fa=self.get_facies_obj(ID=i, type="ID")
+                    # fa_domains[fa_domains == fa.ID]=new_id
+                    colors.append(fa.c)
+                    d[new_id + 0.5]=fa.name
+                    new_id += 1
+                    new_lst_ID.append(i)
 
         #remove 0 occurence (where no facies are present)
         fa_domains[fa_domains==0]=np.nan
@@ -4936,21 +4965,16 @@ class Arch_table():
         else:
             cz=None
 
-        #filtering values, change values to have right numbers
-        if filtering_value is not None:
-            ft_val=[d_ID[i] for i in filtering_value]
-        else:
-            ft_val=None
 
         if slicex is not None or slicey is not None or slicez is not None:
             imgplt3.drawImage3D_slice(im, plotter=p, slice_normal_x=cx, slice_normal_y=cy, slice_normal_z=cz,
-                                    custom_scalar_bar_for_equidistant_categories=True,
-                                    custom_colors=colors, scalar_bar_annotations=d, filtering_value=ft_val,
-                                    scalar_bar_kwargs=scalar_bar_kwargs, show_scalar_bar = show_scalar_bar)
+                                    categ=True, categVal=new_lst_ID, excludedVal=excludedVal,
+                                    categCol=colors, scalar_bar_annotations=d,
+                                    scalar_bar_kwargs=scalar_bar_kwargs, show_scalar_bar = show_scalar_bar, **kwargs)
         else:
-            imgplt3.drawImage3D_surface(im, plotter=p, custom_scalar_bar_for_equidistant_categories=True,
-                                    custom_colors=colors, scalar_bar_annotations=d, filtering_value=ft_val,
-                                    scalar_bar_kwargs=scalar_bar_kwargs, show_scalar_bar = show_scalar_bar)
+            imgplt3.drawImage3D_surface(im, plotter=p, categ=True, categVal=new_lst_ID, excludedVal=excludedVal,
+                                    categCol=colors, scalar_bar_annotations=d,
+                                    scalar_bar_kwargs=scalar_bar_kwargs, show_scalar_bar = show_scalar_bar, **kwargs)
 
         if plotter is None:
             p.add_bounding_box()
@@ -4958,8 +4982,8 @@ class Arch_table():
             p.show()
 
 
-    def plot_prop(self, property, iu=0, ifa=0, ip=0, v_ex=1, inside_units=None, inside_facies=None,
-                    plotter=None, slicex=None, slicey=None, slicez=None, cmin=None, cmax=None, filtering_interval=None, scalar_bar_kwargs=None):
+    def plot_prop(self, property, iu=0, ifa=0, ip=0, v_ex=1, inside_units=None, inside_facies=None, filtering_interval=None,
+                    plotter=None, slicex=None, slicey=None, slicez=None, cmin=None, cmax=None, scalar_bar_kwargs=None, **kwargs):
 
         """
         Plot the facies realizations over the domain with the colors attributed to facies
@@ -4983,10 +5007,10 @@ class Arch_table():
             fraction in x, y or z direction where the slice is done
         cmin, cmax:float
             min and max value of the colorbar
-        filtering_interval:tuple of float
-            interval of values to be plotted
         scalar_bar_kwargs:dict
             kwargs for the scalar bar
+        kwargs:dict
+            kwargs to pass to geone.imgplot.drawImage3D_slice or geone.imgplot.drawImage3D_surface
         """
 
         prop=self.getprop(property, iu, ifa, ip, all_data=False)
@@ -5033,6 +5057,20 @@ class Arch_table():
         y0=self.get_oy()
         z0=self.get_oz()
 
+        # filter values
+        if filtering_interval is not None:
+            if isinstance(filtering_interval, list):
+                if len(filtering_interval) == 2:
+                    if filtering_interval[0] < filtering_interval[1]:
+                        prop[prop < filtering_interval[0]] = np.nan
+                        prop[prop > filtering_interval[1]] = np.nan
+                    else:
+                        print("filtering_interval[0] must be smaller than filtering_interval[1]")
+                else:
+                    print("filtering_interval must be a list of two values")
+            else:
+                print("filtering_interval must be a list of two values")
+
         if plotter is None:
             p=pv.Plotter()
         else:
@@ -5061,13 +5099,12 @@ class Arch_table():
         else:
             cz=None
 
-
         if slicex is not None or slicey is not None or slicez is not None:
             imgplt3.drawImage3D_slice(im, plotter=p, slice_normal_x=cx, slice_normal_y=cy, slice_normal_z=cz, cmin=cmin, cmax=cmax,
-                                    filtering_interval=filtering_interval, scalar_bar_kwargs=scalar_bar_kwargs)
+                                     scalar_bar_kwargs=scalar_bar_kwargs, **kwargs)
         else:
             imgplt3.drawImage3D_surface(im, plotter=p, cmin=cmin, cmax=cmax,
-                                    filtering_interval=filtering_interval, scalar_bar_kwargs=scalar_bar_kwargs)
+                                     scalar_bar_kwargs=scalar_bar_kwargs, **kwargs)
 
         if plotter is None:
             p.add_bounding_box()
@@ -5075,8 +5112,8 @@ class Arch_table():
             p.show()
 
 
-    def plot_mean_prop(self, property, type="arithmetic", v_ex=1, inside_units=None, inside_facies=None,
-                    plotter=None, slicex=None, slicey=None, slicez=None, cmin=None, cmax=None, filtering_interval=None, scalar_bar_kwargs=None):
+    def plot_mean_prop(self, property, type="arithmetic", v_ex=1, inside_units=None, inside_facies=None, filtering_interval=None,
+                    plotter=None, slicex=None, slicey=None, slicez=None, cmin=None, cmax=None, scalar_bar_kwargs=None, **kwargs):
 
         #TO DO --> to optimize
         """
@@ -5099,6 +5136,8 @@ class Arch_table():
             "std" for standard deviation, "median" for median value
         inside_facies: list of string or :class:`Facies` objects
             list of facies to consider for the mean
+        filtering_interval: list of two floats
+            interval of values to keep
         plotter: pyvista.Plotter
             pyvista plotter to plot on
         slicex: float or sequence of floats
@@ -5111,8 +5150,6 @@ class Arch_table():
             minimum value for the colorbar
         cmax: float
             maximum value for the colorbar
-        filtering_interval: float
-            interval to filter the data
         scalar_bar_kwargs: dict
             dictionary of arguments to pass to the pyvista scalar bar
 
@@ -5169,11 +5206,11 @@ class Arch_table():
             arr=np.nanmedian(prop.reshape(-1,self.get_nz(),self.get_ny(),self.get_nx()),axis=0)
 
         self.plot_arr(arr,property,v_ex=v_ex, plotter=plotter, slicex=slicex, slicey=slicey, slicez=slicez,
-                      cmin=cmin, cmax=cmax, filtering_interval=filtering_interval, filtering_value=None, scalar_bar_kwargs=scalar_bar_kwargs)
+                      cmin=cmin, cmax=cmax, scalar_bar_kwargs=scalar_bar_kwargs, **kwargs)
 
 
-    def plot_arr(self,arr,var_name ="V0",v_ex=1, plotter=None, slicex=None, slicey=None, slicez=None,
-                 cmin=None, cmax=None, filtering_interval=None, filtering_value=None, scalar_bar_kwargs=None):
+    def plot_arr(self,arr,var_name ="V0",v_ex=1, plotter=None, slicex=None, slicey=None, slicez=None, filtering_interval=None,
+                 cmin=None, cmax=None, scalar_bar_kwargs=None, **kwargs):
 
         """
         This function plot a 3D array with the same size of the simulation domain
@@ -5194,17 +5231,14 @@ class Arch_table():
             fraction of the y axis to plot
         slicez: float or sequence of floats
             fraction of the z axis to plot
+        filtering_interval: list of two floats
+            interval of values to keep
         cmin: float
             minimum value for the colorbar
         cmax: float
             maximum value for the colorbar
-        filtering_interval: float
-            interval values to filter the data to show
-        filtering_value: float
-            values to filter. Only these values will be shown
         scalar_bar_kwargs: dict
             dictionary of arguments to pass to the pyvista scalar bar
-
         """
 
         nx=self.get_nx()
@@ -5247,13 +5281,26 @@ class Arch_table():
         else:
             cz=None
 
+        # filter values
+        if filtering_interval is not None:
+            if isinstance(filtering_interval, list):
+                if len(filtering_interval) == 2:
+                    if filtering_interval[0] < filtering_interval[1]:
+                        arr[arr < filtering_interval[0]] = np.nan
+                        arr[arr > filtering_interval[1]] = np.nan
+                    else:
+                        print("filtering_interval[0] must be smaller than filtering_interval[1]")
+                else:
+                    print("filtering_interval must be a list of two values")
+            else:
+                print("filtering_interval must be a list of two values")
 
         if slicex is not None or slicey is not None or slicez is not None:
-            imgplt3.drawImage3D_slice(im, plotter=p, slice_normal_x=cx, slice_normal_y=cy, slice_normal_z=cz, cmin=cmin, cmax=cmax,
-                                    filtering_interval=filtering_interval, filtering_value= filtering_value, scalar_bar_kwargs=scalar_bar_kwargs)
+            imgplt3.drawImage3D_slice(im, plotter=p, slice_normal_x=cx, slice_normal_y=cy, slice_normal_z=cz, cmin=cmin, cmax=cmax
+                                      , scalar_bar_kwargs=scalar_bar_kwargs, **kwargs)
         else:
             imgplt3.drawImage3D_surface(im, plotter=p, cmin=cmin, cmax=cmax,
-                                    filtering_interval=filtering_interval, filtering_value= filtering_value, scalar_bar_kwargs=scalar_bar_kwargs)
+                                         scalar_bar_kwargs=scalar_bar_kwargs, **kwargs)
 
         if plotter is None:
             p.add_bounding_box()
@@ -5262,7 +5309,7 @@ class Arch_table():
 
 
     #cross sections
-    def draw_cross_section(self, background="units", iu=0, ifa=0, **kwargs):
+    def draw_cross_section(self, background="units", iu=0, ifa=0):
 
         extent  = [self.get_ox(), self.get_xg()[-1], self.get_oy(), self.get_yg()[-1]]
 
@@ -5557,8 +5604,6 @@ class Arch_table():
             # increment total distance
             dist_points = ((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2)**0.5
             dist_tot += dist_points
-
-        
 
 
     def plot_lines(self, list_lines, names=None, ax=None, legend=True):

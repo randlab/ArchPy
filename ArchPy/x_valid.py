@@ -815,7 +815,7 @@ def X_valid(ArchTable, k=3, nreal_un=5, nreal_fa=2,plot=True,
 
 # other things to add ?
 
-    return (np.array(score_folds), df_conf_norm_un, df_conf_norm_fa)
+    return (np.array(score_folds, dtype="object"), df_conf_norm_un, df_conf_norm_fa)
 
 def plot_confusion_matrix(df, title='Confusion matrix', cmap="plasma"):
 

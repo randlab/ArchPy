@@ -677,10 +677,10 @@ class Cm2fit():
             
             if self.ax is None:
                 [l.remove() for l in ax.lines]
-                ax.texts.clear()
+                # ax.texts.clear()
             else:
                 [l.remove() for l in self.ax.lines]
-                self.ax.texts.clear()
+                # self.ax.texts.clear()
             
             if typ == "nugget":
                 dic = {"w": kwargs["w"]}
@@ -714,11 +714,11 @@ class Cm2fit():
             if self.ax is None:
                 for o in range(2):
                     [l.remove() for l in ax.lines]
-                ax.texts.clear()
+                # ax.texts.clear()
             else:
                 for o in range(2):
                     [l.remove() for l in self.ax.lines]
-                self.ax.texts.clear()
+                # self.ax.texts.clear()
             
             if typ == "nugget":
                 dic = {"w": kwargs["w"]}
@@ -798,10 +798,10 @@ class Cm2fit():
         plt.grid()
         if self.ax is None:
             [l.remove() for l in ax.lines]
-            ax.texts.clear()
+            # ax.texts.clear()
         else:
             [l.remove() for l in self.ax.lines]
-            self.ax.texts.clear()
+            # self.ax.texts.clear()
         
         wid = widgets.interact(self.choose_struc, n_struc=(0, 10), dim=fixed(dim))
         self.w.append(wid)

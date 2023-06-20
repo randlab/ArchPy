@@ -49,10 +49,10 @@ joblib==1.2.0
 jsonpointer==2.4
 jsonschema==4.17.3
 jupyter-events==0.6.3
-jupyter_client==7.4.7
-jupyter_core==4.11.2
-jupyter_server==2.6.0
-jupyter_server_terminals==0.4.4
+jupyter_client
+jupyter_core
+jupyter_server
+jupyter_server_terminals
 jupyterlab-pygments==0.2.2
 jupyterlab-widgets==3.0.7
 kiwisolver==1.4.4

@@ -21,8 +21,8 @@ setuptools.setup(
                       'pyyaml',
                       'pandas',
                       'shapely < 2.0',
-                       'rasterio',
-                       'geopandas'],  # download geone
+                      'rasterio',
+                      'geopandas'],  # download geone
     packages=setuptools.find_packages(),
     include_package_data=True,
     #data_files=[("lib\\site-packages\\ArchPy\\libraries", ["ArchPy\\libraries\\cov_facies.dll"])],

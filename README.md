@@ -1,4 +1,7 @@
 # ArchPy
+
+![logo](./sphinx_build/source/figures/logo_web.png)
+
 A hierarchical stochastic geological modeling tool in Python
 
 
@@ -36,10 +39,11 @@ The following python packages are absolutely necessary:
    - scikit-learn
 
 These are not required but highly recommanded.
-   - PyVista, ver. = 0.37
+   - PyVista
    - pyyaml (for export uses)
    - Rasterio (to use rasters)
    - Geopandas (to use shapefile)
+   - ipywidgets
    
  ## Examples
  There is some example notebooks :

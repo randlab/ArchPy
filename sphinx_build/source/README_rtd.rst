@@ -46,6 +46,7 @@ and then import `ArchPy`.
 
 Requirements
 ------------
+ArchPy has been tested with python>=3.8
 
 ArchPy requires the following packages:
 
@@ -64,23 +65,11 @@ The following packages are optional but are required for some functionalities:
    - pyyaml (for export uses)
    - Rasterio (to use rasters)
    - Geopandas (to use shapefile)
-   
-
-Notebook examples
------------------ 
-
- There is some example notebooks :
-   
-   - 01_basic : a folder where simple and basics ArchPy functionnalities are described 
-   - 02_3D_ArchPy : a complete 3D ArchPy model example
-   - 03_Article_example : a synthetical example shown in ArchPy article
-   - 04_hierarchies : an example with many hierarchical units to test ArchPy capabilities
-   - 05_mps_surfaces : an example how to use MPS to simulate the units surfaces
-   - 06_cross_validation : a notebook that present how to perform a cross-validation directly with ArchPy
-   - 07_geological_map : this notebook presents how to integrate and use a geological in an ArchPy model
-   - 08_inference : little guide how to use archpy inference tools to estimate surface parameters (no facies parameters for now)
-   - 09_interface : little example of an interface to call an preexisting archpy model.
  
+.. warning::
+   **Issues with widgets**: For some reasons, widgets does not work properly with recent version of jupyter-server due to recent versions of tornardo.
+   Ensure to have tornado==6.1 if you plan to use widgets and interactive functions with the matplotlib notebook backend. 
+
 
 Members of the project
 ----------------------

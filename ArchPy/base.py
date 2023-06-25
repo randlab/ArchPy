@@ -7054,6 +7054,14 @@ class Surface():
             return None
         else:
             return self.covmodel
+    
+    def set_contact(self, contact):
+        assert contact in ["erode", "onlap", "comf"], "contact must be erode or onlap or comf"
+        self.contact=contact
+        self.bhs_processed=0
+
+    def set_dic_surf(self, dic_surf):
+        self.dic_surf=dic_surf
 
 class Facies():
 

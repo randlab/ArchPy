@@ -27,7 +27,12 @@ sys.path.append("path where ArchPy is")
 ```
 and then import ArchPy.
 
+:warning: **Issues with widgets**: For some reasons, widgets does not work properly with recent version of jupyter-server due to recent versions of tornardo. Ensure to have tornado==6.1 if you plan to use widgets and interactive functions with the matplotlib notebook backend. 
+
 ## Requirements
+
+Works with python>=3.8
+
 The following python packages are absolutely necessary:
    - [Geone](https://github.com/randlab/geone)
    - matplotlib

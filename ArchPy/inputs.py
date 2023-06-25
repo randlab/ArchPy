@@ -394,7 +394,7 @@ def load_bh_files(list_bhs, facies_data, units_data,
         lay.bot=bot
         lay.facies_ID=None
         lay.Strat=None
-        data=data.append(pd.DataFrame(lay).T)
+        data = pd.concat([data, pd.DataFrame(lay).T], ignore_index=True)
         return data
 
     #loading files

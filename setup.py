@@ -6,7 +6,7 @@ with open("README.md", "r") as file:
 
 setuptools.setup(
     name='Geoarchpy',
-    version='1.0.1',
+    version='1.0.2  ',
     author="Ludovic Schorpp",
     author_email="ludovic.schorpp@unine.ch",
     description="Simpler geological and property models",
@@ -16,13 +16,17 @@ setuptools.setup(
     install_requires=['matplotlib',
                       'numpy',
                       'pyvista',
+                      'trame',
                       'scipy',
                       'scikit-learn',
                       'pyyaml',
                       'pandas',
                       'shapely < 2.0',
                       'rasterio',
-                      'geopandas'],  # download geone
+                      'geopandas',
+                      'ipywidgets',
+                      'tornado==6.1',
+                      'notebook'],  # download geone
     packages=setuptools.find_packages(),
     include_package_data=True,
     #data_files=[("lib\\site-packages\\ArchPy\\libraries", ["ArchPy\\libraries\\cov_facies.dll"])],

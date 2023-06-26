@@ -1,5 +1,5 @@
 # ArchPy
-
+[![Documentation Status](https://readthedocs.org/projects/archpy/badge/?version=latest)](https://archpy.readthedocs.io/en/latest/?badge=latest)
 ![logo](./sphinx_build/source/figures/logo_web.png)
 
 A hierarchical stochastic geological modeling tool in Python

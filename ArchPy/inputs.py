@@ -1540,15 +1540,20 @@ def bhs_analysis(db,  Strat_ID="Strat_ID", Facies_ID="Facies_ID", top_col="top",
     Parameters
     ----------
     db : pandas dataframe
-        dataframe containing the boreholes
+        dataframe containing the geological database, each row is an interval observed
+        The dataframe is composed of at least the following columns:
+            - Strat_ID: name of the column containing the stratigraphic ID
+            - Facies_ID: name of the column containing the facies ID
+            - top: name of the column containing the top altitude of the interval
+            - bot: name of the column containing the bot altitude of the interval
     Strat_ID : str, optional
-        name of the column containing the stratigraphic ID
+        name of the column containing the name of the stratigraphic unit
     Facies_ID : str, optional
-        name of the column containing the facies ID
+        name of the column containing the name of the facies
     top_col : str, optional
-        name of the column containing the top of the unit
+        name of the column containing the top of the interval
     bot_col : str, optional
-        name of the column containing the bottom of the unit
+        name of the column containing the bottom of the interval
     ax : matplotlib axis, optional
         axis to plot the results
 

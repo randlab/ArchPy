@@ -838,14 +838,6 @@ class Arch_table():
             assert 0, ('Error: Grid was not added')
         return self.oz
 
-    # def get_facies(self):
-
-    #     # if self.Geol.facies_domains is None:
-    #     #     assert 0, ('Error: facies domains not computed')
-
-    #     facies =self.Geol.facies_domains.copy()
-    #     return facies
-
     def get_facies(self, iu=0, ifa=0, all_data=True):
 
         """
@@ -1075,7 +1067,7 @@ class Arch_table():
         else:
             return interest
 
-    def getbh(self, ID):
+    def get_bh(self, ID):
 
         """
         Return the borehole object given its ID
@@ -1286,7 +1278,7 @@ class Arch_table():
             raise ValueError('the propriety '+name+' was not found')
         return interest
 
-    def getprop(self, name, iu=None, ifa=None, ip=None, all_data=True):
+    def get_prop(self, name, iu=None, ifa=None, ip=None, all_data=True):
 
         """
         Return a numpy array of 1 or all facies realization(s).
@@ -1427,14 +1419,6 @@ class Arch_table():
             if self.verbose:
                 print("Pile not sets")
 
-    def indextocell(self, x, y, z): #duplicate with pointoindex --> remove one
-        '''cell number to cell indexing'''
-        cell_x=(x/self.get_sx() - min(self.get_xgc())).astype(int)
-        cell_y=(y/self.get_sy() - min(self.get_ygc())).astype(int)
-        cell_z=(z/self.get_sz() - min(self.get_zgc())).astype(int)
-
-        return cell_x, cell_y, cell_z
-
     def celltoindex(self,cell_x,cell_y,cell_z):
 
         '''cell index to cell position
@@ -1503,7 +1487,6 @@ class Arch_table():
         #take grid cell centers
         xc=self.xcellcenters
         yc=self.ycellcenters
-
 
         if band is None:
             ib = 0
@@ -1587,8 +1570,8 @@ class Arch_table():
         z_tree=KDTree(zg.reshape(-1, 1))
         self.z_tree=z_tree
         self.zc_tree=KDTree(zgc.reshape(-1, 1))
-        self.xc_tree=KDTree(xgc.reshape(-1, 1))
-        self.yc_tree=KDTree(ygc.reshape(-1, 1))
+        # self.xc_tree=KDTree(xgc.reshape(-1, 1))
+        # self.yc_tree=KDTree(ygc.reshape(-1, 1))
 
 
         ## resample top and bot if needed
@@ -5011,7 +4994,7 @@ class Arch_table():
             kwargs to pass to geone.imgplot.drawImage3D_slice or geone.imgplot.drawImage3D_surface
         """
 
-        prop=self.getprop(property, iu, ifa, ip, all_data=False)
+        prop=self.get_prop(property, iu, ifa, ip, all_data=False)
         facies=self.get_facies(iu, ifa, all_data=False)
 
         #keep values in only wanted units
@@ -5154,7 +5137,7 @@ class Arch_table():
         """
 
         #load property array and facies array
-        prop=self.getprop(property)  # to modify
+        prop=self.get_prop(property)  # to modify
         prop_shape=prop.shape
         facies=self.get_facies()
         facies_shape=facies.shape
@@ -5206,6 +5189,38 @@ class Arch_table():
         self.plot_arr(arr,property,v_ex=v_ex, plotter=plotter, slicex=slicex, slicey=slicey, slicez=slicez,
                       cmin=cmin, cmax=cmax, scalar_bar_kwargs=scalar_bar_kwargs, **kwargs)
 
+    def plot_grid(self, v_ex=1):
+
+        """
+        Function that plots the grid of the simulation domain
+
+        Parameters
+        ----------
+        v_ex: float
+            vertical exaggeration
+
+        """
+
+        nx=self.get_nx()
+        ny=self.get_ny()
+        nz=self.get_nz()
+        sx=self.get_sx()
+        sy=self.get_sy()
+        sz=self.get_sz()
+        x0=self.get_ox()
+        y0=self.get_oy()
+        z0=self.get_oz()
+
+        #load grid
+        arr = self.mask.astype(float).copy()
+        arr[arr==0]=np.nan
+
+        #geone image
+        im=geone.img.Img(nx, ny, nz, sx, sy, sz*v_ex, x0, y0, z0, nv=1, val=arr, varname="grid")
+
+        #plot
+        imgplt3.drawImage3D_surface(im, categ=True, categCol=["lightgrey"], show_edges=True)
+
 
     def plot_arr(self,arr,var_name ="V0",v_ex=1, plotter=None, slicex=None, slicey=None, slicez=None, filtering_interval=None,
                  cmin=None, cmax=None, scalar_bar_kwargs=None, **kwargs):
@@ -5250,6 +5265,8 @@ class Arch_table():
         z0=self.get_oz()
 
         assert arr.shape == (nz, ny, nx), "Invalid shape for array, must be equal to {}".format(nz, ny, nx)
+
+        arr = arr.astype(float).copy()
 
         if plotter is None:
             p=pv.Plotter()
@@ -5510,7 +5527,7 @@ class Arch_table():
 
         elif typ =="prop":
             assert isinstance(property, str), "property should be given in a property name --> string"
-            arr=self.getprop(property, iu, ifa, ip, all_data=False)
+            arr=self.get_prop(property, iu, ifa, ip, all_data=False)
 
         elif typ =="entropy_units":
             units=self.get_units_domains_realizations()
@@ -6262,7 +6279,7 @@ class Unit():
             self.flag=dic_facies["Flag"]
             self.G_cm=dic_facies["G_cm"]
 
-        #SIS
+        # SIS
         elif self.f_method == "SIS":
             if "f_covmodel" not in dic_facies.keys():
                 if self.verbose:
@@ -6469,7 +6486,6 @@ class Unit():
             
         return unit
 
-
     def get_baby_units(self, recompute=False, vb=1):
 
 
@@ -6553,7 +6569,7 @@ class Unit():
         all_facies: bool
             If True, all facies are removed
         """
-
+    
         if all_facies:
             self.list_facies=[]
         else:
@@ -6952,7 +6968,6 @@ class Unit():
             if ArchTable.verbose:
                 print("SubPile filling method, nothing happened")
             pass
-
 
 class Surface():
 

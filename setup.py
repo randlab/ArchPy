@@ -1,12 +1,16 @@
-import sys, platform
 import setuptools
 
+# Load version
+with open('ArchPy/_version.py', 'r') as f:
+    exec(f.read())
+
+# load version
 with open("README.md", "r") as file:
     long_desc = file.read()
 
 setuptools.setup(
     name='Geoarchpy',
-    version='1.0.2  ',
+    version=__version__,
     author="Ludovic Schorpp",
     author_email="ludovic.schorpp@unine.ch",
     description="Simpler geological and property models",
@@ -19,6 +23,7 @@ setuptools.setup(
                       'trame',
                       'scipy',
                       'scikit-learn',
+                      'scikit-image',
                       'pyyaml',
                       'pandas',
                       'shapely < 2.0',

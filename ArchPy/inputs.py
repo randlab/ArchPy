@@ -466,7 +466,9 @@ def load_bh_files(list_bhs, facies_data, units_data,
             if top_0 != top and i == 0:
 
                 if vb:
-                    print("Error, top altitude of first facies does not match borehole altitude")
+                    raise GeolInconsistencyError("Top altitude of first facies"
+                                                 " ({0}) does not match borehole altitude ({1})."
+                          "Please double check your data.\n".format(top_0, top))    
                 #fa_idata.loc[i,"top"]=top_0
                 fa_data=add_gap(fa_data, bh_id, top_0, top)
 
@@ -1587,3 +1589,5 @@ def bhs_analysis(db,  Strat_ID="Strat_ID", Facies_ID="Facies_ID", top_col="top",
     
     return df
     
+class GeolInconsistencyError(Exception):
+    pass

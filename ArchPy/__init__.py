@@ -1,7 +1,8 @@
-import ArchPy.base
-import ArchPy.data_transfo
-import ArchPy.ineq
-import ArchPy.tpgs
-import ArchPy.inputs
+__version__ = '1.0.3'
 
-__version__ = '1.0.2'
+from . import base
+from . import data_transfo
+from . import ineq
+from . import infer
+from . import inputs
+from . import x_valid

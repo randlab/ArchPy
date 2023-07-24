@@ -486,7 +486,8 @@ def test_bh_1fold(ArchTable, bhs_real, bhs_test, weighting_method = "same_weight
 # X_validation
 def X_valid(ArchTable, k=3, nreal_un=5, nreal_fa=2,plot=True,
             brier = True, proba_correct = True,
-            aggregate_method = None,
+            aggregate_method = None, 
+            auto_estimate_surface_parameters = True, default_covmodel = None,
             weighting_method = "same_weights", dic_weights = None, parallel=False,
             seed = 15, folding_method = "random", aspect="auto",
              verbose = 1, **kwargs):

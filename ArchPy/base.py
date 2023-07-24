@@ -838,14 +838,6 @@ class Arch_table():
             assert 0, ('Error: Grid was not added')
         return self.oz
 
-    # def get_facies(self):
-
-    #     # if self.Geol.facies_domains is None:
-    #     #     assert 0, ('Error: facies domains not computed')
-
-    #     facies =self.Geol.facies_domains.copy()
-    #     return facies
-
     def get_facies(self, iu=0, ifa=0, all_data=True):
 
         """
@@ -1075,7 +1067,7 @@ class Arch_table():
         else:
             return interest
 
-    def getbh(self, ID):
+    def get_bh(self, ID):
 
         """
         Return the borehole object given its ID
@@ -1286,7 +1278,7 @@ class Arch_table():
             raise ValueError('the propriety '+name+' was not found')
         return interest
 
-    def getprop(self, name, iu=None, ifa=None, ip=None, all_data=True):
+    def get_prop(self, name, iu=None, ifa=None, ip=None, all_data=True):
 
         """
         Return a numpy array of 1 or all facies realization(s).
@@ -1427,14 +1419,6 @@ class Arch_table():
             if self.verbose:
                 print("Pile not sets")
 
-    def indextocell(self, x, y, z): #duplicate with pointoindex --> remove one
-        '''cell number to cell indexing'''
-        cell_x=(x/self.get_sx() - min(self.get_xgc())).astype(int)
-        cell_y=(y/self.get_sy() - min(self.get_ygc())).astype(int)
-        cell_z=(z/self.get_sz() - min(self.get_zgc())).astype(int)
-
-        return cell_x, cell_y, cell_z
-
     def celltoindex(self,cell_x,cell_y,cell_z):
 
         '''cell index to cell position
@@ -1503,7 +1487,6 @@ class Arch_table():
         #take grid cell centers
         xc=self.xcellcenters
         yc=self.ycellcenters
-
 
         if band is None:
             ib = 0
@@ -1587,8 +1570,8 @@ class Arch_table():
         z_tree=KDTree(zg.reshape(-1, 1))
         self.z_tree=z_tree
         self.zc_tree=KDTree(zgc.reshape(-1, 1))
-        self.xc_tree=KDTree(xgc.reshape(-1, 1))
-        self.yc_tree=KDTree(ygc.reshape(-1, 1))
+        # self.xc_tree=KDTree(xgc.reshape(-1, 1))
+        # self.yc_tree=KDTree(ygc.reshape(-1, 1))
 
 
         ## resample top and bot if needed
@@ -2815,7 +2798,7 @@ class Arch_table():
 
         return prop_units
 
-    def process_bhs(self, step=None, facies=True, stop_condition=False):
+    def process_bhs(self, step=None, facies=True, stop_condition=False, reprocess=False):
 
         """
         ArchPy Pre-processing algorithm
@@ -2946,6 +2929,10 @@ class Arch_table():
             #    self.rem_fake_bh(bh)
             if bh in bhs_lst:
                 bhs_lst.remove(bh) # remove borehole from current list
+
+        if reprocess:
+            self.bhs_processed=0
+            self.erase_hd()
 
         #merge lists
         bhs_lst=self.list_bhs + self.list_fake_bhs + self.list_map_bhs
@@ -5011,7 +4998,7 @@ class Arch_table():
             kwargs to pass to geone.imgplot.drawImage3D_slice or geone.imgplot.drawImage3D_surface
         """
 
-        prop=self.getprop(property, iu, ifa, ip, all_data=False)
+        prop=self.get_prop(property, iu, ifa, ip, all_data=False)
         facies=self.get_facies(iu, ifa, all_data=False)
 
         #keep values in only wanted units
@@ -5154,7 +5141,7 @@ class Arch_table():
         """
 
         #load property array and facies array
-        prop=self.getprop(property)  # to modify
+        prop=self.get_prop(property)  # to modify
         prop_shape=prop.shape
         facies=self.get_facies()
         facies_shape=facies.shape
@@ -5206,6 +5193,38 @@ class Arch_table():
         self.plot_arr(arr,property,v_ex=v_ex, plotter=plotter, slicex=slicex, slicey=slicey, slicez=slicez,
                       cmin=cmin, cmax=cmax, scalar_bar_kwargs=scalar_bar_kwargs, **kwargs)
 
+    def plot_grid(self, v_ex=1):
+
+        """
+        Function that plots the grid of the simulation domain
+
+        Parameters
+        ----------
+        v_ex: float
+            vertical exaggeration
+
+        """
+
+        nx=self.get_nx()
+        ny=self.get_ny()
+        nz=self.get_nz()
+        sx=self.get_sx()
+        sy=self.get_sy()
+        sz=self.get_sz()
+        x0=self.get_ox()
+        y0=self.get_oy()
+        z0=self.get_oz()
+
+        #load grid
+        arr = self.mask.astype(float).copy()
+        arr[arr==0]=np.nan
+
+        #geone image
+        im=geone.img.Img(nx, ny, nz, sx, sy, sz*v_ex, x0, y0, z0, nv=1, val=arr, varname="grid")
+
+        #plot
+        imgplt3.drawImage3D_surface(im, categ=True, categCol=["lightgrey"], show_edges=True)
+
 
     def plot_arr(self,arr,var_name ="V0",v_ex=1, plotter=None, slicex=None, slicey=None, slicez=None, filtering_interval=None,
                  cmin=None, cmax=None, scalar_bar_kwargs=None, **kwargs):
@@ -5250,6 +5269,8 @@ class Arch_table():
         z0=self.get_oz()
 
         assert arr.shape == (nz, ny, nx), "Invalid shape for array, must be equal to {}".format(nz, ny, nx)
+
+        arr = arr.astype(float).copy()
 
         if plotter is None:
             p=pv.Plotter()
@@ -5510,7 +5531,7 @@ class Arch_table():
 
         elif typ =="prop":
             assert isinstance(property, str), "property should be given in a property name --> string"
-            arr=self.getprop(property, iu, ifa, ip, all_data=False)
+            arr=self.get_prop(property, iu, ifa, ip, all_data=False)
 
         elif typ =="entropy_units":
             units=self.get_units_domains_realizations()
@@ -5741,6 +5762,17 @@ class Pile():
         else:
             if self.verbose:
                 print("no units found in pile {}".format(self.name))
+
+    def get_pile_ref(self):
+
+        l = []
+        for un in self.list_units:
+            if un.m_unit_name is not None:
+                l.append(un.m_unit_name)
+            else:
+                l.append(un.name)
+
+        return l
 
     def order_units(self, vb=1):
 
@@ -6118,6 +6150,9 @@ class Unit():
         surface object that defines the surface of the unit
     ID : int
         ID of the unit, if None, the ID will be set to the order of the unit
+    m_unit_name : string
+        identifier name if the unit is a multiple unit (can appear several times in the pile)
+        Not yet implemented
     dic_facies : dict
         dictionary that defines the facies of the unit. The mandatory keys for the dictionary are:
 
@@ -6175,7 +6210,7 @@ class Unit():
 
     """
 
-    def __init__(self, name, order, color, surface=None, ID=None,
+    def __init__(self, name, order, color, surface=None, ID=None, m_unit_name=None,
                 dic_facies={"f_method": "homogenous", "f_covmodel": None, "TI": None, "SubPile": None, "Flag": None, "G_cm": None},
                 contact="onlap", verbose=1):
     
@@ -6187,6 +6222,7 @@ class Unit():
         self.order=order
         self.contact=contact
         self.c=color
+        self.m_unit_name=m_unit_name
 
         if ID is None:
             self.ID=order
@@ -6262,7 +6298,7 @@ class Unit():
             self.flag=dic_facies["Flag"]
             self.G_cm=dic_facies["G_cm"]
 
-        #SIS
+        # SIS
         elif self.f_method == "SIS":
             if "f_covmodel" not in dic_facies.keys():
                 if self.verbose:
@@ -6469,7 +6505,6 @@ class Unit():
             
         return unit
 
-
     def get_baby_units(self, recompute=False, vb=1):
 
 
@@ -6509,6 +6544,27 @@ class Unit():
 
             fun(self)
         return self.bb_units
+
+
+    def get_list_facies(self, recompute=False):
+
+        """
+        Return list of facies of the unit
+        """
+
+        if self.f_method == "SubPile":
+            bb_units = self.get_baby_units(recompute=recompute)
+            list_facies = []
+            for unit in bb_units:
+                for facies in unit.list_facies:
+                    if facies not in list_facies:
+                        list_facies.append(facies)
+            return list_facies
+        
+        else:
+
+            return self.list_facies
+
 
     def add_facies(self, facies):
 
@@ -6553,7 +6609,7 @@ class Unit():
         all_facies: bool
             If True, all facies are removed
         """
-
+    
         if all_facies:
             self.list_facies=[]
         else:
@@ -6640,7 +6696,7 @@ class Unit():
 
         # list objects
         if mode == "facies":
-            list_obj = self.list_facies
+            list_obj = self.get_list_facies()
         elif mode == "units":
             list_obj = self.SubPile.list_units
 
@@ -6953,7 +7009,6 @@ class Unit():
                 print("SubPile filling method, nothing happened")
             pass
 
-
 class Surface():
 
     """
@@ -7251,6 +7306,7 @@ class borehole():
         self.depth=depth
         self.log_strati=log_strati
         self.log_facies=log_facies
+        self.log_raw = None
 
         if log_strati is not None:
             self.list_stratis=[s for s, d in self.log_strati]
@@ -7277,6 +7333,12 @@ class borehole():
             return True
         else:
             return False
+
+    def set_log_strati(self, log_strati):
+        self.log_strati=log_strati
+
+    def set_log_facies(self, log_facies):
+        self.log_facies=log_facies
 
     def prop_units(self):
 
@@ -7355,6 +7417,39 @@ class borehole():
         elif lf:
             return facies
 
+    def create_thickness_log(self, pile_ref):
+        
+        """
+        Create the thickness log based on the pile reference and the raw log
+        """
+
+        log = self.log_raw
+        log_thk = list(np.zeros(len(pile_ref)))
+        pos = 0
+        for i in range(len(pile_ref)):
+            
+            unit = log[pos][0]
+            if isinstance(unit, ArchPy.base.Unit):
+                u_name = unit.name
+            else:
+                u_name = unit
+            if pile_ref[i] == u_name:
+
+                if pos == len(log) - 1:
+                    log_thk[i] = log[pos][1] - (self.z - self.depth)
+                else:
+                    log_thk[i] = log[pos][1] - log[pos + 1][1]
+                pos += 1
+                if pos == len(log):
+                    break
+            else:
+                log_thk[i] = 0
+
+        self.log_thk = log_thk
+
+    def set_thickness_log(self, log_thk):
+
+        self.log_thk = log_thk
 
 class Geol():
 

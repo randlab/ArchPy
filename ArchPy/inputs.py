@@ -388,13 +388,14 @@ def load_bh_files(list_bhs, facies_data, units_data,
     def add_gap(data, bh_id, top, bot):
         if vb:
             print("Gap encountered - creation of a gap interval")
+            
         idata=data.loc[[bh_id]]
-        lay=idata.iloc[0]
+        lay= copy.deepcopy(idata.iloc[0])
         lay.top=top
         lay.bot=bot
         lay.facies_ID=None
         lay.Strat=None
-        data = pd.concat([data, pd.DataFrame(lay).T], ignore_index=True)
+        data = pd.concat([data, pd.DataFrame(lay).T])
         return data
 
     #loading files
@@ -427,7 +428,7 @@ def load_bh_files(list_bhs, facies_data, units_data,
     #apply dictionnaries to changes identifier 
     fa_data.replace(dic_facies_names, inplace=True)
     s_data.replace(dic_units_names, inplace=True)
-    
+
     #change depth into altitude
     if not altitude:
         for bh_id in list_bhs.index:
@@ -438,8 +439,8 @@ def load_bh_files(list_bhs, facies_data, units_data,
 
             if bh_id in s_data.index:
                 s_data.loc[bh_id, "top"]=top_0 - s_data.loc[bh_id, "top"]
-                s_data.loc[bh_id, "bot"]=top_0 - s_data.loc[bh_id, "bot"]
-                
+                s_data.loc[bh_id, "bot"]=top_0 - s_data.loc[bh_id, "bot"]   
+
     #fill gaps
     for bh_id in list_bhs.index:
 
@@ -466,16 +467,18 @@ def load_bh_files(list_bhs, facies_data, units_data,
             if top_0 != top and i == 0:
 
                 if vb:
-                    raise GeolInconsistencyError("Top altitude of first facies"
-                                                 " ({0}) does not match borehole altitude ({1})."
-                          "Please double check your data.\n".format(top_0, top))    
+                    print("Top altitude of first facies ({0}) does not match borehole ({2}) altitude ({1}), altitudes modified.\n".format(top_0, top, bh_id))
+                    
                 #fa_idata.loc[i,"top"]=top_0
-                fa_data=add_gap(fa_data, bh_id, top_0, top)
+                if top_0 > top:
+                    fa_data=add_gap(fa_data, bh_id, top_0, top)
+                else:
+                    fa_idata.loc[i, "top"]=top_0
 
             if i > 0 and bot != top:  # if there is a gap in the data
                 fa_data=add_gap(fa_data, bh_id, bot, top)
 
-            bot=fa_idata.loc[i,"bot"]
+            bot=fa_idata.loc[i, "bot"]
 
             if i == fa_idata.shape[0] - 1:  # last lay
                 if (bot-1e-5 > top_0 - depth):  # if bot above maximum depth of borehole --> add a gap
@@ -489,10 +492,12 @@ def load_bh_files(list_bhs, facies_data, units_data,
 
             if top_0 != top and i == 0:
                 if vb:
-                    print("Error, top altitude of first unit does not match borehole altitude")
-
+                    print("Top altitude of first unit ({0}) does not match borehole ({2}) altitude ({1}), altitudes modified.\n".format(top_0, top, bh_id)) 
                 #s_idata.loc[i,"top"]=top_0
-                s_data=add_gap(s_data, bh_id, top_0, top)
+                if top_0 > top:  # top of borehole above top of first unit --> add a gap
+                    s_data=add_gap(s_data, bh_id, top_0, top)
+                else:  # top of borehole below top of first unit --> change top of first unit
+                    s_idata.loc[i, "top"]=top_0
 
             if i > 0 and bot != top:  # if there is a gap in the data
                 s_data=add_gap(s_data, bh_id, bot, top)
@@ -502,7 +507,6 @@ def load_bh_files(list_bhs, facies_data, units_data,
             if i == s_idata.shape[0] - 1:  # last lay
                 if (bot-1e-5 > top_0 - depth):  # if bot above maximum depth of borehole --> add a gap
                     s_data=add_gap(s_data, bh_id, bot, top_0 - depth)
-                    print(1)
 
     fa_data.index.rename("bh_ID", inplace=True)
     s_data.index.rename("bh_ID", inplace=True)

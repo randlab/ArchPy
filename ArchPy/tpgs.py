@@ -939,9 +939,6 @@ def run_tpgs(nsim,xg,yg,zg,data,Gk,flag,nit=100,nmax = 24,grf_method="fft",mask=
     return output
 
 
-
-
-
     ## kriging functions  ##
 def simple_kriging(x, xu, cov_model, mean):
    

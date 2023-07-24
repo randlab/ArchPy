@@ -2798,7 +2798,7 @@ class Arch_table():
 
         return prop_units
 
-    def process_bhs(self, step=None, facies=True, stop_condition=False):
+    def process_bhs(self, step=None, facies=True, stop_condition=False, reprocess=False):
 
         """
         ArchPy Pre-processing algorithm
@@ -2929,6 +2929,10 @@ class Arch_table():
             #    self.rem_fake_bh(bh)
             if bh in bhs_lst:
                 bhs_lst.remove(bh) # remove borehole from current list
+
+        if reprocess:
+            self.bhs_processed=0
+            self.erase_hd()
 
         #merge lists
         bhs_lst=self.list_bhs + self.list_fake_bhs + self.list_map_bhs
@@ -5759,6 +5763,17 @@ class Pile():
             if self.verbose:
                 print("no units found in pile {}".format(self.name))
 
+    def get_pile_ref(self):
+
+        l = []
+        for un in self.list_units:
+            if un.m_unit_name is not None:
+                l.append(un.m_unit_name)
+            else:
+                l.append(un.name)
+
+        return l
+
     def order_units(self, vb=1):
 
         """
@@ -6135,6 +6150,9 @@ class Unit():
         surface object that defines the surface of the unit
     ID : int
         ID of the unit, if None, the ID will be set to the order of the unit
+    m_unit_name : string
+        identifier name if the unit is a multiple unit (can appear several times in the pile)
+        Not yet implemented
     dic_facies : dict
         dictionary that defines the facies of the unit. The mandatory keys for the dictionary are:
 
@@ -6192,7 +6210,7 @@ class Unit():
 
     """
 
-    def __init__(self, name, order, color, surface=None, ID=None,
+    def __init__(self, name, order, color, surface=None, ID=None, m_unit_name=None,
                 dic_facies={"f_method": "homogenous", "f_covmodel": None, "TI": None, "SubPile": None, "Flag": None, "G_cm": None},
                 contact="onlap", verbose=1):
     
@@ -6204,6 +6222,7 @@ class Unit():
         self.order=order
         self.contact=contact
         self.c=color
+        self.m_unit_name=m_unit_name
 
         if ID is None:
             self.ID=order
@@ -6526,6 +6545,27 @@ class Unit():
             fun(self)
         return self.bb_units
 
+
+    def get_list_facies(self, recompute=False):
+
+        """
+        Return list of facies of the unit
+        """
+
+        if self.f_method == "SubPile":
+            bb_units = self.get_baby_units(recompute=recompute)
+            list_facies = []
+            for unit in bb_units:
+                for facies in unit.list_facies:
+                    if facies not in list_facies:
+                        list_facies.append(facies)
+            return list_facies
+        
+        else:
+
+            return self.list_facies
+
+
     def add_facies(self, facies):
 
         """
@@ -6656,7 +6696,7 @@ class Unit():
 
         # list objects
         if mode == "facies":
-            list_obj = self.list_facies
+            list_obj = self.get_list_facies()
         elif mode == "units":
             list_obj = self.SubPile.list_units
 
@@ -7266,6 +7306,7 @@ class borehole():
         self.depth=depth
         self.log_strati=log_strati
         self.log_facies=log_facies
+        self.log_raw = None
 
         if log_strati is not None:
             self.list_stratis=[s for s, d in self.log_strati]
@@ -7292,6 +7333,12 @@ class borehole():
             return True
         else:
             return False
+
+    def set_log_strati(self, log_strati):
+        self.log_strati=log_strati
+
+    def set_log_facies(self, log_facies):
+        self.log_facies=log_facies
 
     def prop_units(self):
 
@@ -7370,6 +7417,39 @@ class borehole():
         elif lf:
             return facies
 
+    def create_thickness_log(self, pile_ref):
+        
+        """
+        Create the thickness log based on the pile reference and the raw log
+        """
+
+        log = self.log_raw
+        log_thk = list(np.zeros(len(pile_ref)))
+        pos = 0
+        for i in range(len(pile_ref)):
+            
+            unit = log[pos][0]
+            if isinstance(unit, ArchPy.base.Unit):
+                u_name = unit.name
+            else:
+                u_name = unit
+            if pile_ref[i] == u_name:
+
+                if pos == len(log) - 1:
+                    log_thk[i] = log[pos][1] - (self.z - self.depth)
+                else:
+                    log_thk[i] = log[pos][1] - log[pos + 1][1]
+                pos += 1
+                if pos == len(log):
+                    break
+            else:
+                log_thk[i] = 0
+
+        self.log_thk = log_thk
+
+    def set_thickness_log(self, log_thk):
+
+        self.log_thk = log_thk
 
 class Geol():
 

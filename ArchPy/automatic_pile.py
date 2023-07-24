@@ -209,3 +209,32 @@ def infer_pile(l_bhs):
         i += 1
             
     return results, new_l_M
+
+
+def get_errors_M(M, boreholes):
+
+    """
+    Function to analyze the pile of the matrix M and returns the errors observed
+    i.e. the contact that are not in agreement with the pile.
+
+    Parameters
+    ----------
+    M : np.array of size (n_units, n_units)
+        Matrix form of the pile inffered by the :func:`infer_pile` function.
+    """
+
+    c = 0
+    dic = {}
+    for bh in boreholes:
+        for i in range(len(bh) - 1, 0, -1):
+            s1 = bh[i]
+            s2 = bh[i-1]  # s2 is above s1
+            if M[s2, s1] <= -1 or (M[M[s1] >= 1, s2] > 0).any():  # incorrect info
+                c += 1
+                if (s2, s1) not in dic.keys():
+                    dic[(s2 ,s1)] = 0
+                dic[(s2, s1)] += 1
+                
+                break
+    
+    return dic

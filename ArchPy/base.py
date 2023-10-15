@@ -1682,22 +1682,22 @@ class Arch_table():
                     polygon = MultiPolygon(poly.geometry.values)
 
         import shapely
-        #if polygon is shapely Polygon
+        # if polygon is shapely Polygon
         if isinstance(polygon, (shapely.geometry.Polygon, shapely.geometry.MultiPolygon)):
             if self.verbose:
                 print("Polygon is a shapely instance - discretization activated")
 
-            polygon_array=np.zeros([ny*nx], dtype=bool) #2D array simulation domain
-            cell_l=[]
+            polygon_array=np.zeros([ny*nx], dtype=bool)  # 2D array simulation domain
+            cell_l = []
             for i,cell in enumerate(self.xu2D):
 
-                xy=((cell[0]-sx/2, cell[1]-sy/2),(cell[0]-sx/2, cell[1]+sy/2),
+                xy = ((cell[0]-sx/2, cell[1]-sy/2),(cell[0]-sx/2, cell[1]+sy/2),
                       (cell[0]+sx/2, cell[1]+sy/2),(cell[0]+sx/2, cell[1]-sy/2))
-                p=shapely.geometry.Polygon(xy)
-                p.name=i
+                p = shapely.geometry.Polygon(xy)
+                p.name = i
                 cell_l.append(p)
 
-            l=[]#list of intersected cells
+            l=[]  # list of intersected cells
             for cell in cell_l:
                 if cell.intersects(polygon):
                     l.append(cell.name)
@@ -1837,8 +1837,14 @@ class Arch_table():
                             elif s2[1] > iz:
                                 new_log.append((s2[0], iz))
                             bh.log_strati=new_log
+                        elif len(bh.log_strati) == 1:  # Adjust if only one unit
+                            new_log=[]                  
+                            s=bh.log_strati[0]          
+                            new_log.append((s[0], iz))  
+                            bh.log_strati=new_log     
                         else:
-                            pass
+                            pass  
+
                     # update log facies
                     if bh.log_facies:
                         if len(bh.log_facies)>1:
@@ -1857,8 +1863,17 @@ class Arch_table():
                             elif s2[1] > iz:
                                 new_log.append((s2[0], iz))
                             bh.log_facies=new_log
+                        elif len(bh.log_facies) == 1:  # Adjust if only one facies
+                            new_log=[]                  
+                            s=bh.log_facies[0]          
+                            new_log.append((s[0], iz))  
+                            bh.log_facies=new_log
                         else:
                             pass
+                    
+                    # update depth
+                    bh.depth = bh.depth - (bh.z - iz)
+                    
                     cut_botom(bh)
                     if bh.depth < 0:
                         return 0
@@ -2397,7 +2412,7 @@ class Arch_table():
             print("Geological map extracted - processus ended successfully")
 
     # remove boreholes
-    def rem_all_bhs(self, fake_only=False, geol_map_only=False):
+    def rem_all_bhs(self, standard_bh=True, fake_bh=True, geol_map_bh=True):
 
         """Remove all boreholes from the list
         
@@ -2409,20 +2424,22 @@ class Arch_table():
             if True, only boreholes from geological map are removed
         """
 
-        if fake_only:
+        if standard_bh:
+            self.list_bhs=[]
+            if self.verbose:
+                print("Standard boreholes removed")
+        
+        if fake_bh:
             self.list_fake_bhs=[]
             if self.verbose:
                 print("Fake boreholes removed")
-        if geol_map_only:
+
+        if geol_map_bh:
             self.list_map_bhs=[]
             if self.verbose:
-                print("Boreholes from geological map removed")
-        else:
-            self.list_fake_bhs=[]
-            self.list_bhs=[]
-            self.list_map_bhs=[]
-            if self.verbose:
-                print("boreholes removed")
+                print("Geological map boreholes removed")
+
+        
 
     def rem_bh(self, bh):
 
@@ -4382,6 +4399,92 @@ class Arch_table():
         else:
             p=plotter
 
+        l_colors = [i.c for i in self.get_all_units()]
+
+        wells = pv.MultiBlock()
+        IDs = []
+
+        # define new IDs for units and get colors
+        d = {}
+        d_colors = {}
+        ID = 0
+        for bh in self.list_bhs:
+            if bh.log_strati is not None:
+                for unit in bh.get_list_stratis():
+                    if unit is not None:
+                        if unit.ID not in d.keys():
+                            d[unit.ID] = ID
+                            d_colors[ID] = unit.c
+                            ID += 1
+
+        # define new IDs for facies and get colors
+        d_f = {}
+        d_colors_f = {}
+        ID_f = 0
+        for bh in self.list_bhs:
+            if bh.log_facies is not None:
+                for facies in bh.get_list_facies():
+                    if facies is not None:
+                        if facies.ID not in d_f.keys():
+                            d_f[facies.ID] = ID_f
+                            d_colors_f[ID_f] = facies.c
+                            ID_f += 1
+
+        if log == "strati":
+            for bh in self.list_bhs:
+                if bh.log_strati is not None:
+                    coord = np.array([bh.x, bh.y])
+                    for i in range(len(bh.log_strati)):
+
+                        st=bh.log_strati[i][0]  # unit object
+                        l = []
+                        l.append(bh.log_strati[i][1])
+                        if i < len(bh.log_strati)-1:
+                            l.append(bh.log_strati[i+1][1])
+
+                        elif i == len(bh.log_strati)-1:
+                            l.append(bh.z-bh.depth)
+                    
+                        a = (coord[0], coord[1], (l[0] - z0) * v_ex + z0)
+                        b = (coord[0], coord[1], (l[1] - z0) * v_ex + z0)
+                        line = pv.Line(a, b)
+                        if st is not None:
+                            wells.append(line)
+                            IDs.append(d[st.ID])
+                        else:
+                            break
+            
+            wells = wells.combine()   
+            p.add_mesh(wells, render_lines_as_tubes=True, line_width=15, scalars=IDs, cmap=list(d_colors.values()), show_scalar_bar=False)
+
+        elif log == "facies":
+            for bh in self.list_bhs:
+                if bh.log_facies is not None:
+                    coord = np.array([bh.x, bh.y])
+                    for i in range(len(bh.log_facies)):
+
+                        st=bh.log_facies[i][0]  # facies object
+                        l = []
+                        l.append(bh.log_facies[i][1])
+                        if i < len(bh.log_facies)-1:
+                            l.append(bh.log_facies[i+1][1])
+
+                        elif i == len(bh.log_facies)-1:
+                            l.append(bh.z-bh.depth)
+
+                        a = (coord[0], coord[1], (l[0] - z0) * v_ex + z0)
+                        b = (coord[0], coord[1], (l[1] - z0) * v_ex + z0)
+                        line = pv.Line(a, b)
+                        if st is not None:
+                            wells.append(line)
+                            IDs.append(d_f[st.ID])
+                        else:
+                            break
+
+            wells = wells.combine()   
+            p.add_mesh(wells, render_lines_as_tubes=True, line_width=15, scalars=IDs, cmap=list(d_colors_f.values()), show_scalar_bar=False)
+
+        """
         if log == "strati":
             for bh in self.list_bhs:
                 if bh.log_strati is not None:
@@ -4393,7 +4496,7 @@ class Arch_table():
                         if i < len(bh.log_strati)-1:
                             l.append(bh.log_strati[i+1][1])
 
-                        if i == len(bh.log_strati)-1:
+                        elif i == len(bh.log_strati)-1:
                             l.append(bh.z-bh.depth)
 
                         pts=np.array([np.ones([len(l)])*bh.x, np.ones([len(l)])*bh.y, l]).T
@@ -4406,7 +4509,8 @@ class Arch_table():
                         else:
                             color="white"
                             opacity=0
-                        p.add_mesh(line, color=color, interpolate_before_map=True, render_lines_as_tubes=True, line_width=15, opacity=opacity)
+                        p.add_mesh(line, color=color, line_width=15, opacity=opacity)
+
 
         elif log == "facies":
             for bh in self.list_bhs:
@@ -4432,6 +4536,7 @@ class Arch_table():
                             color="white"
                             opacity=0
                         p.add_mesh(line, color=color, interpolate_before_map=True, render_lines_as_tubes=True, line_width=15, opacity=opacity)
+        """   
 
         if plot_top:
             X, Y=np.meshgrid(self.get_xgc(), self.get_ygc())
@@ -5476,6 +5581,9 @@ class Arch_table():
             ratio between y and x axis to adjust vertical exaggeration
         """
 
+        if ax is None:
+            fig, ax = plt.subplots(figsize=(10, 10))
+
         def plot_bh(bh, x=None, width=width, typ="units"):
 
             if typ == "units":
@@ -5494,13 +5602,13 @@ class Arch_table():
                             s2 = bh.log_strati[i+1][1]
 
                         if unit is not None:
-                            plt.bar(ix, s - s2, bottom=s2, color=unit.c, alpha=1, edgecolor = 'black', width=width)
+                            ax.bar(ix, s - s2, bottom=s2, color=unit.c, alpha=1, edgecolor = 'black', width=width)
 
                     s = bh.log_strati[i+1][1]
                     unit = bh.log_strati[i+1][0]
                     s2 = bh.z - bh.depth
                     if unit is not None:
-                        plt.bar(ix, s - s2, bottom=s2, color=unit.c, alpha=1, edgecolor = 'black', width=width)
+                        ax.bar(ix, s - s2, bottom=s2, color=unit.c, alpha=1, edgecolor = 'black', width=width)
 
         if typ == "units":
             arr=self.get_units_domains_realizations(iu=iu, fill="color", all_data=False)
@@ -5539,7 +5647,7 @@ class Arch_table():
             b=len(self.get_all_units())
             nreal=units.shape[0]
             for unit in self.get_all_units():
-                print(unit)
+                # print(unit)
                 Pi=(units==unit.ID).sum(0)/nreal
                 pi_mask=(self.mask) & (Pi!=0)
                 SE[pi_mask] += Pi[pi_mask]*(np.log(Pi[pi_mask])/np.log(b))
@@ -5568,9 +5676,6 @@ class Arch_table():
 
         #extract cross section
         xsec, dist=self.cross_section(arr, p_list, esp=esp)
-
-        if ax is None:
-            fig, ax=plt.subplots(figsize=(10, 10))
 
         extent=[0, dist, self.get_oz(), self.get_zg()[-1]]
         a=ax.imshow(xsec, origin="lower", extent=extent, interpolation="none", vmax=vmax, vmin=vmin)
@@ -6545,27 +6650,6 @@ class Unit():
             fun(self)
         return self.bb_units
 
-
-    def get_list_facies(self, recompute=False):
-
-        """
-        Return list of facies of the unit
-        """
-
-        if self.f_method == "SubPile":
-            bb_units = self.get_baby_units(recompute=recompute)
-            list_facies = []
-            for unit in bb_units:
-                for facies in unit.list_facies:
-                    if facies not in list_facies:
-                        list_facies.append(facies)
-            return list_facies
-        
-        else:
-
-            return self.list_facies
-
-
     def add_facies(self, facies):
 
         """
@@ -6696,7 +6780,7 @@ class Unit():
 
         # list objects
         if mode == "facies":
-            list_obj = self.get_list_facies()
+            list_obj = self.list_facies
         elif mode == "units":
             list_obj = self.SubPile.list_units
 
@@ -7083,7 +7167,7 @@ class Surface():
     def copy(self):
         return copy.deepcopy(self)
 
-    def set_covmodel(self, covmodel):
+    def set_covmodel(self, covmodel, vb=0):
 
         """
         change or add a covmodel for surface interpolation of self unit.
@@ -7097,10 +7181,12 @@ class Surface():
 
         if isinstance(covmodel, geone.covModel.CovModel2D):
             self.covmodel=covmodel
-            # self.dic_surf["covmodel"]=covmodel
-            print("Surface {}: covmodel added".format(self.name))
+            self.dic_surf["covmodel"]=covmodel
+            if vb:
+                print("Surface {}: covmodel added".format(self.name))
         else:
-            print("Surface {}: covmodel not a geone 2D covmodel".format(self.name))
+            if vb:
+                print("Surface {}: covmodel not a geone 2D covmodel".format(self.name))
 
     def get_surface_covmodel(self, vb=1):
         if self.covmodel is None:

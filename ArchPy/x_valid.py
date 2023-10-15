@@ -158,7 +158,7 @@ def bh2array(ArchTable, bh, typ="units"):
     
     
 def test_bh_1fold(ArchTable, bhs_real, bhs_test, weighting_method = "same_weight", dic_weights = None,
-                  plot = True, brier = True, proba_correct = False, aspect="auto"):
+                  plot = True, save_figs=False, fig_dir = None, brier = True, proba_correct = False, aspect="auto"):
     
     """
     Perform a test on a single fold of a cross-validation
@@ -167,7 +167,7 @@ def test_bh_1fold(ArchTable, bhs_real, bhs_test, weighting_method = "same_weight
     ----------
     ArchTable : :class:`ArchPy.base.Arch_table`
         ArchPy table to test
-    bhs_real : sequence of :class:`ArchPy.base.borehole`
+    bhs_real : ndarray of size (nreal_units, nreal_fa, n_boreholes) of :class:`ArchPy.base.borehole`
         "fake" boreholes sampled in the realizations of the ArchTable
     bhs_test : sequence of :class:`ArchPy.base.borehole`
         "real" boreholes to test
@@ -177,6 +177,10 @@ def test_bh_1fold(ArchTable, bhs_real, bhs_test, weighting_method = "same_weight
         dictionnary linking realization index to weight
     plot : bool
         plot or not
+    save_figs : bool
+        save figures or not
+    fig_dir : str
+        directory to save figures
     brier : bool
         compute Brier score or not
     proba_correct : bool
@@ -189,7 +193,7 @@ def test_bh_1fold(ArchTable, bhs_real, bhs_test, weighting_method = "same_weight
     dict
         dictionnary of results
     """
-    
+
     reals = bhs_real
     scores_un = []
     scores_fa = []
@@ -284,7 +288,8 @@ def test_bh_1fold(ArchTable, bhs_real, bhs_test, weighting_method = "same_weight
             ref_arr_plot = img_to_3D_colors(ref_arr_plot, d)
 
             # 1st plot
-            fig,ax = plt.subplots(1,2, figsize=(.5*ArchTable.nreal_units, 5), sharey=True)
+            print(bh_test.ID)  # plot borehole id
+            fig, ax = plt.subplots(1,2, figsize=(.5*ArchTable.nreal_units, 5), sharey=True)
             ax[0].imshow(res_plot, extent=[0, ArchTable.nreal_units, ArchTable.zg[0], ArchTable.zg[-1]], origin="lower", interpolation="nearest", aspect=aspect)
             ax[0].set_title("real")
             ax[0].set_xlabel("Realizations")
@@ -294,7 +299,10 @@ def test_bh_1fold(ArchTable, bhs_real, bhs_test, weighting_method = "same_weight
                        origin="lower", interpolation="nearest", aspect=aspect)
             ax[1].set_title("ref")
             plt.subplots_adjust(wspace=1/ArchTable.nreal_units)
-            plt.show()
+            # plt.show()
+            if save_figs:
+                plt.savefig(fig_dir + "/bh_" + str(bh_test.ID) + "_units.png")
+                plt.close()
 
             if ArchTable.nreal_fa > 0:
                 # facies
@@ -321,7 +329,10 @@ def test_bh_1fold(ArchTable, bhs_real, bhs_test, weighting_method = "same_weight
                 ax2.imshow(ref_arr_plot, extent=[0, ArchTable.nreal_units, ArchTable.zg[0], ArchTable.zg[-1]],
                            origin="lower", interpolation="nearest")
                 plt.title("ref")
-                plt.show()
+                # plt.show()
+                if save_figs:
+                    plt.savefig(fig_dir + "/bh_" + str(bh_test.ID) + "_facies.png")
+                    plt.close()
 
 
         if proba_correct:
@@ -486,8 +497,7 @@ def test_bh_1fold(ArchTable, bhs_real, bhs_test, weighting_method = "same_weight
 # X_validation
 def X_valid(ArchTable, k=3, nreal_un=5, nreal_fa=2,plot=True,
             brier = True, proba_correct = True,
-            aggregate_method = None, 
-            auto_estimate_surface_parameters = True, default_covmodel = None,
+            aggregate_method = None, save_figs=False, fig_dir = None,
             weighting_method = "same_weights", dic_weights = None, parallel=False,
             seed = 15, folding_method = "random", aspect="auto",
              verbose = 1, **kwargs):
@@ -534,8 +544,7 @@ def X_valid(ArchTable, k=3, nreal_un=5, nreal_fa=2,plot=True,
 
         Each entry of the score_folds list is a tuple containing various scores:
 
-            - final score units
-            - final score facies
+            - dictionsnary of final scores (units/facies and brier/probability of correct classification)
             - distinct brier scores for each borehole (units and facies)
             - proportion of correct cells for each borehole (units and facies)
             - list of test boreholes
@@ -548,7 +557,18 @@ def X_valid(ArchTable, k=3, nreal_un=5, nreal_fa=2,plot=True,
 
     np.random.seed(seed)
     assert len(ArchTable.list_bhs) > 1, "there is not enough boreholes to perform K-validation"
-    
+
+    # make sure fig_dir exists if save_figs is True
+    if save_figs:
+        assert fig_dir is not None, "fig_dir must be specified if save_figs is True"
+        import os
+        if not os.path.exists(fig_dir):
+            os.makedirs(fig_dir)
+        elif os.path.exists(fig_dir):
+            # remove all files in fig_dir
+            for f in os.listdir(fig_dir):
+                os.remove(os.path.join(fig_dir, f))
+
     Lx = ArchTable.xg[-1] - ArchTable.xg[0]
     arch_table_dummy = copy.deepcopy(ArchTable)
     
@@ -608,10 +628,10 @@ def X_valid(ArchTable, k=3, nreal_un=5, nreal_fa=2,plot=True,
         ids = np.arange(n_bh)
         np.random.shuffle(ids)
 
-    elif folding_method == "stratified":
+    elif folding_method == "stratified":  # TO DO
         pass
 
-    elif folding_method == "kmeans":
+    elif folding_method == "kmeans":  # TO DO
         pass
 
     # get folds
@@ -637,7 +657,7 @@ def X_valid(ArchTable, k=3, nreal_un=5, nreal_fa=2,plot=True,
 
         # initialize
         arch_table_dummy.Geol = Geol()  # initialize results to nothing  
-        arch_table_dummy.rem_all_bhs()  # remove previous boreholes
+        arch_table_dummy.rem_all_bhs(standard_bh=True, fake_bh=False, geol_map_bh=False)  # remove previous boreholes
         arch_table_dummy.add_bh(new_fold)
         arch_table_dummy.seed = np.random.randint(1e6, 10e6)
 
@@ -677,7 +697,7 @@ def X_valid(ArchTable, k=3, nreal_un=5, nreal_fa=2,plot=True,
         a = np.array(a)
 
         # test this fold
-        d = test_bh_1fold(arch_table_dummy, a, bh_rm, plot=plot, weighting_method=weighting_method, dic_weights=dic_weights, 
+        d = test_bh_1fold(arch_table_dummy, a, bh_rm, plot=plot, save_figs=save_figs, fig_dir=fig_dir, weighting_method=weighting_method, dic_weights=dic_weights, 
                           proba_correct = proba_correct, brier=brier, aspect=aspect)
         scores = d["brier"]
         scores = np.array(scores)
@@ -693,18 +713,38 @@ def X_valid(ArchTable, k=3, nreal_un=5, nreal_fa=2,plot=True,
             plt.show()
             
         final_score_un = 0
+        final_score_proba_un = 0
         final_score_fa = 0
+        final_score_proba_fa = 0
         total_depth = 0
         for i in range(len(scores[0])):
             de = bh_rm[i].depth
             total_depth += de
             final_score_un += de*scores[0][i]
             final_score_fa += de*scores[1][i]
-            
+            if proba_correct:
+                if np.isnan(d["proba_correct"][0][i]):
+                    pass
+                else:
+                    final_score_proba_un += de*d["proba_correct"][0][i]
+                if np.isnan(d["proba_correct"][1][i]):
+                    pass
+                else:
+                    final_score_proba_fa += de*d["proba_correct"][1][i]
+
         final_score_un /= total_depth
         final_score_fa /= total_depth
         
-        score_folds.append((final_score_un, final_score_fa, scores, np.array(d["proba_correct"]), bh_rm, a))  
+        if proba_correct:
+            final_score_proba_un /= total_depth
+            final_score_proba_fa /= total_depth
+
+        d_res = {}
+        d_res["final brier score units"] = final_score_un
+        d_res["final brier score facies"] = final_score_fa
+        d_res["final proba score units"] = final_score_proba_un
+        d_res["final proba score facies"] = final_score_proba_fa
+        score_folds.append((d_res, scores, np.array(d["proba_correct"]), bh_rm, a))  
 
 
     ### Begin summary ###

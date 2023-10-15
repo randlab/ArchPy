@@ -2,7 +2,7 @@ import numpy as np
 
 
 # automatic inference of the pile
-def infer_pile(l_bhs):
+def infer_pile(l_bhs, n_units=None):
     
     """
     Determine all possible stratigraphic piles compatible with a given set of boreholes
@@ -48,8 +48,12 @@ def infer_pile(l_bhs):
 
                         M[s2, s1] += 1
                         M[s1, s2] += -1
+
                         M[s2, M[s1] >= 1] += 1
                         M[M[s1] >= 1, s2] += -1   
+
+                        M[s1, M[s2] <= -1] += -1
+                        M[M[s2] <= -1, s1] += 1
 
                 M[0, 0] += 1
             else:
@@ -61,14 +65,16 @@ def infer_pile(l_bhs):
     # algo
     l_M = []  # list of all the possible connexion tables
 
-    # how many units present
-    list_ids = []
-    for ibh in l_bhs:
-        for un in ibh:
-            if un not in list_ids:
-                list_ids.append(un)
-    n_units = len(list_ids)
+    if n_units is None:
 
+        # how many units present
+        list_ids = []
+        for ibh in l_bhs:
+            for un in ibh:
+                if un not in list_ids:
+                    list_ids.append(un)
+        n_units = len(list_ids)
+    
 
     # matrix
     M = np.zeros((n_units, n_units), dtype=int)
@@ -81,17 +87,15 @@ def infer_pile(l_bhs):
 
         all_incompatible = False
         
-        iM = -1
         for Mi in l_M:
             
-            iM += 1
             compatible = True   
 
             # check compatibility first
             for i in range(len(bh) - 1, 0, -1):  # loop in the log
                 s1 = bh[i]
                 s2 = bh[i-1]  # s2 is above s1
-                if Mi[s2, s1] <= -1 or (Mi[Mi[s1] >= 1, s2] > 0).any():  # incorrect info
+                if Mi[s2, s1] <= -1 or (Mi[Mi[s1] >= 1, s2] > 0).any():  # incorrect info 
                     compatible = False  # not compatible
                     break  # bh not compatible with Mi --> break and go to next table
 
@@ -107,7 +111,10 @@ def infer_pile(l_bhs):
 
                     Mi[s2, Mi[s1] >= 1] += 1
                     Mi[Mi[s1] >= 1, s2] += -1                       
-        
+
+                    Mi[s1, Mi[s2] <= -1] += -1
+                    Mi[Mi[s2] <= -1, s1] += 1
+
                 Mi[0, 0] += 1
                 all_incompatible = True  # at least one table match the borehole
 
@@ -136,7 +143,7 @@ def infer_pile(l_bhs):
         Mi = l_M[id_table]
         new_l_M.append(Mi)
         
-        if sum((Mi[mask] == 0)) > 2:
+        if sum((Mi[mask] == 0)) > 0:
             definite = False
             
         b = np.zeros(n_units, dtype=int)

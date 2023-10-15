@@ -31,16 +31,16 @@ and then import ArchPy.
 
 ## Requirements
 
-Works with python>=3.8
+Works and tested with 3.8 <= python <= 3.11
 
 The following python packages are absolutely necessary:
    - [Geone](https://github.com/randlab/geone)
    - matplotlib
-   - numpy
+   - numpy (tested with 1.23.5)
    - SciPy
    - sklearn
    - pandas
-   - shapely < 2.0
+   - shapely < 2.0 (will be adapted to shapely 2.0 soon)
    - scikit-learn
 
 These are not required but highly recommanded.
@@ -59,7 +59,7 @@ These are not required but highly recommanded.
  - 05_mps_surfaces : an example how to use MPS to simulate the units surfaces
  - 06_cross_validation : a notebook that present how to perform a cross-validation directly with ArchPy
  - 07_geological_map : this notebook presents how to integrate and use a geological in an ArchPy model
- - 08_inference : little guide how to use archpy inference tools to estimate surface parameters (no facies parameters for now)
+ - 08_inference : little guide how to use archpy inference tools to estimate surface parameters (no facies parameters for now) --> Note that for now, the interface is not working due to unkown issues with ipywidgets.
  - 09_interface : little exemple of an interface to call an preexisting archpy model.
  
  ## Paper

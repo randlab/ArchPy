@@ -1,30 +1,23 @@
 import numpy as np
-import pandas as pd
-import scipy
-import geone
-import geone.covModel as gcm
-import geone.geosclassicinterface as gci
-import geone.imgplot3d as imgplt3
 import os
-import sys
-import pickle
 import copy
 
 #my modules
-import ArchPy
 from ArchPy.base import *
 
 
-from multiprocessing import Pool, Process
+from multiprocessing import Pool
 
 
 def compute_surf_1table(Arch_Table):
 
     Arch_Table.compute_surf(1)
     res_un = Arch_Table.get_units_domains_realizations()[0]
+    surf = Arch_Table.Geol.surfaces_by_piles
+    surf_bot = Arch_Table.Geol.surfaces_bot_by_piles
     del(Arch_Table)
     
-    return res_un
+    return (res_un, surf, surf_bot)
 
 
 def compute_fa_1table(Arch_Table):
@@ -81,8 +74,22 @@ def parallel_compute(Arch_Table, n_real = 1, n_real_fa = 0, n_real_prop = 0):
     with Pool(ncpu) as p:
         res = p.map(compute_surf_1table, l)
     
-    # get results and make array
-    u_domains = np.array(res)
+
+    # get unit results and assemble them
+    u_domains = np.array([i[0] for i in res]).reshape(n_real, nz, ny, nx)
+    list_surf_dic = np.array([i[1] for i in res])
+    # combine dictionaries
+    d = list_surf_dic[0]
+    for k in d.keys():
+        d[k] = np.concatenate([d[k] for d in list_surf_dic], axis=0)
+    surf = d
+
+    list_surf_bot_dic = np.array([i[2] for i in res])
+    # combine dictionaries
+    d = list_surf_bot_dic[0]
+    for k in d.keys():
+        d[k] = np.concatenate([d[k] for d in list_surf_bot_dic], axis=0)
+    surf_bot = d
 
     if n_real_fa > 0:
         ## facies ##
@@ -144,6 +151,8 @@ def parallel_compute(Arch_Table, n_real = 1, n_real_fa = 0, n_real_prop = 0):
     
     # store results 
     Arch_Table.Geol.units_domains = u_domains
+    Arch_Table.Geol.surfaces_by_piles = surf
+    Arch_Table.Geol.surfaces_bot_by_piles = surf_bot
     if n_real_fa > 0:
         # put results in facies_domains
         Arch_Table.Geol.facies_domains = fa_domains
@@ -157,6 +166,6 @@ def parallel_compute(Arch_Table, n_real = 1, n_real_fa = 0, n_real_prop = 0):
                 l.append(iprop[prop_obj.name][0])
             new_d[prop_obj.name] = np.array(l).reshape(n_real, n_real_fa, n_real_prop, nz, ny, nx)
         Arch_Table.Geol.prop_values = new_d
-                         
-    print("done")
+               
+    # print("done")
 

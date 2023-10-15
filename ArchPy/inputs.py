@@ -75,7 +75,7 @@ class drawPoly:
 
 
 #### Load files ####
-def imp_cm(covmodel_dic):
+def imp_cm(covmodel_dic, ws=None):
     
     """
     Function to import a geone covmodel given the dictionnary written in the yaml file
@@ -107,12 +107,26 @@ def imp_cm(covmodel_dic):
     if n == 1:
         cm=gcm.CovModel1D(elem=covmodel_dic["elem"])
     elif n == 2:
-        cm=gcm.CovModel2D(elem=covmodel_dic["elem"], alpha=covmodel_dic["alpha"])
+        if isinstance(covmodel_dic["alpha"], str):
+            alpha = np.load(os.path.join(ws, covmodel_dic["alpha"]))
+        else:
+            alpha = covmodel_dic["alpha"]
+        cm=gcm.CovModel2D(elem=covmodel_dic["elem"], alpha=alpha)
     elif n == 3:
-        cm=gcm.CovModel3D(elem=covmodel_dic["elem"],
-                       alpha=covmodel_dic["alpha"],
-                       beta=covmodel_dic["beta"],
-                       gamma=covmodel_dic["gamma"])
+        if isinstance(covmodel_dic["alpha"], str):
+            alpha = np.load(os.path.join(ws, covmodel_dic["alpha"]))
+        else:
+            alpha = covmodel_dic["alpha"]
+        if isinstance(covmodel_dic["beta"], str):
+            beta = np.load(os.path.join(ws, covmodel_dic["beta"]))
+        else:
+            beta = covmodel_dic["beta"]
+        if isinstance(covmodel_dic["gamma"], str):
+            gamma = np.load(os.path.join(ws, covmodel_dic["gamma"]))
+        else:
+            gamma = covmodel_dic["gamma"]
+        
+        cm=gcm.CovModel3D(elem=covmodel_dic["elem"], alpha=alpha, beta=beta, gamma=gamma)
     
     return cm
 
@@ -799,7 +813,7 @@ def import_d_units(dic_project, all_facies, ws=None):
         for k, v in para["surface"]["dic_surf"].items():
             if k == "covmodel":
                 if v is not None:
-                    dic_s[k]=ArchPy.inputs.imp_cm(v)
+                    dic_s[k]=ArchPy.inputs.imp_cm(v, ws=ws)
                 else:
                     dic_s[k]=v
             else:
@@ -1003,6 +1017,8 @@ def import_project(project_name, ws, import_bhs=True, import_results=True, impor
     if import_bhs:
         # boreholes
         if len(dic_project["boreholes"]) > 0:  # if there is borehole info
+
+            # load true boreholes
             l_bh_path=os.path.join(ws, dic_project["boreholes"]["list_bhs"])
             fd_path=os.path.join(ws, dic_project["boreholes"]["facies_data"])
             un_path=os.path.join(ws, dic_project["boreholes"]["units_data"])
@@ -1012,10 +1028,21 @@ def import_project(project_name, ws, import_bhs=True, import_results=True, impor
             db, l_bhs=ArchPy.inputs.load_bh_files(l_bhs, fa_data, un_data, altitude=True)
             
             boreholes=extract_bhs(db, l_bhs, ArchTable)
+            ArchTable.add_bh(boreholes)
+
+            # fake boreholes
+            l_bh_path=os.path.join(ws, dic_project["boreholes"]["list_fake_bhs"])
+            fd_path=os.path.join(ws, dic_project["boreholes"]["facies_fake_data"])
+            un_path=os.path.join(ws, dic_project["boreholes"]["units_fake_data"])
+            l_bhs=pd.read_csv(l_bh_path)
+            fa_data=pd.read_csv(fd_path)
+            un_data=pd.read_csv(un_path)
+            db, l_bhs=ArchPy.inputs.load_bh_files(l_bhs, fa_data, un_data, altitude=True)
+
+            boreholes=extract_bhs(db, l_bhs, ArchTable, extract_facies=False)
+            ArchTable.add_fake_bh(boreholes)
         else:
             print("No borehole data found")
-        
-        ArchTable.add_bh(boreholes)
     
     if "geol_map" in dic_project.keys():
         path=os.path.join(ws, dic_project["geol_map"]+".npy")
@@ -1062,7 +1089,7 @@ def import_project(project_name, ws, import_bhs=True, import_results=True, impor
 
 
 #### Write files ####
-def write_bh_files(ArchTable):
+def write_bh_files(ArchTable, fake_bhs=False, vb=0):
     
     """
     Write input files from an existing ArchTable project
@@ -1091,7 +1118,14 @@ def write_bh_files(ArchTable):
     facies_top=[]
     facies_bot=[]
     
-    for bh in ArchTable.list_bhs:
+    if fake_bhs:
+        list_of_bhs=ArchTable.list_fake_bhs
+        true_name = ArchTable.name
+        ArchTable.name = "fake_" + true_name
+    else:
+        list_of_bhs=ArchTable.list_bhs
+
+    for bh in list_of_bhs:
         l_id.append(bh.ID)
         l_name.append(bh.name)
         l_bhx.append(bh.x)
@@ -1154,8 +1188,16 @@ def write_bh_files(ArchTable):
     pd.DataFrame(l_bh).set_index("bh_ID").to_csv(os.path.join(ArchTable.ws, ArchTable.name+".lbh")) #list boreholes
     pd.DataFrame(stratis).set_index("bh_ID").to_csv(os.path.join(ArchTable.ws, ArchTable.name+".ud")) #units data
     pd.DataFrame(facies).set_index("bh_ID").to_csv(os.path.join(ArchTable.ws, ArchTable.name+".fd")) #facies data
-    
-    return ArchTable.name+".lbh", ArchTable.name+".ud", ArchTable.name+".fd"
+
+    lbh_name = ArchTable.name+".lbh"
+    ud_name = ArchTable.name+".ud"
+    fd_name = ArchTable.name+".fd"
+
+    if fake_bhs:
+        ArchTable.name = true_name
+
+    return lbh_name, ud_name, fd_name
+
 
 def save_results(ArchTable):
 
@@ -1227,11 +1269,15 @@ def Cm2YamlCm (cm):
     
     cm.elem=cm_tr
     if isinstance(cm, geone.covModel.CovModel2D):
-        cm.alpha=float(cm.alpha)
+        if isinstance(cm.alpha, (int, np.float32, np.float64)):
+            cm.alpha=float(cm.alpha)
     if isinstance(cm, geone.covModel.CovModel3D):
-        cm.alpha=float(cm.alpha)
-        cm.beta=float(cm.beta)
-        cm.gamma=float(cm.gamma)
+        if isinstance(cm.alpha, (int, np.float32, np.float64)):
+            cm.alpha=float(cm.alpha)
+        if isinstance(cm.beta, (int, np.float32, np.float64)):
+            cm.beta=float(cm.beta)
+        if isinstance(cm.gamma, (int, np.float32, np.float64)):
+            cm.gamma=float(cm.gamma)
     return cm
 
 
@@ -1250,7 +1296,7 @@ def create_d_f_covmodels(unit):
     
     return l
 
-def create_d_surface(surface, ws):
+def create_d_surface(surface, unit, ws):
     
     """
     create a yaml dic for a surface object
@@ -1264,11 +1310,16 @@ def create_d_surface(surface, ws):
     d_dic_s={}
     for k, v in surface.dic_surf.items():
         
-        if isinstance(v, str) or isinstance(v, (int, float)):
+        if isinstance(v, str) or isinstance(v, (int, float)) or v is None:
             d_dic_s[k]=v
         elif isinstance(v, gcm.CovModel2D):
             cm=Cm2YamlCm(v)
-            d_dic_s["covmodel"]={"alpha": float(cm.alpha), "elem": cm.elem}
+            if isinstance(cm.alpha, np.ndarray):
+                f_name= unit + "_dic_surf_" + str(k) + ".npy"
+                np.save(os.path.join(ws, f_name), cm.alpha)
+                d_dic_s[k]={"alpha": f_name, "elem": cm.elem}
+            else:
+                d_dic_s["covmodel"]={"alpha": float(cm.alpha), "elem": cm.elem}
         
         elif hasattr(v, "__iter__") and isinstance(v[0], (int, float)): #sequence of numbers
             new_v=[]
@@ -1287,6 +1338,7 @@ def create_d_surface(surface, ws):
             d_dic_s[k]=f_name
             
         else:  # warning some arguments cannot work with the export
+            print("Warning: {} argument of surface {} is possibly not compatible with the export".format(k, surface.name))
             d_dic_s[k]=v
             
     d["dic_surf"]=d_dic_s
@@ -1308,15 +1360,15 @@ def create_d_unit(unit, ws):
         d["color"]=new_c
     
     d["ID"]=unit.ID
-    d["surface"]=create_d_surface(unit.surface, ws)
+    d["surface"]=create_d_surface(unit.surface, unit.name, ws)
     d["list_facies"]=[i.name for i in unit.list_facies]
 
     #dic facies
     d_dic_f={}
     for k, v in unit.dic_facies.items():
-        if isinstance(v, (str, int)):
+        if isinstance(v, (str, int, bool)) or v is None:
             d_dic_f[k]=v
-        if isinstance(v, float): #only a string, float or int
+        elif isinstance(v, (float, np.float32, np.float64)): #only a string, float or int
             d_dic_f[k]=float(v)
         elif isinstance(v, gcm.CovModel3D): #f covmodel
             cm=Cm2YamlCm(v)
@@ -1349,6 +1401,7 @@ def create_d_unit(unit, ws):
             else:
                  d_dic_f[k]=v
         else:
+            print("Warning: {} argument of unit {} is possibly not compatible with the export".format(k, unit.name))
             d_dic_f[k]=v
             
     d["dic_facies"]=d_dic_f
@@ -1500,10 +1553,15 @@ def save_project(ArchTable, results=True):
 
     #save boreholes
     d_bh={}
-    l_bh, units_data, facies_data=write_bh_files(ArchTable)
+    l_bh, units_data, facies_data=write_bh_files(ArchTable, fake_bhs=False)
     d_bh["list_bhs"]=l_bh
     d_bh["units_data"]=units_data
     d_bh["facies_data"]=facies_data
+
+    l_bh, units_data, facies_data=write_bh_files(ArchTable, fake_bhs=True)
+    d_bh["list_fake_bhs"]=l_bh
+    d_bh["units_fake_data"]=units_data
+    d_bh["facies_fake_data"]=facies_data    
     
     d["boreholes"]=d_bh
     

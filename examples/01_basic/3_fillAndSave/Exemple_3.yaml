@@ -298,8 +298,11 @@ Units:
       name: Surface_1
 boreholes:
   facies_data: Exemple_3.fd
+  facies_fake_data: fake_Exemple_3.fd
   list_bhs: Exemple_3.lbh
+  list_fake_bhs: fake_Exemple_3.lbh
   units_data: Exemple_3.ud
+  units_fake_data: fake_Exemple_3.ud
 facies_computed: 1
 grid:
   bot: Exemple_3.bot

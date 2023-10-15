@@ -390,8 +390,11 @@ Units:
       name: Surface_1
 boreholes:
   facies_data: P1.fd
+  facies_fake_data: fake_P1.fd
   list_bhs: P1.lbh
+  list_fake_bhs: fake_P1.lbh
   units_data: P1.ud
+  units_fake_data: fake_P1.ud
 facies_computed: 1
 grid:
   bot: P1.bot

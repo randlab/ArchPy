@@ -4449,6 +4449,7 @@ class Arch_table():
             p.show()
 
     def plot_geol_map(self, plotter=None, v_ex=1, up=0):
+        
     
         nx = self.get_nx()
         ny = self.get_ny()
@@ -4459,22 +4460,22 @@ class Arch_table():
         
         geol_map = self.geol_map
         
-        arr = np.ones([ny, nx, 3])*np.nan
+        arr = np.ones([ny, nx, 4])*np.nan
         for iy in range(geol_map.shape[0]):
             for ix in range(geol_map.shape[1]):
                 unit = self.get_unit(ID=geol_map[iy, ix], type="ID", vb=0)
                 if unit is not None:
-                    arr[iy, ix] = matplotlib.colors.to_rgb(unit.c)
+                    arr[iy, ix] = matplotlib.colors.to_rgba(unit.c)
         
         if plotter is None:
             p = pv.Plotter()
-
-            p.add_mesh(grid,"red", scalars=arr.reshape((nx*ny, 3),order="F"), opacity=.5, rgb=True)
+            
+            p.add_mesh(grid,"red", scalars=arr.reshape((nx*ny, 4),order="F"), opacity=0.5, rgb=True)
             p.add_bounding_box()
             p.show()
         
         else:
-            plotter.add_mesh(grid,"red",scalars=arr.reshape((nx*ny, 3),order="F"), opacity=.5, rgb=True)
+            plotter.add_mesh(grid,"red",scalars=arr.reshape((nx*ny, 4),order="F"), opacity=0.5, rgb=True)
 
     def get_units_domains_realizations(self, iu=None, all_data=True, fill="ID", h_level="all"):
 

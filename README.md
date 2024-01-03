@@ -27,7 +27,7 @@ sys.path.append("path where ArchPy is")
 ```
 and then import ArchPy.
 
-:warning: **Issues with widgets**: For some reasons, widgets does not work properly with recent version of jupyter-server due to recent versions of tornardo. Ensure to have tornado==6.1 if you plan to use widgets and interactive functions with the matplotlib notebook backend. 
+:warning: **Issues with widgets**: For some reasons, widgets does not work properly, probably due to the recent version of jupyter-server. For now these issues are not solved and widgets are not working, except partially with inline backend. 
 
 ## Requirements
 
@@ -40,10 +40,10 @@ The following python packages are absolutely necessary:
    - SciPy
    - sklearn
    - pandas
-   - shapely < 2.0 (will be adapted to shapely 2.0 soon)
+   - shapely
    - scikit-learn
 
-These are not required but highly recommanded.
+These are not required but highly recommanded. They are installed with ArchPy by default.
    - PyVista
    - pyyaml (for export uses)
    - Rasterio (to use rasters)
@@ -59,8 +59,8 @@ These are not required but highly recommanded.
  - 05_mps_surfaces : an example how to use MPS to simulate the units surfaces
  - 06_cross_validation : a notebook that present how to perform a cross-validation directly with ArchPy
  - 07_geological_map : this notebook presents how to integrate and use a geological in an ArchPy model
- - 08_inference : little guide how to use archpy inference tools to estimate surface parameters (no facies parameters for now) --> Note that for now, the interface is not working due to unkown issues with ipywidgets.
- - 09_interface : little exemple of an interface to call an preexisting archpy model.
+ - 08_inference : little guide how to use archpy inference tools to estimate surface parameters (no facies parameters for now) --> Note that for now, the interface is not working due to incompatibilities issues with ipywidgets.
+ - 09_interface : little exemple of an interface to call an preexisting archpy model as well as drawing a new model extension.
  
  ## Paper
  A paper was published on the ArchPy concept and its different capabilities.

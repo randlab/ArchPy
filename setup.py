@@ -26,11 +26,11 @@ setuptools.setup(
                       'scikit-image',
                       'pyyaml',
                       'pandas',
-                      'shapely < 2.0',
+                      'shapely',
                       'rasterio',
                       'geopandas',
                       'ipywidgets',
-                      'tornado==6.1',
+                      'tornado',
                       'notebook'],  # download geone
     packages=setuptools.find_packages(),
     include_package_data=True,

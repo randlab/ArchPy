@@ -390,8 +390,11 @@ Units:
       name: Surface_1
 boreholes:
   facies_data: model1.fd
+  facies_fake_data: fake_model1.fd
   list_bhs: model1.lbh
+  list_fake_bhs: fake_model1.lbh
   units_data: model1.ud
+  units_fake_data: fake_model1.ud
 facies_computed: 1
 grid:
   bot: model1.bot
@@ -415,7 +418,7 @@ prop_computed: 1
 properties:
   K:
     covmodels:
-    - alpha: 0
+    - alpha: 0.0
       beta: 0.0
       elem:
       - !!python/tuple
@@ -426,7 +429,7 @@ properties:
           - 1.0
           w: 0.1
       gamma: 0.0
-    - alpha: -20
+    - alpha: -20.0
       beta: 0.0
       elem:
       - !!python/tuple

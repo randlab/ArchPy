@@ -434,7 +434,16 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, mask2D=None, seed=123456789, 
                 else:
                     mean = kwargs["mean"]
 
-            #return x_eq, v_eq, xIneq_min, vIneq_min,xIneq_max,vIneq_max, mask2D, mean, (nx, ny), (sx, sy), (ox, oy)
+            # set None if no data
+            if len(v_eq) == 0:
+                v_eq=None
+                x_eq=None
+            if len(vIneq_min) == 0:
+                vIneq_min=None
+                xIneq_min=None
+            if len(vIneq_max) == 0:
+                vIneq_max=None
+                xIneq_max=None
             sim=gci.simulate2D(covmodel, (nx, ny), (sx, sy), (ox, oy), method=kwargs["krig_type"], mean=mean,
                                 x=x_eq, v=v_eq,
                                 xIneqMin=xIneq_min, vIneqMin=vIneq_min,
@@ -1689,18 +1698,19 @@ class Arch_table():
 
             polygon_array=np.zeros([ny*nx], dtype=bool)  # 2D array simulation domain
             cell_l = []
+            cell_name = []
             for i,cell in enumerate(self.xu2D):
 
                 xy = ((cell[0]-sx/2, cell[1]-sy/2),(cell[0]-sx/2, cell[1]+sy/2),
                       (cell[0]+sx/2, cell[1]+sy/2),(cell[0]+sx/2, cell[1]-sy/2))
                 p = shapely.geometry.Polygon(xy)
-                p.name = i
+                cell_name.append(i)
                 cell_l.append(p)
 
             l=[]  # list of intersected cells
-            for cell in cell_l:
+            for icell, cell in enumerate(cell_l):
                 if cell.intersects(polygon):
-                    l.append(cell.name)
+                    l.append(cell_name[icell])
             polygon_array[np.array(l)]=1
             polygon=polygon_array.reshape(ny, nx)
 
@@ -6823,10 +6833,10 @@ class Unit():
                         elif mode == "units":
                             hd, facies = ArchTable.hd_un_in_unit(self, iu=iu)
 
+                        hd = np.array(hd)
+                        facies = np.array(facies)
+
                         cat_values=[i.ID for i in list_obj]  # ID values
-                        
-                        hd=np.array(hd)
-                        facies=np.array(facies)
                             
                         ### orientation map ###  -> to modify !!!!
                         if (kwargs["SIS_orientation"]) == "follow_surfaces": # if orientations must follow surfaces
@@ -6856,7 +6866,7 @@ class Unit():
                                     cm.gamma=ga
 
 
-                        #Modify sill of covmodel if there is only one
+                        # Modify sill of covmodel if there is only one
                         if len(self.list_f_covmodel) == 1:
                             if ArchTable.verbose:
                                 print("Only one facies covmodels for multiples facies, adapt sill to right proportions")
@@ -6872,26 +6882,36 @@ class Unit():
                                 
                                 cm_copy=copy.deepcopy(cm) #make a copy
 
-                                if "probability" in kwargs.keys():
-                                    if kwargs["probability"] is not None:
-                                        p = kwargs["probability"][ifa]
+                                if len(hd) > 0:
+
+                                    if "probability" in kwargs.keys():
+                                        if kwargs["probability"] is not None:
+                                            p = kwargs["probability"][ifa]
+                                        else:
+                                            p=np.sum(facies == fa.ID)/len(facies == fa.ID) #calculate proportion of facies
                                     else:
                                         p=np.sum(facies == fa.ID)/len(facies == fa.ID) #calculate proportion of facies
-                                else:
-                                    p=np.sum(facies == fa.ID)/len(facies == fa.ID) #calculate proportion of facies
 
-                                if p > 0:
-                                    var=p*(1-p) #variance
-                                    ratio=var/sill  #ratio btw covmodel and real variance
+                                    if p > 0:
+                                        var=p*(1-p) #variance
+                                        ratio=var/sill  #ratio btw covmodel and real variance
 
-                                    for e in cm_copy.elem:
-                                        e[1]["w"] *= ratio
-                                else:
-                                    for e in cm_copy.elem:
-                                        e[1]["w"] *= 1
+                                        for e in cm_copy.elem:
+                                            e[1]["w"] *= ratio
+                                    else:
+                                        for e in cm_copy.elem:
+                                            e[1]["w"] *= 1
+
                                 self.list_f_covmodel.append(cm_copy)
                                 ifa += 1
 
+                        if len(hd) > 0:
+                            hd=np.array(hd)
+                            facies=np.array(facies)
+                        else:
+                            hd=None
+                            facies=None
+                            
                         ## Simulation
                         simus = gci.simulateIndicator3D(cat_values, self.list_f_covmodel, dimensions, spacing, origin,
                                                         nreal=nreal, method="simple_kriging", x=hd, v=facies, mask=mask,

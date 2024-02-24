@@ -1072,7 +1072,7 @@ class Arch_table():
             if self.list_bhs[i].ID == ID:
                 interest=i
         if interest is None:
-            assert 1, ('the propriety '+ID+' was not found')
+            assert 0, ('the borehole '+ID+' was not found')
         else:
             return interest
 
@@ -6048,7 +6048,6 @@ class Pile():
                     if vb:
                         print("{}: determinist interpolation method, reuse the first surface".format(litho.name))
                 else:
-
                     # change mean if thickness mode is activated
                     if "thickness" in litho.surface.dic_surf.keys():
                         if litho.surface.dic_surf["thickness"] is not None:
@@ -6285,11 +6284,12 @@ class Unit():
     
         Facies keyword arguments to pass to the facies methods (these should be pass through dic_facies !):
         
-            - "SIS" :
+            - SIS :
                 - "neigh" : int, number of neighbors to use for the SIS
                 - r : float, radius of the neighborhood to use for the SIS
                 - probability : list of float, proportion of each facies to use for the SIS
-            - TI                    : geone img, Training image(s) to use
+            - MPS:
+                - TI                    : geone img, Training image(s) to use
                 - mps "classic" parameters (maxscan, thresh, neig (number of neighbours))
                 - npost                 : number of path postprocessing, default 1
                 - radiusMode            : radius mode to use (check deesse manual)
@@ -6298,10 +6298,8 @@ class Unit():
                 - angle1, angle2, angle3: ellipsoid of research rotation angles
                 - ax, ay, az            : anisotropy ratio for research ellipsoid
                 - rot_usage             : 0, 1 or 2 (check deesse manual)
-                - rotAziLoc, rotDipLoc, : local rotation, True or False ?
-                  rotPlungeLoc
-                - rotAzi, rotDip,       : global rotation angles: values, min-max, maps, see deesse_input doc
-                  rotPlunge                
+                - rotAziLoc rotDipLoc, rotPlungeLoc : local rotation angles: values, min-max, maps, see deesse_input doc
+                - rotAzi, rotDip, rotPlunge : global rotation angles: values, min-max, maps, see deesse_input doc
                 - xr, yr, zr            : ratio for geom transformation
                 - xloc, yloc, zloc      : local or not transformation
                 - homo_usage            : homothety usage

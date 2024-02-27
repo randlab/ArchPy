@@ -19,7 +19,6 @@ def compute_surf_1table(Arch_Table):
     
     return (res_un, surf, surf_bot)
 
-
 def compute_fa_1table(Arch_Table):
     
     Arch_Table.compute_facies(1)
@@ -27,7 +26,6 @@ def compute_fa_1table(Arch_Table):
     del(Arch_Table)
     
     return res_fa
-
 
 def compute_prop_1table(Arch_Table):
     
@@ -153,6 +151,7 @@ def parallel_compute(Arch_Table, n_real = 1, n_real_fa = 0, n_real_prop = 0):
     Arch_Table.Geol.units_domains = u_domains
     Arch_Table.Geol.surfaces_by_piles = surf
     Arch_Table.Geol.surfaces_bot_by_piles = surf_bot
+    Arch_Table.surfaces_computed=1
     if n_real_fa > 0:
         # put results in facies_domains
         Arch_Table.Geol.facies_domains = fa_domains

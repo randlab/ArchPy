@@ -1515,6 +1515,9 @@ def save_project(ArchTable, results=True):
     d["surfaces_computed"]=ArchTable.surfaces_computed
     d["facies_computed"]=ArchTable.facies_computed
     d["prop_computed"]=ArchTable.prop_computed
+    d["nreal_units"]=ArchTable.nreal_units
+    d["nreal_fa"]=ArchTable.nreal_fa
+    d["nreal_prop"]=ArchTable.nreal_prop
 
     ##grid##
     gr={}

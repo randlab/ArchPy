@@ -1072,7 +1072,7 @@ class Arch_table():
             if self.list_bhs[i].ID == ID:
                 interest=i
         if interest is None:
-            assert 1, ('the propriety '+ID+' was not found')
+            assert 0, ('the borehole '+ID+' was not found')
         else:
             return interest
 
@@ -5212,6 +5212,59 @@ class Arch_table():
             p.show_axes()
             p.show()
 
+    def compute_mean_prop(self, property, type="arithmetic", inside_units=None, inside_facies=None):
+
+        #load property array and facies array
+        prop=self.get_prop(property)  # to modify
+        prop_shape=prop.shape
+        facies=self.get_facies()
+        facies_shape=facies.shape
+
+        #keep values in only wanted units
+        if inside_units is not None:
+            nreal_units=self.nreal_units  # number of units real
+            mask_all=np.zeros(prop_shape)
+            for iu in range(nreal_units):
+                for u in inside_units:
+                    if isinstance(u, str):
+                        mask=self.unit_mask(u, iu=iu)
+                    elif isinstance(u, Unit) and u in self.get_all_units():
+                        mask=self.unit_mask(u.name, iu=iu)
+                    else:
+                        raise ValueError ("Unit passed in inside_units must be a unit name or a unit object contained in the ArchTable")
+                    mask_all[iu,:,:,mask == 1]=1
+
+            prop[mask_all != 1]=np.nan
+
+        #keep values in only wanted facies
+        if inside_facies is not None:
+            mask_all=np.zeros(prop_shape)
+            for iu in range(nreal_units):
+                for ifa in range(self.nreal_fa):
+                    for fa in inside_facies:
+                        if isinstance(fa, str):
+                            mask=(facies[iu,ifa] == self.get_facies_obj(fa).ID)
+                        elif isinstance(fa, Facies) and fa in self.get_all_facies():
+                            mask=(facies[iu,ifa] == fa.ID)
+                        else:
+                            raise ValueError ("Unit passed in inside_units must be a unit name or a unit object contained in the ArchTable")
+                        mask_all[iu,ifa,:,mask == 1]=1
+
+            prop[mask_all != 1]=np.nan
+
+        if ~prop.any():
+            raise ValueError ("Error: No values found")
+
+        if type == "arithmetic":
+            arr=np.nanmean(prop.reshape(-1,self.get_nz(),self.get_ny(),self.get_nx()),axis=0)
+
+        elif type == "std":
+            arr=np.nanstd(prop.reshape(-1,self.get_nz(),self.get_ny(),self.get_nx()),axis=0)
+
+        elif type == "median":
+            arr=np.nanmedian(prop.reshape(-1,self.get_nz(),self.get_ny(),self.get_nx()),axis=0)
+
+        return arr
 
     def plot_mean_prop(self, property, type="arithmetic", v_ex=1, inside_units=None, inside_facies=None, filtering_interval=None,
                     plotter=None, slicex=None, slicey=None, slicez=None, cmin=None, cmax=None, scalar_bar_kwargs=None, **kwargs):
@@ -5620,6 +5673,30 @@ class Arch_table():
                     s2 = bh.z - bh.depth
                     if unit is not None:
                         ax.bar(ix, s - s2, bottom=s2, color=unit.c, alpha=1, edgecolor = 'black', width=width)
+            
+            elif typ == "facies":
+                if bh.log_facies is not None:
+                    if x is None:
+                        ix = bh.x
+                    else:
+                        ix = x
+
+                    i = -1
+                    for i in range(len(bh.log_facies)-1):
+                        s = bh.log_facies[i][1]
+                        facies = bh.log_facies[i][0]
+
+                        if i < len(bh.log_facies):
+                            s2 = bh.log_facies[i+1][1]
+
+                        if facies is not None:
+                            ax.bar(ix, s - s2, bottom=s2, color=facies.c, alpha=1, edgecolor = 'black', width=width)
+
+                    s = bh.log_facies[i+1][1]
+                    facies = bh.log_facies[i+1][0]
+                    s2 = bh.z - bh.depth
+                    if facies is not None:
+                        ax.bar(ix, s - s2, bottom=s2, color=facies.c, alpha=1, edgecolor = 'black', width=width)
 
         if typ == "units":
             arr=self.get_units_domains_realizations(iu=iu, fill="color", all_data=False)
@@ -5651,6 +5728,13 @@ class Arch_table():
         elif typ =="prop":
             assert isinstance(property, str), "property should be given in a property name --> string"
             arr=self.get_prop(property, iu, ifa, ip, all_data=False)
+
+        elif typ == "prop_mean":
+            arr=self.compute_mean_prop(property, inside_units=None, inside_facies=None)
+
+        elif typ == "prop_std":
+            assert isinstance(property, str), "property should be given in a property name --> string"
+            arr=self.compute_mean_prop(property, type="std", inside_units=None, inside_facies=None)
 
         elif typ =="entropy_units":
             units=self.get_units_domains_realizations()
@@ -5702,7 +5786,7 @@ class Arch_table():
 
             p1 = p_list[ip]
             p2 = p_list[ip+1]
-            xmin = min(p1[0], p2[0])
+            xmin = min(p1[0], p2[0]) 
             xmax = max(p1[0], p2[0])
             Lx = xmax - xmin
             xmin -= max(0.2*Lx, dist_max/2)
@@ -6285,11 +6369,12 @@ class Unit():
     
         Facies keyword arguments to pass to the facies methods (these should be pass through dic_facies !):
         
-            - "SIS" :
+            - SIS:
                 - "neigh" : int, number of neighbors to use for the SIS
                 - r : float, radius of the neighborhood to use for the SIS
                 - probability : list of float, proportion of each facies to use for the SIS
-            - TI                    : geone img, Training image(s) to use
+            - MPS:                  
+                - TI                    : geone img, Training image(s) to use
                 - mps "classic" parameters (maxscan, thresh, neig (number of neighbours))
                 - npost                 : number of path postprocessing, default 1
                 - radiusMode            : radius mode to use (check deesse manual)
@@ -6298,10 +6383,8 @@ class Unit():
                 - angle1, angle2, angle3: ellipsoid of research rotation angles
                 - ax, ay, az            : anisotropy ratio for research ellipsoid
                 - rot_usage             : 0, 1 or 2 (check deesse manual)
-                - rotAziLoc, rotDipLoc, : local rotation, True or False ?
-                  rotPlungeLoc
-                - rotAzi, rotDip,       : global rotation angles: values, min-max, maps, see deesse_input doc
-                  rotPlunge                
+                - rotAziLoc, rotDipLoc, rotPlungeLoc : local rotation, True or False ?
+                - rotAzi, rotDip, rotPlunge : global rotation angles: values, min-max, maps, see deesse_input doc
                 - xr, yr, zr            : ratio for geom transformation
                 - xloc, yloc, zloc      : local or not transformation
                 - homo_usage            : homothety usage

@@ -37,7 +37,7 @@ def compute_prop_1table(Arch_Table):
     
     return res_prop
 
-def parallel_compute(Arch_Table, n_real = 1, n_real_fa = 0, n_real_prop = 0):
+def parallel_compute(Arch_Table, n_real = 1, n_real_fa = 0, n_real_prop = 0, l_u = None):
     
     nx = Arch_Table.get_nx()
     ny = Arch_Table.get_ny()
@@ -48,7 +48,6 @@ def parallel_compute(Arch_Table, n_real = 1, n_real_fa = 0, n_real_prop = 0):
     elif Arch_Table.ncpu > 0:
         ncpu = Arch_Table.ncpu
     
-    
     Arch_Table.nreal_units = n_real
     
     ## units ##
@@ -56,24 +55,27 @@ def parallel_compute(Arch_Table, n_real = 1, n_real_fa = 0, n_real_prop = 0):
     ncpu_units_real = max(int(ncpu/n_real), 1)
     left_cpu = int(ncpu - ncpu_units_real*n_real)
     
-    for iu in range(n_real):
-        
-        # make a copy
-        T1_copy = copy.deepcopy(Arch_Table)
-        T1_copy.seed  = int(Arch_Table.seed + iu)
-        if left_cpu > 0:
-            cpu_bonus = 1
-            left_cpu -= 1
-        else:
-            cpu_bonus = 0
-        T1_copy.ncpu = ncpu_units_real + cpu_bonus
-        #print(T1_copy.ncpu)
-        T1_copy.verbose = 3
-        l.append(T1_copy)
+    if l_u is not None:
+        l = l_u
+    else:
+        for iu in range(n_real):
+            
+            # make a copy
+            T1_copy = copy.deepcopy(Arch_Table)
+
+            T1_copy.seed  = int(Arch_Table.seed + iu)
+            if left_cpu > 0:
+                cpu_bonus = 1
+                left_cpu -= 1
+            else:
+                cpu_bonus = 0
+            T1_copy.ncpu = ncpu_units_real + cpu_bonus
+
+            T1_copy.verbose = 3
+            l.append(T1_copy)
     
     with Pool(ncpu) as p:
         res = p.map(compute_surf_1table, l)
-    
 
     # get unit results and assemble them
     u_domains = np.array([i[0] for i in res]).reshape(n_real, nz, ny, nx)

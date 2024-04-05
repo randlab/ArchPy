@@ -972,6 +972,11 @@ def import_project(project_name, ws, import_bhs=True, import_results=True, impor
     
     ArchTable.set_Pile_master(d_piles[dic_project["Pile_master"]])
     
+    # nreal_units, nreal_fa, nreal_prop
+    ArchTable.nreal_units=dic_project["nreal_units"]
+    ArchTable.nreal_fa=dic_project["nreal_fa"]
+    ArchTable.nreal_prop=dic_project["nreal_prop"]
+
     # add properties
     for prop in d_pro.values():
         ArchTable.add_prop(prop)

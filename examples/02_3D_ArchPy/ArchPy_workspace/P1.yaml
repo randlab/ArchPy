@@ -414,6 +414,9 @@ grid:
   top: P1.top
 name: P1
 ncpu: -1
+nreal_fa: 1
+nreal_prop: 2
+nreal_units: 10
 prop_computed: 1
 properties:
   K:

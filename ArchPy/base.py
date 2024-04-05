@@ -5256,13 +5256,16 @@ class Arch_table():
             raise ValueError ("Error: No values found")
 
         if type == "arithmetic":
-            arr=np.nanmean(prop.reshape(-1,self.get_nz(),self.get_ny(),self.get_nx()),axis=0)
+            arr = np.mean(prop, axis=(0,1,2))
+            # arr=np.nanmean(prop.reshape(-1,self.get_nz(),self.get_ny(),self.get_nx()),axis=0)
 
         elif type == "std":
-            arr=np.nanstd(prop.reshape(-1,self.get_nz(),self.get_ny(),self.get_nx()),axis=0)
+            arr = np.std(prop, axis=(0,1,2))
+            # arr=np.nanstd(prop.reshape(-1,self.get_nz(),self.get_ny(),self.get_nx()),axis=0)
 
         elif type == "median":
-            arr=np.nanmedian(prop.reshape(-1,self.get_nz(),self.get_ny(),self.get_nx()),axis=0)
+            arr = np.median(prop, axis=(0,1,2))
+            # arr=np.nanmedian(prop.reshape(-1,self.get_nz(),self.get_ny(),self.get_nx()),axis=0)
 
         return arr
 

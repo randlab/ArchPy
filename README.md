@@ -44,18 +44,17 @@ Works and tested with 3.8 <= python <= 3.11
 The following python packages are absolutely necessary:
    - [Geone](https://github.com/randlab/geone)
    - matplotlib
-   - numpy (tested with 1.23.5)
-   - SciPy
-   - sklearn
-   - pandas
-   - shapely
-   - scikit-learn
+   - numpy (tested with 1.26.4)
+   - SciPy (tested with 1.14.1) 
+   - sklearn (tested with 1.5.1) 
+   - pandas (tested with 2.2.2) 
+   - shapely (tested with 2.0.6)
 
 These are not required but highly recommanded. They are installed with ArchPy by default.
-   - PyVista
-   - pyyaml (for export uses)
-   - Rasterio (to use rasters)
-   - Geopandas (to use shapefile)
+   - PyVista (tested with 0.44.1)
+   - pyyaml (tested with 6.0.2, for export uses)
+   - Rasterio (tested with 1.3.10, to use rasters)
+   - Geopandas (tested with 1.0.1, to use shapefile)
    - ipywidgets
    
  ## Examples
@@ -69,11 +68,19 @@ These are not required but highly recommanded. They are installed with ArchPy by
  - 07_geological_map : this notebook presents how to integrate and use a geological in an ArchPy model
  - 08_inference : little guide how to use archpy inference tools to estimate surface parameters (no facies parameters for now) --> Note that for now, the interface is not working due to incompatibilities issues with ipywidgets.
  - 09_interface : little exemple of an interface to call an preexisting archpy model as well as drawing a new model extension.
+ - 10_rotation : an example of how to create a rotated model
  
  ## Paper
  A paper was published on the ArchPy concept and its different capabilities.
  The paper was written with the version 0.1 of ArchPy.
  It is available with the following [link](https://www.frontiersin.org/articles/10.3389/feart.2022.884075/).
 
+ ## list of references using ArchPy
+ Schorpp, L., Straubhaar, J., & Renard, P. (2024). From lithological descriptions to geological models: an example from the Upper Aare Valley. Frontiers in Applied Mathematics and Statistics, 10, 1441596 [link](https://doi.org/10.3389/fams.2024.1441596).
+
+ Neven, A., & Renard, P. (2023). A novel methodology for the stochastic integration of geophysical and hydrogeological data in geologically consistent models. Water Resources Research, 59(7). [link](https://doi.org/10.1029/2023WR034992)
+ 
+ Neven, A., Schorpp, L., & Renard, P. (2022). Stochastic multi-fidelity joint hydrogeophysical inversion of consistent geological models. Frontiers in Water, 4, 989440. [link](https://doi.org/10.3389/frwa.2022.989440)
+ 
  ## Contact
  For any questions regarding ArchPy, please contact me at <ludovic.schorpp@unine.ch>

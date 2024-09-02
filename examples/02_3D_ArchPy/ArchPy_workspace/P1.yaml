@@ -407,6 +407,7 @@ grid:
   - 0.0
   - 0.0
   - -15.0
+  rotation_angle: 0
   spacing: !!python/tuple
   - 1.5
   - 1.5

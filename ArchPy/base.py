@@ -703,7 +703,7 @@ class Arch_table():
     """
 
 
-    def __init__(self, name, working_directory="ArchPy_workspace", seed=np.random.randint(1e6), write_results=False, fill_flag=False, verbose=1, ncpu=-1):
+    def __init__(self, name, working_directory="ArchPy_workspace", seed=1312, write_results=False, fill_flag=False, verbose=1, ncpu=-1):
 
         assert name is not None, "A name must be provided"
         # put assert seed
@@ -846,6 +846,18 @@ class Arch_table():
         if self.oz is None:
             assert 0, ('Error: Grid was not added')
         return self.oz
+
+    def get_rot_angle(self):
+        """Returns the rotation angle of the grid"""
+        if self.rot_angle is None:
+            assert 0, ('Error: Grid was not added')
+        return self.rot_angle
+    
+    def get_rot_matrix(self):
+        """Returns the rotation matrix of the grid"""
+        if self.rot_matrix is None:
+            assert 0, ('Error: Grid was not added')
+        return self.rot_matrix
 
     def get_facies(self, iu=0, ifa=0, all_data=True):
 
@@ -1154,6 +1166,14 @@ class Arch_table():
         3 int
             index of the cell containing the point (x,y,z)
         """
+
+        # rotation
+        if self.get_rot_angle() != 0:
+            x -= self.ox
+            y -= self.oy
+            x, y=self.rotate(x, y, -self.get_rot_angle())
+            x += self.ox
+            y += self.oy
 
         cell_x=np.array((x-self.ox)/self.sx).astype(int)
         cell_y=np.array((y-self.oy)/self.sy).astype(int)
@@ -1503,7 +1523,7 @@ class Arch_table():
             ib = band
         return resample_to_grid(xc, yc, rxc, ryc, DEM.read()[ib], method=rspl_method)  # resampling
 
-    def add_grid(self, dimensions, spacing, origin, top=None, bot=None, rspl_method="nearest", polygon=None, mask=None):
+    def add_grid(self, dimensions, spacing, origin, top=None, bot=None, rspl_method="nearest", polygon=None, mask=None, rotation_angle=0):
 
         """
         Method to add/change simulation grid, regular grid.
@@ -1511,17 +1531,17 @@ class Arch_table():
         Parameters
         ----------
         dimensions: sequence of size 3,
-                     number of cells in x, y and direction (nx, ny, nz)
+                number of cells in x, y and direction (nx, ny, nz)
         spacing: sequence of size 3,
-                 spacing of the cells in x, y and direction (sx, sy, sz)
+                spacing of the cells in x, y and direction (sx, sy, sz)
         origin: sequence of size 3,
                 origin of the simulation grid of the cells
                 in x, y and direction (ox, oy, oz)
         top, bot: 2D ndarray of dimensions (ny, nx) or float or raster file,
-                  top and bottom of the simulation domain
+                top and bottom of the simulation domain
         rspl_method: string
-                    scipy resampling method (nearest, linear
-                    and cubic --> nearest is generally sufficient)
+                scipy resampling method (nearest, linear
+                and cubic --> nearest is generally sufficient)
         polygon: 2D ndarray of dimensions (ny, nx)
                 boolean array to indicate where the simulation is active (1)
                 or inactive (0). Polygon can also be a Shapely (Multi) - polygon.
@@ -1529,6 +1549,8 @@ class Arch_table():
                 3D boolean array to indicate where the simulation
                 is active (1) or inactive (0).
                 If given, top, bot and polygon are ignored.
+        rotation_angle: float
+                angle of rotation of the grid in degrees
         """
 
         if self.verbose:
@@ -1549,6 +1571,14 @@ class Arch_table():
         xg=np.arange(ox, ox+nx*sx+sx, sx, dtype=np.float32)
         yg=np.arange(oy, oy+ny*sy+sy, sy, dtype=np.float32)
         zg=np.arange(oz, oz+nz*sz+sz, sz, dtype=np.float32)
+
+        # ensure that the grid is consistent with the dimensions
+        if len(xg) != nx+1:
+            xg = np.linspace(ox, ox+nx*sx, nx+1)
+        if len(yg) != ny+1:
+            yg = np.linspace(oy, oy+ny*sy, ny+1)
+        if len(zg) != nz+1:
+            zg = np.linspace(oz, oz+nz*sz, nz+1)
 
         xgc=xg[: -1]+sx/2
         ygc=yg[: -1]+sy/2
@@ -1574,14 +1604,27 @@ class Arch_table():
         self.ygc=ygc  # yg_cell_centers
         self.zgc=zgc  # zg_cell_centers
 
-        self.xcellcenters, self.ycellcenters = np.meshgrid(xgc, ygc) # cell centers coordinates
+        xc, yc = np.meshgrid(xgc, ygc) # cell centers coordinates
+
+        # rotation
+        if rotation_angle != 0:
+            xc -= ox
+            yc -= oy
+            self.rot_matrix = np.array([[np.cos(np.radians(rotation_angle)), -np.sin(np.radians(rotation_angle))],
+                                        [np.sin(np.radians(rotation_angle)), np.cos(np.radians(rotation_angle))]])
+            xc, yc = np.dot(self.rot_matrix, np.array([xc.flatten(), yc.flatten()])).reshape(2, ny, nx)
+            xc += ox
+            yc += oy
+
+        self.xcellcenters=xc
+        self.ycellcenters=yc
+        self.rot_angle = rotation_angle
 
         z_tree=KDTree(zg.reshape(-1, 1))
         self.z_tree=z_tree
         self.zc_tree=KDTree(zgc.reshape(-1, 1))
         # self.xc_tree=KDTree(xgc.reshape(-1, 1))
         # self.yc_tree=KDTree(ygc.reshape(-1, 1))
-
 
         ## resample top and bot if needed
         if isinstance(top, str) or isinstance(bot, str):
@@ -1620,9 +1663,9 @@ class Arch_table():
                 bot=resample_to_grid(xc, yc, rxc, ryc, rast.read()[0], method=rspl_method)  # resampling
 
         if top is not None:
-            assert top.shape == (ny, nx), "Top shape is not adequat respectively to coordinate vectors. \n Must be have a size of -1 respectively to coordinate vectors xg and yg (which are the vectors of edge cells)"
+            assert top.shape == (ny, nx), "Top shape is not adequat respectively to coordinate vectors (which are the vectors of edge cells). \n Must be have a size of -1 respectively to coordinate vectors xg and yg"
         if bot is not None:
-            assert bot.shape == (ny, nx), "Bot shape is not adequat respectively to coordinate vectors. \n Must be have a size of -1 respectively to coordinate vectors xg and yg (which are the vectors of edge cells)"
+            assert bot.shape == (ny, nx), "Bot shape is not adequat respectively to coordinate vectors(which are the vectors of edge cells). \n Must be have a size of -1 respectively to coordinate vectors xg and yg"
 
         #define top/bot
         if (top is None) and (mask is None):
@@ -1727,6 +1770,33 @@ class Arch_table():
         if self.verbose:
             print("## Grid added and is now simulation grid ##")
 
+    def rotate(self, points, angle = 0):
+
+        """
+        Rotate points around the origin of the grid
+
+        Parameters
+        ----------
+        points: 2D ndarray
+            points to rotate
+        angle: float
+            angle of rotation in degrees
+
+        Returns
+        -------
+        2D ndarray
+            rotated points
+        """
+
+        angle = np.radians(angle)
+        ox = self.ox
+        oy = self.oy
+        points = points - np.array([ox, oy])
+        rot_matrix = np.array([[np.cos(angle), -np.sin(angle)],
+                               [np.sin(angle), np.cos(angle)]])
+        points = np.dot(rot_matrix, points.T).T
+        points = points + np.array([ox, oy])
+        return points
 
     def hierarchy_relations(self, vb=1):
 
@@ -1753,8 +1823,7 @@ class Arch_table():
         if vb:
             print("hierarchical relations set")
 
-
-    def check_bh_inside(self, bh):
+    def check_bh_inside(self, bh, rotate=False):
 
         """
         Check if a borehole is inside the simulation domain
@@ -1782,7 +1851,7 @@ class Arch_table():
             z0_bh=bh.z
             zbot_bh=z0_bh - bh.depth
 
-            bot_z = self.bot[self.coord2cell(bh.x, bh.y)]
+            bot_z = self.bot[self.coord2cell(bh.x, bh.y, rotate=rotate)]
             # if (zbot_bh < zg[0]):  # modification to cut below bot and not below simulation grid
             if (zbot_bh < bot_z):
                 bh.depth=(z0_bh - bot_z) - sz/2
@@ -1816,7 +1885,7 @@ class Arch_table():
 
         #check inside mask and adapt z borehole to DEM
         for iz in np.arange(z0_bh, z0_bh-bh.depth, max(-sz, (-bh.depth) / 2)):
-            if self.coord2cell(bh.x, bh.y, iz) is not None: # check if inside mask
+            if self.coord2cell(bh.x, bh.y, iz, rotate=rotate) is not None: # check if inside mask
                 if self.verbose:
                     #print("Borehole {} inside of the simulation zone".format(bh.ID))
                     pass
@@ -1894,7 +1963,7 @@ class Arch_table():
             print("Borehole {} outside of the simulation zone - not added -".format(bh.ID))
         return 0
 
-    def coord2cell(self, x, y, z=None):
+    def coord2cell(self, x, y, z=None, rotate=True):
 
         """
         Method that returns the cell in which are the given coordinates
@@ -1927,6 +1996,10 @@ class Arch_table():
         sy=self.get_sy()
         sz=self.get_sz()
         nz=self.get_nz()
+
+        # rotation
+        if self.get_rot_angle() != 0 and rotate:
+            x, y = self.rotate(np.array([x, y]), angle=-self.get_rot_angle())  # rotate point (from world to grid coordinates)
 
         # check point inside simulation block
         if (x <= xg[0]) or (x >= xg[-1]):
@@ -2009,7 +2082,13 @@ class Arch_table():
         if hasattr(bhs, "__iter__"):
             for i in bhs:
                 if (isinstance(i, borehole)) and (i not in self.list_bhs):
-                    if self.check_bh_inside(i):
+                    if self.check_bh_inside(i, rotate=True):
+
+                        # rotate borehole if grid is rotated
+                        if self.get_rot_angle() != 0:
+                            new_x, new_y = self.rotate(np.array([i.x, i.y]), angle=-self.get_rot_angle())
+                            i.set_coordinates(new_x, new_y)
+
                         self.list_bhs.append(i)
                         self.bhs_processed = 0  # reset flag of boreholes already processed
                         if self.verbose:
@@ -2020,7 +2099,13 @@ class Arch_table():
 
         else: # boreholes not in a list
             if (isinstance(bhs, borehole)) and (bhs not in self.list_bhs):
-                if self.check_bh_inside(bhs):
+                if self.check_bh_inside(bhs, rotate=True):
+
+                    # rotate borehole if grid is rotated
+                    if self.get_rot_angle() != 0:
+                        new_x, new_y = self.rotate(np.array([bhs.x, bhs.y]), angle=-self.get_rot_angle())
+                        bhs.set_coordinates(new_x, new_y)
+
                     self.list_bhs.append(bhs)
                     self.bhs_processed = 0  # reset flag of boreholes already processed 
                     if self.verbose:
@@ -2086,7 +2171,7 @@ class Arch_table():
         l_pos = []
         for x,y in zip(positions_x,positions_y):
 
-            cell_x, cell_y, z = self.pointToIndex(x,y,1)
+            cell_x, cell_y, z = self.pointToIndex(x, y, 1)
             l_pos.append((cell_x, cell_y, z))
         
         u_list = []
@@ -2252,7 +2337,7 @@ class Arch_table():
 
         Parameters
         ----------
-        raster : 2D ndarray of size (ny, nx)
+        raster : 2D ndarray of size (ny, nx) or str (path to raster)
             geological map to add. Values are units IDs
         """
 
@@ -2265,6 +2350,7 @@ class Arch_table():
             return
         
         elif isinstance(raster, np.ndarray):
+            assert raster.shape == (self.get_ny(), self.get_nx()), "invalid shape for geological map, should be ({}, {})".format(self.get_ny(), self.get_nx())
             self.geol_map = raster
             if self.verbose:
                 print("Geological map added")
@@ -2582,7 +2668,7 @@ class Arch_table():
         sub_units=[]
         for un in unit.SubPile.list_units:
             for ix,iy,iz in zip(un.x, un.y,un.z):
-                cell=self.coord2cell(ix,iy,iz)
+                cell=self.coord2cell(ix,iy,iz, rotate=False)
                 if cell is not None:
                     if mask[cell]:
                         hd.append((ix, iy, iz))
@@ -2613,7 +2699,7 @@ class Arch_table():
         for fa in self.get_all_facies():
             fa_err=0
             for ix,iy,iz in zip(fa.x, fa.y,fa.z):
-                cell=self.coord2cell(ix,iy,iz)
+                cell=self.coord2cell(ix,iy,iz, rotate=False)
                 if mask[cell]:
                     if fa not in unit.list_facies:
                         fa_err += 1
@@ -2741,7 +2827,7 @@ class Arch_table():
         if mask is not None:
             new_l_bhs = []
             for bh in list_bhs:
-                iy, ix = self.coord2cell(bh.x, bh.y)
+                iy, ix = self.coord2cell(bh.x, bh.y, rotate=False)
                 if mask[iy, ix]:
                     new_l_bhs.append(bh)
             list_bhs = new_l_bhs
@@ -3041,7 +3127,7 @@ class Arch_table():
             check_bhs_consistency(new_bh_lst)
 
             def add_contact(s, x, y, z, type="equality", z2=None): #function to add an hd point to a surface
-                if self.coord2cell(x, y, z) is not None:
+                if self.coord2cell(x, y, z, rotate=False) is not None:
                     if type == "equality":
                         s.surface.x.append(x)
                         s.surface.y.append(y)
@@ -3071,7 +3157,7 @@ class Arch_table():
                                 idx=np.where(zi < np.array(bh.log_facies)[:, 1])[0][-1]
                                 fa=bh.log_facies[idx][0]
                                 if fa is not None: # if there is data
-                                    if self.coord2cell(bh.x, bh.y, zi) is not None:
+                                    if self.coord2cell(bh.x, bh.y, zi, rotate=False) is not None:
                                         fa.x.append(bh.x)
                                         fa.y.append(bh.y)
                                         fa.z.append(zi)
@@ -3989,8 +4075,6 @@ class Arch_table():
 
         return azi, dip
 
-
-
     def extract_log_facies_bh(self, facies, bhx, bhy, bhz, depth):
 
         """
@@ -4551,12 +4635,12 @@ class Arch_table():
         if plot_top:
             X, Y=np.meshgrid(self.get_xgc(), self.get_ygc())
             grid=pv.StructuredGrid(X, Y, (self.top-z0)*v_ex+z0)
-            p.add_mesh(grid, opacity=0.8, color="white")
+            p.add_mesh(grid, opacity=1, color="white")
 
         if plot_bot:
             X, Y=np.meshgrid(self.get_xgc(), self.get_ygc())
             grid=pv.StructuredGrid(X, Y, (self.bot-z0)*v_ex+z0)
-            p.add_mesh(grid, opacity=0.8, color="red")
+            p.add_mesh(grid, opacity=1, color="red")
 
         if plotter is None:
             p.add_bounding_box()
@@ -5024,7 +5108,7 @@ class Arch_table():
             excludedVal=[excludedVal]
 
         ## create a dictionnary to map the facies ID to the facies name
-        new_id=1
+        new_id=0
         for i in lst_ID:
             if i != 0:
                 if i not in excludedVal:
@@ -5632,7 +5716,15 @@ class Arch_table():
                 (e.g. p_list=[(100, 200), (300, 200)]
                 --> draw a cross section between these two points)
         typ: string
-            units, facies or a property name
+            type of cross section to make. Possible choices are:
+            units, facies, prop, proba_units, proba_facies,
+            prop_mean, prop_std, entropy_units, entropy_facies
+            and arr. "arr" allows to plot any 3D array 
+            (with the same grid modeling size)
+            that can be provided with the "arr" parameter.
+            If typ corresponds to a plot related to a property,
+            the specific property must be indicated with the "property"
+            parameter.
         iu: int
             units index realization
         ifa: int
@@ -5644,8 +5736,20 @@ class Arch_table():
         esp: float
             spacing to use when sampling the array along the cross section
         ax: matplotlib axes on which to plot
+        colorbar: bool
+            if True, show the colorbar
         ratio_aspect: float
             ratio between y and x axis to adjust vertical exaggeration
+        i: int
+            unit or facies object to plot if typ is "prob_units" or "proba_facies"
+        dist_max: float
+            maximum distance at which the boreholes are plotted on the cross-section
+        width: float
+            width of the boreholes on the cross-section (doesn't know the unit of the width so try different values)
+        vmax: float
+            maximum value for the colorbar
+        vmin: float
+            minimum value for the colorbar
         """
 
         if ax is None:
@@ -6882,7 +6986,7 @@ class Unit():
             list_obj = self.SubPile.list_units
 
         #check if only 1 facies --> homogenous
-        if len(list_obj) < 2 and method != "homogenous":
+        if len(list_obj) < 2 and method != "homogenous" and method != "SubPile":
             method ="homogenous"
             if self.verbose:
                 print("Unit {} has only one facies, facies method sets to homogenous".format(self.name))
@@ -7532,6 +7636,21 @@ class borehole():
 
     def set_log_facies(self, log_facies):
         self.log_facies=log_facies
+
+    def set_coordinates(self, x=None, y=None, z=None):
+        
+        if x is not None:
+            self.x=x
+        if y is not None:
+            self.y=y
+        if z is not None:
+            self.z=z
+
+    def set_ID(self, ID):
+        self.ID=ID
+
+    def set_depth(self, depth):
+        self.depth=depth
 
     def prop_units(self):
 

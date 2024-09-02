@@ -973,9 +973,12 @@ def import_project(project_name, ws, import_bhs=True, import_results=True, impor
     ArchTable.set_Pile_master(d_piles[dic_project["Pile_master"]])
     
     # nreal_units, nreal_fa, nreal_prop
-    ArchTable.nreal_units=dic_project["nreal_units"]
-    ArchTable.nreal_fa=dic_project["nreal_fa"]
-    ArchTable.nreal_prop=dic_project["nreal_prop"]
+    if "nreal_units" in dic_project.keys():
+        ArchTable.nreal_units=dic_project["nreal_units"]
+    if "nreal_fa" in dic_project.keys():
+        ArchTable.nreal_fa=dic_project["nreal_fa"]
+    if "nreal_prop" in dic_project.keys():
+        ArchTable.nreal_prop=dic_project["nreal_prop"]
 
     # add properties
     for prop in d_pro.values():
@@ -988,6 +991,11 @@ def import_project(project_name, ws, import_bhs=True, import_results=True, impor
         spa=dic_project["grid"]["spacing"]
         ori=dic_project["grid"]["origin"]
         
+        # rotation
+        if "rotation_angle" in dic_project["grid"].keys():
+            rotation_angle = dic_project["grid"]["rotation_angle"]
+        else:
+            rotation_angle = 0
         #top
         top=dic_project["grid"]["top"]
         if isinstance(top, str): #path
@@ -1017,7 +1025,7 @@ def import_project(project_name, ws, import_bhs=True, import_results=True, impor
                 mask=np.load(path)
 
         di=(int(di[0]), int(di[1]), int(di[2]))
-        ArchTable.add_grid(di, spa, ori, top=top, bot=bot, mask=mask)
+        ArchTable.add_grid(di, spa, ori, top=top, bot=bot, mask=mask, rotation_angle=rotation_angle)
     
     if import_bhs:
         # boreholes
@@ -1133,8 +1141,16 @@ def write_bh_files(ArchTable, fake_bhs=False, vb=0):
     for bh in list_of_bhs:
         l_id.append(bh.ID)
         l_name.append(bh.name)
-        l_bhx.append(bh.x)
-        l_bhy.append(bh.y)
+
+        # if rotation --> change x and y
+        if ArchTable.get_rot_angle() != 0:
+            new_x, new_y = ArchTable.rotate(np.array([bh.x, bh.y]), angle=+ArchTable.get_rot_angle())
+            l_bhx.append(new_x)
+            l_bhy.append(new_y)
+        else:
+            l_bhx.append(bh.x)
+            l_bhy.append(bh.y)
+
         l_bhz.append(bh.z)
         l_depth.append(bh.depth)
         
@@ -1529,7 +1545,7 @@ def save_project(ArchTable, results=True):
     gr["dimensions"]=(int(ArchTable.get_nx()), int(ArchTable.get_ny()), int(ArchTable.get_nz()))
     gr["spacing"]=(float(ArchTable.get_sx()), float(ArchTable.get_sy()), float(ArchTable.get_sz()))
     gr["origin"]=(float(ArchTable.get_ox()), float(ArchTable.get_oy()), float(ArchTable.get_oz()))
-    
+    gr["rotation_angle"]=ArchTable.get_rot_angle()
     
     #top -> save top with numpy
     file=ArchTable.name+".top"

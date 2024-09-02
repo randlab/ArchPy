@@ -1,0 +1,337 @@
+Facies:
+  Clay:
+    ID: 4
+    color: blue
+  GM:
+    ID: 3
+    color: blueviolet
+  Gravel:
+    ID: 2
+    color: lightgreen
+  SM:
+    ID: 5
+    color: brown
+  Sand:
+    ID: 1
+    color: yellow
+  Silt:
+    ID: 6
+    color: goldenrod
+  basement:
+    ID: 7
+    color: red
+Pile_master: P1
+Piles:
+  P1:
+    list_units:
+    - D
+    - C
+    - B
+    - A
+    name: P1
+    seed: 1
+    verbose: 1
+Results:
+  surfaces: Example_rotation.sf
+  surfaces_bot: Example_rotation.sfb
+  units: Example_rotation.unt
+Units:
+  A:
+    ID: 4
+    color: red
+    dic_facies:
+      f_method: homogenous
+    list_facies:
+    - basement
+    name: A
+    order: 4
+    surface:
+      contact: erode
+      dic_surf:
+        N_transfo: false
+        bandwidth_mult: 1
+        covmodel:
+          alpha: 0.0
+          elem:
+          - !!python/tuple
+            - spherical
+            - r:
+              - 10.0
+              - 10.0
+              w: 1.0
+        int_method: grf_ineq
+        mean: -13
+        tau: 0
+      name: Surface_1
+  B:
+    ID: 3
+    color: green
+    dic_facies:
+      TI: B_dic_facies_TI.gslib
+      angle1: 0
+      angle2: 0
+      angle3: 0
+      anisotropyRatioMode: one
+      ax: 1
+      ay: 1
+      az: 1
+      azi_bot: gradient
+      azi_top: gradient
+      constantThreshold: 0.001
+      dataImage: null
+      deactivationDistance: 4.0
+      dip_bot: gradient
+      dip_top: gradient
+      distanceType:
+      - categorical
+      f_method: MPS
+      globalPdf:
+      - 0.33
+      - 0.37
+      - 0.2
+      - 0.1
+      homo_usage: 1
+      localPdf: B_dic_facies_localPdf.npy
+      localPdfRadius: 12.0
+      maxscan: 0.01
+      neig: 24
+      npost: 1
+      nv: 1
+      outputVarFlag: null
+      probaUsage: 2
+      radiusMode: large_default
+      rotAzi: 90
+      rotAziLoc: false
+      rotDip: 0
+      rotDipLoc: false
+      rotPlunge: 0
+      rotPlungeLoc: false
+      rot_usage: 1
+      rx: 60.00000238418579
+      ry: 30.000001192092896
+      rz: 9.299976348876953
+      thresh: 0.1
+      varname: code
+      xloc: false
+      xr: 0.5
+      yloc: false
+      yr: 0.5
+      zloc: false
+      zr: 1
+    list_facies:
+    - Sand
+    - Gravel
+    - GM
+    - SM
+    name: B
+    order: 3
+    surface:
+      contact: onlap
+      dic_surf:
+        N_transfo: false
+        bandwidth_mult: 1
+        covmodel:
+          alpha: 0.0
+          elem:
+          - !!python/tuple
+            - cubic
+            - r:
+              - 6.0
+              - 6.0
+              w: 0.6
+        int_method: grf_ineq
+        mean: -10
+        tau: 0
+      name: Surface_1
+  C:
+    ID: 2
+    color: blue
+    dic_facies:
+      SIS_orientation: false
+      azimuth: 0
+      dip: 0
+      f_covmodel:
+      - alpha: 0.0
+        beta: 0.0
+        elem:
+        - !!python/tuple
+          - exponential
+          - r:
+            - 10.0
+            - 10.0
+            - 3.0
+            w: 0.25
+        gamma: 0.0
+      - alpha: 45.0
+        beta: 30.0
+        elem:
+        - !!python/tuple
+          - exponential
+          - r:
+            - 20.0
+            - 20.0
+            - 5.0
+            w: 0.21
+        gamma: 0.0
+      f_method: SIS
+      neig: 10
+      plunge: 0
+      probability: null
+      r: 1
+    list_facies:
+    - Clay
+    - Silt
+    name: C
+    order: 2
+    surface:
+      contact: onlap
+      dic_surf:
+        N_transfo: false
+        bandwidth_mult: 1
+        covmodel:
+          alpha: 0.0
+          elem:
+          - !!python/tuple
+            - cubic
+            - r:
+              - 8.0
+              - 8.0
+              w: 0.3
+        int_method: grf_ineq
+        mean: -6
+        tau: 0
+      name: Surface_1
+  D:
+    ID: 1
+    color: gold
+    dic_facies:
+      Flag:
+        1:
+        - - !!python/tuple
+            - -.inf
+            - -0.3
+          - !!python/tuple
+            - -.inf
+            - 0
+        2:
+        - - !!python/tuple
+            - 0.3
+            - .inf
+          - !!python/tuple
+            - -.inf
+            - 0.5
+        3:
+        - - !!python/tuple
+            - -.inf
+            - -0.3
+          - !!python/tuple
+            - 0
+            - .inf
+        5:
+        - - !!python/tuple
+            - -0.3
+            - 0.3
+          - !!python/tuple
+            - -.inf
+            - .inf
+        - - !!python/tuple
+            - 0.3
+            - .inf
+          - !!python/tuple
+            - 0.5
+            - .inf
+      G_cm:
+      - alpha: 0.0
+        beta: 0.0
+        elem:
+        - !!python/tuple
+          - cubic
+          - r:
+            - 5.0
+            - 5.0
+            - 2.0
+            w: 1.0
+        - !!python/tuple
+          - nugget
+          - w: 0.0
+        gamma: 0.0
+      - alpha: 30.0
+        beta: 0.0
+        elem:
+        - !!python/tuple
+          - spherical
+          - r:
+            - 10.0
+            - 10.0
+            - 5.0
+            w: 1.0
+        - !!python/tuple
+          - nugget
+          - w: 0.0
+        gamma: 0.0
+      f_method: TPGs
+      grf_method: sgs
+      neig: 20
+      nit: 100
+    list_facies:
+    - Sand
+    - Gravel
+    - GM
+    - SM
+    name: D
+    order: 1
+    surface:
+      contact: onlap
+      dic_surf:
+        N_transfo: false
+        bandwidth_mult: 1
+        covmodel:
+          alpha: 0.0
+          elem:
+          - !!python/tuple
+            - cubic
+            - r:
+              - 6.0
+              - 6.0
+              w: 0.6
+        int_method: grf_ineq
+        mean: -5
+        tau: 0
+      name: Surface_1
+boreholes:
+  facies_data: Example_rotation.fd
+  facies_fake_data: fake_Example_rotation.fd
+  list_bhs: Example_rotation.lbh
+  list_fake_bhs: fake_Example_rotation.lbh
+  units_data: Example_rotation.ud
+  units_fake_data: fake_Example_rotation.ud
+facies_computed: 0
+geol_map: Example_rotation.gmap
+grid:
+  bot: Example_rotation.bot
+  dimensions: !!python/tuple
+  - 215
+  - 112
+  - 62
+  mask: Example_rotation.msk
+  origin: !!python/tuple
+  - 25.0
+  - 10.0
+  - -15.0
+  rotation_angle: 60
+  spacing: !!python/tuple
+  - 0.046511627906976744
+  - 0.13392857142857142
+  - 0.15
+  top: Example_rotation.top
+name: Example_rotation
+ncpu: -1
+nreal_fa: 0
+nreal_prop: 0
+nreal_units: 2
+prop_computed: 0
+properties: {}
+seed: 1000000
+surfaces_computed: 1
+verbose: 1
+ws: workspace_ref

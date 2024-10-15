@@ -27,6 +27,7 @@ setuptools.setup(
                       'scikit-learn',
                       'scikit-image',
                       'pyyaml',
+                      'geone',
                       'pandas',
                       'shapely',
                       'rasterio',

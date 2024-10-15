@@ -789,6 +789,18 @@ class Arch_table():
             assert 0, ('Error: Grid was not added')
         return self.ygc
 
+    def get_xcellcenters(self):
+        """Returns the x coordinates of the grid"""
+        if self.xcellcenters is None:
+            assert 0, ('Error: Grid was not added')
+        return self.xcellcenters
+    
+    def get_ycellcenters(self):
+        """Returns the y coordinates of the grid"""
+        if self.ycellcenters is None:
+            assert 0, ('Error: Grid was not added')
+        return self.ycellcenters
+
     def get_zgc(self):
         """Returns the centers of the grid in z direction"""
         if self.zg is None:
@@ -1712,8 +1724,9 @@ class Arch_table():
                     mask[il[iy, ix]: iu[iy, ix], iy, ix]=1
 
         # list of coordinates 2D and 3D
-        X, Y=np.meshgrid(xgc, ygc)
-        self.xu2D=np.array([X.flatten(), Y.flatten()], dtype=np.float32).T
+        # X, Y=np.meshgrid(xgc, ygc)
+        # self.xu2D=np.array([X.flatten(), Y.flatten()], dtype=np.float32).T
+        self.xu2D = np.array([xc.flatten(), yc.flatten()]).T
 
         #X, Y, Z=np.meshgrid(xgc, ygc, zgc)
         #self.xu3D=np.array([X.flatten(), Y.flatten(), Z.flatten()]).T
@@ -2435,8 +2448,10 @@ class Arch_table():
                         ix = int(ix)
                         z = top[iy ,ix]-1e-3
                         if u1_above:
+                            # bh = borehole("contact_bh", "contact_bh", xc[iy, ix], yc[iy, ix], z, sz/2, [(u1, z),(u2, z-sz/2)])
                             bh = borehole("contact_bh", "contact_bh", xgc[ix], ygc[iy], z, sz/2, [(u1, z),(u2, z-sz/2)])
                         else : 
+                            # bh = borehole("contact_bh", "contact_bh", xc[iy, ix], yc[iy, ix], z, sz/2, [(u2, z),(u1, z-sz/2)])
                             bh = borehole("contact_bh", "contact_bh", xgc[ix], ygc[iy], z, sz/2, [(u2, z),(u1, z-sz/2)])
                         lst.append(bh)
             
@@ -2466,8 +2481,10 @@ class Arch_table():
         yg = self.get_yg()
         xgc = self.get_xgc()
         ygc = self.get_ygc()
+        xc = self.get_xcellcenters()
+        yc = self.get_ycellcenters()
         sz  = self.get_sz()
-        
+
         raster = self.geol_map
         assert raster.shape == (self.get_ny(), self.get_nx()), "invalid shape for geological map, should be ({}, {})".format(self.get_ny(), self.get_nx())
         
@@ -2494,6 +2511,7 @@ class Arch_table():
                         unit = self.get_unit(ID=unit_id, type="ID", vb=0)
                         if unit is not None:
                             z = self.top[iy, ix]-1e-3
+                            # bh = borehole("raster_bh", "raster_bh", xc[iy, ix], yc[iy, ix], z, sz/4, [(unit, z)])
                             bh = borehole("raster_bh", "raster_bh", xgc[ix], ygc[iy], z, sz/4, [(unit, z)])
 
                             bhs_map.append(bh)
@@ -3743,9 +3761,6 @@ class Arch_table():
             return
         np.random.seed (self.seed) # set seed
         self.nreal_prop=nreal
-        xg=self.xgc
-        yg=self.ygc
-        zg=self.zgc
         nx=self.get_nx()
         ny=self.get_ny()
         nz=self.get_nz()
@@ -3994,8 +4009,6 @@ class Arch_table():
 
             return azi, dip
         
-        xg=self.get_xgc()
-        yg=self.get_ygc()
         zg=self.get_zgc()
         nx=self.get_nx()
         ny=self.get_ny()
@@ -4648,7 +4661,6 @@ class Arch_table():
             p.show()
 
     def plot_geol_map(self, plotter=None, v_ex=1, up=0):
-        
     
         nx = self.get_nx()
         ny = self.get_ny()
@@ -6167,7 +6179,6 @@ class Pile():
                 s.surface.sto_ineq.append([x, y, 0, np.nan, z])
             elif type == "double_ineq":
                 s.surface.sto_ineq.append([x, y, 0, z, z2])  # inferior and upper ineq
-
 
         if ArchTable.check_piles_name() == 0: # check consistency in unit
             return None

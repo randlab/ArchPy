@@ -9,6 +9,7 @@ import geone.covModel as gcm
 import sys
 import ipywidgets as widgets
 from ipywidgets import interact, fixed, Button
+from IPython.display import display
 
 #my modules
 import ArchPy
@@ -271,14 +272,14 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
                         hmax = ev.hmax
                         cm_to_fit.h_max = np.max(hmax)
                         cm_to_fit.alpha = ev.alpha
-                        ev.clear()
+                        ev.clear(all=True)
                         cm_to_fit.fit(dim=dim)
 
                         plt.xlim(0, right = 1.1*np.nanmax(ev.h))
                         plt.ylim(0, top = 1.1*np.nanmax(ev.val))
                     elif i > 0:
                         print("Finished and variogram saved")
-                        cm_to_fit.clear()
+                        cm_to_fit.clear(all=True)
                         button.close()
                         if isinstance(cm_to_fit.cm, gcm.CovModel1D):
                             surf.set_covmodel(gcm.covModel1D_to_covModel2D(cm_to_fit.cm))
@@ -360,13 +361,11 @@ def fit_surfaces(self, default_covmodel=None, **kwargs):
 
     widgets.interact(f, unit=units_n, auto=False, dim=[1, 2], default_covmodel=fixed(default_covmodel), **kwargs)
     
-
-
 # Classes
 
 # var exp
 ## Class for estimate var exp
-def plot_var_exp(h1, h2, v1 ,v2, p1, p2, print_pairs=False):
+def plot_var_exp(h1, h2, v1 ,v2, p1, p2, print_pairs=False, ax=None):
     
     """
     Function to plot experimental variogram
@@ -389,20 +388,24 @@ def plot_var_exp(h1, h2, v1 ,v2, p1, p2, print_pairs=False):
         print number of pairs on the plot. The default is False.
     """
     
-    plt.scatter(h1, v1, label="x'")
-    plt.scatter(h2, v2, label="y'")
-    plt.plot(h1, v1)
-    plt.plot(h2, v2)   
+    if ax is None:
+        axi = plt.gca()
+    else:
+        axi = ax
+
+    axi.scatter(h1, v1, label="x'")
+    axi.scatter(h2, v2, label="y'")
+    axi.plot(h1, v1)
+    axi.plot(h2, v2)   
     
     if print_pairs:
         for i in range(len(h1)):
-            plt.text(h1[i],v1[i],p1[i]) 
+            axi.text(h1[i],v1[i],p1[i]) 
         for i in range(len(h2)):
-            plt.text(h2[i], v2[i], p2[i]) 
+            axi.text(h2[i], v2[i], p2[i]) 
     
-    plt.legend()
-    plt.grid()
-    plt.show()
+    axi.legend()
+    axi.grid()
     
 class Var_exp():
     
@@ -432,6 +435,8 @@ class Var_exp():
         self.hmax = 0
         self.alpha = 0
         self.ax = ax
+        self.w = []
+        self.w2 = []
         
     # fit function
     def fit(self, **kwargs):
@@ -446,20 +451,37 @@ class Var_exp():
         """
 
         if self.ax is None:
-            [l.remove() for l in ax.lines]
+            axi = plt.gca()
         else:
-            [l.remove() for l in self.ax.lines]
+            axi = self.ax
+        [l.remove() for l in axi.lines]
 
-        print("General parameters - Do not touch except dim if you want to specify the dimension")
-        w=widgets.interact(self.make_exp_var, dim=(1, 3), **kwargs)
-        self.w = w
+        # print("General parameters - Do not touch except dim if you want to specify the dimension")
+        # w=widgets.interact(self.make_exp_var, dim=(1, 3), **kwargs)
+        # self.w = w
+
+        def on_change(change_dim):
+
+            self.clear()
+            
+            self.make_exp_var(change_dim["new"])
+
+        change_dim = widgets.ToggleButtons(options=[1, 2], description="Dimension")
+        change_dim.observe(on_change, names='value')
+        self.w2.append(change_dim)
+        display(change_dim)
+
     
-    def clear(self):
+    def clear(self, all=False):
 
         """
         :meta_private:
         """
-        self.w.widget.close()
+        for w in self.w:
+            w.widget.close()
+        if all:
+            for w in self.w2:
+                w.close()
     
     
     # functions
@@ -476,20 +498,21 @@ class Var_exp():
             dictionnary of parameters to pass to make_exp_var_1D, make_exp_var_2D or make_exp_var_3D
         """
 
-        print("Experimental variogram parameters")
         x = self.x
         v = self.v
         self.dim = dim  # store dimension
         if dim == 1:
-            widgets.interact(self.make_exp_var_1D, x=fixed(x), v=fixed(v),
+            wid = widgets.interact(self.make_exp_var_1D, x=fixed(x), v=fixed(v),
                              ncla=(1, 200, 5), hmax=(0, self.hmax_lim, 1), **kwargs)
+            self.w.append(wid)
             
         elif dim == 2:
-            widgets.interact(self.make_exp_var_2D, x=fixed(x), v=fixed(v),
-                     ncla_x=(1, 50, 1), ncla_y=(1, 50, 1), 
-                     hmax_x=(0, self.hmax_lim, 1), hmax_y=(0, self.hmax_lim, 1), 
+            wid = widgets.interact(self.make_exp_var_2D, x=fixed(x), v=fixed(v),
+                     ncla=(1, 50, 1), 
+                     hmax=(0, self.hmax_lim, 1),
                      alpha=(-90, 90, 5),
                      make_plot=fixed(False), **kwargs)
+            self.w.append(wid)
             
         elif dim == 3:
             # TO DO
@@ -531,7 +554,7 @@ class Var_exp():
         plt.legend()
         plt.grid()
         
-    def make_exp_var_2D(self, x, v, hmax_x, hmax_y, ncla_x=10, ncla_y=10, alpha=0, **kwargs):
+    def make_exp_var_2D(self, x, v, hmax, ncla, alpha=0, **kwargs):
         
         """
         Function to estimate the experimental variogram in 2D
@@ -558,15 +581,15 @@ class Var_exp():
 
         plt.cla()
         
-        if hmax_x <= 0:
-            hmax_x = np.nan
-        if hmax_y <= 0:
-            hmax_y = np.nan
-            
-        ncla = (ncla_x, ncla_y)
-        hmax=(hmax_x, hmax_y)
+        if hmax <= 0:
+            hmax = np.nan
+
+        tol_dist = hmax / ncla        
+        ncla = (ncla, ncla)
+        hmax=(hmax, hmax)
+
         self.hmax = hmax
-        (h1, v1, p1), (h2, v2, p2) = gcm.variogramExp2D(x, v, alpha, 
+        (h1, v1, p1), (h2, v2, p2) = gcm.variogramExp2D(x, v, alpha, tol_dist=tol_dist,
                                                         hmax=hmax, ncla=ncla,
                                                         **kwargs)
         
@@ -574,7 +597,7 @@ class Var_exp():
         self.h = np.array((h1, h2))
         self.val = np.array((v1, v2))
         self.alpha = alpha
-        plot_var_exp(h1, h2, v1 ,v2, p1, p2)
+        plot_var_exp(h1, h2, v1 ,v2, p1, p2, ax=self.ax)
         plt.legend()
         
     def make_exp_var_3D(self, x, v, ncla=(10, 10, 10), hmax=None, alpha=0, beta=0, gamma=0, **kwargs):
@@ -583,7 +606,6 @@ class Var_exp():
                                                                       alpha, beta, gamma,
                                                                       hmax=hmax, ncla=ncla,
                                                                       **kwargs)
-
 
 class Cm2fit():
     
@@ -609,7 +631,7 @@ class Cm2fit():
 
 
     # 1D estimation
-    def __init__(self, h_max=10, w_max=10, r_max = 100, nu_max=10, alpha=0, ax=None):
+    def __init__(self, h_max=100, w_max=10, r_max = 100, nu_max=10, alpha=0, ax=None):
         
         self.h_max = h_max
         self.w_max = w_max
@@ -618,6 +640,7 @@ class Cm2fit():
         self.alpha = alpha
         self.l = []
         self.w = []
+        self.w2 = []
         self.ax = ax
 
     # update functions 
@@ -630,17 +653,19 @@ class Cm2fit():
         """
         #remove
         if self.ax is None:
-            [l.remove() for l in ax.lines]
+            axi = plt.gca()
         else:
-            [l.remove() for l in self.ax.lines]
+            axi = self.ax
+
+        [l.remove() for l in axi.lines]
+
         #update params
         self.h_max = h_max
         
         # plot
         h = np.arange(0, self.h_max, 0.1)
         f = self.cm.vario_func()
-        plt.plot(h, f(h), c="k")
-        plt.show()
+        axi.plot(h, f(h), c="k")
     
     def update_cm2D(self, h_max, alpha):
         
@@ -652,9 +677,11 @@ class Cm2fit():
 
         #remove
         if self.ax is None:
-            [l.remove() for l in ax.lines]
+            axi = plt.gca()
         else:
-            [l.remove() for l in self.ax.lines]
+            axi = self.ax
+
+        [l.remove() for l in axi.lines]
         
         #update params
         self.h_max = h_max
@@ -663,7 +690,6 @@ class Cm2fit():
         # plot
         self.cm.plot_model_one_curve(1, True, hmax=self.h_max, color="blue")
         self.cm.plot_model_one_curve(2, True, hmax=self.h_max, color="orange")  
-        
     
     def make_update(self):
         
@@ -676,11 +702,11 @@ class Cm2fit():
         def update(i, typ, **kwargs):
             
             if self.ax is None:
-                [l.remove() for l in ax.lines]
-                # ax.texts.clear()
+                axi = plt.gca()
             else:
-                [l.remove() for l in self.ax.lines]
-                # self.ax.texts.clear()
+                axi = self.ax
+
+            [l.remove() for l in axi.lines]
             
             if typ == "nugget":
                 dic = {"w": kwargs["w"]}
@@ -695,7 +721,7 @@ class Cm2fit():
             
             f = self.cm.vario_func()
             h = np.arange(0, self.h_max, 0.1)
-            plt.plot(h, f(h), c="k")
+            axi.plot(h, f(h), c="k")
             
             
         return update
@@ -712,12 +738,19 @@ class Cm2fit():
             
             # remove previous lines
             if self.ax is None:
-                for o in range(2):
-                    [l.remove() for l in ax.lines]
-                # ax.texts.clear()
+                axi = plt.gca()
             else:
-                for o in range(2):
-                    [l.remove() for l in self.ax.lines]
+                axi = self.ax
+
+            [l.remove() for l in axi.lines]
+
+            # if self.ax is None:
+            #     for o in range(2):
+            #         [l.remove() for l in ax.lines]
+            #     # ax.texts.clear()
+            # else:
+            #     for o in range(2):
+            #         [l.remove() for l in self.ax.lines]
                 # self.ax.texts.clear()
             
             if typ == "nugget":
@@ -735,6 +768,7 @@ class Cm2fit():
             self.cm.plot_model_one_curve(1, True, hmax=self.h_max, color="blue", label="x'")
             self.cm.plot_model_one_curve(2, True, hmax=self.h_max, color="orange", label="y'")
             plt.legend()
+
         return update
     
     # display widgets
@@ -761,10 +795,10 @@ class Cm2fit():
             self.cm = gcm.CovModel1D(elem = elem)
 
             update = self.make_update()
-            widgets.interact(self.update_hmax, h_max=(0, 2*self.h_max))
+            w_hmax = widgets.interact(self.update_hmax, h_max=(0, 2*self.h_max))
+            self.w.append(w_hmax)
             for i in range(n_struc):
                 update = self.make_update()
-
 
                 wid = widgets.interact(update, i=fixed(i), typ=["spherical", "exponential", "cubic", "gaussian", "matern", "nugget"],
                                           r=(0, self.r_max, self.r_max/1000),
@@ -779,7 +813,8 @@ class Cm2fit():
             self.cm = gcm.CovModel2D(elem = elem, alpha=self.alpha)
             
             update = self.make_update_2D()
-            widgets.interact(self.update_cm2D, h_max=(0, 2*self.h_max), alpha=fixed(self.alpha))  
+            w_hmax = widgets.interact(self.update_cm2D, h_max=(0, 2*self.h_max), alpha=fixed(self.alpha)) 
+            self.w.append(w_hmax) 
             for i in range(n_struc):
                 update = self.make_update_2D()
                 wid = widgets.interact(update, i=fixed(i), typ=["spherical", "exponential", "cubic","gaussian", "matern", "nugget"],
@@ -797,16 +832,31 @@ class Cm2fit():
 
         plt.grid()
         if self.ax is None:
-            [l.remove() for l in ax.lines]
-            # ax.texts.clear()
+            axi = plt.gca()
         else:
-            [l.remove() for l in self.ax.lines]
-            # self.ax.texts.clear()
+            axi = self.ax
+        [l.remove() for l in axi.lines]
         
-        wid = widgets.interact(self.choose_struc, n_struc=(0, 10), dim=fixed(dim))
-        self.w.append(wid)
-        
-    def clear(self):
+        def on_change(_):
+
+            # remove legend if exists
+            if axi.get_legend() is not None:
+                axi.get_legend().remove()
+
+            self.clear()
+            
+            self.choose_struc(change_w.value, change_dim.value)
+
+        change_w = widgets.IntSlider(value=1, min=1, max=4, description="Number of structures")
+        change_dim = widgets.ToggleButtons(options=[1, 2], description="Dimension")
+        self.w2.append(change_w)
+        self.w2.append(change_dim)
+        change_w.observe(on_change, names='value')
+        change_dim.observe(on_change, names='value')
+        display(change_dim)
+        display(change_w)
+
+    def clear(self, all=False):
 
         """
         :meta private:
@@ -814,4 +864,7 @@ class Cm2fit():
 
         for w in self.w:
             w.widget.close()
-        
+
+        if all:
+            for w in self.w2:
+                w.close()

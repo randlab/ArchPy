@@ -332,7 +332,6 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
                     if vb:
                         print("Nothing has changed")
 
-    
                                                
 def fit_surfaces(self, default_covmodel=None, **kwargs):
 
@@ -349,17 +348,28 @@ def fit_surfaces(self, default_covmodel=None, **kwargs):
         Arguments for :func:`infer_surface`. See :func:`infer_surface` for more details
     """
 
-    print(default_covmodel)
+
     # create a nested function to set default argument (ArchTable and surface)
-    def f(unit, auto, default_covmodel, **kwargs):
-        unit = self.get_unit(unit)
-        def _f():
-            infer_surface(self, unit, auto=auto, default_covmodel=default_covmodel, **kwargs)
-        widgets.interact(_f, **kwargs)
+    # def f(unit, auto, default_covmodel, **kwargs):
+    #     unit = self.get_unit(unit)
+    #     def _f():
+    #         infer_surface(self, unit, auto=auto, default_covmodel=default_covmodel, **kwargs)
+    #     widgets.interact(_f, **kwargs)
         
     units_n = [i.name for i in self.get_all_units()]
 
-    widgets.interact(f, unit=units_n, auto=False, dim=[1, 2], default_covmodel=fixed(default_covmodel), **kwargs)
+    def on_change(_):
+
+        infer_surface(self, self.get_unit(change_unit.value), auto=change_auto.value, default_covmodel=default_covmodel, **kwargs)
+
+    change_unit = widgets.ToggleButtons(options=units_n, description="Unit")
+    change_auto = widgets.ToggleButtons(options=[True, False], description="Auto")
+
+    # widgets.interact(f, unit=units_n, auto=False, dim=[1, 2], default_covmodel=fixed(default_covmodel), **kwargs)
+    change_unit.observe(on_change, names='value')
+    change_auto.observe(on_change, names='value')
+    display(change_unit)
+    display(change_auto)
     
 # Classes
 

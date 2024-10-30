@@ -51,7 +51,9 @@ def cm_any_nan(cm):
                             
                             
 def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1, plot=True,
-                  npoints_min=20, max_nugget=1, bounds = None, default_covmodel=None, vb=1, **kwargs):
+                  npoints_min=20, max_nugget=1, bounds = None, default_covmodel=None, vb=1, 
+                  l=None,
+                  **kwargs):
     
     """
     Infer surface parameters of a unit in an :class:`base.Arch_table`. Fitting can be done automatically or manually.
@@ -79,6 +81,13 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
     bounds: list, optional  
         bounds for the parameters of the covmodel to fit
         list containing two lists, one for the lower bounds and one for the upper bounds of each parameter
+    default_covmodel: :class:`geone.CovModel2D`, optional
+        default covmodel to add if not enough data for a variogram
+    vb: int, optional
+        verbosity level. 0 for no output, 1 for output
+    l: list, optional
+        list to store the widgets
+
 
     Returns
     -------
@@ -86,11 +95,11 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
         inferred covmodel
     """
     
-    if plot:
-        plt.cla()
-        plt.close()
-        global fig, ax  # global figure to allow class to access to the plot
-        fig,ax=plt.subplots()
+    # if plot:
+    #     plt.cla()
+    #     plt.close()
+    #     global fig, ax  # global figure to allow class to access to the plot
+    #     fig,ax=plt.subplots()
         
     surf = unit.surface
 
@@ -101,6 +110,9 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
     Ly = ArchTable.get_yg()[-1] - ArchTable.get_yg()[0]
     
     dmax = np.sqrt(Lx**2 + Ly**2)
+
+    if l is None:
+        l = []
 
     if len(surf.z) > npoints_min:
         
@@ -179,8 +191,6 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
                         plt.xlim(-hmax*0.1, hmax)
                     plt.xlabel("h [L]")
                     plt.legend() 
-                    plt.show() 
-                
 
             elif dim == 2: 
                 
@@ -254,12 +264,15 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
                     
                 # set model
                 surf.set_covmodel(cm_fitted)
+
+            return None, None
                 
         else : # manual fitting
             
             #create a continue Button
             button = Button(description="Continue")  # continue button
             output = widgets.Output()
+            l.append(button)
             display(button, output)
             
             # function to separate exp var and fitting
@@ -278,7 +291,8 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
                         plt.xlim(0, right = 1.1*np.nanmax(ev.h))
                         plt.ylim(0, top = 1.1*np.nanmax(ev.val))
                     elif i > 0:
-                        print("Finished and variogram saved")
+                        if vb:
+                            print("Finished and variogram saved")
                         cm_to_fit.clear(all=True)
                         button.close()
                         if isinstance(cm_to_fit.cm, gcm.CovModel1D):
@@ -297,8 +311,8 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
             global i
             i = 0
             button.on_click(on_button_clicked)
-            
-            # display(button)  # Important !! --> you have to use display to show the button
+
+            return ev, cm_to_fit
             
     else :  # not enough data for a variogram
 
@@ -316,8 +330,11 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
                     surf.set_covmodel(cm_def)
 
             button = Button(description="add default covmodel")  # continue button
+            l.append(button)
             display(button)
             button.on_click(on_button_clicked)
+
+            return None, None
 
         else:
             if vb:
@@ -331,6 +348,8 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
                 else:
                     if vb:
                         print("Nothing has changed")
+    
+            return None, None
 
                                                
 def fit_surfaces(self, default_covmodel=None, **kwargs):
@@ -358,12 +377,37 @@ def fit_surfaces(self, default_covmodel=None, **kwargs):
         
     units_n = [i.name for i in self.get_all_units()]
 
+    global fig, ax
+    fig, ax = plt.subplots()
+
+    l = []
+
     def on_change(_):
 
-        infer_surface(self, self.get_unit(change_unit.value), auto=change_auto.value, default_covmodel=default_covmodel, **kwargs)
+        global obj1, obj2
+
+        # clear existing plots
+        ax.cla()
+
+        # clear widgets
+        if obj1 is not None:
+            obj1.clear(all=True)
+        if obj2 is not None:
+            obj2.clear(all=True)
+
+        for w in l:
+            w.close()
+
+        obj1, obj2 = infer_surface(self, self.get_unit(change_unit.value), 
+                      auto=change_auto.value, default_covmodel=default_covmodel,
+                      l=l,
+                      **kwargs)
+        
+    global obj1, obj2
+    obj1, obj2 = None, None
 
     change_unit = widgets.ToggleButtons(options=units_n, description="Unit")
-    change_auto = widgets.ToggleButtons(options=[True, False], description="Auto")
+    change_auto = widgets.ToggleButtons(options=[False, True], description="Auto")
 
     # widgets.interact(f, unit=units_n, auto=False, dim=[1, 2], default_covmodel=fixed(default_covmodel), **kwargs)
     change_unit.observe(on_change, names='value')
@@ -652,6 +696,7 @@ class Cm2fit():
         self.w = []
         self.w2 = []
         self.ax = ax
+        self.cm = None
 
     # update functions 
     def update_hmax(self, h_max):

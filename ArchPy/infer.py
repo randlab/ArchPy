@@ -151,7 +151,7 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
                         bmax = []
 
                         for el in cm_to_fit.elem:
-                            if el[0] is not "nugget":
+                            if el[0] != "nugget":
                                 for k in el[1].keys():
                                     if k == "w":
                                         bmin.append(0)
@@ -223,7 +223,7 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
                         bmax = []
 
                         for el in cm_to_fit.elem:
-                            if el[0] is not "nugget":
+                            if el[0] != "nugget":
                                 for k in el[1].keys():
                                     if k == "w":
                                         bmin.append(0)
@@ -366,14 +366,6 @@ def fit_surfaces(self, default_covmodel=None, **kwargs):
     **kwargs :
         Arguments for :func:`infer_surface`. See :func:`infer_surface` for more details
     """
-
-
-    # create a nested function to set default argument (ArchTable and surface)
-    # def f(unit, auto, default_covmodel, **kwargs):
-    #     unit = self.get_unit(unit)
-    #     def _f():
-    #         infer_surface(self, unit, auto=auto, default_covmodel=default_covmodel, **kwargs)
-    #     widgets.interact(_f, **kwargs)
         
     units_n = [i.name for i in self.get_all_units()]
 
@@ -406,7 +398,7 @@ def fit_surfaces(self, default_covmodel=None, **kwargs):
     global obj1, obj2
     obj1, obj2 = None, None
 
-    change_unit = widgets.ToggleButtons(options=units_n, description="Unit")
+    change_unit = widgets.ToggleButtons(options=units_n, description="Unit", value=None)
     change_auto = widgets.ToggleButtons(options=[False, True], description="Auto")
 
     # widgets.interact(f, unit=units_n, auto=False, dim=[1, 2], default_covmodel=fixed(default_covmodel), **kwargs)
@@ -520,7 +512,7 @@ class Var_exp():
             
             self.make_exp_var(change_dim["new"])
 
-        change_dim = widgets.ToggleButtons(options=[1, 2], description="Dimension")
+        change_dim = widgets.ToggleButtons(options=[1, 2], description="Dimension", value=None)
         change_dim.observe(on_change, names='value')
         self.w2.append(change_dim)
         display(change_dim)

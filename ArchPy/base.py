@@ -2811,6 +2811,7 @@ class Arch_table():
             for u in self.list_all_units:
                 print("### UNIT : {} ### \n".format(u.name))
                 api.infer_surface(self, u, default_covmodel=default_covmodel, **kwargs)
+                plt.show()
         else:
             api.fit_surfaces(self, default_covmodel=default_covmodel, **kwargs)
 

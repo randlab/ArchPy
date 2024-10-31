@@ -13,23 +13,23 @@ ArchPy can be installed with pip :
 pip install geoarchpy
 ```
 
-This will install all ArchPy dependencies (even the optional ones) and the package itself.
+This will install ArchPy and the necessary dependencies. To install all the dependencies (including optional ones) :
 
-OR 
+```
+pip install geoarchpy[all]
+```
 
-ArchPy can be installed with 
+ArchPy can also be installed from the source code. To do so, clone the repository and run the following command in the main directory :
+
 ```
 pip install .
 ```
-when in the main directory.
 
 Alternatively, it is possible to add ArchPy path directly in the python script with sys :
 ```
 sys.path.append("path where ArchPy is") 
 ```
 and then import ArchPy. In such case, it is necessary to install all the dependencies manually.
-
-:warning: **Issues with widgets**: For some reasons, widgets does not work properly, probably due to the recent version of jupyter-server. For now these issues are not solved and widgets are not working, except partially with inline backend. 
 
 Concerning the interactivity of the plots, it is necessary to install trame as well as some trame subpackages. This can be done with the following command :
 ```

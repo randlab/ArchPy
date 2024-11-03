@@ -14,9 +14,9 @@ ArchPy offers a variety of capabilities such as:
    - Integration of hierarchy in the modelling process at different spatial scales
    - Input/Output capabilities to read and write borehole data, stratigraphic pile and models
    - Automatic inference of conditioning point 
-   - Automatic inference of surface parameters
+   - Automatic and manual interface for inference of surface parameters
    - Can handle raster and shapefile data
-   - Can handle 3D geological map
+   - Can handle geological maps
    - Cross-validation capabilities
    - and many more...
 
@@ -27,7 +27,7 @@ Installation
 
 `ArchPy` is available on `Pypi <https://pypi.org/project/geoarchpy>`_ and can be installed with pip::
 
-   pip install geoarchpy
+   pip install geoarchpy[all]
 
 OR 
 
@@ -52,23 +52,19 @@ ArchPy requires the following packages:
 
    - `Geone <https://github.com/randlab/geone>`_
    - matplotlib
-   - numpy
-   - SciPy
-   - sklearn
-   - pandas
-   - shapely < 2.0
-   - scikit-learn
+   - numpy (tested with 1.26.4)
+   - SciPy (tested with 1.14.1) 
+   - sklearn (tested with 1.5.2) 
+   - pandas (tested with 2.2.3) 
+   - shapely (tested with 2.0.6)
 
 The following packages are optional but are required for some functionalities:
 
-   - PyVista (for 3D vizualisation)
-   - pyyaml (for export uses)
-   - Rasterio (to use rasters)
-   - Geopandas (to use shapefile)
- 
-.. warning::
-   **Issues with widgets**: For some reasons, widgets does not work properly with recent version of jupyter-server due to recent versions of tornardo.
-   Ensure to have tornado==6.1 if you plan to use widgets and interactive functions with the matplotlib notebook backend. 
+   - PyVista (tested with 0.44.1)
+   - pyyaml (tested with 6.0.2, for export uses)
+   - Rasterio (tested with 1.3.10, to use rasters)
+   - Geopandas (tested with 1.0.1, to use shapefile)
+   - ipywidgets
 
 
 Members of the project
@@ -80,14 +76,23 @@ ArchPy is developped, tested and supported by a group of people from the Randlab
    - Alexis Neven
    - Julien Straubhaar
    - Philippe Renard
+   - Nina Egli
 
 
 How to cite
 -----------
 
- A paper was published on the `ArchPy` concept and its different capabilities.
- The paper was written with the version 0.1 of `ArchPy`.
- It is available with the following `Link <https://www.frontiersin.org/articles/10.3389/feart.2022.884075/>`_.
+A paper was published on the `ArchPy` concept and its different capabilities.
+The paper was written with the version 0.1 of `ArchPy`.
+It is available with the following `Link <https://www.frontiersin.org/articles/10.3389/feart.2022.884075/>`_.
+
+
+List of references using ArchPy
+-------------------------------
+
+Schorpp, L., Straubhaar, J., & Renard, P. (2024). From lithological descriptions to geological models: an example from the Upper Aare Valley. Frontiers in Applied Mathematics and Statistics, 10, 1441596 [link](https://doi.org/10.3389/fams.2024.1441596).
+Neven, A., & Renard, P. (2023). A novel methodology for the stochastic integration of geophysical and hydrogeological data in geologically consistent models. Water Resources Research, 59(7). [link](https://doi.org/10.1029/2023WR034992)
+Neven, A., Schorpp, L., & Renard, P. (2022). Stochastic multi-fidelity joint hydrogeophysical inversion of consistent geological models. Frontiers in Water, 4, 989440. [link](https://doi.org/10.3389/frwa.2022.989440)
 
 
 Contact

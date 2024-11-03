@@ -1,0 +1,3 @@
+python run_test.py env
+conda activate archpy
+python run_test.py notebook readme pypi

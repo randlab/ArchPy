@@ -871,6 +871,18 @@ class Arch_table():
             assert 0, ('Error: Grid was not added')
         return self.rot_matrix
 
+    def get_top(self):
+        """Returns the top of the grid"""
+        if self.top is None:
+            assert 0, ('Error: Grid was not added')
+        return self.top
+    
+    def get_mask(self):
+        """Returns the mask of the grid"""
+        if self.mask is None:
+            assert 0, ('Error: Grid was not added')
+        return self.mask
+
     def get_facies(self, iu=0, ifa=0, all_data=True):
 
         """
@@ -966,7 +978,7 @@ class Arch_table():
         else:
             return None
 
-    def get_surface(self, h_level="all"):
+    def get_surface(self, h_level="all", typ="top"):
 
         """
         Return a 4D array of multiple surfaces according to
@@ -1019,7 +1031,7 @@ class Arch_table():
         unit_names=[i.name for i in l]
         for i in range(nlay):
             u=l[i]
-            s=self.get_surfaces_unit(u)
+            s=self.get_surfaces_unit(u, typ=typ)
             if i == 0:
                 nreal, ny, nx=s.shape
                 surfs=np.zeros([nlay, nreal, ny, nx], dtype=np.float32)
@@ -1381,6 +1393,13 @@ class Arch_table():
                 prop=self.Geol.prop_values[name][iu, ifa, ip]
 
         return prop
+
+    def get_prop_names(self):
+        """Returns the property names"""
+        prop_names = []
+        for prop in self.list_props:
+            prop_names.append(prop.name)
+        return prop_names
 
     def get_bounds(self):
 
@@ -3669,6 +3688,7 @@ class Arch_table():
                 if self.verbose:
                     print("\n### Unit {}: facies simulation with {} method ####".format(strat.name, strat.f_method))
                 start=time.time()
+                # check that unit has units domains
                 strat.compute_facies(self, nreal, verbose=verbose_methods)
                 end=time.time()
 
@@ -6193,7 +6213,7 @@ class Pile():
         ny=yg.shape[0]
         zg=ArchTable.get_zg()
         nz=zg.shape[0] - 1
-        if ~subpile:
+        if not subpile:
             top=ArchTable.top
             bot=ArchTable.bot
         mask=ArchTable.mask  # simulation mask
@@ -6370,7 +6390,7 @@ class Pile():
         ny=yg.shape[0]
         zg=ArchTable.get_zg()
         nz=zg.shape[0] - 1
-        if ~subpile:
+        if not subpile:
             top=ArchTable.top
             bot=ArchTable.bot
         mask=ArchTable.mask
@@ -6489,7 +6509,7 @@ class Unit():
         Facies keyword arguments to pass to the facies methods (these should be pass through dic_facies !):
         
             - SIS:
-                - "neigh" : int, number of neighbors to use for the SIS
+                - neig : int, number of neighbors to use for the SIS
                 - r : float, radius of the neighborhood to use for the SIS
                 - probability : list of float, proportion of each facies to use for the SIS
             - MPS:                  
@@ -6912,6 +6932,9 @@ class Unit():
         else:
             self.list_facies.remove(facies)
 
+    def get_facies(self):
+        return self.list_facies
+
     def compute_facies(self, ArchTable, nreal=1, mode="facies", verbose=0):
 
         """
@@ -6929,7 +6952,7 @@ class Unit():
         verbose : int
             verbosity level, 0 for no print, 1 for print
         """
- 
+
 
         xg=ArchTable.get_xg()
         yg=ArchTable.get_yg()
@@ -7006,305 +7029,307 @@ class Unit():
         ### Simulations ###
         if method != "SubPile" or mode == "units":
             for iu in range(nreal_units): # loop over existing surfaces
-                if ArchTable.verbose:
-                    print("### Unit {} - realization {} ###".format(self.name, iu))
-                if self.contact == "onlap":
 
-                    mask=ArchTable.get_units_domains_realizations(iu) == self.ID
+                mask = ArchTable.get_units_domains_realizations(iu) == self.ID
+                if mask.any():
 
-                    ## HOMOGENOUS ##
-                    if method.lower() == "homogenous":
+                    if ArchTable.verbose:
+                        print("### Unit {} - realization {} ###".format(self.name, iu))
+                    if self.contact == "onlap":
 
-                        if len(list_obj) > 1: # more than one
-                            if ArchTable.verbose:
-                                print("WARNING !! More than one facies has been passed to homogenous unit {}\nFirst in the list is taken".format(self.name))
-                        elif len(list_obj) < 1: # no facies added
-                            raise ValueError ("No facies passed to homogenous unit {}".format(self.name))
+                        ## HOMOGENOUS ##
+                        if method.lower() == "homogenous":
 
-                        ## setup a 3D array of the simulation grid size and assign one facies to the unit###
-                        facies=list_obj[0]
-                        for ireal in range(nreal):
-                            facies_domains[iu, ireal][mask]=facies.ID
+                            if len(list_obj) > 1: # more than one
+                                if ArchTable.verbose:
+                                    print("WARNING !! More than one facies has been passed to homogenous unit {}\nFirst in the list is taken".format(self.name))
+                            elif len(list_obj) < 1: # no facies added
+                                raise ValueError ("No facies passed to homogenous unit {}".format(self.name))
 
-                    ## SIS ##
-                    elif method.upper() == "SIS":
-                        ## setup SIS ##
+                            ## setup a 3D array of the simulation grid size and assign one facies to the unit###
+                            facies=list_obj[0]
+                            for ireal in range(nreal):
+                                facies_domains[iu, ireal][mask]=facies.ID
 
-                        if mode == "facies":
-                            hd, facies = ArchTable.hd_fa_in_unit(self, iu=iu)
-                        elif mode == "units":
-                            hd, facies = ArchTable.hd_un_in_unit(self, iu=iu)
+                        ## SIS ##
+                        elif method.upper() == "SIS":
+                            ## setup SIS ##
 
-                        hd = np.array(hd)
-                        facies = np.array(facies)
+                            if mode == "facies":
+                                hd, facies = ArchTable.hd_fa_in_unit(self, iu=iu)
+                            elif mode == "units":
+                                hd, facies = ArchTable.hd_un_in_unit(self, iu=iu)
 
-                        cat_values=[i.ID for i in list_obj]  # ID values
-                            
-                        ### orientation map ###  -> to modify !!!!
-                        if (kwargs["SIS_orientation"]) == "follow_surfaces": # if orientations must follow surfaces
-                            # Warning: This option changes alpha and beta angles assuming that rz is smaller than rx and ry. Moreover, rx and ry must be similar.
+                            hd = np.array(hd)
+                            facies = np.array(facies)
 
-                            azi,dip=ArchTable.orientation_map(self, smooth=5)
-                            for cm in self.list_f_covmodel: # iterate through all facies covmodels and change angles
-                                cm.alpha=azi
-                                cm.beta=dip
-
-                        elif kwargs["SIS_orientation"]: # if set True, change angles with inputs angles
-                            al=kwargs["alpha"]
-                            be=kwargs["beta"]
-                            ga=kwargs["gamma"]
-                            if type(al) is list and type(be) is list and type(ga) is list:
-                            #if hasattr(al,"__iter__") and hasattr(be,"__iter__") and hasattr(ga,"__iter__"): #if a list is given
-                                assert len(al) == len(be) == len(ga), "Error: number of given values/arrays in alpha, beta and gamma must be the same"
-                                for i in range(len(al)): # loop over
-                                    for cm in self.list_f_covmodel:
-                                            cm.alpha=al[i]
-                                            cm.beta=be[i]
-                                            cm.gamma=ga[i]
-                            else: # if only a ndarray or a value are given
-                                for cm in self.list_f_covmodel:
-                                    cm.alpha=al
-                                    cm.beta=be
-                                    cm.gamma=ga
-
-
-                        # Modify sill of covmodel if there is only one
-                        if len(self.list_f_covmodel) == 1:
-                            if ArchTable.verbose:
-                                print("Only one facies covmodels for multiples facies, adapt sill to right proportions")
-
-                            cm=self.list_f_covmodel[0]
-
-                            sill=cm.sill() #get sill
-
-                            self.list_f_covmodel=[] #reset list
-
-                            ifa=0
-                            for fa in list_obj: #loop over facies
+                            cat_values=[i.ID for i in list_obj]  # ID values
                                 
-                                cm_copy=copy.deepcopy(cm) #make a copy
+                            ### orientation map ###  -> to modify !!!!
+                            if (kwargs["SIS_orientation"]) == "follow_surfaces": # if orientations must follow surfaces
+                                # Warning: This option changes alpha and beta angles assuming that rz is smaller than rx and ry. Moreover, rx and ry must be similar.
 
-                                if len(hd) > 0:
+                                azi,dip=ArchTable.orientation_map(self, smooth=5)
+                                for cm in self.list_f_covmodel: # iterate through all facies covmodels and change angles
+                                    cm.alpha=azi
+                                    cm.beta=dip
 
-                                    if "probability" in kwargs.keys():
-                                        if kwargs["probability"] is not None:
-                                            p = kwargs["probability"][ifa]
+                            elif kwargs["SIS_orientation"]: # if set True, change angles with inputs angles
+                                al=kwargs["alpha"]
+                                be=kwargs["beta"]
+                                ga=kwargs["gamma"]
+                                if type(al) is list and type(be) is list and type(ga) is list:
+                                #if hasattr(al,"__iter__") and hasattr(be,"__iter__") and hasattr(ga,"__iter__"): #if a list is given
+                                    assert len(al) == len(be) == len(ga), "Error: number of given values/arrays in alpha, beta and gamma must be the same"
+                                    for i in range(len(al)): # loop over
+                                        for cm in self.list_f_covmodel:
+                                                cm.alpha=al[i]
+                                                cm.beta=be[i]
+                                                cm.gamma=ga[i]
+                                else: # if only a ndarray or a value are given
+                                    for cm in self.list_f_covmodel:
+                                        cm.alpha=al
+                                        cm.beta=be
+                                        cm.gamma=ga
+
+
+                            # Modify sill of covmodel if there is only one
+                            if len(self.list_f_covmodel) == 1:
+                                if ArchTable.verbose:
+                                    print("Only one facies covmodels for multiples facies, adapt sill to right proportions")
+
+                                cm=self.list_f_covmodel[0]
+
+                                sill=cm.sill() #get sill
+
+                                self.list_f_covmodel=[] #reset list
+
+                                ifa=0
+                                for fa in list_obj: #loop over facies
+                                    
+                                    cm_copy=copy.deepcopy(cm) #make a copy
+
+                                    if len(hd) > 0:
+
+                                        if "probability" in kwargs.keys():
+                                            if kwargs["probability"] is not None:
+                                                p = kwargs["probability"][ifa]
+                                            else:
+                                                p=np.sum(facies == fa.ID)/len(facies == fa.ID) #calculate proportion of facies
                                         else:
                                             p=np.sum(facies == fa.ID)/len(facies == fa.ID) #calculate proportion of facies
-                                    else:
-                                        p=np.sum(facies == fa.ID)/len(facies == fa.ID) #calculate proportion of facies
 
-                                    if p > 0:
-                                        var=p*(1-p) #variance
-                                        ratio=var/sill  #ratio btw covmodel and real variance
+                                        if p > 0:
+                                            var=p*(1-p) #variance
+                                            ratio=var/sill  #ratio btw covmodel and real variance
 
-                                        for e in cm_copy.elem:
-                                            e[1]["w"] *= ratio
-                                    else:
-                                        for e in cm_copy.elem:
-                                            e[1]["w"] *= 1
+                                            for e in cm_copy.elem:
+                                                e[1]["w"] *= ratio
+                                        else:
+                                            for e in cm_copy.elem:
+                                                e[1]["w"] *= 1
 
-                                self.list_f_covmodel.append(cm_copy)
-                                ifa += 1
+                                    self.list_f_covmodel.append(cm_copy)
+                                    ifa += 1
 
-                        if len(hd) > 0:
+                            if len(hd) > 0:
+                                hd=np.array(hd)
+                                facies=np.array(facies)
+                            else:
+                                hd=None
+                                facies=None
+                                
+                            ## Simulation
+                            simus = gci.simulateIndicator3D(cat_values, self.list_f_covmodel, dimensions, spacing, origin,
+                                                            nreal=nreal, method="simple_kriging", x=hd, v=facies, mask=mask,
+                                                            searchRadiusRelative=kwargs["r"], nneighborMax=kwargs["neig"],
+                                                            probability=kwargs["probability"], verbose=verbose, nthreads = ArchTable.ncpu, seed=seed+iu)["image"].val
+
+                            ### rearrange data into a 2D array of the simulation grid size ###
+                            for ireal in range(nreal):
+                                grid=simus[ireal]
+                                grid[grid==0]=np.nan
+                                grid[mask==0]=np.nan  # extract only the part on the real domain
+                                facies_domains[iu, ireal][mask]=grid[mask]
+
+                        elif method.upper() == "MPS":
+                            ## assertions ##
+                            assert  isinstance(self.f_TI, geone.img.Img), "TI is not a geone image object"
+
+                            #load parameters
+                            TI=self.f_TI
+
+                            #facies IDs
+                            IDs=np.unique(TI.val)
+                            nclass=len(IDs)
+                            classInterval=[]
+                            for c in IDs:
+                                classInterval.append([c-0.5, c+0.5])
+
+                            # extract hard data
+                            hd=np.ones([4, 1])
+                            for fa in list_obj: #facies by facies in unit
+                                fa_x=np.array(fa.x)
+                                fa_y=np.array(fa.y)
+                                fa_z=np.array(fa.z)
+                                hdi=np.zeros([4, fa_x.shape[0]])
+                                hdi[0]= fa_x
+                                hdi[1]=fa_y
+                                hdi[2]=fa_z
+                                hdi[3]=np.ones(fa_x.shape)*fa.ID
+                                hd=np.concatenate([hd, hdi], axis=1)
+                            hd=np.delete(hd, 0, axis=1) # remove 1st point (I didn't find a clever way to do it...)
+                            pt=img.PointSet(npt=hd.shape[1], nv=4, val=hd)
+                            pt.set_varname("code")
+
+                            # automatic inference of orientations
+                            if kwargs["rotAzi"] == "inference" and kwargs["rotDip"] == "inference":  # only if these two are set on inference
+                                azi, dip=ArchTable.orientation_map(self, azi_top = kwargs["azi_top"],  dip_top= kwargs["dip_top"],
+                                                                azi_bot=kwargs["azi_bot"], dip_bot=kwargs["dip_bot"], smooth=2)  # get azimuth and dip
+
+                                kwargs["rotAzi"] = azi
+                                kwargs["rotDip"] = dip
+                                kwargs["rotAziLoc"] = True
+                                kwargs["rotDipLoc"] = True
+
+                            #DS research
+                            snp=dsi.SearchNeighborhoodParameters(
+                                radiusMode=kwargs["radiusMode"], rx=kwargs["rx"], ry=kwargs["ry"], rz=kwargs["rz"],
+                                anisotropyRatioMode=kwargs["anisotropyRatioMode"], ax=kwargs["ax"], ay=kwargs["ay"], az=kwargs["az"],
+                                angle1=kwargs["angle1"], angle2=kwargs["angle2"], angle3=kwargs["angle3"])
+
+                            snp_l = []
+                            for iv in range(kwargs["nv"]):
+                                snp_l.append(snp)
+
+                            #DS softproba
+                            sp=dsi.SoftProbability(
+                                probabilityConstraintUsage=kwargs["probaUsage"],   # probability constraints method (1 for globa, 2 for local)
+                                nclass=nclass,                  # number of classes of values
+                                classInterval=classInterval,  # list of classes
+                                localPdf= kwargs["localPdf"],             # local target PDF
+                                globalPdf=kwargs["globalPdf"],
+                                localPdfSupportRadius=kwargs["localPdfRadius"],      # support radius
+                                comparingPdfMethod=5,           # method for comparing PDF's (see doc: help(geone.deesseinterface.SoftProbability))
+                                deactivationDistance=kwargs["deactivationDistance"],       # deactivation distance (checking PDF is deactivated for narrow patterns)
+                                constantThreshold=kwargs["constantThreshold"])        # acceptation threshold
+
+                            sp_l = []
+                            for iv in range(kwargs["nv"]):
+                                sp_l.append(sp)
+
+                            #DS input
+                            deesse_input=dsi.DeesseInput(
+                                nx=nx, ny=ny, nz=nz,       # dimension of the simulation grid (number of cells)
+                                sx=sx, sy=sy, sz=sz,     # cells units in the simulation grid (here are the default values)
+                                ox=ox, oy=oy, oz=oz,     # origin of the simulation grid (here are the default values)
+                                nv=kwargs["nv"], varname=kwargs["varname"],       # number of variable(s), name of the variable(s)
+                                nTI=1, TI=TI,             # number of TI(s), TI (class dsi.Img)
+                                dataPointSet=pt,            # hard data (optional)
+                                dataImage = kwargs["dataImage"],
+                                outputVarFlag = kwargs["outputVarFlag"],
+                                distanceType = kwargs["distanceType"],  # distance type: proportion of mismatching nodes (categorical var., default)
+                                softProbability=sp_l,
+                                searchNeighborhoodParameters=snp_l,
+                                homothetyUsage=kwargs["homo_usage"],
+                                homothetyXLocal=kwargs["xloc"],
+                                homothetyXRatio=kwargs["xr"],
+                                homothetyYLocal=kwargs["yloc"],
+                                homothetyYRatio=kwargs["yr"],
+                                homothetyZLocal=kwargs["zloc"],
+                                homothetyZRatio=kwargs["zr"],
+                                rotationUsage=kwargs["rot_usage"],            # tolerance or not
+                                rotationAzimuthLocal=kwargs["rotAziLoc"], #    rotation according to azimuth: global
+                                rotationAzimuth=kwargs["rotAzi"],
+                                rotationDipLocal=kwargs["rotDipLoc"],
+                                rotationDip=kwargs["rotDip"],
+                                rotationPlungeLocal=kwargs["rotPlungeLoc"],
+                                rotationPlunge=kwargs["rotPlunge"],
+                                nneighboringNode=kwargs["neig"],        # max. number of neighbors (for the patterns)
+                                distanceThreshold=kwargs["thresh"],     # acceptation threshold (for distance between patterns)
+                                maxScanFraction=kwargs["maxscan"],       # max. scanned fraction of the TI (for simulation of each cell)
+                                npostProcessingPathMax=kwargs["npost"],   # number of post-processing path(s)
+                                seed=seed,                   # seed (initialization of the random number generator)
+                                nrealization=nreal,         # number of realization(s)
+                                mask=mask)                 # ncpu
+
+                            deesse_output=dsi.deesseRun(deesse_input, nthreads=ArchTable.ncpu, verbose=verbose)
+
+                            simus=deesse_output["sim"]
+                            for ireal in range(nreal):
+                                sim=simus[ireal]
+                                #self.facies_domains[iu, ireal]=sim.val[0] #output in facies_domains
+                                facies_domains[iu, ireal][mask]=sim.val[0][mask]
+
+                        elif method == "TPGs": #truncated (pluri)gaussian
+
+                            #load params#
+                            flag=self.flag
+                            G_cm=self.G_cm
+                            ## data format ##
+                            # data=(x, y, z, g1, g2, v), where x, y, z are the cartesian coordinates, g1 and g2 are the values of 
+                            # first/second gaussian fields and v is the facies value
+
+                            ## setup and get hard data
+                            hd=np.array([])
+                            for fa in list_obj:
+                                #ndarray
+                                nd=len(fa.x)
+                                fa_x=np.array(fa.x)
+                                fa_y=np.array(fa.y)
+                                fa_z=np.array(fa.z)
+                                facies=fa.ID*np.ones(nd)# append facies IDs
+
+                                hd=np.concatenate([hd.reshape(-1, 6), np.concatenate([[fa_x], [fa_y], [fa_z], [np.zeros(nd)], [np.zeros(nd)], [facies]], axis=0).T]) # append data for input TPGs
+
+                            if hd.shape[0] == 0:
+                                hd=None
+                            simus=run_tpgs(nreal, xg, yg, zg, hd, G_cm, flag, nmax=kwargs["neig"], grf_method=kwargs["grf_method"], mask=mask)
+                            for ireal in range(nreal):
+                                grid=simus[ireal]
+                                grid[mask==0]=np.nan  # extract only the part on the real domain
+                                facies_domains[iu, ireal][mask]=grid[mask]
+
+                        elif method == "nearest":
+                            if ArchTable.verbose:
+                                print("<===Nearest neighbors interpolation===>")
+
+                            from sklearn.neighbors import NearestNeighbors
+
+                            X = np.ones([nz, ny, nx])* ArchTable.xgc
+                            Y = np.ones([nz, ny, nx])
+                            Y[:] = np.ones([nx, ny]).T * ArchTable.ygc.reshape(-1, 1)
+                            Z = np.ones([nz, ny, nx])
+                            Z[:, :] =( np.ones([nz, nx]) * ArchTable.zgc.reshape(-1, 1)).reshape(nz, 1, nx)
+                            xu3D = np.array([X.flatten(), Y.flatten(), Z.flatten()]).T
+
+                            # get hard data
+                            if mode == "facies":
+                                hd, facies = ArchTable.hd_fa_in_unit(self, iu=iu)
+                            elif mode == "units":
+                                hd, facies = ArchTable.hd_un_in_unit(self, iu=iu)
+
                             hd=np.array(hd)
                             facies=np.array(facies)
-                        else:
-                            hd=None
-                            facies=None
-                            
-                        ## Simulation
-                        simus = gci.simulateIndicator3D(cat_values, self.list_f_covmodel, dimensions, spacing, origin,
-                                                        nreal=nreal, method="simple_kriging", x=hd, v=facies, mask=mask,
-                                                        searchRadiusRelative=kwargs["r"], nneighborMax=kwargs["neig"],
-                                                        probability=kwargs["probability"], verbose=verbose, nthreads = ArchTable.ncpu, seed=seed+iu)["image"].val
 
-                        ### rearrange data into a 2D array of the simulation grid size ###
-                        for ireal in range(nreal):
-                            grid=simus[ireal]
-                            grid[grid==0]=np.nan
-                            grid[mask==0]=np.nan  # extract only the part on the real domain
-                            facies_domains[iu, ireal][mask]=grid[mask]
+                            X_fit = hd
+                            y_fit = facies
 
-                    elif method.upper() == "MPS":
-                        ## assertions ##
-                        assert  isinstance(self.f_TI, geone.img.Img), "TI is not a geone image object"
+                            X_pred = xu3D[mask.flatten()]
 
-                        #load parameters
-                        TI=self.f_TI
+                            # fit
+                            nn = NearestNeighbors(n_neighbors=1).fit(X_fit)
 
-                        #facies IDs
-                        IDs=np.unique(TI.val)
-                        nclass=len(IDs)
-                        classInterval=[]
-                        for c in IDs:
-                            classInterval.append([c-0.5, c+0.5])
+                            #pred
+                            res = nn.kneighbors(X_pred, return_distance=False, n_neighbors=1)
 
-                        # extract hard data
-                        hd=np.ones([4, 1])
-                        for fa in list_obj: #facies by facies in unit
-                            fa_x=np.array(fa.x)
-                            fa_y=np.array(fa.y)
-                            fa_z=np.array(fa.z)
-                            hdi=np.zeros([4, fa_x.shape[0]])
-                            hdi[0]= fa_x
-                            hdi[1]=fa_y
-                            hdi[2]=fa_z
-                            hdi[3]=np.ones(fa_x.shape)*fa.ID
-                            hd=np.concatenate([hd, hdi], axis=1)
-                        hd=np.delete(hd, 0, axis=1) # remove 1st point (I didn't find a clever way to do it...)
-                        pt=img.PointSet(npt=hd.shape[1], nv=4, val=hd)
-                        pt.set_varname("code")
+                            # assign
+                            y_pred = y_fit[res]
+                            simus = np.zeros([nz, ny, nx])
+                            simus[mask] = y_pred[:, 0]  # reassign values
 
-                        # automatic inference of orientations
-                        if kwargs["rotAzi"] == "inference" and kwargs["rotDip"] == "inference":  # only if these two are set on inference
-                            azi, dip=ArchTable.orientation_map(self, azi_top = kwargs["azi_top"],  dip_top= kwargs["dip_top"],
-                                                               azi_bot=kwargs["azi_bot"], dip_bot=kwargs["dip_bot"], smooth=2)  # get azimuth and dip
-
-                            kwargs["rotAzi"] = azi
-                            kwargs["rotDip"] = dip
-                            kwargs["rotAziLoc"] = True
-                            kwargs["rotDipLoc"] = True
-
-                        #DS research
-                        snp=dsi.SearchNeighborhoodParameters(
-                            radiusMode=kwargs["radiusMode"], rx=kwargs["rx"], ry=kwargs["ry"], rz=kwargs["rz"],
-                            anisotropyRatioMode=kwargs["anisotropyRatioMode"], ax=kwargs["ax"], ay=kwargs["ay"], az=kwargs["az"],
-                            angle1=kwargs["angle1"], angle2=kwargs["angle2"], angle3=kwargs["angle3"])
-
-                        snp_l = []
-                        for iv in range(kwargs["nv"]):
-                            snp_l.append(snp)
-
-                        #DS softproba
-                        sp=dsi.SoftProbability(
-                            probabilityConstraintUsage=kwargs["probaUsage"],   # probability constraints method (1 for globa, 2 for local)
-                            nclass=nclass,                  # number of classes of values
-                            classInterval=classInterval,  # list of classes
-                            localPdf= kwargs["localPdf"],             # local target PDF
-                            globalPdf=kwargs["globalPdf"],
-                            localPdfSupportRadius=kwargs["localPdfRadius"],      # support radius
-                            comparingPdfMethod=5,           # method for comparing PDF's (see doc: help(geone.deesseinterface.SoftProbability))
-                            deactivationDistance=kwargs["deactivationDistance"],       # deactivation distance (checking PDF is deactivated for narrow patterns)
-                            constantThreshold=kwargs["constantThreshold"])        # acceptation threshold
-
-                        sp_l = []
-                        for iv in range(kwargs["nv"]):
-                            sp_l.append(sp)
-
-                        #DS input
-                        deesse_input=dsi.DeesseInput(
-                            nx=nx, ny=ny, nz=nz,       # dimension of the simulation grid (number of cells)
-                            sx=sx, sy=sy, sz=sz,     # cells units in the simulation grid (here are the default values)
-                            ox=ox, oy=oy, oz=oz,     # origin of the simulation grid (here are the default values)
-                            nv=kwargs["nv"], varname=kwargs["varname"],       # number of variable(s), name of the variable(s)
-                            nTI=1, TI=TI,             # number of TI(s), TI (class dsi.Img)
-                            dataPointSet=pt,            # hard data (optional)
-                            dataImage = kwargs["dataImage"],
-                            outputVarFlag = kwargs["outputVarFlag"],
-                            distanceType = kwargs["distanceType"],  # distance type: proportion of mismatching nodes (categorical var., default)
-                            softProbability=sp_l,
-                            searchNeighborhoodParameters=snp_l,
-                            homothetyUsage=kwargs["homo_usage"],
-                            homothetyXLocal=kwargs["xloc"],
-                            homothetyXRatio=kwargs["xr"],
-                            homothetyYLocal=kwargs["yloc"],
-                            homothetyYRatio=kwargs["yr"],
-                            homothetyZLocal=kwargs["zloc"],
-                            homothetyZRatio=kwargs["zr"],
-                            rotationUsage=kwargs["rot_usage"],            # tolerance or not
-                            rotationAzimuthLocal=kwargs["rotAziLoc"], #    rotation according to azimuth: global
-                            rotationAzimuth=kwargs["rotAzi"],
-                            rotationDipLocal=kwargs["rotDipLoc"],
-                            rotationDip=kwargs["rotDip"],
-                            rotationPlungeLocal=kwargs["rotPlungeLoc"],
-                            rotationPlunge=kwargs["rotPlunge"],
-                            nneighboringNode=kwargs["neig"],        # max. number of neighbors (for the patterns)
-                            distanceThreshold=kwargs["thresh"],     # acceptation threshold (for distance between patterns)
-                            maxScanFraction=kwargs["maxscan"],       # max. scanned fraction of the TI (for simulation of each cell)
-                            npostProcessingPathMax=kwargs["npost"],   # number of post-processing path(s)
-                            seed=seed,                   # seed (initialization of the random number generator)
-                            nrealization=nreal,         # number of realization(s)
-                            mask=mask)                 # ncpu
-
-                        deesse_output=dsi.deesseRun(deesse_input, nthreads=ArchTable.ncpu, verbose=verbose)
-
-                        simus=deesse_output["sim"]
-                        for ireal in range(nreal):
-                            sim=simus[ireal]
-                            #self.facies_domains[iu, ireal]=sim.val[0] #output in facies_domains
-                            facies_domains[iu, ireal][mask]=sim.val[0][mask]
-
-                    elif method == "TPGs": #truncated (pluri)gaussian
-
-                        #load params#
-                        flag=self.flag
-                        G_cm=self.G_cm
-                        ## data format ##
-                        # data=(x, y, z, g1, g2, v), where x, y, z are the cartesian coordinates, g1 and g2 are the values of 
-                        # first/second gaussian fields and v is the facies value
-
-                        ## setup and get hard data
-                        hd=np.array([])
-                        for fa in list_obj:
-                            #ndarray
-                            nd=len(fa.x)
-                            fa_x=np.array(fa.x)
-                            fa_y=np.array(fa.y)
-                            fa_z=np.array(fa.z)
-                            facies=fa.ID*np.ones(nd)# append facies IDs
-
-                            hd=np.concatenate([hd.reshape(-1, 6), np.concatenate([[fa_x], [fa_y], [fa_z], [np.zeros(nd)], [np.zeros(nd)], [facies]], axis=0).T]) # append data for input TPGs
-
-                        if hd.shape[0] == 0:
-                            hd=None
-                        simus=run_tpgs(nreal, xg, yg, zg, hd, G_cm, flag, nmax=kwargs["neig"], grf_method=kwargs["grf_method"], mask=mask)
-                        for ireal in range(nreal):
-                            grid=simus[ireal]
-                            grid[mask==0]=np.nan  # extract only the part on the real domain
-                            facies_domains[iu, ireal][mask]=grid[mask]
-
-                    elif method == "nearest":
-                        if ArchTable.verbose:
-                            print("<===Nearest neighbors interpolation===>")
-
-                        from sklearn.neighbors import NearestNeighbors
-
-                        X = np.ones([nz, ny, nx])* ArchTable.xgc
-                        Y = np.ones([nz, ny, nx])
-                        Y[:] = np.ones([nx, ny]).T * ArchTable.ygc.reshape(-1, 1)
-                        Z = np.ones([nz, ny, nx])
-                        Z[:, :] =( np.ones([nz, nx]) * ArchTable.zgc.reshape(-1, 1)).reshape(nz, 1, nx)
-                        xu3D = np.array([X.flatten(), Y.flatten(), Z.flatten()]).T
-
-                        # get hard data
-                        if mode == "facies":
-                            hd, facies = ArchTable.hd_fa_in_unit(self, iu=iu)
-                        elif mode == "units":
-                            hd, facies = ArchTable.hd_un_in_unit(self, iu=iu)
-
-                        hd=np.array(hd)
-                        facies=np.array(facies)
-
-                        X_fit = hd
-                        y_fit = facies
-
-                        X_pred = xu3D[mask.flatten()]
-
-                        # fit
-                        nn = NearestNeighbors(n_neighbors=1).fit(X_fit)
-
-                        #pred
-                        res = nn.kneighbors(X_pred, return_distance=False, n_neighbors=1)
-
-                        # assign
-                        y_pred = y_fit[res]
-                        simus = np.zeros([nz, ny, nx])
-                        simus[mask] = y_pred[:, 0]  # reassign values
-
-                        for ireal in range(nreal):
-                            facies_domains[iu, ireal][mask]=simus[mask]
+                            for ireal in range(nreal):
+                                facies_domains[iu, ireal][mask]=simus[mask]
 
 
                 if mode == "facies":

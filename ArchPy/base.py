@@ -2572,8 +2572,6 @@ class Arch_table():
             if self.verbose:
                 print("Geological map boreholes removed")
 
-        
-
     def rem_bh(self, bh):
 
         """
@@ -4491,6 +4489,47 @@ class Arch_table():
             print("help")
 
     ### plotting ###
+
+    def plot_pile(self):
+    
+        fig, ax = plt.subplots()
+        
+        d = {}  # dic_bottom by level
+        
+        def fun(pile, x = 0, i = 0, incr = 1):
+            
+            for un in pile.list_units[::-1]:
+
+                plt.bar(x, incr, bottom=i, label=un.name, alpha=1, color=un.c)
+                
+                if un.SubPile is not None:
+                    pos = (un.SubPile.list_units[0].get_h_level() - 1)*2
+                    
+                    new_i = .5 + i - 0.5 * len(un.SubPile.list_units) / 2
+                    if pos in d.keys():
+                        if new_i <= d[pos]:
+                            new_i = d[pos] + 1.5  
+                    
+                    # plot arrow
+                    center_subpile = (pos - .5, new_i + 0.5 * len(un.SubPile.list_units) / 2)
+                    dy = center_subpile[1] - (i + 0.5)
+                    dx = center_subpile[0] - (x + 0.5)
+                    plt.arrow(x + 0.5, i + incr/2, dx, dy)
+                    fun(un.SubPile, x = pos, i = new_i, incr=0.5)
+                    
+                i += incr
+                
+                d[x] = i
+            
+            plt.text(x - .04*len(pile.name), i+0.5, pile.name, bbox=dict(facecolor='none', edgecolor='black', boxstyle='round,pad=.2'))
+            
+            handles, labels = ax.get_legend_handles_labels()
+            ax.legend(handles[::-1], labels[::-1], title='Units', bbox_to_anchor=(1.05, 1),
+                    borderaxespad=0, fontsize=10, ncol=2)
+        
+        fun(self.get_pile_master())
+        plt.axis('off')    
+
     def plot_bhs(self, log="strati", plotter=None, v_ex=1, plot_top=False, plot_bot=False):
 
         """

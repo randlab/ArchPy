@@ -2012,7 +2012,7 @@ class Arch_table():
         Returns
         -------
         cell: tuple
-            cell indexes (ix, iy, iz) or (ix, iy) if z is None
+            cell indexes (iz, iy, ix) or (iy, ix) if z is None
         """
 
         assert y == y, "coordinates contain NaN"
@@ -2530,8 +2530,8 @@ class Arch_table():
                         unit = self.get_unit(ID=unit_id, type="ID", vb=0)
                         if unit is not None:
                             z = self.top[iy, ix]-1e-3
-                            # bh = borehole("raster_bh", "raster_bh", xc[iy, ix], yc[iy, ix], z, sz/4, [(unit, z)])
-                            bh = borehole("raster_bh", "raster_bh", xgc[ix], ygc[iy], z, sz/4, [(unit, z)])
+                            bh = borehole("raster_bh", "raster_bh", xc[iy, ix], yc[iy, ix], z, sz/4, [(unit, z)])
+                            # bh = borehole("raster_bh", "raster_bh", xgc[ix], ygc[iy], z, sz/4, [(unit, z)])
 
                             bhs_map.append(bh)
             
@@ -5736,8 +5736,11 @@ class Arch_table():
                 for o in np.arange(0,dist,esp):
                     x_d += d1*lam
                     y_d += d2*lam
-                    ix=int((x_d - ox)/sx)
-                    iy=int((y_d - oy)/sy)
+                    # ix=int((x_d - ox)/sx)
+                    # iy=int((y_d - oy)/sy)
+                    cell = self.coord2cell((x_d, y_d))
+                    iy, ix = cell[0], cell[1]
+
                     fp=f[:,iy,ix]
                     if ip == 0:
                         x_sec[:,i]=fp
@@ -5749,8 +5752,10 @@ class Arch_table():
                 for o in np.arange(0,dist,esp):
                     x_d += d1*lam
                     y_d += d2*lam
-                    ix=int((x_d - ox)/sx)
-                    iy=int((y_d - oy)/sy)
+                    # ix=int((x_d - ox)/sx)
+                    # iy=int((y_d - oy)/sy)
+                    cell = self.coord2cell((x_d, y_d))
+                    iy, ix = cell[0], cell[1]
                     fp=f[:,iy,ix]
                     if ip == 0:
                         x_sec[:,i,: ]=fp

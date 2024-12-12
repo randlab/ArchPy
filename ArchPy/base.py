@@ -1195,7 +1195,7 @@ class Arch_table():
         if self.get_rot_angle() != 0:
             x -= self.ox
             y -= self.oy
-            x, y=self.rotate(x, y, -self.get_rot_angle())
+            x, y=self.rotate(np.array([x, y]), -self.get_rot_angle())
             x += self.ox
             y += self.oy
 
@@ -2530,7 +2530,9 @@ class Arch_table():
                         unit = self.get_unit(ID=unit_id, type="ID", vb=0)
                         if unit is not None:
                             z = self.top[iy, ix]-1e-3
-                            bh = borehole("raster_bh", "raster_bh", xc[iy, ix], yc[iy, ix], z, sz/4, [(unit, z)])
+                            xbh = xgc[ix]
+                            ybh = ygc[iy]
+                            bh = borehole("raster_bh", "raster_bh", xbh, ybh, z, sz/4, [(unit, z)])
                             # bh = borehole("raster_bh", "raster_bh", xgc[ix], ygc[iy], z, sz/4, [(unit, z)])
 
                             bhs_map.append(bh)
@@ -3108,7 +3110,8 @@ class Arch_table():
 
             self.sto_hd = []
             ### check multiple boreholes in the same cell ###
-            t=KDTree(self.xu2D)
+            xu2D_rot = self.rotate(self.xu2D, -self.get_rot_angle())
+            t=KDTree(xu2D_rot)
 
             xbh=[i.x for i in bhs_lst]
             ybh=[i.y for i in bhs_lst]
@@ -5678,7 +5681,7 @@ class Arch_table():
         return p_list
 
 
-    def cross_section(self, arr_to_plot, p_list, esp=None):
+    def cross_section(self, arr_to_plot, p_list, esp=None, rotate=True):
 
         """
         Return a cross section along the points pass in p_list
@@ -5738,7 +5741,7 @@ class Arch_table():
                     y_d += d2*lam
                     # ix=int((x_d - ox)/sx)
                     # iy=int((y_d - oy)/sy)
-                    cell = self.coord2cell((x_d, y_d))
+                    cell = self.coord2cell(x_d, y_d, rotate=rotate)
                     iy, ix = cell[0], cell[1]
 
                     fp=f[:,iy,ix]
@@ -5754,7 +5757,7 @@ class Arch_table():
                     y_d += d2*lam
                     # ix=int((x_d - ox)/sx)
                     # iy=int((y_d - oy)/sy)
-                    cell = self.coord2cell((x_d, y_d))
+                    cell = self.coord2cell(x_d, y_d, rotate=rotate)
                     iy, ix = cell[0], cell[1]
                     fp=f[:,iy,ix]
                     if ip == 0:
@@ -5779,8 +5782,8 @@ class Arch_table():
     def plot_cross_section(self, p_list, typ="units", arr=None, iu=0, ifa=0, ip=0,
                            property=None, esp=None, ax=None, colorbar=False,
                            ratio_aspect=2, i=0,
-                           dist_max = 100, width=.5,
-                           vmax=None, vmin=None):
+                           dist_max = 100, width=.5, bh_type="units",
+                           vmax=None, vmin=None, rotate=True):
 
         """
         Plot a cross section along the points given in
@@ -5954,7 +5957,7 @@ class Arch_table():
             return
 
         #extract cross section
-        xsec, dist=self.cross_section(arr, p_list, esp=esp)
+        xsec, dist=self.cross_section(arr, p_list, esp=esp, rotate=rotate)
 
         extent=[0, dist, self.get_oz(), self.get_zg()[-1]]
         a=ax.imshow(xsec, origin="lower", extent=extent, interpolation="none", vmax=vmax, vmin=vmin)
@@ -5970,17 +5973,12 @@ class Arch_table():
 
             p1 = p_list[ip]
             p2 = p_list[ip+1]
-            xmin = min(p1[0], p2[0]) 
-            xmax = max(p1[0], p2[0])
-            Lx = xmax - xmin
-            xmin -= max(0.2*Lx, dist_max/2)
-            xmax += max(0.2*Lx, dist_max/2)
 
-            ymin = min(p1[1], p2[1])
-            ymax = max(p1[1], p2[1])
-            Ly = ymax - ymin
-            ymin -= max(0.2*Ly, dist_max/2)
-            ymax += max(0.2*Ly, dist_max/2)
+            xmin = self.get_ox()
+            xmax = self.get_xg()[-1]
+
+            ymin = self.get_oy()
+            ymax = self.get_yg()[-1]
 
             # select bh inside p1 and p2
             sel_bhs = [bh for bh in self.list_bhs if bh.x > xmin and bh.x < xmax and bh.y > ymin and bh.y < ymax]
@@ -5991,18 +5989,26 @@ class Arch_table():
             for bh in sel_bhs:
                 a = p2[0] - p1[0]
                 b = p2[1] - p1[1]
-                x_proj = (a**2 * bh.x + b**2 * p2[0] + a * b * (bh.y - p2[1])) / (a**2 + b**2)
+                min_x_p = min(p1[0], p2[0])
+                max_x_p = max(p1[0], p2[0])
+                min_y_p = min(p1[1], p2[1])
+                max_y_p = max(p1[1], p2[1])
+
+                if rotate:
+                    bh_x, bh_y = self.rotate(np.array([bh.x, bh.y]), self.get_rot_angle())
+                else:
+                    bh_x, bh_y = bh.x, bh.y
+                x_proj = (a**2 * bh_x + b**2 * p2[0] + a * b * (bh_y - p2[1])) / (a**2 + b**2)
                 y_proj = (b * x_proj - b * p2[0] + a * p2[1]) / a
 
-                dist_line = ((bh.x - x_proj) ** 2 + (bh.y - y_proj) ** 2)**0.5
-
+                dist_line = ((bh_x - x_proj) ** 2 + (bh_y - y_proj) ** 2)**0.5
                 if dist_line < dist_max:
-                    dist = ((x_proj - p1[0]) ** 2 + (y_proj - p1[1]) ** 2)**0.5
-                    dist_to_plot = dist_tot + dist  # distance where to plot the bh
+                    if ((x_proj > min_x_p) and (x_proj < max_x_p)) and ((y_proj > min_y_p) and (y_proj < max_y_p)):
+                        dist = ((x_proj - p1[0]) ** 2 + (y_proj - p1[1]) ** 2)**0.5
+                        dist_to_plot = dist_tot + dist
 
-                    # plot bh
-                    if typ == "units":
-                        plot_bh(bh, dist_to_plot)
+                        # plot bh
+                        plot_bh(bh, dist_to_plot, typ=bh_type)
 
             # increment total distance
             dist_points = ((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2)**0.5

@@ -20,6 +20,26 @@ def hmean(v1, v2, w1=1, w2=1):
 def mean(v1, v2, w1=1, w2=1):
     return (v1 * w1 + v2 * w2) / (w1 + w2)
 
+def gmean(a):
+    if np.all(a > 0):
+        return np.exp(np.mean(np.log(a)))
+    elif np.all(a < 0):
+        a = np.abs(a)
+        return -np.exp(np.mean(np.log(a)))
+    else:
+        raise ValueError("Array must be all positive or all negative")
+
+def fill_nan_values_with_gmean(a):
+    
+    """
+    Function to fill nan values with the geometric mean of the non-nan values
+    """
+
+    a = np.copy(a)
+    mask = np.isnan(a)
+    a[mask] = gmean(a[~mask])
+    return a
+
 # function to operate one mean operation
 def f_3D(a, dx=None, dy=None, dz=None, direction="x", typ="x"):
 
@@ -510,6 +530,12 @@ def standard_renormalization(field_xx, field_yy, field_zz, dx, dy, dz, niter=1, 
                     block_xx = field_xx[i:i+2, j:j+2, k:k+2]
                     block_yy = field_yy[i:i+2, j:j+2, k:k+2]
                     block_zz = field_zz[i:i+2, j:j+2, k:k+2]
+
+                    # fill nan values with the geometric mean
+                    block_xx = fill_nan_values_with_gmean(block_xx)
+                    block_yy = fill_nan_values_with_gmean(block_yy)
+                    block_zz = fill_nan_values_with_gmean(block_zz)
+
                     if scheme == "direct":
                         kxx = f_sr(block_xx, block_yy, block_zz, dx, dy, dz, direction="x")
                         kyy = f_sr(block_yy, block_xx, block_zz, dy, dx, dz, direction="y")
@@ -627,6 +653,12 @@ def tensorial_renormalization(field_xx, field_yy, field_zz, dx, dy, dz, niter=1)
                     block_xx = field_xx[i:i+2, j:j+2, k:k+2]
                     block_yy = field_yy[i:i+2, j:j+2, k:k+2]
                     block_zz = field_zz[i:i+2, j:j+2, k:k+2]
+
+                    # fill nan values with the geometric mean
+                    block_xx = fill_nan_values_with_gmean(block_xx)
+                    block_yy = fill_nan_values_with_gmean(block_yy)
+                    block_zz = fill_nan_values_with_gmean(block_zz)
+
                     K = f_rt_simple(block_xx, block_yy, block_zz, dx, dy, dz)
                     kxx = K[0, 0]
                     kyy = K[1, 1]
@@ -649,6 +681,7 @@ def tensorial_renormalization(field_xx, field_yy, field_zz, dx, dy, dz, niter=1)
         # list_field_zz.append(field_zz)
 
     return field_xx, field_yy, field_zz
+
 
 
 def upscale_k(field, dx=1, dy=1, dz=1, method="simplified_renormalization", factor_x=2, factor_y=2, factor_z=2, grid=None, scheme="center"):
@@ -699,6 +732,10 @@ def upscale_k(field, dx=1, dy=1, dz=1, method="simplified_renormalization", fact
                 for j in range(0, field.shape[1], factor_y):
                     for k in range(0, field.shape[2], factor_x):
                         selected_area = field[i:i+factor_z, j:j+factor_y, k:k+factor_z]
+
+                        # fill nan values with the geometric mean of the selected area
+                        selected_area = fill_nan_values_with_gmean(selected_area)
+
                         Kxx = simplified_renormalization(selected_area, dx, dy, dz, direction="x")
                         Kyy = simplified_renormalization(selected_area, dx, dy, dz, direction="y")
                         Kzz = simplified_renormalization(selected_area, dx, dy, dz, direction="z")
@@ -732,6 +769,10 @@ def upscale_k(field, dx=1, dy=1, dz=1, method="simplified_renormalization", fact
                 for j in range(0, field.shape[1], factor_y):
                     for k in range(0, field.shape[2], factor_x):
                         selected_area = field[i:i+factor_z, j:j+factor_y, k:k+factor_x]
+
+                        # remove nan values
+                        selected_area = selected_area[~np.isnan(selected_area)]
+
                         if method == "arithmetic":
                             K = np.mean(selected_area.flatten())
                         elif method == "harmonic":

@@ -238,7 +238,7 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, mask2D=None, seed=123456789, 
 
     ##kwargs
     kwargs_def_grf={"nit": 50, "nmax": 20, "krig_type": "simple_kriging",  # number of gibbs sampler iterations, number of neigbors, krig type
-                      "grf_method": "fft", "mean": None,"unco": False}  # and grf method, mean and unconditional flag
+                      "grf_method": "sgs", "mean": None,"unco": False}  # and grf method, mean and unconditional flag
 
     kwargs_def_MPS={"unco": False,
                       "xr": 1, "yr": 1, "zr": 1, "maxscan": 0.25, "neig": 24, "thresh": 0.05, "xloc": False, "yloc": False, "zloc": False,
@@ -6326,7 +6326,7 @@ class Pile():
                     if "thickness" in litho.surface.dic_surf.keys():
                         if litho.surface.dic_surf["thickness"] is not None:
                             if i == 0:
-                                litho.surface.dic_surf["mean"] = ArchTable.bot + litho.surface.dic_surf["thickness"]
+                                litho.surface.dic_surf["mean"] = bot + litho.surface.dic_surf["thickness"]
                             else:
                                 litho.surface.dic_surf["mean"] = s1 + litho.surface.dic_surf["thickness"]
 

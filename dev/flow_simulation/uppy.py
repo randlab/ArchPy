@@ -717,9 +717,9 @@ def upscale_k(field, dx=1, dy=1, dz=1, method="simplified_renormalization", fact
         Scheme for standard renormalization. Options are direct and center. Center is generally more accurate and faster. Default is center
     """
 
-    assert field.shape[0] % factor_y == 0, "factor_y must be a divisor of the field size"
-    assert field.shape[1] % factor_x == 0, "factor_x must be a divisor of the field size"
-    assert field.shape[2] % factor_z == 0, "factor_z must be a divisor of the field size"
+    assert field.shape[1] % factor_y == 0, "factor_y must be a divisor of the field size"
+    assert field.shape[2] % factor_x == 0, "factor_x must be a divisor of the field size"
+    assert field.shape[0] % factor_z == 0, "factor_z must be a divisor of the field size"
 
     if method == "simplified_renormalization":
         

@@ -50,3 +50,8 @@ Notebooks
    notebooks/inference_surfaces
    notebooks/example
 
+.. nbgallery::
+   :caption: Coupling
+
+   notebooks/modflow_coupling
+

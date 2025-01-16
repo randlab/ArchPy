@@ -27,7 +27,7 @@ setuptools.setup(
                       'shapely',
                       ],  
     extras_require={
-        "all": ['pyvista',
+        "all": ['pyvista==0.44.0',
                 'trame',
                 'trame-vuetify',
                 'trame-vtk',
@@ -36,7 +36,9 @@ setuptools.setup(
                 'ipympl',
                 'pyyaml',
                 'rasterio',
-                'geopandas']
+                'geopandas',
+                'flopy',
+                'numba']
     },
     packages=setuptools.find_packages(),
     include_package_data=True,

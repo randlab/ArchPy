@@ -3,6 +3,8 @@
 *.pyc
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
+debug/*
+dev/debug/*
 
 #ArchPy result files
 *.unt

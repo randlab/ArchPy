@@ -48,4 +48,10 @@ Notebooks
    notebooks/Article_example
    notebooks/x_valid_exemple1
    notebooks/inference_surfaces
+   notebooks/example
+
+.. nbgallery::
+   :caption: Coupling
+
+   notebooks/modflow_coupling
 

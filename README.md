@@ -43,19 +43,20 @@ Works and tested with 3.8 <= python <= 3.11
 
 The following python packages are absolutely necessary:
    - [Geone](https://github.com/randlab/geone)
-   - matplotlib (tested with 3.9.2)
+   - matplotlib (tested with 3.10.0)
    - numpy (tested with 1.26.4)
-   - SciPy (tested with 1.14.1) 
-   - sklearn (tested with 1.5.2)
+   - scipy (tested with 1.15.1)
+   - sklearn (tested with 1.6.1)
    - pandas (tested with 2.2.3)
    - shapely (tested with 2.0.6)
 
 These are not required but highly recommanded. They are installed with ArchPy by default.
-   - pyvista (tested with 0.44.1)
+   - pyvista (tested with 0.44.0)
    - yaml (tested with 6.0.2)
-   - rasterio (tested with 1.4.2)
+   - rasterio (tested with 1.4.3)
    - geopandas (tested with 1.0.1)
    - ipywidgets (tested with 8.1.5)
+   - flopy (tested with 3.4.1)
    
  ## Examples
  There is some example notebooks :
@@ -83,4 +84,4 @@ These are not required but highly recommanded. They are installed with ArchPy by
  Neven, A., Schorpp, L., & Renard, P. (2022). Stochastic multi-fidelity joint hydrogeophysical inversion of consistent geological models. Frontiers in Water, 4, 989440. [link](https://doi.org/10.3389/frwa.2022.989440)
  
  ## Contact
- For any questions regarding ArchPy, please contact me at <ludovic.schorpp@unine.ch>scipy (tested with 1.14.1)
+ For any questions regarding ArchPy, please contact me at <ludovic.schorpp@unine.ch>

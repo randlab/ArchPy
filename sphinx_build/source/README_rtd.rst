@@ -51,20 +51,21 @@ ArchPy has been tested with python>=3.8
 ArchPy requires the following packages:
 
    - `Geone <https://github.com/randlab/geone>`_
-   - matplotlib
+   - matplotlib (tested with 3.10.0)
    - numpy (tested with 1.26.4)
-   - SciPy (tested with 1.14.1) 
-   - sklearn (tested with 1.5.2) 
-   - pandas (tested with 2.2.3) 
+   - scipy (tested with 1.15.1)
+   - sklearn (tested with 1.6.1)
+   - pandas (tested with 2.2.3)
    - shapely (tested with 2.0.6)
 
 The following packages are optional but are required for some functionalities:
 
-   - PyVista (tested with 0.44.1)
-   - pyyaml (tested with 6.0.2, for export uses)
-   - Rasterio (tested with 1.3.10, to use rasters)
-   - Geopandas (tested with 1.0.1, to use shapefile)
-   - ipywidgets
+   - pyvista (tested with 0.44.0)
+   - yaml (tested with 6.0.2)
+   - rasterio (tested with 1.4.3)
+   - geopandas (tested with 1.0.1)
+   - ipywidgets (tested with 8.1.5)
+   - flopy (tested with 3.4.1)
 
 
 Members of the project
@@ -91,7 +92,9 @@ List of references using ArchPy
 -------------------------------
 
 Schorpp, L., Straubhaar, J., & Renard, P. (2024). From lithological descriptions to geological models: an example from the Upper Aare Valley. Frontiers in Applied Mathematics and Statistics, 10, 1441596 [link](https://doi.org/10.3389/fams.2024.1441596).
+
 Neven, A., & Renard, P. (2023). A novel methodology for the stochastic integration of geophysical and hydrogeological data in geologically consistent models. Water Resources Research, 59(7). [link](https://doi.org/10.1029/2023WR034992)
+
 Neven, A., Schorpp, L., & Renard, P. (2022). Stochastic multi-fidelity joint hydrogeophysical inversion of consistent geological models. Frontiers in Water, 4, 989440. [link](https://doi.org/10.3389/frwa.2022.989440)
 
 

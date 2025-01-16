@@ -70,6 +70,7 @@ These are not required but highly recommanded. They are installed with ArchPy by
  - 08_inference : little guide how to use archpy inference tools to estimate surface parameters (no facies parameters for now) --> Note that for now, the interface is not working due to incompatibilities issues with ipywidgets.
  - 09_interface : little exemple of an interface to call an preexisting archpy model as well as drawing a new model extension.
  - 10_rotation : an example of how to create a rotated model
+ - 11_modflow_coupling : an example of how to couple ArchPy with Modflow
  
  ## Paper
  A paper was published on the ArchPy concept and its different capabilities.

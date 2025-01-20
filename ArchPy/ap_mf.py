@@ -61,7 +61,7 @@ def array2cellids(array, idomain):
                     cellids.append((ilay, irow, icol))
     return cellids
 
-def plot_particle_tracking(arch_table, df, plot_time=False, plot_distance=False):
+def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance=False):
 
     if plot_time and plot_distance:
         fig, ax = plt.subplots(2,1, figsize=(10, 1.5), dpi=200)
@@ -74,8 +74,10 @@ def plot_particle_tracking(arch_table, df, plot_time=False, plot_distance=False)
     if plot_time:
         dt = df["dt"]
         for i, (facies, time) in enumerate(zip(df["facies"], df["time"])):
-            
-            axi.barh(0, dt[i], left=time, color=arch_table.get_facies_obj(ID=facies, type="ID").c)
+            if i > 0:
+                axi.barh(0, dt[i], left=df["time"].loc[i-1], color=arch_table.get_facies_obj(ID=facies, type="ID").c)
+            else:
+                axi.barh(0, dt[i], left=0, color=arch_table.get_facies_obj(ID=facies, type="ID").c, label=arch_table.get_facies_obj(ID=facies, type="ID").name)
         
         axi.set_xlim(0, df["time"].iloc[-1])
         axi.set_xlabel("Time (days)")
@@ -276,7 +278,7 @@ class archpy2modflow:
         
         # npf package
         # empty package
-        npf = fp.mf6.ModflowGwfnpf(gwf, icelltype=0, k=1, save_flows=True)
+        npf = fp.mf6.ModflowGwfnpf(gwf, icelltype=0, k=1, save_flows=True, save_saturation=True)
 
         self.sim = sim
         print("Simulation created")
@@ -434,7 +436,7 @@ class archpy2modflow:
             new_k33 = k33
 
         # new_k = np.flip(new_k, axis=1)  # we have to flip in order to match modflow grid
-        npf = fp.mf6.ModflowGwfnpf(gwf, icelltype=0, k=new_k, k22=new_k22, k33=new_k33, save_flows=True, save_specific_discharge=True)
+        npf = fp.mf6.ModflowGwfnpf(gwf, icelltype=0, k=new_k, k22=new_k22, k33=new_k33, save_flows=True, save_specific_discharge=True, save_saturation=True)
         npf.write()
 
 
@@ -495,7 +497,7 @@ class archpy2modflow:
 
     def mp_create(self, mpexe, trackdir="forward",
                   locs=None, rowcelldivisions=1, columncelldivisions=1, layercelldivisions=1,
-                  list_p_coord=None):
+                  list_p_coords=None):
         """
         Create a modpath simulation from an ArchPy table
 
@@ -514,7 +516,7 @@ class archpy2modflow:
             number of column divisions
         layercelldivisions : int
             number of layer divisions
-        list_p_coord : list of tuples
+        list_p_coords : list of tuples
             list of particles coordinates. Each tuple must have 3 values (xp, yp, zp) corresponding to the coordinates of the particle
         """
 
@@ -542,7 +544,7 @@ class archpy2modflow:
                                                 exe_name=mpexe,
                                             )
         else:
-            if list_p_coord is not None:
+            if list_p_coords is not None:
                 # write a function to find the modlfow cellids as well as localx, localy and localz from a coordinate
                 from shapely.geometry import Point, MultiPoint
 
@@ -551,7 +553,7 @@ class archpy2modflow:
 
                 list_p = []
                 list_cellids = []
-                for pi in list_p_coord:
+                for pi in list_p_coords:
                     p1 = Point(pi)
                     list_cellids.append(ix.intersect(p1).cellids[0])
 
@@ -566,7 +568,7 @@ class archpy2modflow:
                 l = []
                 for i in range(len(cellids)):
                     cid = cellids[i]
-                    exem_i = list_p_coord[i]
+                    exem_i = list_p_coords[i]
             
                     local_dx = (grid.xvertices[cid[1], cid[2]+1] - grid.xvertices[cid[1], cid[2]]) / 2
                     local_dy = - (grid.yvertices[cid[1]+1, cid[2]] - grid.yvertices[cid[1], cid[2]]) / 2
@@ -606,6 +608,121 @@ class archpy2modflow:
 
         self.mp = mp  # save the modpath object
         self.mpnamf = mpnamf  # save the name of the modpath file
+
+    def prt_create(self, prt_name="test", workspace="./", trackdir="forward", list_p_coords=None):
+        
+        """
+        Create a particle tracking simulation from a list of coordinates
+
+        Parameters
+        ----------
+        prt_name : str
+            name of the particle tracking simulation
+        workspace : str
+            path to the workspace where the simulation will be saved
+        trackdir : str
+            tracking direction. Can be "forward" or "backward"
+        list_p_coords : list of tuples
+            list of particles coordinates. Each tuple must have 3 values (xp, yp, zp) corresponding to the coordinates of the particle
+        """
+
+        sim_prt = fp.mf6.MFSimulation(sim_name=prt_name, exe_name=self.exe_name, sim_ws=workspace, version="mf6")
+
+        tdis_perioddata = self.get_sim().tdis.perioddata.array
+        tdis = fp.mf6.ModflowTdis(sim_prt, pname="tdis", time_units="DAYS", nper=len(tdis_perioddata), perioddata=tdis_perioddata)
+
+        # Create PRT model
+        prt = fp.mf6.ModflowPrt(sim_prt, modelname=prt_name, model_nam_file="{}.nam".format(prt_name))
+
+        # Create grid discretization
+        dis = self.get_gwf().dis
+        dis_prt = fp.mf6.ModflowGwfdis(prt, nlay=dis.nlay.array, nrow=dis.nrow.array, ncol=dis.ncol.array,
+                                        delr=dis.delr.array, delc=dis.delc.array, top=dis.top.array, botm=dis.botm.array,
+                                        idomain=dis.idomain.array)
+
+        # create prt input package
+        mip = fp.mf6.ModflowPrtmip(prt, pname="mip", porosity=0.2)
+
+        from shapely.geometry import Point, MultiPoint
+
+        grid = self.get_gwf().modelgrid
+        ix = fp.utils.gridintersect.GridIntersect(mfgrid=grid)
+
+        list_cellids = []
+        for pi in list_p_coords:
+            p1 = Point(pi)
+            result = ix.intersect(p1)
+            if len(result) > 0:
+                list_cellids.append(result.cellids[0])
+            else:
+                p1 = Point((pi[0], pi[1]))
+                result = ix.intersect(p1)
+                list_cellids.append((-1, result.cellids[0][1], result.cellids[0][2]))
+
+        cellids = np.array([cids for cids in list_cellids])
+
+        cellids[:, 0] += 1
+
+        # package data (irptno, cellid, x, y, z)
+        package_data = []
+        for i in range(len(cellids)):
+            package_data.append((i, cellids[i], list_p_coords[i][0], list_p_coords[i][1], list_p_coords[i][2]))
+
+        # period data (when to release the particles)
+        period_data = {0: ["FIRST"]}
+
+        prp = fp.mf6.ModflowPrtprp(prt, pname="prp", filename="{}.prp".format(prt_name),
+                                        packagedata=package_data,
+                                        perioddata=period_data,
+                                        nreleasepts=len(package_data),
+                                        exit_solve_tolerance=1e-5)
+
+
+        # output control package
+        budgetfile_prt_name = "{}.bud".format(prt_name)
+        trackfile_name = "{}.trk".format(prt_name)
+        trackcsvfile_name = "{}.trk.csv".format(prt_name)
+        budget_record = [budgetfile_prt_name]
+        track_record = [trackfile_name]
+        trackcsv_record = [trackcsvfile_name]
+        oc = fp.mf6.ModflowPrtoc(
+            prt,
+            pname="oc",
+            budget_filerecord=budget_record,
+            track_filerecord=track_record,
+            trackcsv_filerecord=trackcsv_record,
+            saverecord=[("BUDGET", "ALL")])
+
+        # load head and budget files
+        gwf_ws = self.get_gwf().simulation_data.mfpath.get_sim_path()
+        head_file_path = os.path.join(gwf_ws, "{}.hds".format(self.model_name))
+        head_file = fp.utils.HeadFile(head_file_path, tdis=sim_prt.tdis)
+        budget_file_path = os.path.join(gwf_ws, "{}.cbc".format(self.model_name))
+        budget_file = fp.utils.CellBudgetFile(budget_file_path, precision="double", tdis=sim_prt.tdis)
+
+        if trackdir == "backward":
+            headfile_bkwd_name = f"{self.model_name}_hds_bkwd"
+            budgetfile_bkwd_name = f"{self.model_name}_cbc_bkwd"
+
+            # reverse head and budget files to get backward tracking
+            head_file.reverse(workspace + "/" + headfile_bkwd_name)
+            budget_file.reverse(workspace + "/" + budgetfile_bkwd_name)
+
+            fmi = fp.mf6.ModflowPrtfmi(prt, packagedata=[
+                ("GWFHEAD", headfile_bkwd_name),
+                ("GWFBUDGET", budgetfile_bkwd_name),
+            ])
+
+        else:
+            fmi = fp.mf6.ModflowPrtfmi(prt, packagedata=[
+                ("GWFHEAD", head_file_path),
+                ("GWFBUDGET", budget_file_path),
+            ])
+
+        ems = fp.mf6.ModflowEms(sim_prt, pname="ems", filename="{}.ems".format(prt_name))
+        sim_prt.register_solution_package(ems, [prt.name])
+
+        self.sim_prt = sim_prt
 
     def set_porosity(self, 
                      iu = 0, ifa = 0, ip = 0, 
@@ -672,6 +789,14 @@ class archpy2modflow:
 
         mpbas = fp.modpath.Modpath7Bas(self.get_mp(), porosity=new_k)
 
+    def prt_run(self, silent=False):
+        # write simulation to disk
+        self.sim_prt.write_simulation()
+        success, msg = self.sim_prt.run_simulation(silent=silent)
+        if not success:
+            print("particle tracking did not run successfully")
+            print(msg)
+
     def mp_run(self, silent=False):
         self.mp.write_input()
         success, msg = self.mp.run_model(silent=silent)
@@ -679,6 +804,7 @@ class archpy2modflow:
             print("modpath did not run successfully")
             print(msg)
 
+    # get results
     def get_mp(self):
         return self.mp
     
@@ -693,8 +819,8 @@ class archpy2modflow:
         fpth = os.path.join(self.model_dir, f"{self.mpnamf}.mpend")
         e = fp.utils.EndpointFile(fpth)
         return e
-    
-    def get_df_particle(self, i_particle, fac_time = 1/86400, iu = 0, ifa = 0):
+
+    def mp_get_facies_path_particle(self, i_particle, fac_time = 1/86400, iu = 0, ifa = 0):
 
         grid_mode = self.grid_mode
         p = self.mp_get_pathlines_object()
@@ -751,3 +877,64 @@ class archpy2modflow:
         else:
             raise ValueError
         return df_all
+
+    def prt_get_pathlines(self, i_particle=None):
+        sim_dir = self.sim_prt.sim_path
+        csv_name = self.sim_prt.prt[0].oc.trackcsv_filerecord.array[0][0]
+        csv_path = os.path.join(sim_dir, csv_name)
+        df = pd.read_csv(csv_path)
+
+        if i_particle is not None:
+            df = df.loc[df["irpt"] == i_particle]
+        return df
+
+    def prt_get_facies_path_particle(self, i_particle=1, fac_time = 1/86400, iu = 0, ifa = 0):
+
+        grid_mode = self.grid_mode
+        df = self.prt_get_pathlines(i_particle)
+
+        time_ordered = df["t"].values.copy()
+        time_ordered *= 1/86400
+        dt = np.diff(time_ordered)
+
+        # add a column to track distance traveled
+        distances = ((df[["x", "y", "z"]].iloc[1:].values - df[["x", "y", "z"]].iloc[:-1].values)**2).sum(1)
+
+        # store everything in a new dataframe
+        df_all = pd.DataFrame(columns=["dt", "time", "distance", "cum_distance", "x", "y", "z"])
+        df_all["dt"] = dt
+        df_all["time"] = time_ordered[1:]
+        df_all["distance"] = distances
+        df_all["cum_distance"] = df_all["distance"].cumsum()
+        df_all["x"] = (df["x"].values[1:] + df["x"].values[:-1]) / 2
+        df_all["y"] = (df["y"].values[1:] + df["y"].values[:-1]) / 2
+        df_all["z"] = (df["z"].values[1:] + df["z"].values[:-1]) / 2
+
+        cells_path = np.array((((df_all["z"].values-self.T1.zg[0])//self.T1.sz).astype(int),
+                                ((df_all["y"].values-self.T1.yg[0])//self.T1.sy).astype(int),
+                                ((df_all["x"].values-self.T1.xg[0])//self.T1.sx).astype(int))).T
+
+        if grid_mode in ["layers", "new_resolution"]:
+            dic_facies_path = {}
+            # retrieve lithologies along the pathlines
+            for fa in self.T1.get_all_facies():
+                id_fa = fa.ID
+                prop_fa = self.upscaled_facies[id_fa]
+
+                facies_along_path = prop_fa[cells_path[:, 0], cells_path[:, 1], cells_path[:, 2]]
+                dic_facies_path[fa.ID] = facies_along_path
+            colors_fa = []
+            for k, v in dic_facies_path.items():
+                df_all["facies_prop_"+ str(k)] = v
+                colors_fa.append(self.T1.get_facies_obj(ID=k, type="ID").c)
+
+        elif grid_mode == "archpy":
+            facies = self.T1.get_facies(iu, ifa, all_data=False)
+            facies_along_path = facies[cells_path[:, 0], cells_path[:, 1], cells_path[:, 2]]
+            df_all["facies"] = facies_along_path
+        else:
+            raise ValueError
+        
+        return df_all
+
+

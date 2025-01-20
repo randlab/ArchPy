@@ -217,6 +217,16 @@ class archpy2modflow:
                 mask = s1 == s2
                 s1[mask] += 1e-2
 
+                # 2nd loop over previous layers to ensure that the thickness is > 0
+                for o in range(i, -1, -1):
+                    s2 = botm[o]
+                    if o == 0:
+                        s1 = top
+                    else:
+                        s1 = botm[o-1]
+                    mask = s1 <= s2
+                    s1[mask] = s2[mask] + 1e-2
+
         elif grid_mode == "new_resolution":
             assert factor_x is not None, "factor_x must be provided"
             assert factor_y is not None, "factor_y must be provided"

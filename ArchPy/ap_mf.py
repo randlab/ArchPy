@@ -930,7 +930,7 @@ class archpy2modflow:
         dt = np.diff(time_ordered)
 
         # add a column to track distance traveled
-        distances = ((df[["x", "y", "z"]].iloc[1:].values - df[["x", "y", "z"]].iloc[:-1].values)**2).sum(1)
+        distances = ((df[["x", "y", "z"]].iloc[1:].values - df[["x", "y", "z"]].iloc[:-1].values)**2).sum(1)**0.5
 
         # store everything in a new dataframe
         df_all = pd.DataFrame(columns=["dt", "time", "distance", "cum_distance", "x", "y", "z"])

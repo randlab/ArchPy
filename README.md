@@ -56,7 +56,7 @@ These are not required but highly recommanded. They are installed with ArchPy by
    - rasterio (tested with 1.4.3)
    - geopandas (tested with 1.0.1)
    - ipywidgets (tested with 8.1.5)
-   - flopy (tested with 3.4.1)
+   - flopy (tested with 3.9.1)
    
  ## Examples
  There is some example notebooks :

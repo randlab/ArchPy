@@ -38,7 +38,7 @@ def run_notebooks():
     # use an alias
 
     # get list of all notebooks
-    notebooks_subfolders = ["11_modflow_coupling"]
+    notebooks_subfolders = ["01_basic", "02_3D_ArchPy", "04_hierarchies", "05_mps_surfaces", "06_cross_validation", "07_Geological_map", "10_rotation_grid", "11_modflow_coupling"]
 
     for folder in notebooks_subfolders:
         for notebook in os.listdir(f"{notebook_folder}/{folder}"):
@@ -109,7 +109,7 @@ def update_readme():
     with open("README.md", "r") as f:
         readme = f.read()
 
-    list_packages = ["numpy", "pandas", "matplotlib", "scipy", "sklearn", "geopandas", "rasterio", "shapely", "pyvista", "yaml", "ipywidgets"]
+    list_packages = ["numpy", "pandas", "matplotlib", "scipy", "sklearn", "geopandas", "rasterio", "shapely", "pyvista", "yaml", "ipywidgets", "flopy"]
 
     import numpy
     import pandas

@@ -61,7 +61,7 @@ def array2cellids(array, idomain):
                     cellids.append((ilay, irow, icol))
     return cellids
 
-def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance=False):
+def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance=False, proportions=False):
 
     if plot_time and plot_distance:
         fig, ax = plt.subplots(2,1, figsize=(10, 1.5), dpi=200)
@@ -70,33 +70,55 @@ def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance
         fig, axi = plt.subplots(1,1, figsize=(10, 0.5), dpi=200)
     plt.subplots_adjust(hspace=1.5)
 
+    if proportions:
+        colors_fa = []
+        for col in df.columns:
+            if col.split("_")[0] == "facies":
+                id_fa = int(col.split("_")[-1])
+                color_fa = archpy_flow.T1.get_facies_obj(ID=id_fa, type="ID").c
+                colors_fa.append(color_fa)
 
     if plot_time:
-        dt = df["dt"]
-        for i, (facies, time) in enumerate(zip(df["facies"], df["time"])):
-            if i > 0:
-                axi.barh(0, dt[i], left=df["time"].loc[i-1], color=arch_table.get_facies_obj(ID=facies, type="ID").c)
-            else:
-                axi.barh(0, dt[i], left=0, color=arch_table.get_facies_obj(ID=facies, type="ID").c, label=arch_table.get_facies_obj(ID=facies, type="ID").name)
-        
-        axi.set_xlim(0, df["time"].iloc[-1])
-        axi.set_xlabel("Time (days)")
-        axi.set_yticks([])
+
+        if proportions:
+            df.set_index("time").iloc[:, -len(colors_fa):].plot(color=colors_fa, legend=False, ax=ax[0])
+            axi.set_ylabel("Proportion")
+            axi.set_xlabel("time [days]")
+            axi.set_ylim(-.1, 1.1)
+
+        else:
+            dt = df["dt"]
+            for i, (facies, time) in enumerate(zip(df["facies"], df["time"])):
+                if i > 0:
+                    axi.barh(0, dt[i], left=df["time"].loc[i-1], color=arch_table.get_facies_obj(ID=facies, type="ID").c)
+                else:
+                    axi.barh(0, dt[i], left=0, color=arch_table.get_facies_obj(ID=facies, type="ID").c, label=arch_table.get_facies_obj(ID=facies, type="ID").name)
+            
+            axi.set_xlim(0, df["time"].iloc[-1])
+            axi.set_xlabel("Time (days)")
+            axi.set_yticks([])
 
         if plot_distance:
             axi = ax[1]
     
+    # plot facies function of the distance traveled
     if plot_distance:
-
-        # plot facies function of the distance traveled
         all_dist = df["distance"].values
         all_cum_dist = df["cum_distance"].values
 
-        for i in range(int(len(df["facies"]) - 1)):
-            facies = df["facies"].iloc[i]
-            width = all_dist[i+1]
-            distance = all_cum_dist[i]
-            axi.barh(0, width, left=distance, color=arch_table.get_facies_obj(ID=facies, type="ID").c)
+        if proportions:
+            df.set_index("cum_distance").iloc[:, -len(colors_fa):].plot(color=colors_fa, legend=False, ax=ax[1])
+            ax[1].set_ylabel("Proportion")
+            ax[1].set_xlabel("Distance [m]")
+            ax[1].set_ylim(-.1, 1.1)
+
+        else:
+
+            for i in range(int(len(df["facies"]) - 1)):
+                facies = df["facies"].iloc[i]
+                width = all_dist[i+1]
+                distance = all_cum_dist[i]
+                axi.barh(0, width, left=distance, color=arch_table.get_facies_obj(ID=facies, type="ID").c)
 
         axi.set_xlim(0, all_cum_dist[-1])
         axi.set_xlabel("Distance (m)")
@@ -667,7 +689,7 @@ class archpy2modflow:
             else:
                 p1 = Point((pi[0], pi[1]))
                 result = ix.intersect(p1)
-                list_cellids.append((-1, result.cellids[0][1], result.cellids[0][2]))
+                list_cellids.append((-1, result.cellids[0][0], result.cellids[0][1]))
 
         cellids = np.array([cids for cids in list_cellids])
 

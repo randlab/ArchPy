@@ -55,3 +55,7 @@ Notebooks
 
    notebooks/modflow_coupling
 
+.. nbgallery::
+   :caption: Upscaling
+
+   notebooks/upscaling_3D_fields

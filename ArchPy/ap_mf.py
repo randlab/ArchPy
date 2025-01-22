@@ -175,7 +175,7 @@ class archpy2modflow:
         self.factor_y = None
         self.factor_z = None
 
-    def create_sim(self, grid_mode="archpy", iu=0, factor_x=None, factor_y=None, factor_z=None):
+    def create_sim(self, grid_mode="archpy", iu=0, factor_x=None, factor_y=None, factor_z=None, ID_units_to_exclude=None):
 
         """
         Create a modflow simulation from an ArchPy table
@@ -195,6 +195,8 @@ class archpy2modflow:
             factor to change the resolution of the grid in the y direction.
         factor_z : float    
             factor to change the resolution of the grid in the z direction.
+        ID_units_to_exclude : list of int TO DO
+            list of ArchPy units to exclude from the simulation
         """
 
         sim = fp.mf6.MFSimulation(sim_name=self.sim_name, version='mf6', exe_name=self.exe_name, 
@@ -275,6 +277,8 @@ class archpy2modflow:
                         if mask.mean() >= 0.5:
                             idomain[ilay//factor_z, irow//factor_y, icol//factor_x] = 1
             
+            idomain = np.flip(np.flipud(idomain), axis=1)  # flip the array to have the same orientation as the ArchPy table
+
             self.factor_x = factor_x
             self.factor_y = factor_y
             self.factor_z = factor_z

@@ -12,18 +12,18 @@ import pandas as pd
 
 # some functions
 def mask_below_unit(T1, unit, iu=0):
-                u = T1.get_unit(unit)
-                
-                mask_tot = np.zeros([T1.nz, T1.ny, T1.nx])
-                mask_unit = T1.unit_mask(u.name, iu=iu)
-                mask_tot[mask_unit.astype(bool)] = 1
+    u = T1.get_unit(unit)
+    
+    mask_tot = np.zeros([T1.nz, T1.ny, T1.nx])
+    mask_unit = T1.unit_mask(u.name, iu=iu)
+    mask_tot[mask_unit.astype(bool)] = 1
 
-                for unit_to_compare in T1.get_all_units():
-                    if unit_to_compare > u:
-                        mask_unit = T1.unit_mask(unit_to_compare.name, iu=iu)
-                        mask_tot[mask_unit.astype(bool)] = 1
-                
-                return mask_tot
+    for unit_to_compare in T1.get_all_units():
+        if unit_to_compare > u:
+            mask_unit = T1.unit_mask(unit_to_compare.name, iu=iu)
+            mask_tot[mask_unit.astype(bool)] = 1
+    
+    return mask_tot
 
 def cellidBD(idomain, layer=0):   
     
@@ -103,7 +103,7 @@ def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance
             dt = df["dt"]
             for i, (facies, time) in enumerate(zip(df["facies"], df["time"])):
                 if i > 0:
-                    axi.barh(0, dt[i], left=df["time"].loc[i-1], color=arch_table.get_facies_obj(ID=facies, type="ID").c)
+                    axi.barh(0, dt[i], left=df["time"].loc[i], color=arch_table.get_facies_obj(ID=facies, type="ID").c)
                 else:
                     axi.barh(0, dt[i], left=0, color=arch_table.get_facies_obj(ID=facies, type="ID").c, label=arch_table.get_facies_obj(ID=facies, type="ID").name)
             
@@ -231,6 +231,7 @@ class archpy2modflow:
             # inactive cells below unit limit
             if unit_limit is not None:
                 mask = mask_below_unit(self.T1, unit_limit, iu=iu)
+                mask = np.flip(np.flipud(mask), axis=1)  # flip the array to have the same orientation as the ArchPy table
                 idomain[mask == 1] = 0
 
         elif grid_mode == "layers":
@@ -248,7 +249,7 @@ class archpy2modflow:
                 units = list_unit_below_unit(self.T1, unit_limit)
                 n_units_removed = len(units) + 1
             else:
-                n_units_removed = 0
+                n_units_removed = None
 
             # get surfaces of each unit
             top = self.T1.get_surface(typ="top")[0][0, iu]
@@ -266,7 +267,8 @@ class archpy2modflow:
             idomain[np.isnan(thicknesses)] = 0
 
             # inactive cells below unit limit
-            idomain[-n_units_removed:] = 0
+            if n_units_removed is not None:
+                idomain[-n_units_removed:] = 0
 
             # adapt botm in order that each layer has a thickness > 0 
             for i in range(-1, nlay-1):

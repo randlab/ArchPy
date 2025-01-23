@@ -11,6 +11,7 @@ ArchPy offers a variety of capabilities such as:
 
    - Various interpolation methods (GRF, Kriging, Spline, etc.)
    - Various simulation methods (MPS, SIS, TPGs, etc.)
+   - Coupling with groundwater flow using MODFLOW and flopy
    - Integration of hierarchy in the modelling process at different spatial scales
    - Input/Output capabilities to read and write borehole data, stratigraphic pile and models
    - Automatic inference of conditioning point 
@@ -65,7 +66,7 @@ The following packages are optional but are required for some functionalities:
    - rasterio (tested with 1.4.3)
    - geopandas (tested with 1.0.1)
    - ipywidgets (tested with 8.1.5)
-   - flopy (tested with 3.4.1)
+   - flopy (tested with 3.9.1)
 
 
 Members of the project

@@ -6742,16 +6742,79 @@ class Unit():
             return False
 
     def __it__(self, other): # inequality comparison
-        if (self.order < other.order):
-            return True
+        l = []
+        def fun(big_unit):  # recursive function to go down the hierarchy
+
+            u1 = self
+            u2 = other
+            for sub_unit in big_unit.SubPile.list_units:
+                if self.goes_up_until(sub_unit) is not None:
+                    u1 = self.goes_up_until(sub_unit)
+                if self == sub_unit:
+                    u1 = self
+                if other.goes_up_until(sub_unit) is not None:
+                    u2 = other.goes_up_until(sub_unit)
+                if other == sub_unit:
+                    u2 = other
+
+            if u1.get_h_level() == u2.get_h_level():
+                if u1.order > u2.order:
+                    l.append(False)
+                elif u1.order < u2.order:
+                    l.append(True)
+                else:
+                    fun(u1)
+                
+            else:
+                l.append(None)
+
+        # Depending on the hierarchy of the units, the order is different --> we need to first check the biggest mummy unit
+        if (self.get_big_mummy_unit().order > other.get_big_mummy_unit().order):
+            l.append(False)
+        elif (self.get_big_mummy_unit().order < other.get_big_mummy_unit().order):
+            l.append(True)
         else:
-            return False
+            fun(self.get_big_mummy_unit())
+            
+        return  l[0]
 
     def __gt__(self, other): # inequality comparison
-        if (self.order > other.order):
-            return True
+        l = []
+        def fun(big_unit):  # recursive function to go down the hierarchy
+
+            u1 = self
+            u2 = other
+            for sub_unit in big_unit.SubPile.list_units:
+                if self.goes_up_until(sub_unit) is not None:
+                    u1 = self.goes_up_until(sub_unit)
+                if self == sub_unit:
+                    u1 = self
+                if other.goes_up_until(sub_unit) is not None:
+                    u2 = other.goes_up_until(sub_unit)
+                if other == sub_unit:
+                    u2 = other
+
+            if u1.get_h_level() == u2.get_h_level():
+                if u1.order > u2.order:
+                    l.append(True)
+                elif u1.order < u2.order:
+                    l.append(False)
+                else:
+                    fun(u1)
+            else:
+                l.append(None)
+
+        # Depending on the hierarchy of the units, the order is different --> we need to first check the biggest mummy unit
+        if (self.get_big_mummy_unit().order > other.get_big_mummy_unit().order):
+            l.append(True)
+        elif (self.get_big_mummy_unit().order < other.get_big_mummy_unit().order):
+            l.append(False)
+        elif (self.get_big_mummy_unit().order == other.get_big_mummy_unit().order): 
+            l.append(None)
         else:
-            return False
+            fun(self.get_big_mummy_unit())
+            
+        return  l[0]
 
     def __str__(self):
         return self.name

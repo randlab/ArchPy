@@ -11,6 +11,19 @@ import flopy as fp
 import pandas as pd
 
 # some functions
+def mask_below_unit(T1, unit, iu=0):
+    u = T1.get_unit(unit)
+    
+    mask_tot = np.zeros([T1.nz, T1.ny, T1.nx])
+    mask_unit = T1.unit_mask(u.name, iu=iu)
+    mask_tot[mask_unit.astype(bool)] = 1
+
+    for unit_to_compare in T1.get_all_units():
+        if unit_to_compare > u:
+            mask_unit = T1.unit_mask(unit_to_compare.name, iu=iu)
+            mask_tot[mask_unit.astype(bool)] = 1
+    
+    return mask_tot
 
 def cellidBD(idomain, layer=0):   
     
@@ -61,7 +74,7 @@ def array2cellids(array, idomain):
                     cellids.append((ilay, irow, icol))
     return cellids
 
-def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance=False):
+def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance=False, proportions=False):
 
     if plot_time and plot_distance:
         fig, ax = plt.subplots(2,1, figsize=(10, 1.5), dpi=200)
@@ -70,33 +83,55 @@ def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance
         fig, axi = plt.subplots(1,1, figsize=(10, 0.5), dpi=200)
     plt.subplots_adjust(hspace=1.5)
 
+    if proportions:
+        colors_fa = []
+        for col in df.columns:
+            if col.split("_")[0] == "facies":
+                id_fa = int(col.split("_")[-1])
+                color_fa = archpy_flow.T1.get_facies_obj(ID=id_fa, type="ID").c
+                colors_fa.append(color_fa)
 
     if plot_time:
-        dt = df["dt"]
-        for i, (facies, time) in enumerate(zip(df["facies"], df["time"])):
-            if i > 0:
-                axi.barh(0, dt[i], left=df["time"].loc[i-1], color=arch_table.get_facies_obj(ID=facies, type="ID").c)
-            else:
-                axi.barh(0, dt[i], left=0, color=arch_table.get_facies_obj(ID=facies, type="ID").c, label=arch_table.get_facies_obj(ID=facies, type="ID").name)
-        
-        axi.set_xlim(0, df["time"].iloc[-1])
-        axi.set_xlabel("Time (days)")
-        axi.set_yticks([])
+
+        if proportions:
+            df.set_index("time").iloc[:, -len(colors_fa):].plot(color=colors_fa, legend=False, ax=ax[0])
+            axi.set_ylabel("Proportion")
+            axi.set_xlabel("time [days]")
+            axi.set_ylim(-.1, 1.1)
+
+        else:
+            dt = df["dt"]
+            for i, (facies, time) in enumerate(zip(df["facies"], df["time"])):
+                if i > 0:
+                    axi.barh(0, dt[i], left=df["time"].loc[i], color=arch_table.get_facies_obj(ID=facies, type="ID").c)
+                else:
+                    axi.barh(0, dt[i], left=0, color=arch_table.get_facies_obj(ID=facies, type="ID").c, label=arch_table.get_facies_obj(ID=facies, type="ID").name)
+            
+            axi.set_xlim(0, df["time"].iloc[-1])
+            axi.set_xlabel("Time (days)")
+            axi.set_yticks([])
 
         if plot_distance:
             axi = ax[1]
     
+    # plot facies function of the distance traveled
     if plot_distance:
-
-        # plot facies function of the distance traveled
         all_dist = df["distance"].values
         all_cum_dist = df["cum_distance"].values
 
-        for i in range(int(len(df["facies"]) - 1)):
-            facies = df["facies"].iloc[i]
-            width = all_dist[i+1]
-            distance = all_cum_dist[i]
-            axi.barh(0, width, left=distance, color=arch_table.get_facies_obj(ID=facies, type="ID").c)
+        if proportions:
+            df.set_index("cum_distance").iloc[:, -len(colors_fa):].plot(color=colors_fa, legend=False, ax=ax[1])
+            ax[1].set_ylabel("Proportion")
+            ax[1].set_xlabel("Distance [m]")
+            ax[1].set_ylim(-.1, 1.1)
+
+        else:
+
+            for i in range(int(len(df["facies"]) - 1)):
+                facies = df["facies"].iloc[i]
+                width = all_dist[i+1]
+                distance = all_cum_dist[i]
+                axi.barh(0, width, left=distance, color=arch_table.get_facies_obj(ID=facies, type="ID").c)
 
         axi.set_xlim(0, all_cum_dist[-1])
         axi.set_xlabel("Distance (m)")
@@ -153,7 +188,7 @@ class archpy2modflow:
         self.factor_y = None
         self.factor_z = None
 
-    def create_sim(self, grid_mode="archpy", iu=0, factor_x=None, factor_y=None, factor_z=None):
+    def create_sim(self, grid_mode="archpy", iu=0, factor_x=None, factor_y=None, factor_z=None, unit_limit=None):
 
         """
         Create a modflow simulation from an ArchPy table
@@ -173,6 +208,8 @@ class archpy2modflow:
             factor to change the resolution of the grid in the y direction.
         factor_z : float    
             factor to change the resolution of the grid in the z direction.
+        unit_limit: unit name
+            unit under which cells are considered as inactive
         """
 
         sim = fp.mf6.MFSimulation(sim_name=self.sim_name, version='mf6', exe_name=self.exe_name, 
@@ -191,10 +228,32 @@ class archpy2modflow:
             botm = np.flip(np.flipud(botm), axis=1)  # flip the array to have the same orientation as the ArchPy table
             idomain = np.flip(np.flipud(self.T1.get_mask().astype(int)), axis=1)  # flip the array to have the same orientation as the ArchPy table
 
+            # inactive cells below unit limit
+            if unit_limit is not None:
+                mask = mask_below_unit(self.T1, unit_limit, iu=iu)
+                mask = np.flip(np.flipud(mask), axis=1)  # flip the array to have the same orientation as the ArchPy table
+                idomain[mask == 1] = 0
+
         elif grid_mode == "layers":
+
+            def list_unit_below_unit(T1, unit):
+                u = T1.get_unit(unit)
+                units = []
+                for unit_to_compare in T1.get_all_units():
+                    if unit_to_compare > u:
+                        units.append(unit_to_compare)
+                return units
+
+            # determine which units will be inactive
+            if unit_limit is not None:
+                units = list_unit_below_unit(self.T1, unit_limit)
+                n_units_removed = len(units) + 1
+            else:
+                n_units_removed = None
+
             # get surfaces of each unit
             top = self.T1.get_surface(typ="top")[0][0, iu]
-            top = np.flip(top, axis=1)
+            top = np.flip(top, axis=0)
             botm = self.T1.get_surface(typ="bot")[0][:, iu]
             botm = np.flip(botm, axis=1)
             layers_names = self.T1.get_surface(typ="bot")[1]
@@ -206,6 +265,10 @@ class archpy2modflow:
             thicknesses = -np.diff(np.vstack([top.reshape(-1, nrow, ncol), botm]), axis=0)
             idomain[thicknesses == 0] = -1
             idomain[np.isnan(thicknesses)] = 0
+
+            # inactive cells below unit limit
+            if n_units_removed is not None:
+                idomain[-n_units_removed:] = 0
 
             # adapt botm in order that each layer has a thickness > 0 
             for i in range(-1, nlay-1):
@@ -246,6 +309,12 @@ class archpy2modflow:
             # how to define idomain ?
             idomain = np.zeros((nlay, nrow, ncol))
             mask_org = self.T1.get_mask().astype(int)
+
+            # modify mask_org to remove the inactive cells
+            if unit_limit is not None:
+                mask = mask_below_unit(self.T1, unit_limit, iu=iu)
+                mask_org[mask == 1] = 0
+
             for ilay in range(0, self.T1.get_nz(), factor_z):
                 for irow in range(0, self.T1.get_ny(), factor_y):
                     for icol in range(0, self.T1.get_nx(), factor_x):
@@ -253,6 +322,8 @@ class archpy2modflow:
                         if mask.mean() >= 0.5:
                             idomain[ilay//factor_z, irow//factor_y, icol//factor_x] = 1
             
+            idomain = np.flip(np.flipud(idomain), axis=1)  # flip the array to have the same orientation as the ArchPy table
+
             self.factor_x = factor_x
             self.factor_y = factor_y
             self.factor_z = factor_z
@@ -667,7 +738,7 @@ class archpy2modflow:
             else:
                 p1 = Point((pi[0], pi[1]))
                 result = ix.intersect(p1)
-                list_cellids.append((-1, result.cellids[0][1], result.cellids[0][2]))
+                list_cellids.append((-1, result.cellids[0][0], result.cellids[0][1]))
 
         cellids = np.array([cids for cids in list_cellids])
 
@@ -908,7 +979,7 @@ class archpy2modflow:
         dt = np.diff(time_ordered)
 
         # add a column to track distance traveled
-        distances = ((df[["x", "y", "z"]].iloc[1:].values - df[["x", "y", "z"]].iloc[:-1].values)**2).sum(1)
+        distances = ((df[["x", "y", "z"]].iloc[1:].values - df[["x", "y", "z"]].iloc[:-1].values)**2).sum(1)**0.5
 
         # store everything in a new dataframe
         df_all = pd.DataFrame(columns=["dt", "time", "distance", "cum_distance", "x", "y", "z"])

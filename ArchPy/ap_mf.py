@@ -11,6 +11,19 @@ import flopy as fp
 import pandas as pd
 
 # some functions
+def mask_below_unit(T1, unit, iu=0):
+                u = T1.get_unit(unit)
+                
+                mask_tot = np.zeros([T1.nz, T1.ny, T1.nx])
+                mask_unit = T1.unit_mask(u.name, iu=iu)
+                mask_tot[mask_unit.astype(bool)] = 1
+
+                for unit_to_compare in T1.get_all_units():
+                    if unit_to_compare > u:
+                        mask_unit = T1.unit_mask(unit_to_compare.name, iu=iu)
+                        mask_tot[mask_unit.astype(bool)] = 1
+                
+                return mask_tot
 
 def cellidBD(idomain, layer=0):   
     
@@ -175,7 +188,7 @@ class archpy2modflow:
         self.factor_y = None
         self.factor_z = None
 
-    def create_sim(self, grid_mode="archpy", iu=0, factor_x=None, factor_y=None, factor_z=None, ID_units_to_exclude=None):
+    def create_sim(self, grid_mode="archpy", iu=0, factor_x=None, factor_y=None, factor_z=None, unit_limit=None):
 
         """
         Create a modflow simulation from an ArchPy table
@@ -195,8 +208,8 @@ class archpy2modflow:
             factor to change the resolution of the grid in the y direction.
         factor_z : float    
             factor to change the resolution of the grid in the z direction.
-        ID_units_to_exclude : list of int TO DO
-            list of ArchPy units to exclude from the simulation
+        unit_limit: unit name
+            unit under which cells are considered as inactive
         """
 
         sim = fp.mf6.MFSimulation(sim_name=self.sim_name, version='mf6', exe_name=self.exe_name, 
@@ -215,10 +228,31 @@ class archpy2modflow:
             botm = np.flip(np.flipud(botm), axis=1)  # flip the array to have the same orientation as the ArchPy table
             idomain = np.flip(np.flipud(self.T1.get_mask().astype(int)), axis=1)  # flip the array to have the same orientation as the ArchPy table
 
+            # inactive cells below unit limit
+            if unit_limit is not None:
+                mask = mask_below_unit(self.T1, unit_limit, iu=iu)
+                idomain[mask == 1] = 0
+
         elif grid_mode == "layers":
+
+            def list_unit_below_unit(T1, unit):
+                u = T1.get_unit(unit)
+                units = []
+                for unit_to_compare in T1.get_all_units():
+                    if unit_to_compare > u:
+                        units.append(unit_to_compare)
+                return units
+
+            # determine which units will be inactive
+            if unit_limit is not None:
+                units = list_unit_below_unit(self.T1, unit_limit)
+                n_units_removed = len(units) + 1
+            else:
+                n_units_removed = 0
+
             # get surfaces of each unit
             top = self.T1.get_surface(typ="top")[0][0, iu]
-            top = np.flip(top, axis=1)
+            top = np.flip(top, axis=0)
             botm = self.T1.get_surface(typ="bot")[0][:, iu]
             botm = np.flip(botm, axis=1)
             layers_names = self.T1.get_surface(typ="bot")[1]
@@ -230,6 +264,9 @@ class archpy2modflow:
             thicknesses = -np.diff(np.vstack([top.reshape(-1, nrow, ncol), botm]), axis=0)
             idomain[thicknesses == 0] = -1
             idomain[np.isnan(thicknesses)] = 0
+
+            # inactive cells below unit limit
+            idomain[-n_units_removed:] = 0
 
             # adapt botm in order that each layer has a thickness > 0 
             for i in range(-1, nlay-1):
@@ -270,6 +307,12 @@ class archpy2modflow:
             # how to define idomain ?
             idomain = np.zeros((nlay, nrow, ncol))
             mask_org = self.T1.get_mask().astype(int)
+
+            # modify mask_org to remove the inactive cells
+            if unit_limit is not None:
+                mask = mask_below_unit(self.T1, unit_limit, iu=iu)
+                mask_org[mask == 1] = 0
+
             for ilay in range(0, self.T1.get_nz(), factor_z):
                 for irow in range(0, self.T1.get_ny(), factor_y):
                     for icol in range(0, self.T1.get_nx(), factor_x):

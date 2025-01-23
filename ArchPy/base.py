@@ -4493,18 +4493,41 @@ class Arch_table():
 
     ### plotting ###
 
-    def plot_pile(self):
+    def plot_pile(self, plot_facies=True):
     
         fig, ax = plt.subplots()
-        
+      
         d = {}  # dic_bottom by level
-        
+        l_fa_rect = []  # list of facies rectangles
+        l_fa_in_legend = []  # list of facies in legend
+        l_un_rect = []  # list of unit rectangles
         def fun(pile, x = 0, i = 0, incr = 1):
-            
+
             for un in pile.list_units[::-1]:
 
-                plt.bar(x, incr, bottom=i, label=un.name, alpha=1, color=un.c)
-                
+                rect = plt.bar(x, incr, bottom=i, label=un.name, width=.8, alpha=1, edgecolor="black", facecolor=un.c, linewidth=0, zorder=0)
+                l_un_rect.append(rect)
+
+                if plot_facies:
+                    # plot small square for facies in the unit
+                    n_fac = len(un.list_facies)
+                    n_fa_per_line = max(np.ceil(n_fac / 2), 4)
+                    incr_x = 1 / (n_fa_per_line*2)
+                    j = 0
+                    bottom = i + incr/1.66
+                    for f in un.list_facies:
+                        x_fac = rect.patches[0].get_x() 
+                        if j > n_fa_per_line - 1:
+                            bottom = i + incr/10
+                            j = 0
+                            
+                        fa_rect = plt.bar(x_fac + j * 1.6*incr_x + 0.8*incr_x, incr/3, width=(0.8/5)*4/n_fa_per_line, bottom=bottom,
+                                 label=f.name, alpha=1, facecolor=f.c, edgecolor="black", linewidth=1)
+                        if f.name not in l_fa_in_legend:  # to avoid duplicate in legend
+                            l_fa_in_legend.append(f.name)
+                            l_fa_rect.append(fa_rect)
+                        j += 1
+
                 if un.SubPile is not None:
                     pos = (un.SubPile.list_units[0].get_h_level() - 1)*2
                     
@@ -4525,12 +4548,12 @@ class Arch_table():
                 d[x] = i
             
             plt.text(x - .04*len(pile.name), i+0.5, pile.name, bbox=dict(facecolor='none', edgecolor='black', boxstyle='round,pad=.2'))
-            
-            handles, labels = ax.get_legend_handles_labels()
-            ax.legend(handles[::-1], labels[::-1], title='Units', bbox_to_anchor=(1.05, 1),
-                    borderaxespad=0, fontsize=10, ncol=2)
-        
+
         fun(self.get_pile_master())
+
+        ax.legend(handles=l_un_rect[::-1] + l_fa_rect[::-1], title='Units and facies',
+                borderaxespad=0, fontsize=10, ncol=2, bbox_to_anchor=(1.05, 1))
+
         plt.axis('off')    
 
     def plot_bhs(self, log="strati", plotter=None, v_ex=1, plot_top=False, plot_bot=False):

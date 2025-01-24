@@ -4491,11 +4491,130 @@ class Arch_table():
         else:
             print("help")
 
+    def get_sp(self, unit_kws=[], facies_kws=[], **kwargs):
+        
+        def cm2string(cm):
+            string = ""
+            o = 0
+            for el in cm.elem:
+                string += str(o) + ": "
+                string += el[0][:3] + " (" +  "w: " + str(el[1]["w"]) 
+                if "r" in el[1]:
+                    string += ", r: " + str(el[1]["r"]) + ")"
+                string += " "
+                o+=1
+            return string
+
+        res = []
+
+        for unit in self.get_all_units():
+            l = [unit.name, unit.surface.contact, unit.surface.int_method]
+            for kw in unit_kws:
+                if kw in unit.surface.dic_surf:
+                    if kw == "covmodel":
+                        l.append(cm2string(unit.surface.dic_surf[kw]))
+                    else:
+                        l.append(unit.surface.dic_surf[kw])
+                else:
+                    l.append(None)
+
+            l.append(unit.dic_facies["f_method"])
+            l.append(unit.list_facies)
+
+            for kw in facies_kws:
+                if kw in unit.dic_facies:
+                    
+                    if kw == "f_covmodel":
+                        f_cov = ""
+                        for fa, cm in zip(unit.list_facies, unit.dic_facies[kw]):
+                            if cm is not None:
+                                f_cov += fa.name + " : " + cm2string(cm) + " | "
+                            else:
+                                f_cov[fa.name] = None
+                        l.append(f_cov)
+                    
+                    elif kw == "TI":
+                        TI = unit.dic_facies[kw]
+                        # make an image of the TI and display it in the dataframe
+                        pv.set_jupyter_backend('static')
+                        p1 = pv.Plotter(off_screen=True)
+                        categCol = [colors.to_rgba(i.c) for i in [fa for fa in self.get_all_facies() if fa.ID in np.unique(TI.val)]]  # color for each category
+                        geone.imgplot3d.drawImage3D_surface(TI, categ=True, categCol=categCol,
+                                                            plotter=p1, show_scalar_bar=False,
+                                                            show_bounds=False, show_axes=False, **kwargs)  # display the TI
+
+                        # save the plot
+                        p1.screenshot(f"TI_{unit.name}.png", transparent_background=True, return_img=False)
+
+                        # convert the image to html
+                        def path_to_image_html(path):
+                            return '<img src="'+ path + '" width="200" >'
+                        
+                        l.append(path_to_image_html(f"TI_{unit.name}.png"))
+                    else:
+                        l.append(unit.dic_facies[kw])
+                else:
+                    l.append(None)
+            res.append(l)
+
+        index = ["name", "contact", "int_method"] + unit_kws + ["filling_method", "list_facies"] + facies_kws
+
+        df_unit = pd.DataFrame(res, columns=index)
+
+        # facies and properties
+        res_fa = []
+
+        for fa in self.get_all_facies():
+            for prop in self.list_props:
+                l = []
+                # property
+                if fa in prop.facies:
+                    l.append(fa.name)
+                    l.append(prop.name)
+                    l.append(prop.means[prop.facies.index(fa)])
+
+                    # covmodel
+                    cm = prop.covmodels[prop.facies.index(fa)]
+                    if cm is not None:
+                        l.append(cm2string(cm))
+                    else:
+                        l.append(None)
+                # else:
+                #     l.append(None)
+                #     l.append(None)
+                #     l.append(None)
+
+                    res_fa.append(l)
+
+        df_facies = pd.DataFrame(res_fa, columns=["name", "property", "mean", "covmodels"])
+
+        def color_row(row, type="units"):
+            unit_name = row['name']
+            if type == "units":
+                color = self.get_unit(unit_name).c
+            elif type == "facies":
+                color = self.get_facies_obj(unit_name).c
+
+            # modify font color to black or white depending on the background color
+            from matplotlib import colors
+            color = colors.to_hex(color)
+            r, g, b = tuple(int(color[i:i+2], 16) for i in (1, 3, 5))
+            luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+            font_color = 'black' if luminance > 0.5 else 'white'
+
+            return ['background-color: %s; color: %s' % (color, font_color)] * len(row)
+
+        df_unit = df_unit.style.apply(color_row, axis=1)
+        df_facies = df_facies.style.apply(color_row, axis=1, type="facies")
+        
+        return df_unit, df_facies
+
     ### plotting ###
 
-    def plot_pile(self, plot_facies=True):
-    
-        fig, ax = plt.subplots()
+    def plot_pile(self, plot_facies=True, ax=None):
+        
+        if ax is None:
+            fig, ax = plt.subplots()
       
         d = {}  # dic_bottom by level
         l_fa_rect = []  # list of facies rectangles

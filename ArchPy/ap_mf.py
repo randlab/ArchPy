@@ -744,6 +744,36 @@ class archpy2modflow:
 
         cellids[:, 0] += 1
 
+        # ensure that particles are in active cells, if not move them to the nearest vertical active cell
+        idomain = dis.idomain.array
+        new_cellids = []
+        for cid in cellids:
+            if idomain[cid[0], cid[1], cid[2]] == -1:
+                o = 1
+                while True:
+                    if cid[0] - o >= 0:
+                        if idomain[cid[0] - o, cid[1], cid[2]] == 1:
+                            flag_neg = True
+                            break
+                        
+                    elif cid[0] + o < idomain.shape[0]:
+                        if idomain[cid[0] + o, cid[1], cid[2]] == 1:
+                            flag_neg = False
+                            break
+
+                    else:
+                        break
+                    o += 1
+
+                if flag_neg:
+                    cid[0] -= o
+                else:
+                    cid[0] += o
+
+            new_cellids.append(tuple(cid))
+
+        cellids = np.array(new_cellids)
+
         # package data (irptno, cellid, x, y, z)
         package_data = []
         for i in range(len(cellids)):
@@ -756,6 +786,7 @@ class archpy2modflow:
                                         packagedata=package_data,
                                         perioddata=period_data,
                                         nreleasepts=len(package_data),
+                                        drape=True,
                                         exit_solve_tolerance=1e-5)
 
 
@@ -974,6 +1005,10 @@ class archpy2modflow:
         grid_mode = self.grid_mode
         df = self.prt_get_pathlines(i_particle)
 
+        if df.shape[0] == 0:
+            print("No particle found")
+            return None
+            
         time_ordered = df["t"].values.copy()
         time_ordered *= 1/86400
         dt = np.diff(time_ordered)

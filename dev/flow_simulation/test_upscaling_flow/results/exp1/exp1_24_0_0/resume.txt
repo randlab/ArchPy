@@ -1,0 +1,8 @@
+Experience name: exp1_24_0_0
+grid_modes: ['archpy', 'layers', 'new_resolution', 'new_resolution_2']
+mode_names: ['reference', 'layers', 'new_resolution - 2', 'new_resolution - 4']
+factor_x: [None, None, 2, 4]
+factor_y: [None, None, 2, 4]
+factor_z: [None, None, 2, 4]
+number of boreholes: 0
+number of particles: 200

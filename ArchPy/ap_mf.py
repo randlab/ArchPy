@@ -266,6 +266,17 @@ class archpy2modflow:
             idomain[thicknesses == 0] = -1
             idomain[np.isnan(thicknesses)] = 0
 
+            # set nan of each layer to the mean of the layer previous + 1e-2
+            prev_mean = None
+            for ilay in range(nlay-1, -1, -1):
+                mask = np.isnan(botm[ilay])
+                if ilay == nlay-1:
+                    prev_mean = np.nanmean(botm[ilay])
+                    botm[ilay][mask] = prev_mean
+                else:
+                    prev_mean = max(np.nanmean(botm[ilay]), prev_mean + 1e-2)
+                    botm[ilay][mask] = prev_mean
+
             # inactive cells below unit limit
             if n_units_removed is not None:
                 idomain[-n_units_removed:] = 0
@@ -336,11 +347,12 @@ class archpy2modflow:
         
         assert (np.array(check_thk(top, botm))).all(), "Error in the processing of the surfaces, some cells have a thickness < 0"
 
+        rot_angle = self.TI.get_rot_angle()
         dis = fp.mf6.ModflowGwfdis(gwf, nlay=nlay, nrow=nrow, ncol=ncol,
                                     delr=delr, delc=delc,
                                     top=top, botm=botm,
                                     xorigin=xoff, yorigin=yoff, 
-                                    idomain=idomain)
+                                    idomain=idomain, angrot=rot_angle)
 
         perioddata = [(1, 1, 1.0)]
         tdis = fp.mf6.ModflowTdis(sim, time_units='SECONDS',perioddata=perioddata)

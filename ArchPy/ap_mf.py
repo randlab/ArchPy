@@ -347,7 +347,7 @@ class archpy2modflow:
         
         assert (np.array(check_thk(top, botm))).all(), "Error in the processing of the surfaces, some cells have a thickness < 0"
 
-        rot_angle = self.TI.get_rot_angle()
+        rot_angle = self.T1.get_rot_angle()
         dis = fp.mf6.ModflowGwfdis(gwf, nlay=nlay, nrow=nrow, ncol=ncol,
                                     delr=delr, delc=delc,
                                     top=top, botm=botm,

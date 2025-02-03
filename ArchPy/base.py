@@ -4491,11 +4491,13 @@ class Arch_table():
         else:
             print("help")
 
-    def get_sp(self, unit_kws=[], facies_kws=[], **kwargs):
+    def get_sp(self, unit_kws=[], facies_kws=[], folder="./", **kwargs):
         
         def cm2string(cm):
             string = ""
             o = 0
+            if cm is None:
+                return None
             for el in cm.elem:
                 string += str(o) + ": "
                 string += el[0][:3] + " (" +  "w: " + str(el[1]["w"]) 
@@ -4521,7 +4523,7 @@ class Arch_table():
             l.append(unit.dic_facies["f_method"])
             l.append(unit.list_facies)
 
-            for kw in facies_kws:
+            for kw in facies_kws: 
                 if kw in unit.dic_facies:
                     
                     if kw == "f_covmodel":
@@ -4538,13 +4540,13 @@ class Arch_table():
                         # make an image of the TI and display it in the dataframe
                         pv.set_jupyter_backend('static')
                         p1 = pv.Plotter(off_screen=True)
-                        categCol = [colors.to_rgba(i.c) for i in [fa for fa in self.get_all_facies() if fa.ID in np.unique(TI.val)]]  # color for each category
+                        categCol = [colors.to_rgba(i.c) for i in [self.get_facies_obj(ID=fa, type="ID") for fa in np.unique(TI.val)]]  # color for each category
                         geone.imgplot3d.drawImage3D_surface(TI, categ=True, categCol=categCol,
                                                             plotter=p1, show_scalar_bar=False,
                                                             show_bounds=False, show_axes=False, **kwargs)  # display the TI
 
                         # save the plot
-                        p1.screenshot(f"TI_{unit.name}.png", transparent_background=True, return_img=False)
+                        p1.screenshot(f"{folder}/TI_{unit.name}.png", transparent_background=True, return_img=False)
 
                         # convert the image to html
                         def path_to_image_html(path):
@@ -6720,7 +6722,7 @@ class Unit():
                 - xloc, yloc, zloc      : local or not transformation
                 - homo_usage            : homothety usage
                 - probaUsage            : probability constraint usage, 0 for no proba constraint, 1 for global proportion defined in globalPdf, 2 for local proportion defined in localPdf
-                - globalPdf             : array-like of float of length equal to the number of class, proportion for each class
+                - probability           : array-like of float of length equal to the number of class, proportion for each class
                 - localPdf              : (nclass, nz, ny, nx) array of floats probability for each class, localPdf[i] is the "map defined on the simulation grid
                 - localPdfRadius        : support radius for local pdf, default is 2
                 - deactivationDistance  : float, distance at which localPdf are deactivated (see Deesse doc)
@@ -7253,7 +7255,7 @@ class Unit():
                          "azi_top":"gradient", "azi_bot":"gradient", "dip_top":"gradient", "dip_bot":"gradient",
                          "radiusMode": "large_default", "rx": nx*sx, "ry": ny*sy, "rz": nz*sz, "anisotropyRatioMode": "one", "ax": 1, "ay": 1, "az": 1,
                          "angle1": 0, "angle2": 0, "angle3": 0,
-                         "globalPdf": None, "localPdf": None, "probaUsage": 0, "localPdfRadius": 12., "deactivationDistance": 4., "constantThreshold": 1e-3, "npost":1}
+                         "probability": None, "localPdf": None, "probaUsage": 0, "localPdfRadius": 12., "deactivationDistance": 4., "constantThreshold": 1e-3, "npost":1}
 
         kwargs_def_TPGs={"neig": 20, "nit": 100, "grf_method": "fft"}
 
@@ -7415,7 +7417,8 @@ class Unit():
                             TI=self.f_TI
 
                             #facies IDs
-                            IDs=np.unique(TI.val)
+                            # IDs=np.unique(TI.val)
+                            IDs = [i.ID for i in list_obj]
                             nclass=len(IDs)
                             classInterval=[]
                             for c in IDs:
@@ -7463,7 +7466,7 @@ class Unit():
                                 nclass=nclass,                  # number of classes of values
                                 classInterval=classInterval,  # list of classes
                                 localPdf= kwargs["localPdf"],             # local target PDF
-                                globalPdf=kwargs["globalPdf"],
+                                globalPdf=kwargs["probability"],
                                 localPdfSupportRadius=kwargs["localPdfRadius"],      # support radius
                                 comparingPdfMethod=5,           # method for comparing PDF's (see doc: help(geone.deesseinterface.SoftProbability))
                                 deactivationDistance=kwargs["deactivationDistance"],       # deactivation distance (checking PDF is deactivated for narrow patterns)

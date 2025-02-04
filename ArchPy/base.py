@@ -4492,7 +4492,11 @@ class Arch_table():
             print("help")
 
     def get_sp(self, unit_kws=[], facies_kws=[], folder="./", **kwargs):
-        
+
+        # convert the image to html
+        def path_to_image_html(path, width=200):
+            return '<img src="'+ path + '" width="{}" >'.format(width)
+
         def cm2string(cm):
             string = ""
             o = 0
@@ -4526,6 +4530,7 @@ class Arch_table():
             for kw in facies_kws: 
                 if kw in unit.dic_facies:
                     
+                    # special cases
                     if kw == "f_covmodel":
                         f_cov = ""
                         for fa, cm in zip(unit.list_facies, unit.dic_facies[kw]):
@@ -4547,12 +4552,38 @@ class Arch_table():
 
                         # save the plot
                         p1.screenshot(f"{folder}/TI_{unit.name}.png", transparent_background=True, return_img=False)
-
-                        # convert the image to html
-                        def path_to_image_html(path):
-                            return '<img src="'+ path + '" width="200" >'
                         
                         l.append(path_to_image_html(f"TI_{unit.name}.png"))
+
+                    elif kw == "localPdf":
+                        arr = unit.dic_facies[kw]
+                        nclass = arr.shape[0]
+                        nx = arr.shape[3]
+                        ny = arr.shape[2]
+                        nz = arr.shape[1]
+                        sx = self.get_sx()
+                        sy = self.get_sy()
+                        sz = self.get_sz()
+                        im_localPdf = geone.img.Img(nx=nx, ny=ny, nz=nz, sx=sx, sy=sy, sz=sz, ox=0, oy=0, oz=0, nv=nclass, val=arr.flatten())
+                        pv.set_jupyter_backend('static')
+                        nrows = np.ceil(nclass**0.5).astype(int)
+                        ncols = nrows
+                        p1 = pv.Plotter(shape=(nrows, ncols), window_size=[350*nrows, 350*ncols], off_screen=True)
+
+                        for iv in range(0, nclass):
+                            if iv >1:
+                                p1.subplot(1, iv-2)
+                            else:
+                                p1.subplot(0, iv)
+
+                            geone.imgplot3d.drawImage3D_surface(im_localPdf, 
+                                                                plotter=p1, show_scalar_bar=False,
+                                                                show_bounds=False, show_axes=False, iv=iv, cmin=0, cmax=1)  # display the TI
+                            
+                        # save the plot
+                        p1.screenshot(f"{folder}./localPdf_{unit.name}.png", transparent_background=True, return_img=False)
+
+                        l.append(path_to_image_html(f"localPdf_{unit.name}.png"))
                     else:
                         l.append(unit.dic_facies[kw])
                 else:
@@ -5417,8 +5448,8 @@ class Arch_table():
             kwargs to pass to geone.imgplot.drawImage3D_slice or geone.imgplot.drawImage3D_surface
         """
 
-        prop=self.get_prop(property, iu, ifa, ip, all_data=False)
-        facies=self.get_facies(iu, ifa, all_data=False)
+        prop=self.get_prop(property, iu, ifa, ip, all_data=False).copy()
+        facies=self.get_facies(iu, ifa, all_data=False).copy()
 
         #keep values in only wanted units
         if inside_units is not None:

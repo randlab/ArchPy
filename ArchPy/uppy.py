@@ -6,7 +6,175 @@ import geone.covModel as gcm
 from numba import jit
 
 ## 2D algorithms ##
-# TO DO
+def f_2D(a, dx=None, dy=None, direction="x", type="series"):
+
+    """
+    Function to operate a mean row or column wise by pairs of rows or columns
+    """
+
+    w1 = 1
+    w2 = 1
+    new_dx = None
+    new_dy = None
+    # select the vectors
+    if (direction == "x" and type == "parallel") or (direction == "y" and type == "series"):
+
+        v1 = a[::2]
+        v2 = a[1::2]
+        if dy is not None:
+            w1 = dy[::2]
+            w2 = dy[1::2]
+            new_dy = w1 + w2
+            new_dx = dx[::2]
+
+    if (direction == "x" and type == "series") or (direction == "y" and type == "parallel"):
+
+        v1 = a[:, ::2]
+        v2 = a[:, 1::2]
+        if dx is not None:
+            w1 = dx[:, ::2]
+            w2 = dx[:, 1::2]
+            new_dx = w1 + w2
+            new_dy = dy[:, ::2]
+
+    # merge
+    if type == "parallel":
+        return mean(v1, v2, w1, w2), new_dx, new_dy
+    elif type == "series":
+        return hmean(v1, v2, w1, w2), new_dx, new_dy
+
+def test_f_2D():
+
+    """
+    Test the function f
+    """
+
+    a = np.array([[0.2707579 , 0.67406735], 
+                  [0.04264607, 0.17996007]])
+
+    assert np.allclose(f_2D(a, direction="x", type="parallel")[0], np.array([[0.15670199, 0.42701371]]))
+    assert np.allclose(f_2D(a, direction="x", type="series")[0], np.array([[0.38633401], [0.06895219]]))
+    assert np.allclose(f_2D(a, direction="y", type="parallel")[0], np.array([[0.47241263], [0.11130307]]))
+    assert np.allclose(f_2D(a, direction="y", type="series")[0], np.array([[0.07368612, 0.28407801]]))
+
+    print("Test passed")
+
+
+
+def find_c_2D(k_field, dx=None, dy=None, direction="x", first_type="series"):
+
+    k_field_copy = k_field.copy()
+
+    if first_type == "series":
+        o = 1
+    else:
+        o = 2
+
+    # if dx and dy are not provided, set them to 1
+    if dx is None:
+        dx = np.ones(k_field.shape)
+    if dy is None:
+        dy = np.ones(k_field.shape)
+
+    # if dx and dy are provided as a scalar, set them to an array of the same shape as k_field
+    if isinstance(dx, (int, float)):
+        dx = np.ones(k_field.shape) * dx
+    if isinstance(dy, (int, float)):
+        dy = np.ones(k_field.shape) * dy
+
+    # loop until the final value is obtained
+    while k_field_copy.flatten().shape[0] > 1:
+        # print(k_field_copy) 
+        # print("\n", dx, "\n", dy)
+        # print("\n", k_field_copy)
+        if o % 2 == 0 and ((direction == "x" and k_field_copy.shape[0]>1) or (direction == "y" and k_field_copy.shape[1]>1)):  # operate an arithmetic mean
+            
+            # remove the last row or column if the number of rows or columns is odd
+            rm_row = None
+            rm_col = None
+            rm_dx = None
+            rm_dy = None
+            if direction == "x" and k_field_copy.shape[0] % 2 == 1:
+                # remove the last row if the number of rows is odd
+                rm_row = k_field_copy[-1, :]
+                k_field_copy = k_field_copy[:-1, :]
+                rm_dx = dx[-1, :]
+                rm_dy = dy[-1, :]
+                dx = dx[:-1, :]
+                dy = dy[:-1, :]
+            elif direction == "y" and k_field_copy.shape[1] % 2 == 1:
+                # remove the last column if the number of columns is odd
+                rm_col = k_field_copy[:, -1]
+                k_field_copy = k_field_copy[:, :-1]
+                rm_dx = dx[:, -1]
+                rm_dy = dy[:, -1]
+                dx = dx[:, :-1]
+                dy = dy[:, :-1]
+
+            # compute the mean
+            k_field_copy, dx, dy = f_2D(k_field_copy, dx, dy, type="parallel", direction=direction)
+
+            # add the removed row or column
+            if rm_row is not None:
+                # new_row = mean(k_field_copy[-1, :], rm_row, 2, 1)
+                k_field_copy = np.vstack((k_field_copy, rm_row))
+                dx = np.vstack((dx, rm_dx))
+                dy = np.vstack((dy, rm_dy))
+            elif rm_col is not None:
+                # new_col = mean(k_field_copy[:, -1], rm_col, 2, 1)
+                k_field_copy = np.hstack((k_field_copy, rm_col[:, None]))
+                dx = np.hstack((dx, rm_dx[:, None]))
+                dy = np.hstack((dy, rm_dy[:, None]))
+
+        elif o % 2 == 1 and ((direction == "x" and k_field_copy.shape[1]>1) or (direction == "y" and k_field_copy.shape[0]>1)):
+
+            # remove the last row or column if the number of rows or columns is odd
+            rm_row = None
+            rm_col = None
+            if direction == "x" and k_field_copy.shape[1] % 2 == 1:
+                # remove the last column if the number of columns is odd
+                rm_col = k_field_copy[:, -1]
+                k_field_copy = k_field_copy[:, :-1]
+                rm_dx = dx[:, -1]
+                rm_dy = dy[:, -1]
+                dx = dx[:, :-1]
+                dy = dy[:, :-1]
+            elif direction == "y" and k_field_copy.shape[0] % 2 == 1:
+                # remove the last row if the number of rows is odd
+                rm_row = k_field_copy[-1, :]
+                k_field_copy = k_field_copy[:-1, :]
+                rm_dx = dx[-1, :]
+                rm_dy = dy[-1, :]
+                dx = dx[:-1, :]
+                dy = dy[:-1, :]
+                
+            # compute the mean
+            k_field_copy, dx, dy = f_2D(k_field_copy, dx, dy, type="series", direction=direction)
+
+            # add the removed row or column
+            if rm_row is not None:
+                # new_row = hmean(k_field_copy[-1, :], rm_row, 2, 1)
+                k_field_copy = np.vstack((k_field_copy, rm_row))
+                dx = np.vstack((dx, rm_dx))
+                dy = np.vstack((dy, rm_dy))
+            elif rm_col is not None:
+                # new_col = hmean(k_field_copy[:, -1], rm_col, 2, 1)
+                k_field_copy = np.hstack((k_field_copy, rm_col[:, None]))
+                dx = np.hstack((dx, rm_dx[:, None]))
+                dy = np.hstack((dy, rm_dy[:, None]))
+
+        o += 1
+
+    return k_field_copy[0, 0]
+
+def simplified_renormalization_2D(field, dx, dy, direction="x"):
+
+    cx_min, cx_max = find_c_2D(field, direction=direction, dx=dx, dy=dy, first_type="series"), find_c_2D(field, direction=direction, dx=dx, dy=dy, first_type="parallel")
+    return keq(cx_min, cx_max, get_alpha(dx, dy, direction=direction)) 
+
+    
+# def keq(cmin, cmax, alpha):
+#     return cmax**alpha*(cmin)**(1-alpha)
 
 ## 3D algorithms ##
 # Simplified renormalization algorithm
@@ -285,9 +453,23 @@ def test_find_c():
 
     print("Test passed")
 
+# function to compute the most present value in an array
+from scipy.stats import mode
+def most_present_value(arr):
+    return mode(arr, axis=None).mode[0]
+
 # now keq is a function of cmin and cmax according to keq = cmax**alpha*(cmin)**(1-alpha)
 def get_alpha(dx, dy, dz=None, direction="x"):
     
+    # check that dx, dy and dz are single values if array, find the most present value
+    if isinstance(dx, np.ndarray):
+        dx = most_present_value(dx)
+    if isinstance(dy, np.ndarray):
+        dy = most_present_value(dy)
+    if dz is not None:
+        if isinstance(dz, np.ndarray):
+            dz = most_present_value(dz)
+
     def f_u(t):
         return np.arctan(np.sqrt(t)) / (np.pi/2)
 
@@ -682,8 +864,6 @@ def tensorial_renormalization(field_xx, field_yy, field_zz, dx, dy, dz, niter=1)
 
     return field_xx, field_yy, field_zz
 
-
-
 def upscale_k(field, dx=1, dy=1, dz=1, method="simplified_renormalization", factor_x=2, factor_y=2, factor_z=2, grid=None, scheme="center"):
 
     """
@@ -738,7 +918,7 @@ def upscale_k(field, dx=1, dy=1, dz=1, method="simplified_renormalization", fact
 
                         Kxx = simplified_renormalization(selected_area, dx, dy, dz, direction="x")
                         Kyy = simplified_renormalization(selected_area, dx, dy, dz, direction="y")
-                        Kzz = simplified_renormalization(selected_area, dx, dy, dz, direction="z")
+                        Kz = simplified_renormalization(selected_area, dx, dy, dz, direction="z")
 
                         new_field_kxx[i//factor_z, j//factor_y, k//factor_x] = Kxx
                         new_field_kyy[i//factor_z, j//factor_y, k//factor_x] = Kyy

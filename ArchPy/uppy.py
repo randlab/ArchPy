@@ -172,9 +172,7 @@ def simplified_renormalization_2D(field, dx, dy, direction="x"):
     cx_min, cx_max = find_c_2D(field, direction=direction, dx=dx, dy=dy, first_type="series"), find_c_2D(field, direction=direction, dx=dx, dy=dy, first_type="parallel")
     return keq(cx_min, cx_max, get_alpha(dx, dy, direction=direction)) 
 
-    
-# def keq(cmin, cmax, alpha):
-#     return cmax**alpha*(cmin)**(1-alpha)
+
 
 ## 3D algorithms ##
 # Simplified renormalization algorithm
@@ -456,7 +454,7 @@ def test_find_c():
 # function to compute the most present value in an array
 from scipy.stats import mode
 def most_present_value(arr):
-    return mode(arr, axis=None).mode[0]
+    return mode(arr, axis=None).mode
 
 # now keq is a function of cmin and cmax according to keq = cmax**alpha*(cmin)**(1-alpha)
 def get_alpha(dx, dy, dz=None, direction="x"):
@@ -502,7 +500,6 @@ def keq(cmin, cmax, alpha):
     res = (np.abs(cmax)**alpha)*np.abs(cmin)**(1-alpha)
     if cmax and cmin < 0:
         res = -res
-
     return res
 
 def simplified_renormalization(field, dx, dy, dz, direction="x"):
@@ -864,6 +861,91 @@ def tensorial_renormalization(field_xx, field_yy, field_zz, dx, dy, dz, niter=1)
 
     return field_xx, field_yy, field_zz
 
+
+def upscale_k_2D(field, dx=1, dy=1, method="simplified_renormalization", factor_x=2, factor_y=2, grid=None):
+
+    """
+    Function to upscale a field using renormalization methods and average methods
+
+    Parameters
+    ----------
+    field : np.ndarray
+        3D isotropic hydraulic conductivity field
+    dx : float or np.ndarray
+        Cell size in the x direction
+    dy : float or np.ndarray
+        Cell size in the y direction
+    dz : float or np.ndarray
+        Cell size in the z direction
+    method : str
+        Renormalization method. Options are simplified_renormalization, arithmetic, harmonic and geometric
+    factor_x : int
+        Upscaling factor in the x direction. This means that the new field will have a shape divided by factor_x in the x direction
+        Must be a power of 2 for standard and tensorial renormalization. It should be noted that field shape in the x direction must be a multiple of factor_x
+    factor_y : int
+        Upscaling factor in the y direction. This means that the new field will have a shape divided by factor_y in the y direction
+        Must be a power of 2 for standard and tensorial renormalization. It should be noted that field shape in the y direction must be a multiple of factor_y
+    factor_z : int
+        Upscaling factor in the z direction. This means that the new field will have a shape divided by factor_z in the z direction
+        Must be a power of 2 for standard and tensorial renormalization. It should be noted that field shape in the z direction must be a multiple of factor_z
+    grid : np.ndarray
+        Modflow dis grid. Only works with simplified_renormalization, arithmetic, harmonic and geometric. 
+        Not implemented yet.
+    """
+
+    assert field.shape[1] % factor_y == 0, "factor_x must be a divisor of the field size"
+    assert field.shape[0] % factor_x == 0, "factor_y must be a divisor of the field size"
+
+    if method == "simplified_renormalization":
+        
+        if grid is None:
+            new_field_kxx = np.zeros((field.shape[0]//factor_y, field.shape[1]//factor_x))
+            new_field_kyy = np.zeros((field.shape[0]//factor_y, field.shape[1]//factor_x))
+
+            for j in range(0, field.shape[0], factor_y):
+                for k in range(0, field.shape[1], factor_x):
+                        selected_area = field[j:j+factor_y, k:k+factor_x]
+
+                        # fill nan values with the geometric mean of the selected area
+                        selected_area = fill_nan_values_with_gmean(selected_area)
+
+                        Kxx = simplified_renormalization_2D(selected_area, dx, dy, direction="x")
+                        Kyy = simplified_renormalization_2D(selected_area, dx, dy, direction="y")
+
+                        new_field_kxx[j//factor_y, k//factor_x] = Kxx
+                        new_field_kyy[j//factor_y, k//factor_x] = Kyy
+
+        return new_field_kxx, new_field_kyy
+
+    elif method in ["arithmetic", "harmonic", "geometric"]:
+
+        if grid is None:
+            new_field = np.zeros((field.shape[0]//factor_y, field.shape[1]//factor_x))
+
+            for j in range(0, field.shape[0], factor_y):
+                for k in range(0, field.shape[1], factor_x):
+                    selected_area = field[j:j+factor_y, k:k+factor_x]
+
+                    # remove nan values
+                    selected_area = selected_area[~np.isnan(selected_area)]
+
+                    if method == "arithmetic":
+                        K = np.mean(selected_area.flatten())
+                    elif method == "harmonic":
+                        K = 1 / np.mean(1 / selected_area.flatten())
+                    elif method == "geometric":
+                        if np.all(selected_area < 0):
+                            selected_area = np.abs(selected_area)
+                            K = -np.exp(np.mean(np.log(selected_area.flatten())))
+                        else:
+                            K = np.exp(np.mean(np.log(selected_area.flatten())))
+                    new_field[j//factor_y, k//factor_x] = K
+
+        return new_field
+
+    else:
+        raise ValueError("method must be simplified_renormalization, standard_renormalization, tensorial_renormalization, arithmetic, harmonic or geometric")
+
 def upscale_k(field, dx=1, dy=1, dz=1, method="simplified_renormalization", factor_x=2, factor_y=2, factor_z=2, grid=None, scheme="center"):
 
     """
@@ -911,7 +993,7 @@ def upscale_k(field, dx=1, dy=1, dz=1, method="simplified_renormalization", fact
             for i in range(0, field.shape[0], factor_z):
                 for j in range(0, field.shape[1], factor_y):
                     for k in range(0, field.shape[2], factor_x):
-                        selected_area = field[i:i+factor_z, j:j+factor_y, k:k+factor_z]
+                        selected_area = field[i:i+factor_z, j:j+factor_y, k:k+factor_x]
 
                         # fill nan values with the geometric mean of the selected area
                         selected_area = fill_nan_values_with_gmean(selected_area)

@@ -1000,7 +1000,7 @@ def upscale_k(field, dx=1, dy=1, dz=1, method="simplified_renormalization", fact
 
                         Kxx = simplified_renormalization(selected_area, dx, dy, dz, direction="x")
                         Kyy = simplified_renormalization(selected_area, dx, dy, dz, direction="y")
-                        Kz = simplified_renormalization(selected_area, dx, dy, dz, direction="z")
+                        Kzz = simplified_renormalization(selected_area, dx, dy, dz, direction="z")
 
                         new_field_kxx[i//factor_z, j//factor_y, k//factor_x] = Kxx
                         new_field_kyy[i//factor_z, j//factor_y, k//factor_x] = Kyy

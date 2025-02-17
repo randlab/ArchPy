@@ -1102,27 +1102,26 @@ def upscale_k_2D(field, dx=1, dy=1, ox=0, oy=0, method="simplified_renormalizati
 
         elif method in ["arithmetic", "harmonic", "geometric"]:
 
-            if grid is None:
-                new_field = np.zeros((field.shape[0]//factor_y, field.shape[1]//factor_x))
+            new_field = np.zeros((field.shape[0]//factor_y, field.shape[1]//factor_x))
 
-                for j in range(0, field.shape[0], factor_y):
-                    for k in range(0, field.shape[1], factor_x):
-                        selected_area = field[j:j+factor_y, k:k+factor_x]
+            for j in range(0, field.shape[0], factor_y):
+                for k in range(0, field.shape[1], factor_x):
+                    selected_area = field[j:j+factor_y, k:k+factor_x]
 
-                        # remove nan values
-                        selected_area = selected_area[~np.isnan(selected_area)]
+                    # remove nan values
+                    selected_area = selected_area[~np.isnan(selected_area)]
 
-                        if method == "arithmetic":
-                            K = np.mean(selected_area.flatten())
-                        elif method == "harmonic":
-                            K = 1 / np.mean(1 / selected_area.flatten())
-                        elif method == "geometric":
-                            if np.all(selected_area < 0):
-                                selected_area = np.abs(selected_area)
-                                K = -np.exp(np.mean(np.log(selected_area.flatten())))
-                            else:
-                                K = np.exp(np.mean(np.log(selected_area.flatten())))
-                        new_field[j//factor_y, k//factor_x] = K
+                    if method == "arithmetic":
+                        K = np.mean(selected_area.flatten())
+                    elif method == "harmonic":
+                        K = 1 / np.mean(1 / selected_area.flatten())
+                    elif method == "geometric":
+                        if np.all(selected_area < 0):
+                            selected_area = np.abs(selected_area)
+                            K = -np.exp(np.mean(np.log(selected_area.flatten())))
+                        else:
+                            K = np.exp(np.mean(np.log(selected_area.flatten())))
+                    new_field[j//factor_y, k//factor_x] = K
             return new_field
 
     else:  # disv grid #
@@ -1167,8 +1166,11 @@ def upscale_k_2D(field, dx=1, dy=1, ox=0, oy=0, method="simplified_renormalizati
 
         return new_field_kxx, new_field_kyy
 
-
-def upscale_k(field, dx=1, dy=1, dz=1, method="simplified_renormalization", factor_x=2, factor_y=2, factor_z=2, grid=None, scheme="center"):
+def upscale_k(field, dx=1, dy=1, dz=1, 
+              ox=0, oy=0, oz=0, 
+              method="simplified_renormalization", 
+              factor_x=2, factor_y=2, factor_z=2, 
+              grid=None, scheme="center"):
 
     """
     Function to upscale a field using renormalization methods and average methods
@@ -1178,11 +1180,17 @@ def upscale_k(field, dx=1, dy=1, dz=1, method="simplified_renormalization", fact
     field : np.ndarray
         3D isotropic hydraulic conductivity field
     dx : float or np.ndarray
-        Cell size in the x direction
+        Cell size of original field in the x direction
     dy : float or np.ndarray
-        Cell size in the y direction
+        Cell size of original field in the y direction
     dz : float or np.ndarray
-        Cell size in the z direction
+        Cell size of original field in the z direction
+    ox : float
+        Origin of the field (lower left corner) in the x direction
+    oy : float
+        Origin of the field (lower left corner) in the y direction
+    oz : float
+        Origin of the field (lower left corner) in the z direction
     method : str
         Renormalization method. Options are simplified_renormalization, standard_renormalization, tensorial_renormalization, arithmetic, harmonic and geometric
     factor_x : int
@@ -1201,13 +1209,16 @@ def upscale_k(field, dx=1, dy=1, dz=1, method="simplified_renormalization", fact
         Scheme for standard renormalization. Options are direct and center. Center is generally more accurate and faster. Default is center
     """
 
-    assert field.shape[1] % factor_y == 0, "factor_y must be a divisor of the field size"
-    assert field.shape[2] % factor_x == 0, "factor_x must be a divisor of the field size"
-    assert field.shape[0] % factor_z == 0, "factor_z must be a divisor of the field size"
-
-    if method == "simplified_renormalization":
+    if grid is None:
+        assert method in ["simplified_renormalization", "tensorial_renormalization", "standard_renormalization",
+                           "arithmetic", "harmonic", "geometric"], "method must be simplified_renormalization, tensorial_renormalization, standard_renormalization, arithmetic, harmonic or geometric"
         
-        if grid is None:
+        assert field.shape[1] % factor_y == 0, "factor_y must be a divisor of the field size"
+        assert field.shape[2] % factor_x == 0, "factor_x must be a divisor of the field size"
+        assert field.shape[0] % factor_z == 0, "factor_z must be a divisor of the field size"
+
+        if method == "simplified_renormalization":
+
             new_field_kxx = np.zeros((field.shape[0]//factor_z, field.shape[1]//factor_y, field.shape[2]//factor_x))
             new_field_kyy = np.zeros((field.shape[0]//factor_z, field.shape[1]//factor_y, field.shape[2]//factor_x))
             new_field_kzz = np.zeros((field.shape[0]//factor_z, field.shape[1]//factor_y, field.shape[2]//factor_x))
@@ -1228,25 +1239,24 @@ def upscale_k(field, dx=1, dy=1, dz=1, method="simplified_renormalization", fact
                         new_field_kyy[i//factor_z, j//factor_y, k//factor_x] = Kyy
                         new_field_kzz[i//factor_z, j//factor_y, k//factor_x] = Kzz
 
-        return new_field_kxx, new_field_kyy, new_field_kzz
+            return new_field_kxx, new_field_kyy, new_field_kzz
 
-    elif method == "standard_renormalization":
-        assert factor_x == factor_y == factor_z, "factor_x, factor_y and factor_z must be equal for standard renormalization"
-        assert np.log2(factor_x).is_integer(), "factor_x must be a power of 2"
+        elif method == "standard_renormalization":
+            assert factor_x == factor_y == factor_z, "factor_x, factor_y and factor_z must be equal for standard renormalization"
+            assert np.log2(factor_x).is_integer(), "factor_x must be a power of 2"
 
-        field_kxx, field_kyy, field_kzz = standard_renormalization(field, field, field, dx, dy, dz, niter=int(np.log2(factor_x)), scheme=scheme)
-        return field_kxx, field_kyy, field_kzz
-    
-    elif method == "tensorial_renormalization":
-        assert factor_x == factor_y == factor_z, "factor_x, factor_y and factor_z must be equal for tensorial renormalization"
-        assert np.log2(factor_x).is_integer(), "factor_x must be a power of 2"
+            field_kxx, field_kyy, field_kzz = standard_renormalization(field, field, field, dx, dy, dz, niter=int(np.log2(factor_x)), scheme=scheme)
+            return field_kxx, field_kyy, field_kzz
+        
+        elif method == "tensorial_renormalization":
+            assert factor_x == factor_y == factor_z, "factor_x, factor_y and factor_z must be equal for tensorial renormalization"
+            assert np.log2(factor_x).is_integer(), "factor_x must be a power of 2"
 
-        field_kxx, field_kyy, field_kzz = tensorial_renormalization(field, field, field, dx, dy, dz, niter=int(np.log2(factor_x)))
-        return field_kxx, field_kyy, field_kzz
+            field_kxx, field_kyy, field_kzz = tensorial_renormalization(field, field, field, dx, dy, dz, niter=int(np.log2(factor_x)))
+            return field_kxx, field_kyy, field_kzz
 
-    elif method in ["arithmetic", "harmonic", "geometric"]:
+        elif method in ["arithmetic", "harmonic", "geometric"]:
 
-        if grid is None:
             new_field = np.zeros((field.shape[0]//factor_z, field.shape[1]//factor_y, field.shape[2]//factor_x))
 
             for i in range(0, field.shape[0], factor_z):
@@ -1269,7 +1279,120 @@ def upscale_k(field, dx=1, dy=1, dz=1, method="simplified_renormalization", fact
                                 K = np.exp(np.mean(np.log(selected_area.flatten())))
                         new_field[i//factor_z, j//factor_y, k//factor_x] = K
 
-        return new_field
+            return new_field
 
-    else:
-        raise ValueError("method must be simplified_renormalization, standard_renormalization, tensorial_renormalization, arithmetic, harmonic or geometric")
+    else:  # disv grid #
+        assert method in ["simplified_renormalization", "arithmetic", "harmonic", "geometric"], "method must be simplified_renormalization, arithmetic, harmonic or geometric"
+
+        import flopy
+        # grid_ref
+        # field = np.flip(np.flipud(field), axis=1)  # flip the field to have the same orientation as the grid
+        nrow = field.shape[1]
+        ncol = field.shape[2]
+        nlay = field.shape[0]
+        top = np.ones((nrow, ncol)) * (oz + nlay*dz)
+        botm = np.linspace(oz + (nlay-1)*dz, oz, nlay)
+        # transform botm to have the same shape as the field
+        botm = np.repeat(botm.reshape(-1, 1, 1), nrow, axis=1)
+        botm = np.repeat(botm, ncol, axis=2)
+        top = np.zeros((nrow, ncol))
+        grid_ref = flopy.discretization.StructuredGrid(nrow=field.shape[1], ncol=field.shape[2], nlay=field.shape[0],
+                                                    delr=np.ones((field.shape[2]))*dx, delc=np.ones((field.shape[1]))*dy,
+                                                    botm=botm, top=top,
+                                                    xoff=ox, yoff=oy)
+        grid_ref_xver = grid_ref.xvertices
+        grid_ref_yver = grid_ref.yvertices
+        grid_ref_layers = grid_ref.botm[:, 0, 0]
+        grid_ref_top = grid_ref.top[0, 0]
+
+        # new grid
+        # vertices = grid.verts
+        cell2d = grid.cell2d
+        botm = grid.botm
+        top = grid.top
+
+        # determine if grid is disv or disu
+        if len(grid.shape) == 2:
+            grid_type = "disv"
+        else:
+            grid_type = "disu"
+
+        if grid_type == "disv":
+            # upscale the field
+            new_k = []
+            for ilay in range(grid.nlay):
+                l = []
+                for icell in range(len(cell2d)):
+
+                    vert_cell = np.array(grid.get_cell_vertices(icell))
+
+                    x1_cell = np.min(vert_cell[:, 0])
+                    x2_cell = np.max(vert_cell[:, 0])
+                    y1_cell = np.min(vert_cell[:, 1])
+                    y2_cell = np.max(vert_cell[:, 1])
+                    if ilay == 0:
+                        z1_cell = botm[0, icell]
+                        z2_cell = top[icell]
+                    else:
+                        z1_cell = botm[ilay, icell]
+                        z2_cell = botm[ilay-1, icell]
+
+                    Kxx, Kyy, Kzz = upscale_cell_disv(grid_ref_xver, grid_ref_yver, grid_ref_layers=grid_ref_layers, grid_ref_top=grid_ref_top, 
+                                                      sx_grid=dx, sy_grid=dy, sz_grid=dz,
+                                                      field=field, 
+                                                      x1_cell=x1_cell, x2_cell=x2_cell,
+                                                      y1_cell=y1_cell, y2_cell=y2_cell,
+                                                      z1_cell=z1_cell, z2_cell=z2_cell,
+                                                      method=method)
+                    l.append([Kxx, Kyy, Kzz])
+                new_k.append(l)
+
+            new_k = np.array(new_k)
+            new_field_kxx = new_k[:, :, 0]
+            new_field_kyy = new_k[:, :, 1]
+            new_field_kzz = new_k[:, :, 2]
+
+            return new_field_kxx, new_field_kyy, new_field_kzz
+        
+        elif grid_type == "disu":
+            new_k = []
+
+            grid_ref_xver = grid_ref.xvertices
+            grid_ref_yver = grid_ref.yvertices
+            grid_ref_layers = grid_ref.botm[:, 0, 0]
+            grid_ref_top = grid_ref.top[0, 0]
+
+            # grid props
+            # vertices = grid.verts
+            botm = grid.botm
+            top = grid.top
+            ncells = top.shape[0]
+
+            for icell in range(ncells):
+                vert_cell = np.array(grid.get_cell_vertices(icell))
+                x1_cell = np.min(vert_cell[:, 0])
+                x2_cell = np.max(vert_cell[:, 0])
+                y1_cell = np.min(vert_cell[:, 1])
+                y2_cell = np.max(vert_cell[:, 1])
+                z1_cell = botm[icell]
+                z2_cell = top[icell]
+
+                Kxx, Kyy, Kzz = upscale_cell_disv(grid_ref_xver, grid_ref_yver,  grid_ref_layers=grid_ref_layers, grid_ref_top=grid_ref_top, 
+                                                  sx_grid=dx, sy_grid=dy, sz_grid=dz,
+                                                  field=field, 
+                                                  x1_cell=x1_cell, x2_cell=x2_cell,
+                                                  y1_cell=y1_cell, y2_cell=y2_cell,
+                                                  z1_cell=z1_cell, z2_cell=z2_cell,
+                                                  method=method)
+                
+                new_k.append([Kxx, Kyy, Kzz])
+
+            new_k = np.array(new_k)
+
+            new_field_kxx = new_k[:, 0]
+            new_field_kyy = new_k[:, 1]
+            new_field_kzz = new_k[:, 2]
+
+            return new_field_kxx, new_field_kyy, new_field_kzz
+        
+            

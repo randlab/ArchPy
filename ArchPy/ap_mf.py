@@ -245,7 +245,7 @@ class archpy2modflow:
             ox_grid, oy_grid, oz_grid = self.T1.get_ox(), self.T1.get_oy(), self.T1.get_oz()
             new_idomain = upscale_k(idomain, method="arithmetic",
                                     dx=sx_grid, dy=sy_grid, dz=sz_grid,
-                                    factor_x=factor_x, factor_y=factor_y, factor_z=factor_z
+                                    factor_x=factor_x, factor_y=factor_y, factor_z=factor_z,
                                     grid=grid)
             
             # idomain --> superior to 0.5 set to 1

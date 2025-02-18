@@ -3434,8 +3434,11 @@ class Arch_table():
         #assert self.bhs_processed == 1, "Boreholes not processed"
 
         # create work directory if it doesn't exist
-        if self.ws not in os.listdir():
+        # if self.ws not in os.listdir():
+        try:
             os.mkdir(self.ws)
+        except:
+            pass
 
         # remove preexisting results files in ws
         if rm_res_files:

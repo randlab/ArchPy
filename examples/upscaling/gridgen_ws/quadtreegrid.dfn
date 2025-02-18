@@ -1,0 +1,29 @@
+BEGIN MODFLOW_GRID basegrid
+	ROTATION_ANGLE = 45
+	X_OFFSET = 0
+	Y_OFFSET = 0
+	LENGTH_UNIT = undefined
+	NLAY = 4
+	NROW = 8
+	NCOL = 8
+	DELR =  CONSTANT 100.0
+	DELC =  CONSTANT 100.0
+	TOP =  CONSTANT 0.0
+	BOTTOM LAYER 1 =  CONSTANT -10.0
+	BOTTOM LAYER 2 =  CONSTANT -40.0
+	BOTTOM LAYER 3 =  CONSTANT -70.0
+	BOTTOM LAYER 4 =  CONSTANT -100.0
+END MODFLOW_GRID
+
+BEGIN QUADTREE quadtreegrid
+	MODFLOW_GRID = basegrid
+	STRUCTURE_File  = OPEN/CLOSE quadtreegrid.tsf
+	TOP LAYER 1 = OPEN/CLOSE quadtreegrid.top1.dat
+	TOP LAYER 2 = OPEN/CLOSE quadtreegrid.top2.dat
+	TOP LAYER 3 = OPEN/CLOSE quadtreegrid.top3.dat
+	TOP LAYER 4 = OPEN/CLOSE quadtreegrid.top4.dat
+	BOTTOM LAYER 1 = OPEN/CLOSE quadtreegrid.bot1.dat
+	BOTTOM LAYER 2 = OPEN/CLOSE quadtreegrid.bot2.dat
+	BOTTOM LAYER 3 = OPEN/CLOSE quadtreegrid.bot3.dat
+	BOTTOM LAYER 4 = OPEN/CLOSE quadtreegrid.bot4.dat
+END QUADTREE

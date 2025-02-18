@@ -9,6 +9,8 @@ import sys
 import os
 import flopy as fp
 import pandas as pd
+import ArchPy.uppy
+from ArchPy.uppy import upscale_k
 
 # some functions
 def mask_below_unit(T1, unit, iu=0):
@@ -188,7 +190,11 @@ class archpy2modflow:
         self.factor_y = None
         self.factor_z = None
 
-    def create_sim(self, grid_mode="archpy", iu=0, factor_x=None, factor_y=None, factor_z=None, unit_limit=None):
+    def create_sim(self, grid_mode="archpy", iu=0, 
+                   lay_sep=1,
+                   modflowgrid_props=None,
+                   factor_x=None, factor_y=None, factor_z=None, 
+                   unit_limit=None):
 
         """
         Create a modflow simulation from an ArchPy table
@@ -217,142 +223,172 @@ class archpy2modflow:
         gwf = fp.mf6.ModflowGwf(sim, modelname=self.model_name,
                                 model_nam_file='{}.nam'.format(self.model_name))
 
-        #grid
-        nlay, nrow, ncol = self.T1.get_nz(), self.T1.get_ny(), self.T1.get_nx()
-        delr, delc = self.T1.get_sx(), self.T1.get_sy()
-        xoff, yoff = self.T1.get_ox(), self.T1.get_oy()
+        if grid_mode in ["disv", "disu"]:  
 
-        if grid_mode == "archpy":
-            top = np.ones((nrow, ncol)) * self.T1.get_zg()[-1]
-            botm = np.ones((nlay, nrow, ncol)) * self.T1.get_zg()[:-1].reshape(-1, 1, 1)
-            botm = np.flip(np.flipud(botm), axis=1)  # flip the array to have the same orientation as the ArchPy table
-            idomain = np.flip(np.flipud(self.T1.get_mask().astype(int)), axis=1)  # flip the array to have the same orientation as the ArchPy table
+            if grid_mode == "disv":
+                dis = fp.mf6.ModflowGwfdisv(gwf, **modflowgrid_props, xorigin=0, yorigin=0)
+            else:
+                dis = fp.mf6.ModflowGwfdisu(gwf, **modflowgrid_props, xorigin=0, yorigin=0)
+            
+            grid = gwf.modelgrid  # get the grid object
 
+            # idomain #
             # inactive cells below unit limit
+            idomain = np.flip(np.flipud(self.T1.get_mask().astype(int)), axis=1)
             if unit_limit is not None:
                 mask = mask_below_unit(self.T1, unit_limit, iu=iu)
                 mask = np.flip(np.flipud(mask), axis=1)  # flip the array to have the same orientation as the ArchPy table
                 idomain[mask == 1] = 0
-
-        elif grid_mode == "layers":
-
-            def list_unit_below_unit(T1, unit):
-                u = T1.get_unit(unit)
-                units = []
-                for unit_to_compare in T1.get_all_units():
-                    if unit_to_compare > u:
-                        units.append(unit_to_compare)
-                return units
-
-            # determine which units will be inactive
-            if unit_limit is not None:
-                units = list_unit_below_unit(self.T1, unit_limit)
-                n_units_removed = len(units) + 1
-            else:
-                n_units_removed = None
-
-            # get surfaces of each unit
-            top = self.T1.get_surface(typ="top")[0][0, iu]
-            top = np.flip(top, axis=0)
-            botm = self.T1.get_surface(typ="bot")[0][:, iu]
-            botm = np.flip(botm, axis=1)
-            layers_names = self.T1.get_surface(typ="bot")[1]
-            self.layers_names = layers_names
-            nlay = botm.shape[0]
-
-            # define idomain (1 if thickness > 0, 0 if nan, -1 if thickness = 0)
-            idomain = np.ones((nlay, nrow, ncol))
-            thicknesses = -np.diff(np.vstack([top.reshape(-1, nrow, ncol), botm]), axis=0)
-            idomain[thicknesses == 0] = -1
-            idomain[np.isnan(thicknesses)] = 0
-
-            # set nan of each layer to the mean of the layer previous + 1e-2
-            prev_mean = None
-            for ilay in range(nlay-1, -1, -1):
-                mask = np.isnan(botm[ilay])
-                if ilay == nlay-1:
-                    prev_mean = np.nanmean(botm[ilay])
-                    botm[ilay][mask] = prev_mean
-                else:
-                    prev_mean = max(np.nanmean(botm[ilay]), prev_mean + 1e-2)
-                    botm[ilay][mask] = prev_mean
-
-            # inactive cells below unit limit
-            if n_units_removed is not None:
-                idomain[-n_units_removed:] = 0
-
-            # adapt botm in order that each layer has a thickness > 0 
-            for i in range(-1, nlay-1):
-                if i == -1:
-                    s1 = top
-                else:
-                    s1 = botm[i]
-                s2 = botm[i+1]
-                mask = s1 == s2
-                s1[mask] += 1e-2
-
-                # 2nd loop over previous layers to ensure that the thickness is > 0
-                for o in range(i, -1, -1):
-                    s2 = botm[o]
-                    if o == 0:
-                        s1 = top
-                    else:
-                        s1 = botm[o-1]
-                    mask = s1 <= s2
-                    s1[mask] = s2[mask] + 1e-2
-
-        elif grid_mode == "new_resolution":
-            assert factor_x is not None, "factor_x must be provided"
-            assert factor_y is not None, "factor_y must be provided"
-            assert factor_z is not None, "factor_z must be provided"
-            assert nrow % factor_y == 0, "nrow must be divisible by factor_y"
-            assert ncol % factor_x == 0, "ncol must be divisible by factor_x"
-            assert nlay % factor_z == 0, "nlay must be divisible by factor_z"
-            nrow = int(nrow / factor_y)
-            ncol = int(ncol / factor_x)
-            nlay = int(nlay / factor_z)
-            delr = delr * factor_x
-            delc = delc * factor_y
-            top = np.ones((nrow, ncol)) * self.T1.get_zg()[-1]
-            botm = np.ones((nlay, nrow, ncol)) * self.T1.get_zg()[::-factor_z][1:].reshape(-1, 1, 1)
-            # botm = np.flip(np.flipud(botm), axis=1)  # flip the array to have the same orientation as the ArchPy table
             
-            # how to define idomain ?
-            idomain = np.zeros((nlay, nrow, ncol))
-            mask_org = self.T1.get_mask().astype(int)
-
-            # modify mask_org to remove the inactive cells
-            if unit_limit is not None:
-                mask = mask_below_unit(self.T1, unit_limit, iu=iu)
-                mask_org[mask == 1] = 0
-
-            for ilay in range(0, self.T1.get_nz(), factor_z):
-                for irow in range(0, self.T1.get_ny(), factor_y):
-                    for icol in range(0, self.T1.get_nx(), factor_x):
-                        mask = mask_org[ilay:ilay+factor_z, irow:irow+factor_y, icol:icol+factor_x]
-                        if mask.mean() >= 0.5:
-                            idomain[ilay//factor_z, irow//factor_y, icol//factor_x] = 1
+            # upscale idomain
+            sx_grid, sy_grid, sz_grid = self.T1.get_sx(), self.T1.get_sy(), self.T1.get_sz()
+            ox_grid, oy_grid, oz_grid = self.T1.get_ox(), self.T1.get_oy(), self.T1.get_oz()
+            new_idomain = upscale_k(idomain, method="arithmetic",
+                                    dx=sx_grid, dy=sy_grid, dz=sz_grid,
+                                    factor_x=factor_x, factor_y=factor_y, factor_z=factor_z
+                                    grid=grid)
             
-            idomain = np.flip(np.flipud(idomain), axis=1)  # flip the array to have the same orientation as the ArchPy table
+            # idomain --> superior to 0.5 set to 1
+            new_idomain[new_idomain > 0.5] = 1
+            new_idomain[new_idomain <= 0.5] = 0
 
-            self.factor_x = factor_x
-            self.factor_y = factor_y
-            self.factor_z = factor_z
+            # set idomain
+            dis.idomain.set_data(new_idomain)
             
         else:
-            raise ValueError("grid_mode must be one of 'archpy', 'layers' or 'new_resolution'")
+                
+            #grid
+            nlay, nrow, ncol = self.T1.get_nz(), self.T1.get_ny(), self.T1.get_nx()
+            delr, delc = self.T1.get_sx(), self.T1.get_sy()
+            xoff, yoff = self.T1.get_ox(), self.T1.get_oy()
+
+            if grid_mode == "archpy":
+                top = np.ones((nrow, ncol)) * self.T1.get_zg()[-1]
+                botm = np.ones((nlay, nrow, ncol)) * self.T1.get_zg()[:-1].reshape(-1, 1, 1)
+                botm = np.flip(np.flipud(botm), axis=1)  # flip the array to have the same orientation as the ArchPy table
+                idomain = np.flip(np.flipud(self.T1.get_mask().astype(int)), axis=1)  # flip the array to have the same orientation as the ArchPy table
+
+                # inactive cells below unit limit
+                if unit_limit is not None:
+                    mask = mask_below_unit(self.T1, unit_limit, iu=iu)
+                    mask = np.flip(np.flipud(mask), axis=1)  # flip the array to have the same orientation as the ArchPy table
+                    idomain[mask == 1] = 0
+
+            elif grid_mode == "layers":
+
+                def list_unit_below_unit(T1, unit):
+                    u = T1.get_unit(unit)
+                    units = []
+                    for unit_to_compare in T1.get_all_units():
+                        if unit_to_compare > u:
+                            units.append(unit_to_compare)
+                    return units
+
+                # determine which units will be inactive
+                if unit_limit is not None:
+                    units = list_unit_below_unit(self.T1, unit_limit)
+                    n_units_removed = len(units) + 1
+                else:
+                    n_units_removed = None
+
+                # get surfaces of each unit
+                top = self.T1.get_surface(typ="top")[0][0, iu]
+                top = np.flip(top, axis=0)
+                botm = self.T1.get_surface(typ="bot")[0][:, iu]
+                botm = np.flip(botm, axis=1)
+                layers_names = self.T1.get_surface(typ="bot")[1]
+                self.layers_names = layers_names
+                nlay = botm.shape[0]
+
+                # define idomain (1 if thickness > 0, 0 if nan, -1 if thickness = 0)
+                idomain = np.ones((nlay, nrow, ncol))
+                thicknesses = -np.diff(np.vstack([top.reshape(-1, nrow, ncol), botm]), axis=0)
+                idomain[thicknesses == 0] = -1
+                idomain[np.isnan(thicknesses)] = 0
+
+                # set nan of each layer to the mean of the layer previous + 1e-2
+                prev_mean = None
+                for ilay in range(nlay-1, -1, -1):
+                    mask = np.isnan(botm[ilay])
+                    if ilay == nlay-1:
+                        prev_mean = np.nanmean(botm[ilay])
+                        botm[ilay][mask] = prev_mean
+                    else:
+                        prev_mean = max(np.nanmean(botm[ilay]), prev_mean + 1e-2)
+                        botm[ilay][mask] = prev_mean
+
+                # inactive cells below unit limit
+                if n_units_removed is not None:
+                    idomain[-n_units_removed:] = 0
+
+                # adapt botm in order that each layer has a thickness > 0 
+                for i in range(-1, nlay-1):
+                    if i == -1:
+                        s1 = top
+                    else:
+                        s1 = botm[i]
+                    s2 = botm[i+1]
+                    mask = s1 == s2
+                    s1[mask] += 1e-2
+
+                    # 2nd loop over previous layers to ensure that the thickness is > 0
+                    for o in range(i, -1, -1):
+                        s2 = botm[o]
+                        if o == 0:
+                            s1 = top
+                        else:
+                            s1 = botm[o-1]
+                        mask = s1 <= s2
+                        s1[mask] = s2[mask] + 1e-2
+
+            elif grid_mode == "new_resolution":
+                assert factor_x is not None, "factor_x must be provided"
+                assert factor_y is not None, "factor_y must be provided"
+                assert factor_z is not None, "factor_z must be provided"
+                assert nrow % factor_y == 0, "nrow must be divisible by factor_y"
+                assert ncol % factor_x == 0, "ncol must be divisible by factor_x"
+                assert nlay % factor_z == 0, "nlay must be divisible by factor_z"
+                nrow = int(nrow / factor_y)
+                ncol = int(ncol / factor_x)
+                nlay = int(nlay / factor_z)
+                delr = delr * factor_x
+                delc = delc * factor_y
+                top = np.ones((nrow, ncol)) * self.T1.get_zg()[-1]
+                botm = np.ones((nlay, nrow, ncol)) * self.T1.get_zg()[::-factor_z][1:].reshape(-1, 1, 1)
+                
+                # how to define idomain ?
+                idomain = np.zeros((nlay, nrow, ncol))
+                mask_org = self.T1.get_mask().astype(int)
+
+                # modify mask_org to remove the inactive cells
+                if unit_limit is not None:
+                    mask = mask_below_unit(self.T1, unit_limit, iu=iu)
+                    mask_org[mask == 1] = 0
+
+                for ilay in range(0, self.T1.get_nz(), factor_z):
+                    for irow in range(0, self.T1.get_ny(), factor_y):
+                        for icol in range(0, self.T1.get_nx(), factor_x):
+                            mask = mask_org[ilay:ilay+factor_z, irow:irow+factor_y, icol:icol+factor_x]
+                            if mask.mean() >= 0.5:
+                                idomain[ilay//factor_z, irow//factor_y, icol//factor_x] = 1
+                
+                idomain = np.flip(np.flipud(idomain), axis=1)  # flip the array to have the same orientation as the ArchPy table
+
+                self.factor_x = factor_x
+                self.factor_y = factor_y
+                self.factor_z = factor_z
+            
+            assert (np.array(check_thk(top, botm))).all(), "Error in the processing of the surfaces, some cells have a thickness < 0"
+
+            rot_angle = self.T1.get_rot_angle()
+            dis = fp.mf6.ModflowGwfdis(gwf, nlay=nlay, nrow=nrow, ncol=ncol,
+                                        delr=delr, delc=delc,
+                                        top=top, botm=botm,
+                                        xorigin=xoff, yorigin=yoff, 
+                                        idomain=idomain, angrot=rot_angle)
 
         # save grid mode
         self.grid_mode = grid_mode
-        
-        assert (np.array(check_thk(top, botm))).all(), "Error in the processing of the surfaces, some cells have a thickness < 0"
-
-        rot_angle = self.T1.get_rot_angle()
-        dis = fp.mf6.ModflowGwfdis(gwf, nlay=nlay, nrow=nrow, ncol=ncol,
-                                    delr=delr, delc=delc,
-                                    top=top, botm=botm,
-                                    xorigin=xoff, yorigin=yoff, 
-                                    idomain=idomain, angrot=rot_angle)
 
         perioddata = [(1, 1, 1.0)]
         tdis = fp.mf6.ModflowTdis(sim, time_units='SECONDS',perioddata=perioddata)

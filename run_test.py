@@ -38,7 +38,7 @@ def run_notebooks():
     # use an alias
 
     # get list of all notebooks
-    notebooks_subfolders = ["04_hierarchies"]
+    notebooks_subfolders = ["01_basic", "02_3D_ArchPy", "04_hierarchies", "05_mps_surfaces", "06_cross_validation", "07_Geological_map", "10_rotation_grid", "11_modflow_coupling", "upscaling"]
 
     for folder in notebooks_subfolders:
         for notebook in os.listdir(f"{notebook_folder}/{folder}"):

@@ -5,6 +5,18 @@ import geone
 import geone.covModel as gcm
 from numba import jit
 
+
+## functions ##
+def rotate_point(p1, angle, origin=(0, 0)):
+
+    p1 = np.array(p1)
+    origin = np.array(origin)
+    p1_rot = p1 - origin
+    p1_rot = np.array([p1_rot[0]*np.cos(np.radians(angle)) - p1_rot[1]*np.sin(np.radians(angle)), 
+                       p1_rot[0]*np.sin(np.radians(angle)) + p1_rot[1]*np.cos(np.radians(angle))])
+    p1_rot = p1_rot + origin
+    return p1_rot
+
 ## 2D algorithms ##
 def f_2D(a, dx=None, dy=None, direction="x", type="series"):
 

@@ -59,3 +59,4 @@ Notebooks
    :caption: Upscaling
 
    notebooks/upscaling_3D_fields
+   notebooks/unstructured_grids

@@ -593,24 +593,36 @@ class archpy2modflow:
                 field = self.T1.get_prop(k_key)[iu, ifa, ip]
                 field = np.flip(np.flipud(field), axis=1)  # flip the array to have the same orientation as the ArchPy table
 
-                field_kxx, field_kyy, field_kzz = upscale_k(field, method="simplified_renormalization",
+                field_kxx, field_kyy, field_kzz = upscale_k(field, method=upscaling_method,
                                                             dx=dx, dy=dy, dz=dz, ox=ox, oy=oy, oz=oz,
                                                             factor_x=self.factor_x, factor_y=self.factor_y, factor_z=self.factor_z,
                                                             grid=grid)
 
-                new_k = field_kxx
-                new_k22 = field_kyy
-                new_k33 = field_kzz
-                
-                # fill nan values
-                new_k[np.isnan(new_k)] = np.nanmean(new_k)
-                new_k22[np.isnan(new_k22)] = np.nanmean(new_k22)
-                new_k33[np.isnan(new_k33)] = np.nanmean(new_k33)
+                new_k = field_kxx.astype(float)
 
-                if log:
-                    new_k = 10**new_k
-                    new_k22 = 10**new_k22
-                    new_k33 = 10**new_k33
+                if upscaling_method in ["arithmetic", "harmonic", "geometric"]:
+                    new_k22 = None
+                    new_k33 = None
+
+                    # fill nan
+                    new_k[np.isnan(new_k)] = np.nanmean(new_k)
+
+                    if log:
+                        new_k = 10**new_k
+
+                else:
+                    new_k22 = field_kyy
+                    new_k33 = field_kzz
+                
+                    # fill nan values
+                    new_k[np.isnan(new_k)] = np.nanmean(new_k)
+                    new_k22[np.isnan(new_k22)] = np.nanmean(new_k22)
+                    new_k33[np.isnan(new_k33)] = np.nanmean(new_k33)
+
+                    if log:
+                        new_k = 10**new_k
+                        new_k22 = 10**new_k22
+                        new_k33 = 10**new_k33
                     
                 # facies upscaling
                 facies_arr = self.T1.get_facies(iu, ifa, all_data=False)

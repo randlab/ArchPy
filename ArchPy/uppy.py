@@ -1021,7 +1021,7 @@ def upscale_cell_disv(grid_ref_xver, grid_ref_yver, grid_ref_layers, grid_ref_to
 
             dy, dz, dx  = np.meshgrid(dy, dz, dx)  # transform arrays to 3D
         # upscaling 3D
-
+    
         # special case if only one cell
         if field_cell.shape[0] == 1 and field_cell.shape[1] == 1 and field_cell.shape[2] == 1:
             Kxx = field_cell[0, 0, 0]
@@ -1045,11 +1045,17 @@ def upscale_cell_disv(grid_ref_xver, grid_ref_yver, grid_ref_layers, grid_ref_to
                 Kyy = simplified_renormalization(field_cell, dx, dy, dz, direction="y")
                 Kzz = simplified_renormalization(field_cell, dx, dy, dz, direction="z")
             elif method == "arithmetic":
+                np.save("field_cell", field_cell)
+                np.save("dx", dx)
+                np.save("dy", dy)
+                np.save("dz", dz)
+
                 volume = dx*dy*dz
                 Kxx = np.sum(field_cell*volume)/np.sum(volume)
                 Kyy = None
                 Kzz = None
             elif method == "harmonic":
+
                 volume = dx*dy*dz
                 Kxx = np.sum(volume)/np.sum(volume/field_cell)
                 Kyy = None

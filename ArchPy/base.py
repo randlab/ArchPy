@@ -1414,6 +1414,28 @@ class Arch_table():
         bounds=[self.get_ox(), self.get_xg()[-1], self.get_oy(), self.get_yg()[-1], self.get_oz(), self.get_zg()[-1]]
         return bounds
 
+    def get_points_box(self, rot=True):
+
+        """
+        Return the points of the simulation domain
+
+        Parameters
+        ----------
+        rot: bool   
+            if True, the points will be rotated and give the four corners of the simulation domain
+
+        Returns
+        -------
+        ndarray
+            points of the simulation domain (4 corners)
+        """
+        x0, y0, x1, y1 = self.xg[0], self.yg[0], self.xg[-1], self.yg[-1]
+        points_box = [(x0, y0), (x1, y0), (x1, y1), (x0, y1), (x0, y0)]
+        points_box = np.array(points_box)
+        if rot:
+            points_box = self.rotate(points_box, self.rot_angle)
+        return points_box
+        
     def check_units_ID(self):
         
         """

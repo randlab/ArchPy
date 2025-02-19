@@ -1045,11 +1045,23 @@ def upscale_cell_disv(grid_ref_xver, grid_ref_yver, grid_ref_layers, grid_ref_to
                 Kyy = simplified_renormalization(field_cell, dx, dy, dz, direction="y")
                 Kzz = simplified_renormalization(field_cell, dx, dy, dz, direction="z")
             elif method == "arithmetic":
-                pass
+                volume = dx*dy*dz
+                Kxx = np.sum(field_cell*volume)/np.sum(volume)
+                Kyy = None
+                Kzz = None
             elif method == "harmonic":
-                pass
+                volume = dx*dy*dz
+                Kxx = np.sum(volume)/np.sum(volume/field_cell)
+                Kyy = None
+                Kzz = None
             elif method == "geometric":
-                pass
+                volume = dx*dy*dz
+                if (field_cell < 0).all():
+                    Kxx = -np.exp(np.sum(np.log(-field_cell)*volume)/np.sum(volume))
+                else:
+                    Kxx = np.exp(np.sum(np.log(field_cell)*volume)/np.sum(volume))
+                Kyy = None
+                Kzz = None
 
         return Kxx, Kyy, Kzz
 
@@ -1349,6 +1361,7 @@ def upscale_k(field, dx=1, dy=1, dz=1,
                         z1_cell = botm[ilay, icell]
                         z2_cell = botm[ilay-1, icell]
 
+                    # print(x1_cell, x2_cell, y1_cell, y2_cell, z1_cell, z2_cell)
                     Kxx, Kyy, Kzz = upscale_cell_disv(grid_ref_xver, grid_ref_yver, grid_ref_layers=grid_ref_layers, grid_ref_top=grid_ref_top, 
                                                       sx_grid=dx, sy_grid=dy, sz_grid=dz,
                                                       field=field, 

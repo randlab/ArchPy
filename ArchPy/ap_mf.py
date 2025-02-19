@@ -10,7 +10,7 @@ import os
 import flopy as fp
 import pandas as pd
 import ArchPy.uppy
-from ArchPy.uppy import upscale_k
+from ArchPy.uppy import upscale_k, rotate_point
 
 # some functions
 def mask_below_unit(T1, unit, iu=0):
@@ -192,7 +192,7 @@ class archpy2modflow:
 
     def create_sim(self, grid_mode="archpy", iu=0, 
                    lay_sep=1,
-                   modflowgrid_props=None,
+                   modflowgrid_props=None, xorigin=0, yorigin=0, angrot=0,
                    factor_x=None, factor_y=None, factor_z=None, 
                    unit_limit=None):
 
@@ -223,14 +223,21 @@ class archpy2modflow:
         gwf = fp.mf6.ModflowGwf(sim, modelname=self.model_name,
                                 model_nam_file='{}.nam'.format(self.model_name))
 
+        # upscale idomain
+        sx_grid, sy_grid, sz_grid = self.T1.get_sx(), self.T1.get_sy(), self.T1.get_sz()
+        ox_grid, oy_grid, oz_grid = self.T1.get_ox(), self.T1.get_oy(), self.T1.get_oz()
+
         if grid_mode in ["disv", "disu"]:  
 
             if grid_mode == "disv":
-                dis = fp.mf6.ModflowGwfdisv(gwf, **modflowgrid_props, xorigin=0, yorigin=0)
+                dis = fp.mf6.ModflowGwfdisv(gwf, **modflowgrid_props, xorigin=xorigin, yorigin=yorigin)
             else:
-                dis = fp.mf6.ModflowGwfdisu(gwf, **modflowgrid_props, xorigin=0, yorigin=0)
+                dis = fp.mf6.ModflowGwfdisu(gwf, **modflowgrid_props, xorigin=xorigin, yorigin=yorigin)
             
             grid = gwf.modelgrid  # get the grid object
+            # rotate grid around the origin of archpy model
+            xorigin_rot, yorigin_rot = rotate_point((xorigin, yorigin), origin=(ox_grid, oy_grid), angle=-angrot) 
+            grid.set_coord_info(xoff=xorigin_rot, yoff=yorigin_rot, angrot=-angrot)
 
             # idomain #
             # inactive cells below unit limit
@@ -240,13 +247,11 @@ class archpy2modflow:
                 mask = np.flip(np.flipud(mask), axis=1)  # flip the array to have the same orientation as the ArchPy table
                 idomain[mask == 1] = 0
             
-            # upscale idomain
-            sx_grid, sy_grid, sz_grid = self.T1.get_sx(), self.T1.get_sy(), self.T1.get_sz()
-            ox_grid, oy_grid, oz_grid = self.T1.get_ox(), self.T1.get_oy(), self.T1.get_oz()
             new_idomain = upscale_k(idomain, method="arithmetic",
                                     dx=sx_grid, dy=sy_grid, dz=sz_grid,
+                                    ox=ox_grid, oy=oy_grid, oz=oz_grid,
                                     factor_x=factor_x, factor_y=factor_y, factor_z=factor_z,
-                                    grid=grid)
+                                    grid=grid)[0]
             
             # idomain --> superior to 0.5 set to 1
             new_idomain[new_idomain > 0.5] = 1
@@ -528,7 +533,7 @@ class archpy2modflow:
                     field_kxx, field_kyy, field_kzz = upscale_k(field, method="tensorial_renormalization", dx=dx, dy=dy, dz=dz, factor_x=factor_x, factor_y=factor_y, factor_z=factor_z)
                 elif upscaling_method == "simplified_renormalization":
                     field_kxx, field_kyy, field_kzz = upscale_k(field, method="simplified_renormalization", dx=dx, dy=dy, dz=dz, factor_x=factor_x, factor_y=factor_y, factor_z=factor_z)
-                
+
                 new_k = field_kxx
                 new_k22 = field_kyy
                 new_k33 = field_kzz
@@ -559,6 +564,58 @@ class archpy2modflow:
                                 upscaled_facies[ifa][ilay:ilay+factor_z, irow:irow+factor_y, icol:icol+factor_x] = prop[ifa]
 
                 self.upscaled_facies = upscaled_facies
+            
+            elif grid_mode in ["disv", "disu"]:
+
+                from ArchPy.uppy import upscale_k
+                dx, dy, dz = self.T1.get_sx(), self.T1.get_sy(), self.T1.get_sz()
+                ox, oy, oz = self.T1.get_ox(), self.T1.get_oy(), self.T1.get_oz()
+
+                new_k = None
+                new_k22 = None
+                new_k33 = None
+
+                # get the grid object --> needs to be rotated
+                grid = gwf.modelgrid  
+
+                # rotate grid around the origin of archpy model
+
+                # retrieve origin of the new grid and archpy grid as well as the rotation angle 
+                xorigin, yorigin = grid.xoffset, grid.yoffset
+                ox_grid, oy_grid = self.T1.get_ox(), self.T1.get_oy()
+                angrot = self.T1.get_rot_angle()
+                xorigin_rot, yorigin_rot = rotate_point((xorigin, yorigin), origin=(ox_grid, oy_grid), angle=-angrot) 
+
+                # rotation
+                grid.set_coord_info(xoff=xorigin_rot, yoff=yorigin_rot, angrot=-angrot)
+
+                # get field
+                field = self.T1.get_prop(k_key)[iu, ifa, ip]
+                field = np.flip(np.flipud(field), axis=1)  # flip the array to have the same orientation as the ArchPy table
+
+                field_kxx, field_kyy, field_kzz = upscale_k(field, method="simplified_renormalization",
+                                                            dx=dx, dy=dy, dz=dz, ox=ox, oy=oy, oz=oz,
+                                                            factor_x=self.factor_x, factor_y=self.factor_y, factor_z=self.factor_z,
+                                                            grid=grid)
+
+                new_k = field_kxx
+                new_k22 = field_kyy
+                new_k33 = field_kzz
+                
+                # fill nan values
+                new_k[np.isnan(new_k)] = np.nanmean(new_k)
+                new_k22[np.isnan(new_k22)] = np.nanmean(new_k22)
+                new_k33[np.isnan(new_k33)] = np.nanmean(new_k33)
+
+                if log:
+                    new_k = 10**new_k
+                    new_k22 = 10**new_k22
+                    new_k33 = 10**new_k33
+                    
+                # facies upscaling
+                facies_arr = self.T1.get_facies(iu, ifa, all_data=False)
+                # TO DO
+
         else:
             new_k = k
             new_k22 = k22

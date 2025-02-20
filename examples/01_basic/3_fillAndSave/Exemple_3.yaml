@@ -86,11 +86,6 @@ Units:
       distanceType:
       - categorical
       f_method: MPS
-      globalPdf:
-      - 0.33
-      - 0.37
-      - 0.2
-      - 0.1
       homo_usage: 1
       localPdf: null
       localPdfRadius: 12.0
@@ -100,6 +95,11 @@ Units:
       nv: 1
       outputVarFlag: null
       probaUsage: 1
+      probability:
+      - 0.33
+      - 0.37
+      - 0.2
+      - 0.1
       radiusMode: large_default
       rotAzi: 90
       rotAziLoc: false

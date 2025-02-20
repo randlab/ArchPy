@@ -105,7 +105,7 @@ def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance
             dt = df["dt"]
             for i, (facies, time) in enumerate(zip(df["facies"], df["time"])):
                 if i > 0:
-                    axi.barh(0, dt[i], left=df["time"].loc[i], color=arch_table.get_facies_obj(ID=facies, type="ID").c)
+                    axi.barh(0, dt[i], left=df["time"].loc[i-1], color=arch_table.get_facies_obj(ID=facies, type="ID").c)
                 else:
                     axi.barh(0, dt[i], left=0, color=arch_table.get_facies_obj(ID=facies, type="ID").c, label=arch_table.get_facies_obj(ID=facies, type="ID").name)
             
@@ -208,6 +208,8 @@ class archpy2modflow:
             In this case, factor_x, factor_y and factor_z must be provided
         iu : int
             index of the unit to use when grid_mode is "layers"
+        lay_sep : int or list of int of size nlay
+            if grid_mode is layers, lay_sep indicates the number of layers to separate each unit
         factor_x : float
             factor to change the resolution of the grid in the x direction. e.g. 2 means that the resolution will be divided by 2
         factor_y : float
@@ -246,13 +248,13 @@ class archpy2modflow:
                 mask = mask_below_unit(self.T1, unit_limit, iu=iu)
                 mask = np.flip(np.flipud(mask), axis=1)  # flip the array to have the same orientation as the ArchPy table
                 idomain[mask == 1] = 0
-            
+
             new_idomain = upscale_k(idomain, method="arithmetic",
                                     dx=sx_grid, dy=sy_grid, dz=sz_grid,
                                     ox=ox_grid, oy=oy_grid, oz=oz_grid,
                                     factor_x=factor_x, factor_y=factor_y, factor_z=factor_z,
                                     grid=grid)[0]
-            
+
             # idomain --> superior to 0.5 set to 1
             new_idomain[new_idomain > 0.5] = 1
             new_idomain[new_idomain <= 0.5] = 0
@@ -280,11 +282,18 @@ class archpy2modflow:
                     idomain[mask == 1] = 0
 
             elif grid_mode == "layers":
+                
+                n_units = len(self.T1.get_surface()[1])
+                if isinstance(lay_sep, int):
+                    lay_sep = [lay_sep] * n_units
+                assert len(lay_sep) == n_units, "lay_sep must have the same length as the number of units"
+                self.lay_sep = lay_sep  # save lay_sep
 
                 def list_unit_below_unit(T1, unit):
                     u = T1.get_unit(unit)
                     units = []
-                    for unit_to_compare in T1.get_all_units():
+                    for u_name in T1.get_surface()[1]:
+                        unit_to_compare = T1.get_unit(u_name)
                         if unit_to_compare > u:
                             units.append(unit_to_compare)
                     return units
@@ -293,14 +302,30 @@ class archpy2modflow:
                 if unit_limit is not None:
                     units = list_unit_below_unit(self.T1, unit_limit)
                     n_units_removed = len(units) + 1
+                    n_units_removed = np.sum(lay_sep[-n_units_removed:])
                 else:
                     n_units_removed = None
 
                 # get surfaces of each unit
-                top = self.T1.get_surface(typ="top")[0][0, iu]
+                top = self.T1.get_surface(typ="top")[0][0, iu].copy()
                 top = np.flip(top, axis=0)
-                botm = self.T1.get_surface(typ="bot")[0][:, iu]
+                botm = self.T1.get_surface(typ="bot")[0][:, iu].copy()
                 botm = np.flip(botm, axis=1)
+
+                botm_org = botm.copy()  # copy of botm to ensure that we only select original surfaces and not new sublayers
+
+                # add sublayers to botm
+                for ilay in range(n_units):
+                    if ilay == 0:
+                        s1 = top
+                    else:
+                        s1 = botm_org[ilay-1]
+                    s2 = botm_org[ilay]
+                    for isublay in range(1, lay_sep[ilay]):
+
+                        smean = s1*(1-isublay/lay_sep[ilay]) + s2*(isublay/lay_sep[ilay])  # mean of the two surfaces
+                        botm = np.insert(botm, sum(lay_sep[0:ilay])+isublay-1, smean, axis=0)  # insert the surface at the right place
+
                 layers_names = self.T1.get_surface(typ="bot")[1]
                 self.layers_names = layers_names
                 nlay = botm.shape[0]
@@ -412,7 +437,7 @@ class archpy2modflow:
         
         # npf package
         # empty package
-        npf = fp.mf6.ModflowGwfnpf(gwf, icelltype=0, k=1, save_flows=True, save_saturation=True)
+        npf = fp.mf6.ModflowGwfnpf(gwf, icelltype=0, k=1e-3, save_flows=True, save_saturation=True)
 
         self.sim = sim
         print("Simulation created")
@@ -455,6 +480,8 @@ class archpy2modflow:
 
                 # initialize new_k and new_k33
                 kh = self.T1.get_prop(k_key)[iu, ifa, ip] 
+                if log:
+                    kh = 10**kh
                 new_k = np.ones((nlay, nrow, ncol))
 
                 # initialize variable for facies upscaling
@@ -468,20 +495,47 @@ class archpy2modflow:
                     new_k33 = np.ones((nlay, nrow, ncol))
                 else:
                     new_k33 = None
+                
+
+                botm = gwf.dis.botm.array.copy()
+                botm = np.flip(botm, axis=1)
+
+                # mask units
                 layers = self.layers_names
-                mask_units = [self.T1.unit_mask(l).astype(bool) for l in layers]
+                mask_units = []
+                ilay = 0
+                for l in layers:
+                    if self.lay_sep[ilay] == 1:
+                        mask_units.append(self.T1.unit_mask(l).astype(bool))
+                    else:
+                        for isublay in range(self.lay_sep[ilay]):
+                            if ilay == 0 and isublay == 0:
+                                s1 = np.flip(gwf.dis.top.array, axis=1)
+                                s2 = botm[isublay]
+                            else:
+                                s1 = botm[sum(self.lay_sep[0:ilay])+isublay-1]
+                                s2 = botm[sum(self.lay_sep[0:ilay])+isublay]
+                            mask = self.T1.compute_domain(s1, s2)
+                            mask_units.append(mask.astype(bool))
+                    
+                    ilay += 1
 
                 for irow in range(nrow):
                     for icol in range(ncol):
                         for ilay in range(nlay):
                             mask_unit = mask_units[ilay]
+
+                            # extract values in the new cell
+                            k_vals = kh[:, irow, icol][mask_unit[:, irow, icol]]
+
+                            # mask_unit = mask_units[ilay]
                             if k_average_method == "arithmetic":
-                                new_k[ilay, irow, icol] = np.mean(kh[:, irow, icol][mask_unit[:, irow, icol]])
+                                new_k[ilay, irow, icol] = np.mean(k_vals)
                             elif k_average_method == "harmonic":
-                                new_k[ilay, irow, icol] = 1 / np.mean(1 / kh[:, irow, icol][mask_unit[:, irow, icol]])
+                                new_k[ilay, irow, icol] = 1 / np.mean(1 / k_vals)
                             elif k_average_method == "anisotropic":
-                                new_k[ilay, irow, icol] = np.mean(kh[:, irow, icol][mask_unit[:, irow, icol]])
-                                new_k33[ilay, irow, icol] = 1 / np.mean(1 / kh[:, irow, icol][mask_unit[:, irow, icol]])
+                                new_k[ilay, irow, icol] = np.mean(k_vals)
+                                new_k33[ilay, irow, icol] = 1 / np.mean(1 / k_vals)
                             else:
                                 raise ValueError("k_average_method must be one of 'arithmetic' or 'harmonic'")
                             
@@ -508,11 +562,6 @@ class archpy2modflow:
                     
                     new_k33 = np.flip(new_k33, axis=1)
 
-                if log:
-                    new_k = 10**new_k
-                    if k_average_method == "anisotropic":
-                        new_k33 = 10**new_k33
-
             elif grid_mode == "new_resolution":
 
                 from ArchPy.uppy import upscale_k
@@ -524,7 +573,9 @@ class archpy2modflow:
                 
                 field = self.T1.get_prop(k_key)[iu, ifa, ip]
                 field = np.flip(np.flipud(field), axis=1)  # flip the array to have the same orientation as the ArchPy table
-                
+                if log:
+                    field = 10**field
+
                 if upscaling_method == "standard_renormalization_center":
                     field_kxx, field_kyy, field_kzz = upscale_k(field, method="standard_renormalization", dx=dx, dy=dy, dz=dz, factor_x=factor_x, factor_y=factor_y, factor_z=factor_z, scheme="center")
                 elif upscaling_method == "standard_renormalization_direct":
@@ -542,11 +593,6 @@ class archpy2modflow:
                 new_k[np.isnan(new_k)] = np.nanmean(new_k)
                 new_k22[np.isnan(new_k22)] = np.nanmean(new_k22)
                 new_k33[np.isnan(new_k33)] = np.nanmean(new_k33)
-
-                if log:
-                    new_k = 10**new_k
-                    new_k22 = 10**new_k22
-                    new_k33 = 10**new_k33
 
                 # facies upscaling
                 facies_arr = self.T1.get_facies(iu, ifa, all_data=False)
@@ -592,6 +638,8 @@ class archpy2modflow:
                 # get field
                 field = self.T1.get_prop(k_key)[iu, ifa, ip]
                 field = np.flip(np.flipud(field), axis=1)  # flip the array to have the same orientation as the ArchPy table
+                if log:
+                    field = 10**field
 
                 field_kxx, field_kyy, field_kzz = upscale_k(field, method=upscaling_method,
                                                             dx=dx, dy=dy, dz=dz, ox=ox, oy=oy, oz=oz,
@@ -607,8 +655,6 @@ class archpy2modflow:
                     # fill nan
                     new_k[np.isnan(new_k)] = np.nanmean(new_k)
 
-                    if log:
-                        new_k = 10**new_k
 
                 else:
                     new_k22 = field_kyy
@@ -618,11 +664,6 @@ class archpy2modflow:
                     new_k[np.isnan(new_k)] = np.nanmean(new_k)
                     new_k22[np.isnan(new_k22)] = np.nanmean(new_k22)
                     new_k33[np.isnan(new_k33)] = np.nanmean(new_k33)
-
-                    if log:
-                        new_k = 10**new_k
-                        new_k22 = 10**new_k22
-                        new_k33 = 10**new_k33
                     
                 # facies upscaling
                 facies_arr = self.T1.get_facies(iu, ifa, all_data=False)
@@ -1065,24 +1106,25 @@ class archpy2modflow:
         dt = np.diff(time_ordered)
 
         # add a column to track distance traveled
-        df["distance"] = 0
-        for i in range(1, df.shape[0]):
-            x0, y0, z0 = df[["x", "y", "z"]].iloc[i-1]
-            x1, y1, z1 = df[["x", "y", "z"]].iloc[i]
-            distance = np.sqrt((x1-x0)**2 + (y1-y0)**2 + (z1-z0)**2)
-            df.loc[df.index[i], "distance"] = distance
+        distances = ((df[["x", "y", "z"]].iloc[1:].values - df[["x", "y", "z"]].iloc[:-1].values)**2).sum(1)**0.5
 
-        df["cum_distance"] = df["distance"].cumsum()
+        # # add a column to track distance traveled
+        # df["distance"] = 0
+        # for i in range(1, df.shape[0]):
+        #     x0, y0, z0 = df[["x", "y", "z"]].iloc[i-1]
+        #     x1, y1, z1 = df[["x", "y", "z"]].iloc[i]
+        #     distance = np.sqrt((x1-x0)**2 + (y1-y0)**2 + (z1-z0)**2)
+        #     df.loc[df.index[i], "distance"] = distance
 
         # store everything in a new dataframe
         df_all = pd.DataFrame(columns=["dt", "time", "distance", "cum_distance", "x", "y", "z"])
         df_all["dt"] = dt
-        df_all["time"] = time_ordered[:-1]
-        df_all["distance"] = df["distance"].values[:-1]
-        df_all["cum_distance"] = df["cum_distance"].values[:-1]
-        df_all["x"] = df["x"].values[:-1]
-        df_all["y"] = df["y"].values[:-1]
-        df_all["z"] = df["z"].values[:-1]
+        df_all["time"] = time_ordered[1:]
+        df_all["distance"] = distances
+        df_all["cum_distance"] = df_all["distance"].cumsum()
+        df_all["x"] = (df["x"].values[1:] + df["x"].values[:-1]) / 2
+        df_all["y"] = (df["y"].values[1:] + df["y"].values[:-1]) / 2
+        df_all["z"] = (df["z"].values[1:] + df["z"].values[:-1]) / 2
 
         if grid_mode in ["layers", "new_resolution"]:
             dic_facies_path = {}

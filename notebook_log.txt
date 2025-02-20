@@ -1,0 +1,339 @@
+###################################################
+Error in notebook: modflow_coupling_unstructured_grid.ipynb
+[NbConvertApp] Converting notebook examples/11_modflow_coupling/modflow_coupling_unstructured_grid.ipynb to notebook
+C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\zmq\_future.py:687: RuntimeWarning: Proactor event loop does not implement add_reader family of methods required for zmq. Registering an additional selector thread for add_reader support via tornado. Use `asyncio.set_event_loop_policy(WindowsSelectorEventLoopPolicy())` to avoid this warning.
+  self._get_loop()
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Scripts\jupyter-nbconvert.EXE\__main__.py", line 7, in <module>
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\jupyter_core\application.py", line 283, in launch_instance
+    super().launch_instance(argv=argv, **kwargs)
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\traitlets\config\application.py", line 1075, in launch_instance
+    app.start()
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\nbconvertapp.py", line 420, in start
+    self.convert_notebooks()
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\nbconvertapp.py", line 597, in convert_notebooks
+    self.convert_single_notebook(notebook_filename)
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\nbconvertapp.py", line 563, in convert_single_notebook
+    output, resources = self.export_single_notebook(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\nbconvertapp.py", line 487, in export_single_notebook
+    output, resources = self.exporter.from_filename(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\exporters\exporter.py", line 201, in from_filename
+    return self.from_file(f, resources=resources, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\exporters\exporter.py", line 220, in from_file
+    return self.from_notebook_node(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\exporters\notebook.py", line 36, in from_notebook_node
+    nb_copy, resources = super().from_notebook_node(nb, resources, **kw)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\exporters\exporter.py", line 154, in from_notebook_node
+    nb_copy, resources = self._preprocess(nb_copy, resources)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\exporters\exporter.py", line 353, in _preprocess
+    nbc, resc = preprocessor(nbc, resc)
+                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\preprocessors\base.py", line 48, in __call__
+    return self.preprocess(nb, resources)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\preprocessors\execute.py", line 103, in preprocess
+    self.preprocess_cell(cell, resources, index)
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\preprocessors\execute.py", line 124, in preprocess_cell
+    cell = self.execute_cell(cell, index, store_history=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\jupyter_core\utils\__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\asyncio\base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbclient\client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbclient\client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# create a grid  --> we can create a fake modflow model to use the gridgen
+
+# 3D example
+# grid dimensions
+nlay = 4
+nrow = 8
+ncol = 12
+delr = 17.
+delc = 12.
+top = -6
+ox = 0
+oy = 5
+rot_angle = T1.rot_angle
+
+botm = np.linspace(-6.5, -15, nlay)
+
+sim = flopy.mf6.MFSimulation(
+    sim_name="asdf", sim_ws="ws", exe_name="mf6")
+tdis = flopy.mf6.ModflowTdis(sim, time_units="DAYS", perioddata=[[1.0, 1, 1.0]])
+ms = flopy.mf6.ModflowGwf(sim, modelname="asdf", save_flows=True)
+dis = flopy.mf6.ModflowGwfdis(
+    ms,
+    nlay=nlay,
+    nrow=nrow,
+    ncol=ncol,
+    delr=delr,
+    delc=delc,
+    top=top,
+    botm=botm,
+    xorigin=0,  # gridgen will be applied on a grid with origin at 0, 0
+    yorigin=0,
+    angrot=rot_angle,
+)
+
+# create Gridgen object
+g = Gridgen(ms.modelgrid, model_ws="gridgen_ws", exe_name=gridgen_path)  
+
+polygon = [
+    [
+        (70, 140),
+        (70, 130),
+        (40, 120),
+        (40, 120),
+        (70, 140),
+    ]
+]
+polygon = np.array(polygon)
+polygon = polygon - [ox, oy]  # move the polygon to the origin
+
+g.add_refinement_features([polygon], "polygon", 4, range(1))
+refshp0 = "gridgen_ws/" + "rf0"
+------------------
+
+
+[1;31m---------------------------------------------------------------------------[0m
+[1;31mModuleNotFoundError[0m                       Traceback (most recent call last)
+File [1;32m~\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\flopy\utils\utl_import.py:128[0m, in [0;36mimport_optional_dependency[1;34m(name, error_message, errors, min_version)[0m
+[0;32m    127[0m [38;5;28;01mtry[39;00m:
+[1;32m--> 128[0m     module [38;5;241m=[39m [43mimportlib[49m[38;5;241;43m.[39;49m[43mimport_module[49m[43m([49m[43mname[49m[43m)[49m
+[0;32m    129[0m [38;5;28;01mexcept[39;00m [38;5;167;01mImportError[39;00m:
+
+File [1;32m~\AppData\Local\miniconda3\envs\archpy\Lib\importlib\__init__.py:126[0m, in [0;36mimport_module[1;34m(name, package)[0m
+[0;32m    125[0m         level [38;5;241m+[39m[38;5;241m=[39m [38;5;241m1[39m
+[1;32m--> 126[0m [38;5;28;01mreturn[39;00m [43m_bootstrap[49m[38;5;241;43m.[39;49m[43m_gcd_import[49m[43m([49m[43mname[49m[43m[[49m[43mlevel[49m[43m:[49m[43m][49m[43m,[49m[43m [49m[43mpackage[49m[43m,[49m[43m [49m[43mlevel[49m[43m)[49m
+
+File [1;32m<frozen importlib._bootstrap>:1204[0m, in [0;36m_gcd_import[1;34m(name, package, level)[0m
+
+File [1;32m<frozen importlib._bootstrap>:1176[0m, in [0;36m_find_and_load[1;34m(name, import_)[0m
+
+File [1;32m<frozen importlib._bootstrap>:1140[0m, in [0;36m_find_and_load_unlocked[1;34m(name, import_)[0m
+
+[1;31mModuleNotFoundError[0m: No module named 'shapefile'
+
+During handling of the above exception, another exception occurred:
+
+[1;31mImportError[0m                               Traceback (most recent call last)
+Cell [1;32mIn[17], line 50[0m
+[0;32m     47[0m polygon [38;5;241m=[39m np[38;5;241m.[39marray(polygon)
+[0;32m     48[0m polygon [38;5;241m=[39m polygon [38;5;241m-[39m [ox, oy]  [38;5;66;03m# move the polygon to the origin[39;00m
+[1;32m---> 50[0m [43mg[49m[38;5;241;43m.[39;49m[43madd_refinement_features[49m[43m([49m[43m[[49m[43mpolygon[49m[43m][49m[43m,[49m[43m [49m[38;5;124;43m"[39;49m[38;5;124;43mpolygon[39;49m[38;5;124;43m"[39;49m[43m,[49m[43m [49m[38;5;241;43m4[39;49m[43m,[49m[43m [49m[38;5;28;43mrange[39;49m[43m([49m[38;5;241;43m1[39;49m[43m)[49m[43m)[49m
+[0;32m     51[0m refshp0 [38;5;241m=[39m [38;5;124m"[39m[38;5;124mgridgen_ws/[39m[38;5;124m"[39m [38;5;241m+[39m [38;5;124m"[39m[38;5;124mrf0[39m[38;5;124m"[39m
+
+File [1;32m~\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\flopy\utils\gridgen.py:432[0m, in [0;36mGridgen.add_refinement_features[1;34m(self, features, featuretype, level, layers)[0m
+[0;32m    430[0m [38;5;28;01melif[39;00m [38;5;28misinstance[39m(features, ([38;5;28mlist[39m, [38;5;28mtuple[39m, np[38;5;241m.[39mndarray)):
+[0;32m    431[0m     shapefile_path [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39mmodel_ws [38;5;241m/[39m [38;5;124mf[39m[38;5;124m"[39m[38;5;124mrf[39m[38;5;132;01m{[39;00m[38;5;28mlen[39m([38;5;28mself[39m[38;5;241m.[39m_rfdict)[38;5;132;01m}[39;00m[38;5;124m.shp[39m[38;5;124m"[39m
+[1;32m--> 432[0m     [43mfeatures_to_shapefile[49m[43m([49m[43mfeatures[49m[43m,[49m[43m [49m[43mfeaturetype[49m[43m,[49m[43m [49m[43mshapefile_path[49m[43m)[49m
+[0;32m    433[0m [38;5;28;01melse[39;00m:
+[0;32m    434[0m     [38;5;28;01mraise[39;00m [38;5;167;01mValueError[39;00m(
+[0;32m    435[0m         [38;5;124m"[39m[38;5;124mFeatures must be a pathlike (shapefile) or array-like of geometries[39m[38;5;124m"[39m
+[0;32m    436[0m     )
+
+File [1;32m~\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\flopy\utils\gridgen.py:68[0m, in [0;36mfeatures_to_shapefile[1;34m(features, featuretype, filename)[0m
+[0;32m     42[0m [38;5;250m[39m[38;5;124;03m"""[39;00m
+[0;32m     43[0m [38;5;124;03mWrite a shapefile for the features of type featuretype.[39;00m
+[0;32m     44[0m 
+[1;32m   (...)[0m
+[0;32m     64[0m 
+[0;32m     65[0m [38;5;124;03m"""[39;00m
+[0;32m     66[0m [38;5;28;01mfrom[39;00m[38;5;250m [39m[38;5;21;01m.[39;00m[38;5;21;01mgeospatial_utils[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m GeoSpatialCollection
+[1;32m---> 68[0m shapefile [38;5;241m=[39m [43mimport_optional_dependency[49m[43m([49m[38;5;124;43m"[39;49m[38;5;124;43mshapefile[39;49m[38;5;124;43m"[39;49m[43m)[49m
+[0;32m     70[0m [38;5;28;01mif[39;00m featuretype[38;5;241m.[39mlower() [38;5;241m==[39m [38;5;124m"[39m[38;5;124mline[39m[38;5;124m"[39m:
+[0;32m     71[0m     featuretype [38;5;241m=[39m [38;5;124m"[39m[38;5;124mLineString[39m[38;5;124m"[39m
+
+File [1;32m~\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\flopy\utils\utl_import.py:131[0m, in [0;36mimport_optional_dependency[1;34m(name, error_message, errors, min_version)[0m
+[0;32m    129[0m [38;5;28;01mexcept[39;00m [38;5;167;01mImportError[39;00m:
+[0;32m    130[0m     [38;5;28;01mif[39;00m errors [38;5;241m==[39m [38;5;124m"[39m[38;5;124mraise[39m[38;5;124m"[39m:
+[1;32m--> 131[0m         [38;5;28;01mraise[39;00m [38;5;167;01mImportError[39;00m(msg)
+[0;32m    132[0m     [38;5;28;01melse[39;00m:
+[0;32m    133[0m         [38;5;28;01mif[39;00m errors [38;5;241m!=[39m [38;5;124m"[39m[38;5;124msilent[39m[38;5;124m"[39m:
+
+[1;31mImportError[0m: Missing optional dependency 'pyshp'.  Use pip or conda to install pyshp.
+
+###################################################
+Error in notebook: unstructured_grids.ipynb
+[NbConvertApp] Converting notebook examples/upscaling/unstructured_grids.ipynb to notebook
+C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\zmq\_future.py:687: RuntimeWarning: Proactor event loop does not implement add_reader family of methods required for zmq. Registering an additional selector thread for add_reader support via tornado. Use `asyncio.set_event_loop_policy(WindowsSelectorEventLoopPolicy())` to avoid this warning.
+  self._get_loop()
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Scripts\jupyter-nbconvert.EXE\__main__.py", line 7, in <module>
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\jupyter_core\application.py", line 283, in launch_instance
+    super().launch_instance(argv=argv, **kwargs)
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\traitlets\config\application.py", line 1075, in launch_instance
+    app.start()
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\nbconvertapp.py", line 420, in start
+    self.convert_notebooks()
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\nbconvertapp.py", line 597, in convert_notebooks
+    self.convert_single_notebook(notebook_filename)
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\nbconvertapp.py", line 563, in convert_single_notebook
+    output, resources = self.export_single_notebook(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\nbconvertapp.py", line 487, in export_single_notebook
+    output, resources = self.exporter.from_filename(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\exporters\exporter.py", line 201, in from_filename
+    return self.from_file(f, resources=resources, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\exporters\exporter.py", line 220, in from_file
+    return self.from_notebook_node(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\exporters\notebook.py", line 36, in from_notebook_node
+    nb_copy, resources = super().from_notebook_node(nb, resources, **kw)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\exporters\exporter.py", line 154, in from_notebook_node
+    nb_copy, resources = self._preprocess(nb_copy, resources)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\exporters\exporter.py", line 353, in _preprocess
+    nbc, resc = preprocessor(nbc, resc)
+                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\preprocessors\base.py", line 48, in __call__
+    return self.preprocess(nb, resources)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\preprocessors\execute.py", line 103, in preprocess
+    self.preprocess_cell(cell, resources, index)
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbconvert\preprocessors\execute.py", line 124, in preprocess_cell
+    cell = self.execute_cell(cell, index, store_history=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\jupyter_core\utils\__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\asyncio\base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbclient\client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "C:\Users\schorppl\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\nbclient\client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# grid dimensions
+nlay = 1
+nrow = 8
+ncol = 8
+delr = 100.
+delc = 100.
+top = 0.
+botm = -100.
+
+
+sim = flopy.mf6.MFSimulation(
+    sim_name="asdf", sim_ws="ws", exe_name="mf6")
+tdis = flopy.mf6.ModflowTdis(sim, time_units="DAYS", perioddata=[[1.0, 1, 1.0]])
+ms = flopy.mf6.ModflowGwf(sim, modelname="asdf", save_flows=True)
+dis = flopy.mf6.ModflowGwfdis(
+    ms,
+    nlay=nlay,
+    nrow=nrow,
+    ncol=ncol,
+    delr=delr,
+    delc=delc,
+    top=top,
+    botm=botm,
+    xorigin=1103.3,
+    yorigin=1103.5,
+)
+
+# create Gridgen object
+g = Gridgen(ms.modelgrid, model_ws="gridgen_ws", exe_name=gridgen_path)  # ! modidfy path to gridgen.exe !
+
+# polygon refinement in the center of the grid (size 250 x 250)
+polygon = [
+    [
+        (1600, 1350),
+        (1700, 1300),
+        (1300, 1800),
+        (1300, 1700),
+        (1600, 1350),
+    ]
+]
+
+
+g.add_refinement_features([polygon], "polygon", 3, range(nlay))  # refinement level
+refshp0 = "gridgen_ws/" + "rf0"
+
+------------------
+
+
+[1;31m---------------------------------------------------------------------------[0m
+[1;31mModuleNotFoundError[0m                       Traceback (most recent call last)
+File [1;32m~\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\flopy\utils\utl_import.py:128[0m, in [0;36mimport_optional_dependency[1;34m(name, error_message, errors, min_version)[0m
+[0;32m    127[0m [38;5;28;01mtry[39;00m:
+[1;32m--> 128[0m     module [38;5;241m=[39m [43mimportlib[49m[38;5;241;43m.[39;49m[43mimport_module[49m[43m([49m[43mname[49m[43m)[49m
+[0;32m    129[0m [38;5;28;01mexcept[39;00m [38;5;167;01mImportError[39;00m:
+
+File [1;32m~\AppData\Local\miniconda3\envs\archpy\Lib\importlib\__init__.py:126[0m, in [0;36mimport_module[1;34m(name, package)[0m
+[0;32m    125[0m         level [38;5;241m+[39m[38;5;241m=[39m [38;5;241m1[39m
+[1;32m--> 126[0m [38;5;28;01mreturn[39;00m [43m_bootstrap[49m[38;5;241;43m.[39;49m[43m_gcd_import[49m[43m([49m[43mname[49m[43m[[49m[43mlevel[49m[43m:[49m[43m][49m[43m,[49m[43m [49m[43mpackage[49m[43m,[49m[43m [49m[43mlevel[49m[43m)[49m
+
+File [1;32m<frozen importlib._bootstrap>:1204[0m, in [0;36m_gcd_import[1;34m(name, package, level)[0m
+
+File [1;32m<frozen importlib._bootstrap>:1176[0m, in [0;36m_find_and_load[1;34m(name, import_)[0m
+
+File [1;32m<frozen importlib._bootstrap>:1140[0m, in [0;36m_find_and_load_unlocked[1;34m(name, import_)[0m
+
+[1;31mModuleNotFoundError[0m: No module named 'shapefile'
+
+During handling of the above exception, another exception occurred:
+
+[1;31mImportError[0m                               Traceback (most recent call last)
+Cell [1;32mIn[3], line 43[0m
+[0;32m     31[0m [38;5;66;03m# polygon refinement in the center of the grid (size 250 x 250)[39;00m
+[0;32m     32[0m polygon [38;5;241m=[39m [
+[0;32m     33[0m     [
+[0;32m     34[0m         ([38;5;241m1600[39m, [38;5;241m1350[39m),
+[1;32m   (...)[0m
+[0;32m     39[0m     ]
+[0;32m     40[0m ]
+[1;32m---> 43[0m [43mg[49m[38;5;241;43m.[39;49m[43madd_refinement_features[49m[43m([49m[43m[[49m[43mpolygon[49m[43m][49m[43m,[49m[43m [49m[38;5;124;43m"[39;49m[38;5;124;43mpolygon[39;49m[38;5;124;43m"[39;49m[43m,[49m[43m [49m[38;5;241;43m3[39;49m[43m,[49m[43m [49m[38;5;28;43mrange[39;49m[43m([49m[43mnlay[49m[43m)[49m[43m)[49m  [38;5;66;03m# refinement level[39;00m
+[0;32m     44[0m refshp0 [38;5;241m=[39m [38;5;124m"[39m[38;5;124mgridgen_ws/[39m[38;5;124m"[39m [38;5;241m+[39m [38;5;124m"[39m[38;5;124mrf0[39m[38;5;124m"[39m
+
+File [1;32m~\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\flopy\utils\gridgen.py:432[0m, in [0;36mGridgen.add_refinement_features[1;34m(self, features, featuretype, level, layers)[0m
+[0;32m    430[0m [38;5;28;01melif[39;00m [38;5;28misinstance[39m(features, ([38;5;28mlist[39m, [38;5;28mtuple[39m, np[38;5;241m.[39mndarray)):
+[0;32m    431[0m     shapefile_path [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39mmodel_ws [38;5;241m/[39m [38;5;124mf[39m[38;5;124m"[39m[38;5;124mrf[39m[38;5;132;01m{[39;00m[38;5;28mlen[39m([38;5;28mself[39m[38;5;241m.[39m_rfdict)[38;5;132;01m}[39;00m[38;5;124m.shp[39m[38;5;124m"[39m
+[1;32m--> 432[0m     [43mfeatures_to_shapefile[49m[43m([49m[43mfeatures[49m[43m,[49m[43m [49m[43mfeaturetype[49m[43m,[49m[43m [49m[43mshapefile_path[49m[43m)[49m
+[0;32m    433[0m [38;5;28;01melse[39;00m:
+[0;32m    434[0m     [38;5;28;01mraise[39;00m [38;5;167;01mValueError[39;00m(
+[0;32m    435[0m         [38;5;124m"[39m[38;5;124mFeatures must be a pathlike (shapefile) or array-like of geometries[39m[38;5;124m"[39m
+[0;32m    436[0m     )
+
+File [1;32m~\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\flopy\utils\gridgen.py:68[0m, in [0;36mfeatures_to_shapefile[1;34m(features, featuretype, filename)[0m
+[0;32m     42[0m [38;5;250m[39m[38;5;124;03m"""[39;00m
+[0;32m     43[0m [38;5;124;03mWrite a shapefile for the features of type featuretype.[39;00m
+[0;32m     44[0m 
+[1;32m   (...)[0m
+[0;32m     64[0m 
+[0;32m     65[0m [38;5;124;03m"""[39;00m
+[0;32m     66[0m [38;5;28;01mfrom[39;00m[38;5;250m [39m[38;5;21;01m.[39;00m[38;5;21;01mgeospatial_utils[39;00m[38;5;250m [39m[38;5;28;01mimport[39;00m GeoSpatialCollection
+[1;32m---> 68[0m shapefile [38;5;241m=[39m [43mimport_optional_dependency[49m[43m([49m[38;5;124;43m"[39;49m[38;5;124;43mshapefile[39;49m[38;5;124;43m"[39;49m[43m)[49m
+[0;32m     70[0m [38;5;28;01mif[39;00m featuretype[38;5;241m.[39mlower() [38;5;241m==[39m [38;5;124m"[39m[38;5;124mline[39m[38;5;124m"[39m:
+[0;32m     71[0m     featuretype [38;5;241m=[39m [38;5;124m"[39m[38;5;124mLineString[39m[38;5;124m"[39m
+
+File [1;32m~\AppData\Local\miniconda3\envs\archpy\Lib\site-packages\flopy\utils\utl_import.py:131[0m, in [0;36mimport_optional_dependency[1;34m(name, error_message, errors, min_version)[0m
+[0;32m    129[0m [38;5;28;01mexcept[39;00m [38;5;167;01mImportError[39;00m:
+[0;32m    130[0m     [38;5;28;01mif[39;00m errors [38;5;241m==[39m [38;5;124m"[39m[38;5;124mraise[39m[38;5;124m"[39m:
+[1;32m--> 131[0m         [38;5;28;01mraise[39;00m [38;5;167;01mImportError[39;00m(msg)
+[0;32m    132[0m     [38;5;28;01melse[39;00m:
+[0;32m    133[0m         [38;5;28;01mif[39;00m errors [38;5;241m!=[39m [38;5;124m"[39m[38;5;124msilent[39m[38;5;124m"[39m:
+
+[1;31mImportError[0m: Missing optional dependency 'pyshp'.  Use pip or conda to install pyshp.
+

@@ -54,6 +54,7 @@ Notebooks
    :caption: Coupling
 
    notebooks/modflow_coupling
+   notebooks/modflow_coupling_unstructured_grid
 
 .. nbgallery::
    :caption: Upscaling

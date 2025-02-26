@@ -294,14 +294,17 @@ class archpy2modflow:
                     units = []
                     for u_name in T1.get_surface()[1]:
                         unit_to_compare = T1.get_unit(u_name)
-                        if unit_to_compare > u:
+                        if u_name == unit:
+                            units.append(unit_to_compare)
+                            continue
+                        if unit_to_compare > u or unit_to_compare in u.get_baby_units(vb=0):  # if the unit is below the unit or is a baby unit
                             units.append(unit_to_compare)
                     return units
 
                 # determine which units will be inactive
                 if unit_limit is not None:
                     units = list_unit_below_unit(self.T1, unit_limit)
-                    n_units_removed = len(units) + 1
+                    n_units_removed = len(units)
                     n_units_removed = np.sum(lay_sep[-n_units_removed:])
                 else:
                     n_units_removed = None
@@ -351,6 +354,7 @@ class archpy2modflow:
                 if n_units_removed is not None:
                     idomain[-n_units_removed:] = 0
 
+                rtol = 1e-7
                 # adapt botm in order that each layer has a thickness > 0 
                 for i in range(-1, nlay-1):
                     if i == -1:
@@ -358,8 +362,9 @@ class archpy2modflow:
                     else:
                         s1 = botm[i]
                     s2 = botm[i+1]
-                    mask = s1 == s2
+                    mask = np.abs(s2 - s1) < rtol
                     s1[mask] += 1e-2
+                    # mask = ((s2 < (s1 + np.ones(s1.shape)*rtol)) & (s2 > (s1 - np.ones(s1.shape)*rtol)))  # mask to identify cells where the thickness is == 0 with some tolerance
 
                     # 2nd loop over previous layers to ensure that the thickness is > 0
                     for o in range(i, -1, -1):
@@ -368,7 +373,8 @@ class archpy2modflow:
                             s1 = top
                         else:
                             s1 = botm[o-1]
-                        mask = s1 <= s2
+                        mask = (s1 <= s2) | (np.abs(s2 - s1) < rtol)
+                        # mask = (s1 <= s2) | ((s2 < (s1 + np.ones(s1.shape)*rtol)) & (s2 > (s1 - np.ones(s1.shape)*rtol)))  # mask to identify cells where the thickness is <= 0 with some tolerance
                         s1[mask] = s2[mask] + 1e-2
 
             elif grid_mode == "new_resolution":
@@ -500,7 +506,8 @@ class archpy2modflow:
                 botm = gwf.dis.botm.array.copy()
                 botm = np.flip(botm, axis=1)
 
-                # mask units
+                # mask units (boolean mask of each layer to compute the average)
+                # if lay sep is not 1, we need to compute new mask units for each sublayers
                 layers = self.layers_names
                 mask_units = []
                 ilay = 0
@@ -516,9 +523,11 @@ class archpy2modflow:
                                 s1 = botm[sum(self.lay_sep[0:ilay])+isublay-1]
                                 s2 = botm[sum(self.lay_sep[0:ilay])+isublay]
                             mask = self.T1.compute_domain(s1, s2)
+                            mask *= self.T1.unit_mask(l).astype(bool)  # apply mask of the whole unit to ensure that we only consider the cells of the unit
                             mask_units.append(mask.astype(bool))
                     
                     ilay += 1
+                self.mask_units = mask_units
 
                 for irow in range(nrow):
                     for icol in range(ncol):
@@ -537,7 +546,7 @@ class archpy2modflow:
                                 new_k[ilay, irow, icol] = np.mean(k_vals)
                                 new_k33[ilay, irow, icol] = 1 / np.mean(1 / k_vals)
                             else:
-                                raise ValueError("k_average_method must be one of 'arithmetic' or 'harmonic'")
+                                raise ValueError("k_average_method must be one of 'arithmetic' or 'harmonic' or 'anisotropic'")
                             
                             # facies upscaling
                             arr = facies_arr[:, irow, icol][mask_unit[:, irow, icol]]  # array of facies values in the unit

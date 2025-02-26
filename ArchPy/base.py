@@ -3854,10 +3854,10 @@ class Arch_table():
                                 if (fa in prop.facies) and (fa.ID in facies_domain): # simulation of the property (check if facies is inside strat unit)
                                     i=prop.facies.index(fa) # retrieve index
                                     m=prop.means[i] #mean value
-                                    covmodel=prop.covmodels[i] # covariance model used
                                     method=prop.int[i] #method of interpolation (sgs or fft)
 
                                     if method == "fft":
+                                        covmodel=prop.covmodels[i] # covariance model used
                                         sims=grf.grf3D(covmodel, [nx, ny, nz], [sx, sy, sz], [x0, y0, z0],
                                                          nreal=nreal, mean=m, x=x, v=v, printInfo=False)
                                     elif method == "homogenous":
@@ -3874,7 +3874,7 @@ class Arch_table():
                                                 print("homogenous method chosen ! Warning: Some HD can be not respected")
 
                                     elif method == "sgs":
-
+                                        covmodel=prop.covmodels[i] # covariance model used
                                         sims = gci.simulate3D(covmodel, [nx,  ny,  nz],  [sx,  sy,  sz],  [x0,  y0,  z0],
                                                              nreal=nreal, mean=m, mask=mask_facies, x=x, v=v, verbose=0, nthreads=self.ncpu, seed=self.seed + iu*10000 + ite*100 + ifa)["image"].val
 
@@ -6918,44 +6918,45 @@ class Unit():
         else:
             return False
 
-    def __it__(self, other): # inequality comparison
-        l = []
-        def fun(big_unit):  # recursive function to go down the hierarchy
+    # def __it__(self, other): # inequality comparison
+    #     l = []
+    #     def fun(big_unit):  # recursive function to go down the hierarchy
 
-            u1 = self
-            u2 = other
-            for sub_unit in big_unit.SubPile.list_units:
-                if self.goes_up_until(sub_unit) is not None:
-                    u1 = self.goes_up_until(sub_unit)
-                if self == sub_unit:
-                    u1 = self
-                if other.goes_up_until(sub_unit) is not None:
-                    u2 = other.goes_up_until(sub_unit)
-                if other == sub_unit:
-                    u2 = other
+    #         u1 = self
+    #         u2 = other
+    #         for sub_unit in big_unit.SubPile.list_units:
+    #             if self.goes_up_until(sub_unit) is not None:
+    #                 u1 = self.goes_up_until(sub_unit)
+    #             if self == sub_unit:
+    #                 u1 = self
+    #             if other.goes_up_until(sub_unit) is not None:
+    #                 u2 = other.goes_up_until(sub_unit)
+    #             if other == sub_unit:
+    #                 u2 = other
 
-            if u1.get_h_level() == u2.get_h_level():
-                if u1.order > u2.order:
-                    l.append(False)
-                elif u1.order < u2.order:
-                    l.append(True)
-                else:
-                    fun(u1)
+    #         if u1.get_h_level() == u2.get_h_level():
+    #             if u1.order > u2.order:
+    #                 l.append(False)
+    #             elif u1.order < u2.order:
+    #                 l.append(True)
+    #             else:
+    #                 fun(u1)
                 
-            else:
-                l.append(None)
+    #         else:
+    #             l.append(None)
 
-        # Depending on the hierarchy of the units, the order is different --> we need to first check the biggest mummy unit
-        if (self.get_big_mummy_unit().order > other.get_big_mummy_unit().order):
-            l.append(False)
-        elif (self.get_big_mummy_unit().order < other.get_big_mummy_unit().order):
-            l.append(True)
-        else:
-            fun(self.get_big_mummy_unit())
+    #     # Depending on the hierarchy of the units, the order is different --> we need to first check the biggest mummy unit
+    #     if (self.get_big_mummy_unit().order < other.get_big_mummy_unit().order):
+    #         l.append(False)
+    #     elif (self.get_big_mummy_unit().order > other.get_big_mummy_unit().order):
+    #         l.append(True)
+    #     else:
+    #         fun(self.get_big_mummy_unit())
             
-        return  l[0]
+    #     return  l[0]
 
     def __gt__(self, other): # inequality comparison
+
         l = []
         def fun(big_unit):  # recursive function to go down the hierarchy
 
@@ -6986,8 +6987,8 @@ class Unit():
             l.append(True)
         elif (self.get_big_mummy_unit().order < other.get_big_mummy_unit().order):
             l.append(False)
-        elif (self.get_big_mummy_unit().order == other.get_big_mummy_unit().order): 
-            l.append(None)
+        # elif (self.get_big_mummy_unit().order == other.get_big_mummy_unit().order): 
+        #     l.append(None)
         else:
             fun(self.get_big_mummy_unit())
             
@@ -7853,17 +7854,6 @@ class Prop():
         self.x=x
         self.v=v
 
-        #covmodels
-        try:
-            for cm in covmodels:
-                pass
-            self.covmodels=covmodels
-        except:
-            if isinstance(covmodels, gcm.CovModel3D):
-                self.covmodels=[covmodels]*n_facies
-            else:
-                raise ValueError("{} is not a valid CovModel3D".format(cm))
-
         #means
         self.means=means
         try:
@@ -7885,6 +7875,19 @@ class Prop():
                 self.int=[int_method]*n_facies
             else:
                 raise ValueError("{} is not a valid inteprolation method".format(i_method))
+
+        # check covmodels if method is sgs or fft
+        if "sgs" in self.int or "fft" in self.int:
+            #covmodels
+            try:
+                for cm in covmodels:
+                    pass
+                self.covmodels=covmodels
+            except:
+                if isinstance(covmodels, gcm.CovModel3D):
+                    self.covmodels=[covmodels]*n_facies
+                else:
+                    raise ValueError("{} is not a valid CovModel3D".format(cm))
 
         self.def_mean=def_mean
 

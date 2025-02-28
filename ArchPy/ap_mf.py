@@ -21,6 +21,10 @@ def mask_below_unit(T1, unit, iu=0):
     mask_tot[mask_unit.astype(bool)] = 1
 
     for unit_to_compare in T1.get_all_units():
+        if unit_to_compare.name == unit:
+            mask_unit = T1.unit_mask(unit_to_compare.name, iu=iu)
+            mask_tot[mask_unit.astype(bool)] = 1
+            continue
         if unit_to_compare > u:
             mask_unit = T1.unit_mask(unit_to_compare.name, iu=iu)
             mask_tot[mask_unit.astype(bool)] = 1
@@ -1197,6 +1201,11 @@ class archpy2modflow:
         cells_path = np.array((((df_all["z"].values-self.T1.zg[0])//self.T1.sz).astype(int),
                                 ((df_all["y"].values-self.T1.yg[0])//self.T1.sy).astype(int),
                                 ((df_all["x"].values-self.T1.xg[0])//self.T1.sx).astype(int))).T
+
+        # check that no cells path exceed the grid
+        cells_path[:, 0][cells_path[:, 0] >= self.T1.nz] = self.T1.nz - 1
+        cells_path[:, 1][cells_path[:, 1] >= self.T1.ny] = self.T1.ny - 1
+        cells_path[:, 2][cells_path[:, 2] >= self.T1.nx] = self.T1.nx - 1
 
         if grid_mode in ["layers", "new_resolution"]:
             dic_facies_path = {}

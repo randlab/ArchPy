@@ -1231,3 +1231,133 @@ class archpy2modflow:
         return df_all
 
 
+    ## energy model ##
+    def create_sim_energy(self,
+                          strt_temp=10,  # initial temperature
+                          ktw=0.56,  # thermal conductivity of water W/mK
+                          kts=2.5,  # thermal conductivity of material W/mK
+                          al = 1,  # dispersivity in longitudinal direction m
+                          ath1 = 1,  # dispersivity in transverse direction m 
+                          prsity = 0.2,  # porosity
+                          cpw = 4186,  # specific heat capacity of water J/kg·K
+                          cps = 840,  # specific heat capacity of solid J/kg·K
+                          rhow = 1000,  # density of water kg/m3
+                          rhos = 2650,  # density of solid kg/m3
+                          lhv = 2.26e6  # latent heat of vaporization J/kg
+                          ):
+        """
+        Create a simulation object for an energy model with some default values
+        """
+        
+        # paths
+        sim_name = self.sim_name
+        workspace = self.model_dir
+        exe_name = self.exe_name
+        gwf = self.get_gwf()
+
+        # create simulation
+        gwename = "gwe-" + sim_name
+        sim_ws = os.path.join(workspace, gwename)
+        sim_e = fp.mf6.MFSimulation(sim_name=sim_name, sim_ws=sim_ws, exe_name=exe_name)
+
+        # Instantiating MODFLOW 6 groundwater transport model
+        gwe = fp.mf6.MFModel(sim_e, model_type="gwe6", modelname=gwename, model_nam_file=f"{gwename}.nam")
+
+        # TDIS
+        perioddata = [(1, 100, 1.0)]
+        tdis = fp.mf6.ModflowTdis(sim_e, time_units='SECONDS', perioddata=perioddata)
+
+        # DIS 
+        dis = self.get_gwf().dis
+        dis_e = fp.mf6.ModflowGwfdis(gwe, nlay=dis.nlay.array, nrow=dis.nrow.array, ncol=dis.ncol.array,
+                                        delr=dis.delr.array, delc=dis.delc.array, top=dis.top.array, botm=dis.botm.array,
+                                        idomain=dis.idomain.array)
+
+        # Instantiating MODFLOW 6 heat transport initial temperature
+        eic = fp.mf6.ModflowGweic(gwe, strt=strt_temp, filename=f"{gwename}.ic")
+
+        # Instantiating MODFLOW 6 heat transport advection package
+        eadv = fp.mf6.ModflowGweadv(gwe, scheme="TVD", filename=f"{gwename}.adv")
+
+        # conduction and dispersion 
+        cnd = fp.mf6.ModflowGwecnd(gwe, alh=al, ath1=ath1, ktw=ktw, kts=kts, pname="CND", filename=f"{gwename}.dsp")
+
+        # Instantiating MODFLOW 6 heat transport mass storage package (consider renaming to est)
+        est = fp.mf6.ModflowGweest(gwe, porosity=prsity, heat_capacity_water=cpw, density_water=rhow, latent_heat_vaporization=lhv, heat_capacity_solid=cps,
+                                   density_solid=rhos, pname="EST", filename=f"{gwename}.est", 
+                                   save_flows=True,
+                                   )
+
+        # Instantiating MODFLOW 6 heat transport output control package
+        oc = fp.mf6.ModflowGweoc(
+            gwe,
+            budget_filerecord=f"{gwename}.cbc",
+            temperature_filerecord=f"{gwename}.ucn",
+            saverecord=[("TEMPERATURE", "ALL"), ("BUDGET", "ALL")],
+            printrecord=[("BUDGET", "LAST")],
+        )
+
+        # Instantiating MODFLOW 6 Flow-Model Interface package
+        pd = [
+            ("GWFHEAD", f"../{gwf.name}.hds", None),
+            ("GWFBUDGET", f"../{gwf.name}.cbc", None),
+        ]
+        fmi = fp.mf6.ModflowGwefmi(gwe, packagedata=pd)
+
+        # register the packages
+        self.sim_e = sim_e
+        self.gwe = gwe
+
+    def get_sim_energy(self):
+        return self.sim_e
+    
+    def get_gw_energy(self):
+        return self.gwe
+
+    # create additional packages (ssm, ctp, ...) #
+    def create_ssm(self, sourcerecarray):
+        """
+        Create the ssm package for the energy model
+
+        Parameters
+        ----------
+        sourcerecarray : list of tuples
+            list of tuples where each indicate a gwf package which has auxiliar variables (package name, AUX, auxname)
+        """
+
+        sim_e = self.get_sim_energy()
+        gwe = self.get_gw_energy()
+        gwename = gwe.name
+
+        # remove existing ssm package
+        gwe.remove_package("ssm")
+
+        # Source and sink mixing package --> make the link with the groundwater model
+        ssm = fp.mf6.ModflowGwessm(gwe, sources=sourcerecarray, filename=f"{gwename}.ssm", save_flows=True)
+
+    # set exisiting packages #
+    def set_imsgwe(self, **kwargs):
+        """
+        Create the ims package for the energy model
+        """
+        sim_e = self.get_sim_energy()
+        gwe = self.get_gw_energy()
+        # IMS
+
+        # remove existing ims package
+        sim_e.remove_package("ims")
+
+        imsgwe = fp.mf6.ModflowIms(sim_e, print_option="SUMMARY", **kwargs)
+        sim_e.register_ims_package(imsgwe, [gwe.name])
+
+    def set_tdisgwe(self, perioddata):
+        """
+        Create the tdis package for the energy model
+        """
+        sim_e = self.get_sim_energy()
+        
+        # remove existing tdis package
+        sim_e.remove_package("tdis")
+
+        # TDIS
+        tdis = fp.mf6.ModflowTdis(sim_e, time_units='SECONDS', perioddata=perioddata)

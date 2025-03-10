@@ -72,7 +72,6 @@ def test_f_2D():
     print("Test passed")
 
 
-
 def find_c_2D(k_field, dx=None, dy=None, direction="x", first_type="series"):
 
     k_field_copy = k_field.copy()
@@ -1303,7 +1302,7 @@ def upscale_k(field, dx=1, dy=1, dz=1,
                                 K = np.exp(np.mean(np.log(selected_area.flatten())))
                         new_field[i//factor_z, j//factor_y, k//factor_x] = K
 
-            return new_field
+            return new_field, None, None
 
     else:  # disv grid #
         assert method in ["simplified_renormalization", "arithmetic", "harmonic", "geometric"], "method must be simplified_renormalization, arithmetic, harmonic or geometric"

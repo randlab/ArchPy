@@ -24,7 +24,7 @@ import base
 # -- Project information -----------------------------------------------------
 
 project = 'ArchPy'
-copyright = '2024, University of Neuchâtel'
+copyright = '2025, University of Neuchâtel'
 author = 'LS'
 
 # The full version, including alpha/beta/rc tags

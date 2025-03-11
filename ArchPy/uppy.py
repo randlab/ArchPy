@@ -1,4 +1,8 @@
-# Python module to upscale hydraulic conductivity fields
+"""
+Python module to upscale different property fields 
+such as hydraulic conductivity on regular and irregular grids
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 import geone
@@ -70,7 +74,6 @@ def test_f_2D():
     assert np.allclose(f_2D(a, direction="y", type="series")[0], np.array([[0.07368612, 0.28407801]]))
 
     print("Test passed")
-
 
 
 def find_c_2D(k_field, dx=None, dy=None, direction="x", first_type="series"):
@@ -1303,7 +1306,7 @@ def upscale_k(field, dx=1, dy=1, dz=1,
                                 K = np.exp(np.mean(np.log(selected_area.flatten())))
                         new_field[i//factor_z, j//factor_y, k//factor_x] = K
 
-            return new_field
+            return new_field, None, None
 
     else:  # disv grid #
         assert method in ["simplified_renormalization", "arithmetic", "harmonic", "geometric"], "method must be simplified_renormalization, arithmetic, harmonic or geometric"

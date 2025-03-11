@@ -1,3 +1,7 @@
+"""
+This module propose several functions a class to interface ArchPy with MODFLOW 6
+"""
+
 import numpy as np
 from matplotlib import colors
 import matplotlib.pyplot as plt
@@ -167,8 +171,8 @@ class archpy2modflow:
 
     Parameters
     ----------
-    T1 : Arch_table
-        ArchPy table to convert
+    T1 : :class:`ArchPy.base.Arch_table` object
+        ArchPy table object to convert
     sim_name : str
         name of the simulation
     model_dir : str
@@ -186,6 +190,8 @@ class archpy2modflow:
         self.model_name = model_name
         self.exe_name = exe_name
         self.sim = None
+        self.sim_prt = None
+        self.sim_e = None
         self.grid_mode = None
         self.layers_names = None
         self.list_active_cells = None
@@ -452,7 +458,105 @@ class archpy2modflow:
         self.sim = sim
         print("Simulation created")
         print("To retrieve the simulation, use the get_sim() method")
-    
+
+    def upscale_prop(self, prop_key, iu=0, ifa=0, ip=0, method="arithmetic", log=False):
+
+        gwf = self.get_gwf()
+        grid_mode = self.grid_mode
+        if grid_mode == "archpy":
+            prop = self.T1.get_prop(prop_key)[iu, ifa, ip]
+            if log:
+                prop = 10**prop
+            new_prop = np.flip(np.flipud(prop), axis=1)  # flip the array to have the same orientation as the ArchPy table
+        elif grid_mode == "layers":
+            nrow, ncol, nlay = gwf.modelgrid.nrow, gwf.modelgrid.ncol, gwf.modelgrid.nlay
+            
+            # get prop
+            prop = self.T1.get_prop(prop_key)[iu, ifa, ip]
+            if log:
+                prop = 10**prop
+            new_prop = np.ones((nlay, nrow, ncol))
+
+            # get existing mask units
+            try:
+                mask_units = self.mask_units
+            except:
+                raise ValueError("mask_units must be defined before upscaling a property --> try setting the hydraulic conductivity first")
+
+            for irow in range(nrow):
+                for icol in range(ncol):
+                    for ilay in range(nlay):
+                        mask_unit = mask_units[ilay]
+
+                        # extract values in the new cell
+                        prop_vals = prop[:, irow, icol][mask_unit[:, irow, icol]]
+
+                        if method == "arithmetic":
+                            new_prop[ilay, irow, icol] = np.mean(prop_vals)
+                        elif method == "harmonic":
+                            new_prop[ilay, irow, icol] = 1 / np.mean(1 / prop_vals)
+                        else:
+                            raise ValueError("method must be one of 'arithmetic' or 'harmonic'")
+
+            # fill nan values with the mean of the layer
+            for ilay in range(nlay):
+                mask = np.isnan(new_prop[ilay])
+                new_prop[ilay][mask] = np.nanmean(new_prop[ilay])
+
+            new_prop = np.flip(new_prop, axis=1)  # we have to flip in order to match modflow grid
+
+        elif grid_mode == "new_resolution":
+
+            from ArchPy.uppy import upscale_k
+            assert self.factor_x is not None, "factor_x must be defined, try setting the hydraulic conductivity first"
+            assert self.factor_y is not None, "factor_y must be defined, try setting the hydraulic conductivity first"
+            assert self.factor_z is not None, "factor_z must be defined, try setting the hydraulic conductivity first"
+
+            prop = self.T1.get_prop(prop_key)[iu, ifa, ip]
+            prop = np.flip(np.flipud(prop), axis=1)  # flip the array to have the same orientation as the ArchPy table
+            if log:
+                prop = 10**prop
+            new_prop, _, _ = upscale_k(prop, method=method,
+                                 dx=self.T1.get_sx(), dy=self.T1.get_sy(), dz=self.T1.get_sz(),
+                                 factor_x=self.factor_x, factor_y=self.factor_y, factor_z=self.factor_z)
+
+            # fill nan values
+            new_prop[np.isnan(new_prop)] = np.nanmean(new_prop)
+
+        elif grid_mode in ["disv", "disu"]:
+
+            from ArchPy.uppy import upscale_k
+            dx, dy, dz = self.T1.get_sx(), self.T1.get_sy(), self.T1.get_sz()
+            ox, oy, oz = self.T1.get_ox(), self.T1.get_oy(), self.T1.get_oz()   
+
+            prop = self.T1.get_prop(prop_key)[iu, ifa, ip]
+            prop = np.flip(np.flipud(prop), axis=1)  # flip the array to have the same orientation as the ArchPy table
+            if log:
+                prop = 10**prop
+
+            # get the grid object --> needs to be rotated
+            import copy
+            grid = gwf.modelgrid
+
+            # # rotate grid around the origin of archpy model
+
+            # # retrieve origin of the new grid and archpy grid as well as the rotation angle 
+            # xorigin, yorigin = grid.xoffset, grid.yoffset
+            # ox_grid, oy_grid = self.T1.get_ox(), self.T1.get_oy()
+            # angrot = self.T1.get_rot_angle()
+            # xorigin_rot, yorigin_rot = rotate_point((xorigin, yorigin), origin=(ox_grid, oy_grid), angle=-angrot) 
+
+            # # rotation
+            # grid.set_coord_info(xoff=xorigin_rot, yoff=yorigin_rot, angrot=-angrot)
+
+            # upscale
+            new_prop, _, _ = upscale_k(prop, method=method,
+                                 dx=dx, dy=dy, dz=dz, ox=ox, oy=oy, oz=oz,
+                                 factor_x=self.factor_x, factor_y=self.factor_y, factor_z=self.factor_z,
+                                 grid=grid)
+
+        return new_prop
+
     def set_k(self, k_key="K",
               iu=0, ifa=0, ip=0,
               log=False, k=None, k22=None, k33=None, k_average_method="arithmetic", 
@@ -505,7 +609,6 @@ class archpy2modflow:
                     new_k33 = np.ones((nlay, nrow, ncol))
                 else:
                     new_k33 = None
-                
 
                 botm = gwf.dis.botm.array.copy()
                 botm = np.flip(botm, axis=1)
@@ -668,7 +771,6 @@ class archpy2modflow:
                     # fill nan
                     new_k[np.isnan(new_k)] = np.nanmean(new_k)
 
-
                 else:
                     new_k22 = field_kyy
                     new_k33 = field_kzz
@@ -689,8 +791,7 @@ class archpy2modflow:
 
         # new_k = np.flip(new_k, axis=1)  # we have to flip in order to match modflow grid
         npf = fp.mf6.ModflowGwfnpf(gwf, icelltype=0, k=new_k, k22=new_k22, k33=new_k33, save_flows=True, save_specific_discharge=True, save_saturation=True)
-        npf.write()
-
+        # npf.write()
 
     def set_strt(self, heads=None):
         """
@@ -960,7 +1061,6 @@ class archpy2modflow:
                                         drape=True,
                                         exit_solve_tolerance=1e-5)
 
-
         # output control package
         budgetfile_prt_name = "{}.bud".format(prt_name)
         trackfile_name = "{}.trk".format(prt_name)
@@ -1006,71 +1106,6 @@ class archpy2modflow:
         sim_prt.register_solution_package(ems, [prt.name])
 
         self.sim_prt = sim_prt
-
-    def set_porosity(self, 
-                     iu = 0, ifa = 0, ip = 0, 
-                     porosity=None, k_key="porosity"):
-
-        """
-        Set the porosity of the model
-
-        Parameters
-        ----------
-        iu : int
-            unit simulation index
-        ifa : int
-            facies simulation index
-        ip : int
-            property simulation index
-        porosity : float
-            porosity value, if None, the porosity is taken from the table according to the k_key
-        k_key : str
-            key of the property in the table
-        """
-        
-        gwf = self.get_gwf()
-        if porosity is None:
-            
-            # check if the porosity is already in the table
-            assert k_key in self.T1.get_prop_names(), "The property {} is not in the table".format(k_key)
-
-            grid_mode = self.grid_mode
-            if grid_mode == "archpy":
-
-                k = self.T1.get_prop(k_key)[iu, ifa, ip]
-                k = np.flip(np.flipud(k), axis=1)  # flip the array to have the same orientation as the ArchPy table
-                new_k = k
-
-            elif grid_mode == "layers":
-
-                nrow, ncol, nlay = gwf.modelgrid.nrow, gwf.modelgrid.ncol, gwf.modelgrid.nlay
-
-                kh = self.T1.get_prop(k_key)[iu, ifa, ip] 
-                new_k = np.ones((nlay, nrow, ncol))
-
-                layers = self.layers_names
-                mask_units = [self.T1.unit_mask(l).astype(bool) for l in layers]
-
-                for irow in range(nrow):
-                    for icol in range(ncol):
-                        for ilay in range(nlay):
-                            mask_unit = mask_units[ilay]
-                            new_k[ilay, irow, icol] = np.mean(kh[:, irow, icol][mask_unit[:, irow, icol]])
-
-                # fill nan values with the mean of the layer
-                for ilay in range(nlay):
-                    mask = np.isnan(new_k[ilay])
-                    new_k[ilay][mask] = np.nanmean(new_k[ilay])
-
-                new_k = np.flip(new_k, axis=1)  # we have to flip in order to match modflow grid
-
-            elif grid_mode == "new_resolution":
-                pass
-            
-        else:
-            new_k = porosity
-
-        mpbas = fp.modpath.Modpath7Bas(self.get_mp(), porosity=new_k)
 
     def prt_run(self, silent=False):
         # write simulation to disk
@@ -1230,4 +1265,309 @@ class archpy2modflow:
         
         return df_all
 
+
+    ## energy model ##
+    def create_sim_energy(self,
+                          strt_temp = 10,  # initial temperature
+                          ktw = 0.56,  # thermal conductivity of water W/mK
+                          kts=2.5,  # thermal conductivity of material W/mK
+                          al = 1,  # dispersivity in longitudinal direction m
+                          ath1 = 1,  # dispersivity in transverse direction m 
+                          prsity = 0.2,  # porosity
+                          cpw = 4186,  # specific heat capacity of water J/kg·K
+                          cps = 840,  # specific heat capacity of solid J/kg·K
+                          rhow = 1000,  # density of water kg/m3
+                          rhos = 2650,  # density of solid kg/m3
+                          lhv = 2.26e6  # latent heat of vaporization J/kg
+                          ):
+
+        """
+        Create a simulation object for an energy model with some default values
+        """
+
+        # paths
+        sim_name = self.sim_name
+        workspace = self.model_dir
+        exe_name = self.exe_name
+        gwf = self.get_gwf()
+
+        # create simulation
+        gwename = "gwe-" + sim_name
+        sim_ws = os.path.join(workspace, gwename)
+        sim_e = fp.mf6.MFSimulation(sim_name=sim_name, sim_ws=sim_ws, exe_name=exe_name)
+
+        # Instantiating MODFLOW 6 groundwater transport model
+        gwe = fp.mf6.MFModel(sim_e, model_type="gwe6", modelname=gwename, model_nam_file=f"{gwename}.nam")
+
+        # TDIS
+        perioddata = [(1, 100, 1.0)]
+        tdis = fp.mf6.ModflowTdis(sim_e, time_units='SECONDS', perioddata=perioddata)
+
+        # IMS
+        imsgwe = fp.mf6.ModflowIms(sim_e, print_option="SUMMARY", complexity="moderate")
+        # sim_e.register_ims_package(imsgwe, [gwe.name])
+
+        # DIS 
+        dis = self.get_gwf().dis
+        dis_e = fp.mf6.ModflowGwfdis(gwe, nlay=dis.nlay.array, nrow=dis.nrow.array, ncol=dis.ncol.array,
+                                        delr=dis.delr.array, delc=dis.delc.array, top=dis.top.array, botm=dis.botm.array,
+                                        idomain=dis.idomain.array)
+
+        # Instantiating MODFLOW 6 heat transport initial temperature
+        eic = fp.mf6.ModflowGweic(gwe, strt=strt_temp, filename=f"{gwename}.ic")
+
+        # Instantiating MODFLOW 6 heat transport advection package
+        eadv = fp.mf6.ModflowGweadv(gwe, scheme="TVD", filename=f"{gwename}.adv")
+
+        # conduction and dispersion 
+        cnd = fp.mf6.ModflowGwecnd(gwe, alh=al, ath1=ath1, ktw=ktw, kts=kts, pname="CND", filename=f"{gwename}.dsp")
+
+        # Instantiating MODFLOW 6 heat transport mass storage package (consider renaming to est)
+        est = fp.mf6.ModflowGweest(gwe, porosity=prsity, heat_capacity_water=cpw, density_water=rhow,
+                                   latent_heat_vaporization=lhv, heat_capacity_solid=cps, density_solid=rhos,
+                                   pname="EST", filename=f"{gwename}.est", 
+                                   save_flows=True,
+                                   )
+
+        # Instantiating MODFLOW 6 heat transport output control package
+        oc = fp.mf6.ModflowGweoc(
+            gwe,
+            budget_filerecord=f"{gwename}.cbc",
+            temperature_filerecord=f"{gwename}.ucn",
+            saverecord=[("TEMPERATURE", "ALL"), ("BUDGET", "ALL")],
+            printrecord=[("BUDGET", "LAST")],
+        )
+
+        # Instantiating MODFLOW 6 Flow-Model Interface package
+        pd = [
+            ("GWFHEAD", f"../{gwf.name}.hds", None),
+            ("GWFBUDGET", f"../{gwf.name}.cbc", None),
+        ]
+        fmi = fp.mf6.ModflowGwefmi(gwe, packagedata=pd)
+
+        # register the packages
+        self.sim_e = sim_e
+        self.gwe = gwe
+
+    def get_sim_energy(self):
+        return self.sim_e
+    
+    def get_gw_energy(self):
+        return self.gwe
+
+    # create additional packages (ssm, ctp, ...) #
+    def create_ssm(self, sourcerecarray):
+        """
+        Create the ssm package for the energy model
+
+        Parameters
+        ----------
+        sourcerecarray : list of tuples
+            list of tuples where each indicate a gwf package which has auxiliar variables (package name, AUX, auxname)
+        """
+
+        sim_e = self.get_sim_energy()
+        gwe = self.get_gw_energy()
+        gwename = gwe.name
+
+        # remove existing ssm package
+        gwe.remove_package("ssm")
+
+        # Source and sink mixing package --> make the link with the groundwater model
+        ssm = fp.mf6.ModflowGwessm(gwe, sources=sourcerecarray, filename=f"{gwename}.ssm", save_flows=True)
+
+    # set exisiting packages #
+    def set_imsgwe(self, **kwargs):
+        """
+        Create the ims package for the energy model
+        """
+        sim_e = self.get_sim_energy()
+        # IMS
+
+        # remove existing ims package
+        sim_e.remove_package("ims")
+
+        imsgwe = fp.mf6.ModflowIms(sim_e, print_option="SUMMARY", **kwargs)
+
+    def set_tdisgwe(self, perioddata):
+        """
+        Create the tdis package for the energy model
+        """
+        sim_e = self.get_sim_energy()
+        
+        # remove existing tdis package
+        sim_e.remove_package("tdis")
+
+        # TDIS
+        tdis = fp.mf6.ModflowTdis(sim_e, time_units='SECONDS', perioddata=perioddata)
+
+    def set_strt_temp(self, strt_temp):
+        """
+        Set the initial temperature of the energy model
+        """
+        gwe = self.get_gw_energy()
+        gwe.remove_package("ic")
+        eic = fp.mf6.ModflowGweic(gwe, strt=strt_temp, filename=f"{gwe.name}.ic")
+    
+    def set_porosity(self, 
+                     iu = 0, ifa = 0, ip = 0, 
+                     porosity=None, prop_key="porosity",
+                     packages=None):
+
+        """
+        Set the porosity of the model
+
+        Parameters
+        ----------
+        iu : int
+            unit simulation index
+        ifa : int
+            facies simulation index
+        ip : int
+            property simulation index
+        porosity : float
+            porosity value, if None, the porosity is taken from the table according to the prop_key
+        prop_key : str
+            key of the property in the table
+        packages : list
+            list of packages to update the porosity. Can be "mp", "prt" and "energy".
+            If None, all existing packages are updated
+        """
+        
+        gwf = self.get_gwf()
+        if porosity is None:
+            new_porosity = self.upscale_prop(prop_key, iu, ifa, ip)
+        else:
+            new_porosity = porosity
+
+        # update porosity in required packages
+        if self.mp is not None:
+            mpbas = fp.modpath.Modpath7Bas(self.get_mp(), porosity=new_porosity)
+        
+        if self.sim_prt is not None:
+            mip = self.get_sim_prt().get_model().mip
+            mip.porosity.set_data(new_porosity)
+
+        if self.sim_e is not None:
+            self.get_gw_energy().get_package("est").porosity.set_data(new_porosity)
+
+    def set_cnd(self, xt3d_off=None, xt3d_rhs=None,
+                alh=1, alv=None, 
+                ath1=1, ath2=None, atv=None, 
+                ktw=0.56, kts=2.5, vb=1, **kwargs):
+        """
+        Set the conduction and dispersion package
+
+        Parameters
+        ----------
+        xt3d_off : bool
+            flag indicating whether the XT3D package is active
+        xt3d_rhs : bool
+            flag indicating whether the XT3D package is using the right-hand side formulation
+        alh : float or array of model dimension or string
+            longitudinal dispersivity (if flow is horizontal)
+            If a string is provided, it is assumed to be the name of the property in the ArchPy table
+        alv : float or array of model dimension or string
+            longitudinal dispersivity (if flow is vertical)
+        ath1 : float or array of model dimension or string
+            horizontal (y direction) transverse dispersivity (if flow is directed in the x-direction)
+        ath2 : float or array of model dimension or string
+            horizontal (z direction) transverse dispersivity (if flow is directed in the x-direction)
+        atv : float or array of model dimension or string
+            transverse (x-y plane) dispersivity (if flow is vertical)
+        ktw : float or array of model dimension or string
+            thermal conductivity of water
+        kts : float or array of model dimension or string
+            thermal conductivity of solid
+        vb : int (0 or 1)
+            flag to print messages
+        """
+        
+        assert self.sim_e is not None, "You need to create an energy simulation first, see :meth:`create_sim_energy`"
+        gwe = self.get_gw_energy()
+
+        # get upscaled properties if necessary
+        new_par = []
+        for par in [alh, alv, ath1, ath2, atv, ktw, kts]:
+            if isinstance(par, str):
+                par = self.upscale_prop(par)
+            new_par.append(par)
+        alh, alv, ath1, ath2, atv, ktw, kts = new_par
+        
+        # remove existing cnd package
+        gwe.remove_package("cnd")
+
+        # conduction and dispersion
+        cnd = fp.mf6.ModflowGwecnd(gwe, alh=alh, alv=alv, ath1=ath1, ath2=ath2, atv=atv, ktw=ktw, kts=kts, **kwargs)
+
+        if vb:
+            print("cnd package updated")
+
+    def set_est(self, cpw=4184.0, cps=840,
+                rhow=1000, rhos=2500,
+                lhv=2453500.0,
+                porosity=None,
+                save_flows=True, vb=1, **kwargs):
+        """
+        Set the heat transport mass storage package
+
+        Parameters
+        ----------
+        cpw : float
+            specific heat capacity of the fluid
+        cps : float or array of model dimension or string
+            specific heat capacity of the solid
+            if a string is provided, it is assumed to be the name of the property object (see :class:`ArchPy.base.Prop`)
+        rhow : float
+            density of the fluid
+        rhos : float or array of model dimension or string
+            density of the solid
+            if a string is provided, it is assumed to be the name of the property in the ArchPy table
+        lhv : float
+            latent heat of vaporization
+        porosity : float or array of model dimension or string
+            porosity. Note that it is preferable to update 
+            the porosity using the :meth:`set_porosity` method.
+            As this method only update porosity in the est package but 
+            not in the other packages (mp, prt, ...)
+            if a string is provided, it is assumed to be the name of the property in the ArchPy table
+        save_flows : bool
+            flag to save flows in the cell budget file
+        vb : int (0 or 1)
+            flag to print messages
+        """
+
+        assert self.sim_e is not None, "You need to create an energy simulation first, see :meth:`create_sim_energy`"
+        gwe = self.get_gw_energy()
+
+        # get upscaled properties if necessary
+        new_par = []
+        for par in [porosity, cps, rhos]:
+            if isinstance(par, str):
+                par = self.upscale_prop(par)
+            new_par.append(par)
+
+        porosity, cps, rhos = new_par
+
+        # update values
+        est = gwe.get_package("est")
+
+        est.heat_capacity_water.set_data(cpw)
+        est.heat_capacity_solid.set_data(cps)
+        est.density_solid.set_data(rhos)
+        est.density_Water.set_data(rhow)
+        est.latent_heat_vaporization.set_data(lhv)
+
+        if porosity is not None:
+            est.porosity.set_data(porosity)
+        
+        if vb:
+            print("est package updated")
+        # # remove existing est package
+        # gwe.remove_package("est")
+
+        # # Instantiating MODFLOW 6 heat transport mass storage package (consider renaming to est)
+        # est = fp.mf6.ModflowGweest(gwe, heat_capacity_water=cpw, density_water=rhow,
+        #                            latent_heat_vaporization=lhv, heat_capacity_solid=cps, density_solid=rhos,
+        #                            save_flows=save_flows, **kwargs)
 

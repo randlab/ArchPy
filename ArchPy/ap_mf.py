@@ -1,3 +1,7 @@
+"""
+This module propose several functions a class to interface ArchPy with MODFLOW 6
+"""
+
 import numpy as np
 from matplotlib import colors
 import matplotlib.pyplot as plt
@@ -167,8 +171,8 @@ class archpy2modflow:
 
     Parameters
     ----------
-    T1 : Arch_table
-        ArchPy table to convert
+    T1 : :class:`ArchPy.base.Arch_table` object
+        ArchPy table object to convert
     sim_name : str
         name of the simulation
     model_dir : str
@@ -187,6 +191,7 @@ class archpy2modflow:
         self.exe_name = exe_name
         self.sim = None
         self.sim_prt = None
+        self.sim_e = None
         self.grid_mode = None
         self.layers_names = None
         self.list_active_cells = None
@@ -1102,46 +1107,6 @@ class archpy2modflow:
 
         self.sim_prt = sim_prt
 
-    def set_porosity(self, 
-                     iu = 0, ifa = 0, ip = 0, 
-                     porosity=None, k_key="porosity"):
-
-        """
-        Set the porosity of the model
-
-        Parameters
-        ----------
-        iu : int
-            unit simulation index
-        ifa : int
-            facies simulation index
-        ip : int
-            property simulation index
-        porosity : float
-            porosity value, if None, the porosity is taken from the table according to the k_key
-        k_key : str
-            key of the property in the table
-        """
-        
-        gwf = self.get_gwf()
-        if porosity is None:
-            new_porosity = upscale_prop(self, k_key, iu, ifa, ip)
-
-            # update porosity in required packages
-            
-        else:
-            new_porosity = porosity
-
-        if self.mp is not None:
-            mpbas = fp.modpath.Modpath7Bas(self.get_mp(), porosity=new_porosity)
-        
-        if self.sim_prt is not None:
-            mip = self.get_sim_prt().get_model().mip
-            mip.porosity.set_data(new_porosity)
-
-        if 
-        gwe.get_package("est").porosity.set_data(new_porosity)
-
     def prt_run(self, silent=False):
         # write simulation to disk
         self.sim_prt.write_simulation()
@@ -1303,8 +1268,8 @@ class archpy2modflow:
 
     ## energy model ##
     def create_sim_energy(self,
-                          strt_temp=10,  # initial temperature
-                          ktw=0.56,  # thermal conductivity of water W/mK
+                          strt_temp = 10,  # initial temperature
+                          ktw = 0.56,  # thermal conductivity of water W/mK
                           kts=2.5,  # thermal conductivity of material W/mK
                           al = 1,  # dispersivity in longitudinal direction m
                           ath1 = 1,  # dispersivity in transverse direction m 
@@ -1444,10 +1409,165 @@ class archpy2modflow:
         gwe.remove_package("ic")
         eic = fp.mf6.ModflowGweic(gwe, strt=strt_temp, filename=f"{gwe.name}.ic")
     
-    def set_cnd(self, xt3d_off=None, xt3d_rhs=None,
-                alh=1, alv=1, 
-                ath1=None, ath2=None, atv=None, 
-                ktw=0.56, kts=2.5):
-        pass
+    def set_porosity(self, 
+                     iu = 0, ifa = 0, ip = 0, 
+                     porosity=None, prop_key="porosity",
+                     packages=None):
 
-    def set_est(self,)
+        """
+        Set the porosity of the model
+
+        Parameters
+        ----------
+        iu : int
+            unit simulation index
+        ifa : int
+            facies simulation index
+        ip : int
+            property simulation index
+        porosity : float
+            porosity value, if None, the porosity is taken from the table according to the prop_key
+        prop_key : str
+            key of the property in the table
+        packages : list
+            list of packages to update the porosity. Can be "mp", "prt" and "energy".
+            If None, all existing packages are updated
+        """
+        
+        gwf = self.get_gwf()
+        if porosity is None:
+            new_porosity = self.upscale_prop(prop_key, iu, ifa, ip)
+        else:
+            new_porosity = porosity
+
+        # update porosity in required packages
+        if self.mp is not None:
+            mpbas = fp.modpath.Modpath7Bas(self.get_mp(), porosity=new_porosity)
+        
+        if self.sim_prt is not None:
+            mip = self.get_sim_prt().get_model().mip
+            mip.porosity.set_data(new_porosity)
+
+        if self.sim_e is not None:
+            self.get_gw_energy().get_package("est").porosity.set_data(new_porosity)
+
+    def set_cnd(self, xt3d_off=None, xt3d_rhs=None,
+                alh=1, alv=None, 
+                ath1=1, ath2=None, atv=None, 
+                ktw=0.56, kts=2.5, vb=1, **kwargs):
+        """
+        Set the conduction and dispersion package
+
+        Parameters
+        ----------
+        xt3d_off : bool
+            flag indicating whether the XT3D package is active
+        xt3d_rhs : bool
+            flag indicating whether the XT3D package is using the right-hand side formulation
+        alh : float or array of model dimension or string
+            longitudinal dispersivity (if flow is horizontal)
+            If a string is provided, it is assumed to be the name of the property in the ArchPy table
+        alv : float or array of model dimension or string
+            longitudinal dispersivity (if flow is vertical)
+        ath1 : float or array of model dimension or string
+            horizontal (y direction) transverse dispersivity (if flow is directed in the x-direction)
+        ath2 : float or array of model dimension or string
+            horizontal (z direction) transverse dispersivity (if flow is directed in the x-direction)
+        atv : float or array of model dimension or string
+            transverse (x-y plane) dispersivity (if flow is vertical)
+        ktw : float or array of model dimension or string
+            thermal conductivity of water
+        kts : float or array of model dimension or string
+            thermal conductivity of solid
+        vb : int (0 or 1)
+            flag to print messages
+        """
+        
+        assert self.sim_e is not None, "You need to create an energy simulation first, see :meth:`create_sim_energy`"
+        gwe = self.get_gw_energy()
+
+        # get upscaled properties if necessary
+        new_par = []
+        for par in [alh, alv, ath1, ath2, atv, ktw, kts]:
+            if isinstance(par, str):
+                par = self.upscale_prop(par)
+            new_par.append(par)
+        alh, alv, ath1, ath2, atv, ktw, kts = new_par
+        
+        # remove existing cnd package
+        gwe.remove_package("cnd")
+
+        # conduction and dispersion
+        cnd = fp.mf6.ModflowGwecnd(gwe, alh=alh, alv=alv, ath1=ath1, ath2=ath2, atv=atv, ktw=ktw, kts=kts, **kwargs)
+
+        if vb:
+            print("cnd package updated")
+
+    def set_est(self, cpw=4184.0, cps=840,
+                rhow=1000, rhos=2500,
+                lhv=2453500.0,
+                porosity=None,
+                save_flows=True, vb=1, **kwargs):
+        """
+        Set the heat transport mass storage package
+
+        Parameters
+        ----------
+        cpw : float
+            specific heat capacity of the fluid
+        cps : float or array of model dimension or string
+            specific heat capacity of the solid
+            if a string is provided, it is assumed to be the name of the property object (see :class:`ArchPy.base.Prop`)
+        rhow : float
+            density of the fluid
+        rhos : float or array of model dimension or string
+            density of the solid
+            if a string is provided, it is assumed to be the name of the property in the ArchPy table
+        lhv : float
+            latent heat of vaporization
+        porosity : float or array of model dimension or string
+            porosity. Note that it is preferable to update 
+            the porosity using the :meth:`set_porosity` method.
+            As this method only update porosity in the est package but 
+            not in the other packages (mp, prt, ...)
+            if a string is provided, it is assumed to be the name of the property in the ArchPy table
+        save_flows : bool
+            flag to save flows in the cell budget file
+        vb : int (0 or 1)
+            flag to print messages
+        """
+
+        assert self.sim_e is not None, "You need to create an energy simulation first, see :meth:`create_sim_energy`"
+        gwe = self.get_gw_energy()
+
+        # get upscaled properties if necessary
+        new_par = []
+        for par in [porosity, cps, rhos]:
+            if isinstance(par, str):
+                par = self.upscale_prop(par)
+            new_par.append(par)
+
+        porosity, cps, rhos = new_par
+
+        # update values
+        est = gwe.get_package("est")
+
+        est.heat_capacity_water.set_data(cpw)
+        est.heat_capacity_solid.set_data(cps)
+        est.density_solid.set_data(rhos)
+        est.density_Water.set_data(rhow)
+        est.latent_heat_vaporization.set_data(lhv)
+
+        if porosity is not None:
+            est.porosity.set_data(porosity)
+        
+        if vb:
+            print("est package updated")
+        # # remove existing est package
+        # gwe.remove_package("est")
+
+        # # Instantiating MODFLOW 6 heat transport mass storage package (consider renaming to est)
+        # est = fp.mf6.ModflowGweest(gwe, heat_capacity_water=cpw, density_water=rhow,
+        #                            latent_heat_vaporization=lhv, heat_capacity_solid=cps, density_solid=rhos,
+        #                            save_flows=save_flows, **kwargs)
+

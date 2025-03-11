@@ -37,7 +37,6 @@ Notebooks
     notebooks/3_filling_and_saving
     notebooks/4_load_project
 
-
 .. nbgallery::
    :caption: ArchPy capabilities
     
@@ -55,6 +54,7 @@ Notebooks
 
    notebooks/modflow_coupling
    notebooks/modflow_coupling_unstructured_grid
+   notebooks/modflow_energy_model
 
 .. nbgallery::
    :caption: Upscaling

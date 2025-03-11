@@ -1,4 +1,8 @@
-# Python module to upscale hydraulic conductivity fields
+"""
+Python module to upscale different property fields 
+such as hydraulic conductivity on regular and irregular grids
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 import geone

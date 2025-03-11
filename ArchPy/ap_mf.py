@@ -13,6 +13,8 @@ import sys
 import os
 import flopy as fp
 import pandas as pd
+import ArchPy
+import ArchPy.base
 import ArchPy.uppy
 from ArchPy.uppy import upscale_k, rotate_point
 
@@ -794,16 +796,20 @@ class archpy2modflow:
         # npf.write()
 
     def set_strt(self, heads=None):
+
         """
         Set the starting heads
         """
+
         gwf = self.get_gwf()
         gwf.remove_package("ic")
         ic = fp.mf6.ModflowGwfic(gwf, strt=heads)
         ic.write()
 
     def get_list_active_cells(self):
-
+        """
+        Get the list of active cells in the modflow model
+        """
         if self.list_active_cells is None:
             gwf = self.get_gwf()
             idomain = gwf.dis.idomain.array
@@ -819,10 +825,16 @@ class archpy2modflow:
 
     # get functions
     def get_sim(self):
+        """
+        Get the MODFLOW 6 simulation object
+        """
         assert self.sim is not None, "You need to create the simulation first"
         return self.sim
     
     def get_gwf(self):
+        """
+        Get the MODFLOW 6 groundwater flow object
+        """
         assert self.sim is not None, "You need to create the simulation first"
         return self.sim.get_model()
 
@@ -1108,6 +1120,10 @@ class archpy2modflow:
         self.sim_prt = sim_prt
 
     def prt_run(self, silent=False):
+        """
+        Write PRT files and run the particle tracking simulation using MODFLOW 6
+        """
+
         # write simulation to disk
         self.sim_prt.write_simulation()
         success, msg = self.sim_prt.run_simulation(silent=silent)
@@ -1116,6 +1132,9 @@ class archpy2modflow:
             print(msg)
 
     def mp_run(self, silent=False):
+        """
+        Write MODPATH files and run the particle tracking simulation using MODPATH 7
+        """
         self.mp.write_input()
         success, msg = self.mp.run_model(silent=silent)
         if not success:
@@ -1124,22 +1143,31 @@ class archpy2modflow:
 
     # get results
     def get_mp(self):
+        """
+        Get the modpath object
+        """
         return self.mp
     
     def mp_get_pathlines_object(self):
-
+        """
+        Get the pathlines object from the modpath simulation
+        """
         fpth = os.path.join(self.model_dir, f"{self.mpnamf}.mppth")
         p = fp.utils.PathlineFile(fpth)
         return p
 
     def mp_get_endpoints_object(self):
-
+        """
+        Get the endpoints object from the modpath simulation
+        """
         fpth = os.path.join(self.model_dir, f"{self.mpnamf}.mpend")
         e = fp.utils.EndpointFile(fpth)
         return e
 
     def mp_get_facies_path_particle(self, i_particle, fac_time = 1/86400, iu = 0, ifa = 0):
-
+        """
+        Function to retrieve the facies sequence along a pathline
+        """
         grid_mode = self.grid_mode
         p = self.mp_get_pathlines_object()
         pathline = p.get_data(i_particle)
@@ -1198,6 +1226,9 @@ class archpy2modflow:
         return df_all
 
     def prt_get_pathlines(self, i_particle=None):
+        """
+        Retrieve the raw pathlines from the particle tracking simulation
+        """
         sim_dir = self.sim_prt.sim_path
         csv_name = self.sim_prt.prt[0].oc.trackcsv_filerecord.array[0][0]
         csv_path = os.path.join(sim_dir, csv_name)
@@ -1208,7 +1239,9 @@ class archpy2modflow:
         return df
 
     def prt_get_facies_path_particle(self, i_particle=1, fac_time = 1/86400, iu = 0, ifa = 0):
-
+        """
+        Function to retrieve the facies sequences along a pathline
+        """
         grid_mode = self.grid_mode
         df = self.prt_get_pathlines(i_particle)
 
@@ -1350,9 +1383,15 @@ class archpy2modflow:
         self.gwe = gwe
 
     def get_sim_energy(self):
+        """
+        Get the MODFLOW 6 energy simulation object
+        """
         return self.sim_e
     
     def get_gw_energy(self):
+        """
+        Get the MODFLOW 6 groundwater energy object
+        """
         return self.gwe
 
     # create additional packages (ssm, ctp, ...) #
@@ -1392,6 +1431,11 @@ class archpy2modflow:
     def set_tdisgwe(self, perioddata):
         """
         Create the tdis package for the energy model
+
+        Parameters
+        ----------
+        perioddata : list of tuples
+            list of tuples where each tuple is a period data (perlen, nstp, tsmult)
         """
         sim_e = self.get_sim_energy()
         
@@ -1404,6 +1448,11 @@ class archpy2modflow:
     def set_strt_temp(self, strt_temp):
         """
         Set the initial temperature of the energy model
+
+        Parameters
+        ----------
+        strt_temp : float or array of model dimension
+            initial temperature
         """
         gwe = self.get_gw_energy()
         gwe.remove_package("ic")

@@ -100,9 +100,9 @@ def bh2array(ArchTable, bh, typ="units"):
 
     Parameters
     ----------
-    ArchTable : :class:`ArchPy.base.Arch_table`
+    ArchTable : :class:`base.Arch_table`
         ArchPy table
-    bh : :class:`ArchPy.base.borehole`
+    bh : :class:`base.borehole`
         ArchPy borehole
     typ : str
         type of data to extract, either "units" or "facies"
@@ -165,11 +165,11 @@ def test_bh_1fold(ArchTable, bhs_real, bhs_test, weighting_method = "same_weight
 
     Parameters
     ----------
-    ArchTable : :class:`ArchPy.base.Arch_table`
+    ArchTable : :class:`base.Arch_table`
         ArchPy table to test
-    bhs_real : ndarray of size (nreal_units, nreal_fa, n_boreholes) of :class:`ArchPy.base.borehole`
+    bhs_real : ndarray of size (nreal_units, nreal_fa, n_boreholes) of :class:`base.borehole`
         "fake" boreholes sampled in the realizations of the ArchTable
-    bhs_test : sequence of :class:`ArchPy.base.borehole`
+    bhs_test : sequence of :class:`base.borehole`
         "real" boreholes to test
     weighting_method : str
         method to weight the realizations, either "same_weight" or "weights"

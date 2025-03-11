@@ -173,7 +173,7 @@ class archpy2modflow:
 
     Parameters
     ----------
-    T1 : :class:`ArchPy.base.Arch_table` object
+    T1 : :class:`base.Arch_table` object
         ArchPy table object to convert
     sim_name : str
         name of the simulation
@@ -1566,7 +1566,7 @@ class archpy2modflow:
             specific heat capacity of the fluid
         cps : float or array of model dimension or string
             specific heat capacity of the solid
-            if a string is provided, it is assumed to be the name of the property object (see :class:`ArchPy.base.Prop`)
+            if a string is provided, it is assumed to be the name of the property object (see :class:`base.Prop`)
         rhow : float
             density of the fluid
         rhos : float or array of model dimension or string

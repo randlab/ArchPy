@@ -1,5 +1,5 @@
 Automatic pile module
-======================
+=====================
 
 .. automodule:: automatic_pile
    :members:

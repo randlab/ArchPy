@@ -1,5 +1,8 @@
-import numpy as np
+"""
+Module to infer the pile of a stratigraphic model from a set of boreholes.
+"""
 
+import numpy as np
 
 # automatic inference of the pile
 def infer_pile(l_bhs, n_units=None):

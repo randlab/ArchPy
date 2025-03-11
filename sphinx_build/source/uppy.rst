@@ -1,5 +1,5 @@
 Upscaling module
-============
+================
 
 .. automodule:: uppy
    :members:

@@ -5425,7 +5425,6 @@ class Arch_table():
         else:
             cz=None
 
-
         if slicex is not None or slicey is not None or slicez is not None:
             imgplt3.drawImage3D_slice(im, plotter=p, slice_normal_x=cx, slice_normal_y=cy, slice_normal_z=cz,
                                     categ=True, categVal=new_lst_ID, excludedVal=excludedVal,

@@ -4631,10 +4631,13 @@ class Arch_table():
                     l.append(prop.name)
                     l.append(prop.means[prop.facies.index(fa)])
 
-                    # covmodel
-                    cm = prop.covmodels[prop.facies.index(fa)]
-                    if cm is not None:
-                        l.append(cm2string(cm))
+                    if prop.covmodels is not None:
+                        # covmodel
+                        cm = prop.covmodels[prop.facies.index(fa)]
+                        if cm is not None:
+                            l.append(cm2string(cm))
+                        else:
+                            l.append(None)
                     else:
                         l.append(None)
                 # else:
@@ -7852,6 +7855,7 @@ class Prop():
         self.vmax=vmax
         self.x=x
         self.v=v
+        self.covmodels=None
 
         #means
         self.means=means

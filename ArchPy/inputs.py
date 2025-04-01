@@ -872,15 +872,17 @@ def import_d_prop(dic_project, d_fa):
     assert "properties" in dic_project.keys(), '"properties" field not defined in the project yaml file'
     
     d={}
-    for name, para in dic_project["properties"].items():
+    for name, para in dic_project["properties"].items(): 
         
-            
-        l_cms=[]
-        for cm in para["covmodels"]:
-            if cm is not None:
-                l_cms.append(imp_cm(cm))
-            else:
-                l_cms.append(cm)
+        if para["covmodels"] is None:
+            l_cms = None
+        else:
+            l_cms=[]
+            for cm in para["covmodels"]:
+                if cm is not None:
+                    l_cms.append(imp_cm(cm))
+                else:
+                    l_cms.append(cm)
 
         l_facies=[d_fa[i] for i in para["facies"]] #get list of facies object
         
@@ -1463,12 +1465,15 @@ def create_d_prop(prop):
     d["name"]=prop.name
     d["facies"]=[i.name for i in prop.facies]
 
-    l=[]
-    for i in prop.covmodels:
-        if i is not None:
-            l.append({"alpha": i.alpha, "beta": i.beta, "gamma": i.gamma, "elem": Cm2YamlCm(i).elem})
-        else:
-            l.append(None)
+    if prop.covmodels is not None:
+        l=[]
+        for i in prop.covmodels:
+            if i is not None:
+                l.append({"alpha": i.alpha, "beta": i.beta, "gamma": i.gamma, "elem": Cm2YamlCm(i).elem})
+            else:
+                l.append(None)
+    else:
+        l=None
     d["covmodels"]=l
 
     d["means"]=fun2(prop.means)

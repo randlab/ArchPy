@@ -3445,7 +3445,6 @@ class Arch_table():
         start=time.time()
         np.random.seed(self.seed)  # set seed
 
-
         if nreal == 0:
             if self.verbose:
                 print("Warning: nreal is set to 0.")
@@ -3786,7 +3785,6 @@ class Arch_table():
                 a[idx_s2[iy, ix]: idx_s1[iy, ix], iy, ix]=1
 
         return a
-
 
     def compute_prop(self, nreal=1):
         #TO DO --> add an option to resimulate only certain properties (e.g. *args)
@@ -4262,6 +4260,35 @@ class Arch_table():
             else:
                 print("Choose between units or facies")
 
+    def get_transmissivity_in_unit(self, unit_name, iu=0, ifa=0, ip=0, k_key="K", log=True):
+
+        """
+        Compute the transmissivity in a unit for a given realization
+
+        Parameters
+        ----------
+        unit_name: string
+            unit name defined when creating the unit object
+        iu: int
+            unit realization index (0, 1, ..., Nreal_units)
+        ifa: int
+            facies realization index (0, 1, ..., Nreal_facies)
+        ip: int
+            property realization index (0, 1, ..., Nreal_prop)
+        k_key: string
+            key to use to compute the transmissivity, default is "K"
+        """
+
+        arr = self.get_prop(k_key, iu, ifa, ip, all_data=False).copy()  # get the property array, important to copy it
+        mask_unit = self.unit_mask(unit_name, iu=iu).astype(bool)  # get the unit mask for a specific unit, modify if you want to compute transmissivity for another unit or group of units
+        arr[~mask_unit] = np.nan  # set the values outside the unit to NaN
+        thk = np.sum(~np.isnan(arr), axis=0)  # count the number of non-NaN values in each column
+        if log:
+            K_moy = np.nanmean(10**arr, axis=0)  # calculate the mean of the property values in each column
+        else:
+            K_moy = np.nanmean(arr, axis=0)  # calculate the mean of the property values in each column
+        T_moy = K_moy * thk  # calculate the mean of the property values in each column multiplied by the thickness
+        return T_moy  # return the mean transmissivity for the unit
 
     def realizations_aggregation(self, method="basic",
                              depth=100, ignore_units=None,

@@ -100,13 +100,13 @@ def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance
         for col in df.columns:
             if col.split("_")[0] == "facies":
                 id_fa = int(col.split("_")[-1])
-                color_fa = archpy_flow.T1.get_facies_obj(ID=id_fa, type="ID").c
+                color_fa = arch_table.get_facies_obj(ID=id_fa, type="ID").c
                 colors_fa.append(color_fa)
 
     if plot_time:
 
         if proportions:
-            df.set_index("time").iloc[:, -len(colors_fa):].plot(color=colors_fa, legend=False, ax=ax[0])
+            df.set_index("time").iloc[:, -len(colors_fa):].plot(color=colors_fa, legend=False, ax=axi)
             axi.set_ylabel("Proportion")
             axi.set_xlabel("time [days]")
             axi.set_ylim(-.1, 1.1)
@@ -132,10 +132,10 @@ def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance
         all_cum_dist = df["cum_distance"].values
 
         if proportions:
-            df.set_index("cum_distance").iloc[:, -len(colors_fa):].plot(color=colors_fa, legend=False, ax=ax[1])
-            ax[1].set_ylabel("Proportion")
-            ax[1].set_xlabel("Distance [m]")
-            ax[1].set_ylim(-.1, 1.1)
+            df.set_index("cum_distance").iloc[:, -len(colors_fa):].plot(color=colors_fa, legend=False, ax=axi)
+            axi.set_ylabel("Proportion")
+            axi.set_xlabel("Distance [m]")
+            axi.set_ylim(-.1, 1.1)
 
         else:
 
@@ -164,6 +164,210 @@ def get_locs(nodes, nx, ny):
         j = node - k * nx * ny - i * nx
         locs.append((k, i, j))
     return locs
+
+def points2grid_index(points, grid):
+    """
+    Convert a list of points to a list of grid indices
+
+    Parameters
+    ----------
+    points : list of tuples
+        list of points to convert. Each tuple must have 3 values (xp, yp, zp) corresponding to the coordinates of the point
+    grid : modflow grid object
+        modflow grid object
+
+    Returns
+    -------
+    list of tuples
+        list of tuples with the indices of the points in the grid. Depends on the type of grid
+        if grid is disv, return (ilay, icell)
+        if grid is disu, return (icell)
+    """
+    # import packages
+    from scipy.spatial import cKDTree
+    from matplotlib.path import Path
+    from flopy.utils.geometry import is_clockwise
+
+    # functions to intersect the points with the grid
+    def intersect_point_fast_ug(self, index_cells, x, y, z=None,
+                                xv=None, yv=None, zv=None,
+                                local=False, forgive=False):
+
+        
+        
+        """
+        Get the CELL2D number of a point with coordinates x and y
+
+        When the point is on the edge of two cells, the cell with the lowest
+        CELL2D number is returned.
+
+        Parameters
+        ----------
+        x : float
+            The x-coordinate of the requested point
+        y : float
+            The y-coordinate of the requested point
+        z : float, None
+            optional, z-coordiante of the requested point
+        local: bool (optional)
+            If True, x and y are in local coordinates (defaults to False)
+        forgive: bool (optional)
+            Forgive x,y arguments that fall outside the model grid and
+            return NaNs instead (defaults to False - will throw exception)
+
+        Returns
+        -------
+        icell2d : int
+            The CELL2D number
+
+        """
+        if local:
+            # transform x and y to real-world coordinates
+            x, y = super().get_coords(x, y)
+        
+        if xv is None or yv is None or zv is None:
+            # get the vertices of the grid cells
+            xv, yv, zv = self.xyzvertices
+
+        for icell2d in index_cells:
+            
+            xa = np.array(xv[icell2d])
+            ya = np.array(yv[icell2d])
+            # x and y at least have to be within the bounding box of the cell
+            if (
+                np.any(x <= xa)
+                and np.any(x >= xa)
+                and np.any(y <= ya)
+                and np.any(y >= ya)
+            ):
+                if is_clockwise(xa, ya):
+                    radius = -1e-9
+                else:
+                    radius = 1e-9
+                path = Path(np.stack((xa, ya)).transpose())
+                # use a small radius, so that the edge of the cell is included
+                if path.contains_point((x, y), radius=radius):
+                    if z is None:
+                        return icell2d
+
+                    for lay in range(self.nlay):
+                        if lay != 0 and not self.grid_varies_by_layer:
+                            icell2d += self.ncpl[lay - 1]
+                        if zv[0, icell2d] >= z >= zv[1, icell2d]:
+                            return icell2d
+
+        if forgive:
+            icell2d = np.nan
+            return icell2d
+
+        raise Exception("point given is outside of the model area")
+
+    def intersect_point_fast_vg(self, index_cells, x, y, z=None, 
+                        xv=None, yv=None, zv=None,
+                        local=False, forgive=False):
+
+        from matplotlib.path import Path
+        from flopy.utils.geometry import is_clockwise
+        """
+        Get the CELL2D number of a point with coordinates x and y
+
+        When the point is on the edge of two cells, the cell with the lowest
+        CELL2D number is returned.
+
+        Parameters
+        ----------
+        x : float
+            The x-coordinate of the requested point
+        y : float
+            The y-coordinate of the requested point
+        z : float, None
+            optional, z-coordiante of the requested point will return
+            (lay, icell2d)
+        local: bool (optional)
+            If True, x and y are in local coordinates (defaults to False)
+        forgive: bool (optional)
+            Forgive x,y arguments that fall outside the model grid and
+            return NaNs instead (defaults to False - will throw exception)
+
+        Returns
+        -------
+        icell2d : int
+            The CELL2D number
+
+        """
+        if local:
+            # transform x and y to real-world coordinates
+            x, y = super().get_coords(x, y)
+        
+        if xv is None or yv is None or zv is None:
+            # get the vertices of the grid cells
+            xv, yv, zv = self.xyzvertices
+
+        for icell2d in index_cells:
+            xa = np.array(xv[icell2d])
+            ya = np.array(yv[icell2d])
+            # x and y at least have to be within the bounding box of the cell
+            if (
+                np.any(x <= xa)
+                and np.any(x >= xa)
+                and np.any(y <= ya)
+                and np.any(y >= ya)
+            ):
+                path = Path(np.stack((xa, ya)).transpose())
+                # use a small radius, so that the edge of the cell is included
+                if is_clockwise(xa, ya):
+                    radius = -1e-9
+                else:
+                    radius = 1e-9
+                if path.contains_point((x, y), radius=radius):
+                    if z is None:
+                        return icell2d
+
+                    for lay in range(self.nlay):
+                        if (
+                            self.top_botm[lay, icell2d]
+                            >= z
+                            >= self.top_botm[lay + 1, icell2d]
+                        ):
+                            return lay, icell2d
+
+        if forgive:
+            icell2d = np.nan
+            if z is not None:
+                return np.nan, icell2d
+
+            return icell2d
+
+        raise Exception("point given is outside of the model area")
+
+    # load cell centers and vertices
+    xc, yc, zc = grid.xyzcellcenters
+    xv, yv, zv = grid.xyzvertices
+
+    list_points = np.array(points)
+    
+    tree = cKDTree(np.array([xc, yc, zc[0]]).T)
+    dist, index = tree.query(list_points, k=10)  # find the nearest cells for each point in list_points
+
+    list_index = []
+    for list_of_index_cells, point in zip(index, list_points):
+        x, y, z = point
+        if grid.grid_type == "vertex":
+            p = intersect_point_fast_vg(grid, list_of_index_cells, x, y, z=z,
+                                        xv=xv, yv=yv, zv=zv, 
+                                        local=False, forgive=True
+                                        )
+        elif grid.grid_type == "unstructured":
+            p = intersect_point_fast_ug(grid, list_of_index_cells, x, y, z=z,
+                                        xv=xv, yv=yv, zv=zv,
+                                        local=False, forgive=True
+                                        )   
+        else:
+            raise ValueError("Grid type not supported")
+        
+        list_index.append(p)
+
+    return np.array(list_index)
 
 ## archpy to modflow class ##
 class archpy2modflow:
@@ -539,17 +743,18 @@ class archpy2modflow:
             # get the grid object --> needs to be rotated
             import copy
             grid = gwf.modelgrid
+            grid = copy.deepcopy(grid)  # create a copy of the grid to avoid modifying the original one
 
-            # # rotate grid around the origin of archpy model
+            # rotate grid around the origin of archpy model
 
-            # # retrieve origin of the new grid and archpy grid as well as the rotation angle 
-            # xorigin, yorigin = grid.xoffset, grid.yoffset
-            # ox_grid, oy_grid = self.T1.get_ox(), self.T1.get_oy()
-            # angrot = self.T1.get_rot_angle()
-            # xorigin_rot, yorigin_rot = rotate_point((xorigin, yorigin), origin=(ox_grid, oy_grid), angle=-angrot) 
+            # retrieve origin of the new grid and archpy grid as well as the rotation angle 
+            xorigin, yorigin = grid.xoffset, grid.yoffset
+            ox_grid, oy_grid = self.T1.get_ox(), self.T1.get_oy()
+            angrot = self.T1.get_rot_angle()
+            xorigin_rot, yorigin_rot = rotate_point((xorigin, yorigin), origin=(ox_grid, oy_grid), angle=-angrot) 
 
-            # # rotation
-            # grid.set_coord_info(xoff=xorigin_rot, yoff=yorigin_rot, angrot=-angrot)
+            # rotation
+            grid.set_coord_info(xoff=xorigin_rot, yoff=yorigin_rot, angrot=-angrot)
 
             # upscale
             new_prop, _, _ = upscale_k(prop, method=method,
@@ -784,7 +989,27 @@ class archpy2modflow:
                     
                 # facies upscaling
                 facies_arr = self.T1.get_facies(iu, ifa, all_data=False)
-                # TO DO
+                facies_arr = np.flip(np.flipud(facies_arr), axis=1)  # flip the array to have the same orientation as the ArchPy table
+
+                upscaled_facies = {}
+                for ifa in [fa.ID for fa in self.T1.get_all_facies()]:
+
+                    upscaled_facies[ifa] = np.zeros((facies_arr.shape[0], facies_arr.shape[1], facies_arr.shape[2]))
+
+                    field = facies_arr.copy()
+                    field[facies_arr == ifa] = 1
+                    field[facies_arr != ifa] = 0
+                    
+
+                    field_up, _, _ = upscale_k(field, method="arithmetic", 
+                                               dx=dx, dy=dy, dz=dz,
+                                               ox=ox, oy=oy, oz=oz,
+                                               grid=grid)
+                    
+                    upscaled_facies[ifa] = field_up.astype(float)
+                    upscaled_facies[ifa][np.isnan(upscaled_facies[ifa])] = 0
+
+                    self.upscaled_facies = upscaled_facies
 
         else:
             new_k = k
@@ -810,17 +1035,34 @@ class archpy2modflow:
         """
         Get the list of active cells in the modflow model
         """
+
+        grid_type = self.get_gwf().dis.package_type
         if self.list_active_cells is None:
             gwf = self.get_gwf()
-            idomain = gwf.dis.idomain.array
-            list_active_cells = []
-            for ilay in range(idomain.shape[0]):
-                for irow in range(idomain.shape[1]):
-                    for icol in range(idomain.shape[2]):
-                        if idomain[ilay, irow, icol] == 1:
-                            list_active_cells.append((ilay, irow, icol))
-            self.list_active_cells = list_active_cells
-            
+            if grid_type == "dis":
+                idomain = gwf.dis.idomain.array
+                list_active_cells = []
+                for ilay in range(idomain.shape[0]):
+                    for irow in range(idomain.shape[1]):
+                        for icol in range(idomain.shape[2]):
+                            if idomain[ilay, irow, icol] == 1:
+                                list_active_cells.append((ilay, irow, icol))
+                self.list_active_cells = list_active_cells
+            elif grid_type == "disv":
+                idomain = gwf.dis.idomain.array  # (nlay, ncells)
+                list_active_cells = []
+                for ilay in range(idomain.shape[0]):
+                    for icell in range(idomain.shape[1]):
+                        if idomain[ilay, icell] == 1:
+                            list_active_cells.append((ilay, icell))
+                self.list_active_cells = list_active_cells
+            elif grid_type == "disu":
+                idomain = gwf.dis.idomain.array  # (ncells)
+                list_active_cells = []
+                for icell in range(idomain.shape[0]):
+                    if idomain[icell] == 1:
+                        list_active_cells.append((icell))
+                self.list_active_cells = list_active_cells
         return self.list_active_cells
 
     # get functions
@@ -974,6 +1216,7 @@ class archpy2modflow:
         self.mp = mp  # save the modpath object
         self.mpnamf = mpnamf  # save the name of the modpath file
 
+
     def prt_create(self, prt_name="test", workspace="./", trackdir="forward", list_p_coords=None):
         
         """
@@ -999,79 +1242,119 @@ class archpy2modflow:
         # Create PRT model
         prt = fp.mf6.ModflowPrt(sim_prt, modelname=prt_name, model_nam_file="{}.nam".format(prt_name))
 
-        # Create grid discretization
-        dis = self.get_gwf().dis
-        dis_prt = fp.mf6.ModflowGwfdis(prt, nlay=dis.nlay.array, nrow=dis.nrow.array, ncol=dis.ncol.array,
-                                        delr=dis.delr.array, delc=dis.delc.array, top=dis.top.array, botm=dis.botm.array,
-                                        idomain=dis.idomain.array)
-
         # create prt input package
         mip = fp.mf6.ModflowPrtmip(prt, pname="mip", porosity=0.2)
 
+        # Create grid discretization
+        dis = self.get_gwf().dis
+
+        # determine grid type
+        grid_type = dis.package_type
+        if grid_type == "dis":
+            dis_prt = fp.mf6.ModflowGwfdis(prt, nlay=dis.nlay.array, nrow=dis.nrow.array, ncol=dis.ncol.array,
+                                            delr=dis.delr.array, delc=dis.delc.array, top=dis.top.array, botm=dis.botm.array,
+                                            xorigin=dis.xorigin.array, yorigin=dis.yorigin.array,
+                                            idomain=dis.idomain.array)
+        elif grid_type == "disv":
+            dis_prt = fp.mf6.ModflowGwfdisv(prt, nlay=dis.nlay.array, ncpl=dis.ncpl.array, 
+                                            top=dis.top.array, botm=dis.botm.array,
+                                            xorigin=dis.xorigin.array, yorigin=dis.yorigin.array,
+                                            vertices=dis.vertices.array, cell2d=dis.cell2d.array, nvert=dis.nvert.array,
+                                            idomain=dis.idomain.array)
+        
+        elif grid_type == "disu":
+            raise ValueError("disu grid type is not compatible with particle tracking yet")  # to do: add disu grid type
+            # dis_prt = fp.mf6.ModflowGwfdisu(prt, nodes=dis.nodes.array, nja=dis.nja.array, area=dis.area.array,
+            #                                 iac=dis.iac.array, jac=dis.jac.array, ihc=dis.ihc.array, cl12=dis.cl12.array, hwa=dis.hwa.array,
+            #                                 top=dis.top.array, botm=dis.bot.array,
+            #                                 xorigin=dis.xorigin.array, yorigin=dis.yorigin.array,
+            #                                 vertices=dis.vertices.array, cell2d=dis.cell2d.array, nvert=dis.nverts.array,
+            #                                 idomain=dis.idomain.array)
+
+
+        # construct package data for the particles
         from shapely.geometry import Point, MultiPoint
 
         grid = self.get_gwf().modelgrid
         ix = fp.utils.gridintersect.GridIntersect(mfgrid=grid)
 
-        list_cellids = []
-        for pi in list_p_coords:
-            p1 = Point(pi)
-            result = ix.intersect(p1)
-            if len(result) > 0:
-                list_cellids.append(result.cellids[0])
-            else:
-                p1 = Point((pi[0], pi[1]))
+        if grid_type == "dis":
+            list_cellids = []
+            for pi in list_p_coords:
+                p1 = Point(pi)
                 result = ix.intersect(p1)
-                list_cellids.append((-1, result.cellids[0][0], result.cellids[0][1]))
-
-        cellids = np.array([cids for cids in list_cellids])
-
-        cellids[:, 0] += 1
-
-        # ensure that particles are in active cells, if not move them to the nearest vertical active cell
-        idomain = dis.idomain.array
-        new_cellids = []
-        for cid in cellids:
-            if idomain[cid[0], cid[1], cid[2]] == -1:
-                o = 1
-                while True:
-                    if cid[0] - o >= 0:
-                        if idomain[cid[0] - o, cid[1], cid[2]] == 1:
-                            flag_neg = True
-                            break
-                        
-                    elif cid[0] + o < idomain.shape[0]:
-                        if idomain[cid[0] + o, cid[1], cid[2]] == 1:
-                            flag_neg = False
-                            break
-
-                    else:
-                        break
-                    o += 1
-
-                if flag_neg:
-                    cid[0] -= o
+                if len(result) > 0:
+                    list_cellids.append(result.cellids[0])
                 else:
-                    cid[0] += o
+                    p1 = Point((pi[0], pi[1]))
+                    result = ix.intersect(p1)
+                    list_cellids.append((-1, result.cellids[0][0], result.cellids[0][1]))
 
-            new_cellids.append(tuple(cid))
+            cellids = np.array([cids for cids in list_cellids])
 
-        cellids = np.array(new_cellids)
+            cellids[:, 0] += 1
 
-        # package data (irptno, cellid, x, y, z)
-        package_data = []
-        for i in range(len(cellids)):
-            package_data.append((i, cellids[i], list_p_coords[i][0], list_p_coords[i][1], list_p_coords[i][2]))
+            # ensure that particles are in active cells, if not move them to the nearest vertical active cell
+            idomain = dis.idomain.array
+            new_cellids = []
+            for cid in cellids:
+                if idomain[cid[0], cid[1], cid[2]] == -1:
+                    o = 1
+                    while True:
+                        if cid[0] - o >= 0:
+                            if idomain[cid[0] - o, cid[1], cid[2]] == 1:
+                                flag_neg = True
+                                break
+                            
+                        elif cid[0] + o < idomain.shape[0]:
+                            if idomain[cid[0] + o, cid[1], cid[2]] == 1:
+                                flag_neg = False
+                                break
+
+                        else:
+                            break
+                        o += 1
+
+                    if flag_neg:
+                        cid[0] -= o
+                    else:
+                        cid[0] += o
+
+                new_cellids.append(tuple(cid))
+
+            cellids = np.array(new_cellids)
+
+            # package data (irptno, cellid, x, y, z)
+            package_data = []
+            for i in range(len(cellids)):
+                package_data.append((i, cellids[i], list_p_coords[i][0] -grid.xoffset, list_p_coords[i][1] - grid.yoffset, list_p_coords[i][2]))
+
+        elif grid_type in ["disv", "disu"]:
+            
+            # rotate the grid
+            grid.set_coord_info(xoff=grid.xoffset, yoff=grid.yoffset, angrot=0)
+
+            # convert coordinates into cellids
+            cellids = points2grid_index(list_p_coords, grid)
+
+            # package data (irptno, cellid, x, y, z)
+            package_data = []
+            for i in range(len(cellids)):
+                package_data.append((i, cellids[i], list_p_coords[i][0] - grid.xoffset, list_p_coords[i][1] - grid.yoffset, list_p_coords[i][2]))
+
+        else:
+            raise ValueError("grid type not supported")
 
         # period data (when to release the particles)
         period_data = {0: ["FIRST"]}
 
+        # package_data=[(0, (0, 105), 8.3085060975, 105.88924037150001, -6.25)]
         prp = fp.mf6.ModflowPrtprp(prt, pname="prp", filename="{}.prp".format(prt_name),
                                         packagedata=package_data,
                                         perioddata=period_data,
                                         nreleasepts=len(package_data),
                                         drape=True,
-                                        exit_solve_tolerance=1e-5)
+                                        exit_solve_tolerance=1e-5, extend_tracking=True)
 
         # output control package
         budgetfile_prt_name = "{}.bud".format(prt_name)
@@ -1236,6 +1519,20 @@ class archpy2modflow:
 
         if i_particle is not None:
             df = df.loc[df["irpt"] == i_particle]
+
+            # filter particle results to remove issues along the paths
+            df = df.groupby("icell").first().sort_values("t").reset_index()
+        else:
+            # filter all particles results to remove issues along the paths
+            df = df.groupby(["irpt", "icell"]).first().sort_values(["irpt", "t"]).reset_index()
+        
+        # we also need to add origin to coordinate as it is not considerd in the csv file
+        ox = self.get_gwf().modelgrid.xoffset
+        oy = self.get_gwf().modelgrid.yoffset
+
+        df["x"] += ox
+        df["y"] += oy
+
         return df
 
     def prt_get_facies_path_particle(self, i_particle=1, fac_time = 1/86400, iu = 0, ifa = 0):
@@ -1266,14 +1563,19 @@ class archpy2modflow:
         df_all["y"] = (df["y"].values[1:] + df["y"].values[:-1]) / 2
         df_all["z"] = (df["z"].values[1:] + df["z"].values[:-1]) / 2
 
-        cells_path = np.array((((df_all["z"].values-self.T1.zg[0])//self.T1.sz).astype(int),
-                                ((df_all["y"].values-self.T1.yg[0])//self.T1.sy).astype(int),
-                                ((df_all["x"].values-self.T1.xg[0])//self.T1.sx).astype(int))).T
+        if grid_mode == "disv":
+            cells_path = points2grid_index(df_all[["x", "y", "z"]].values, self.get_gwf().modelgrid)
+            cells_path = np.array(cells_path)
+            # cells_path[:, 0] += 1  # add 1 to the layer index to match modflow convention
+        else:
+            cells_path = np.array((((df_all["z"].values-self.T1.zg[0])//self.T1.sz).astype(int),
+                                    ((df_all["y"].values-self.T1.yg[0])//self.T1.sy).astype(int),
+                                    ((df_all["x"].values-self.T1.xg[0])//self.T1.sx).astype(int))).T
 
-        # check that no cells path exceed the grid
-        cells_path[:, 0][cells_path[:, 0] >= self.T1.nz] = self.T1.nz - 1
-        cells_path[:, 1][cells_path[:, 1] >= self.T1.ny] = self.T1.ny - 1
-        cells_path[:, 2][cells_path[:, 2] >= self.T1.nx] = self.T1.nx - 1
+            # check that no cells path exceed the grid
+            cells_path[:, 0][cells_path[:, 0] >= self.T1.nz] = self.T1.nz - 1
+            cells_path[:, 1][cells_path[:, 1] >= self.T1.ny] = self.T1.ny - 1
+            cells_path[:, 2][cells_path[:, 2] >= self.T1.nx] = self.T1.nx - 1
 
         if grid_mode in ["layers", "new_resolution"]:
             dic_facies_path = {}
@@ -1293,11 +1595,61 @@ class archpy2modflow:
             facies = self.T1.get_facies(iu, ifa, all_data=False)
             facies_along_path = facies[cells_path[:, 0], cells_path[:, 1], cells_path[:, 2]]
             df_all["facies"] = facies_along_path
+        
+        elif grid_mode == "disv":
+            dic_facies_path = {}
+            # retrieve lithologies along the pathlines
+            for fa in self.T1.get_all_facies():
+                id_fa = fa.ID
+                prop_fa = self.upscaled_facies[id_fa]
+
+                facies_along_path = prop_fa[cells_path[:, 0], cells_path[:, 1]]
+                dic_facies_path[fa.ID] = facies_along_path
+
+            colors_fa = []
+            for k, v in dic_facies_path.items():
+                df_all["facies_prop_"+ str(k)] = v
+                colors_fa.append(self.T1.get_facies_obj(ID=k, type="ID").c)
         else:
             raise ValueError
         
         return df_all
 
+    ## transport model ##
+    def create_sim_transport(self, strt_conc=0.0, porosity=0.2, diff=1e-9, decay=0.0):
+
+        """
+        Create a simulation object for a transport model with some default values
+        """
+
+        # paths
+        sim_name = self.sim_name
+        workspace = self.model_dir
+        exe_name = self.exe_name
+        gwf = self.get_gwf()
+
+        # create simulation
+        gwename = "gwt-" + sim_name
+        sim_t = fp.mf6.MFSimulation(sim_name=sim_name, sim_ws=workspace, exe_name=exe_name)
+
+        # Instantiating MODFLOW 6 groundwater transport model
+        gwt = fp.mf6.MFModel(sim_t, model_type="gwt6", modelname=gwename, model_nam_file=f"{gwename}.nam" )
+
+        # TDIS
+        perioddata = [(1, 100, 1.0)]
+        tdis = fp.mf6.ModflowTdis(sim_t, time_units='SECONDS', perioddata=perioddata)
+
+        # IMS
+        imsgwt = fp.mf6.ModflowIms(sim_t, print_option="SUMMARY", complexity="moderate")
+
+        # DIS
+        dis = self.get_gwf().dis
+        dis_t = fp.mf6.ModflowGwfdis(gwt, nlay=dis.nlay.array, nrow=dis.nrow.array, ncol=dis.ncol.array,
+                                        delr=dis.delr.array, delc=dis.delc.array, top=dis.top.array, botm=dis.botm.array,
+                                        idomain=dis.idomain.array)      
+
+        pass
+    # TO DO
 
     ## energy model ##
     def create_sim_energy(self,
@@ -1333,7 +1685,7 @@ class archpy2modflow:
         gwe = fp.mf6.MFModel(sim_e, model_type="gwe6", modelname=gwename, model_nam_file=f"{gwename}.nam")
 
         # TDIS
-        perioddata = [(1, 100, 1.0)]
+        perioddata = [(1, 1, 1.0)]
         tdis = fp.mf6.ModflowTdis(sim_e, time_units='SECONDS', perioddata=perioddata)
 
         # IMS
@@ -1341,10 +1693,33 @@ class archpy2modflow:
         # sim_e.register_ims_package(imsgwe, [gwe.name])
 
         # DIS 
-        dis = self.get_gwf().dis
-        dis_e = fp.mf6.ModflowGwfdis(gwe, nlay=dis.nlay.array, nrow=dis.nrow.array, ncol=dis.ncol.array,
-                                        delr=dis.delr.array, delc=dis.delc.array, top=dis.top.array, botm=dis.botm.array,
-                                        idomain=dis.idomain.array)
+        # dis = self.get_gwf().dis
+        # dis_e = fp.mf6.ModflowGwfdis(gwe, nlay=dis.nlay.array, nrow=dis.nrow.array, ncol=dis.ncol.array,
+        #                                 delr=dis.delr.array, delc=dis.delc.array, top=dis.top.array, botm=dis.botm.array,
+        #                                 idomain=dis.idomain.array)
+
+        # determine grid type
+        grid_type = dis.package_type
+        if grid_type == "dis":
+            dis_e = fp.mf6.ModflowGwfdis(prt, nlay=dis.nlay.array, nrow=dis.nrow.array, ncol=dis.ncol.array,
+                                            delr=dis.delr.array, delc=dis.delc.array, top=dis.top.array, botm=dis.botm.array,
+                                            xorigin=dis.xorigin.array, yorigin=dis.yorigin.array,
+                                            idomain=dis.idomain.array)
+        elif grid_type == "disv":
+            dis_e = fp.mf6.ModflowGwfdisv(prt, nlay=dis.nlay.array, ncpl=dis.ncpl.array, 
+                                            top=dis.top.array, botm=dis.botm.array,
+                                            xorigin=dis.xorigin.array, yorigin=dis.yorigin.array,
+                                            vertices=dis.vertices.array, cell2d=dis.cell2d.array, nvert=dis.nvert.array,
+                                            idomain=dis.idomain.array)
+        
+        elif grid_type == "disu":
+            # raise ValueError("disu grid type is not compatible with particle tracking yet")  # to do: add disu grid type
+            dis_e = fp.mf6.ModflowGwfdisu(prt, nodes=dis.nodes.array, nja=dis.nja.array, area=dis.area.array,
+                                            iac=dis.iac.array, jac=dis.jac.array, ihc=dis.ihc.array, cl12=dis.cl12.array, hwa=dis.hwa.array,
+                                            top=dis.top.array, botm=dis.bot.array,
+                                            xorigin=dis.xorigin.array, yorigin=dis.yorigin.array,
+                                            vertices=dis.vertices.array, cell2d=dis.cell2d.array, nvert=dis.nverts.array,
+                                            idomain=dis.idomain.array)
 
         # Instantiating MODFLOW 6 heat transport initial temperature
         eic = fp.mf6.ModflowGweic(gwe, strt=strt_temp, filename=f"{gwename}.ic")
@@ -1394,6 +1769,12 @@ class archpy2modflow:
         """
         return self.gwe
 
+    def get_sim_prt(self):
+        """
+        Get the MODFLOW 6 particle tracking simulation object
+        """
+        return self.sim_prt
+
     # create additional packages (ssm, ctp, ...) #
     def create_ssm(self, sourcerecarray):
         """
@@ -1413,7 +1794,7 @@ class archpy2modflow:
         gwe.remove_package("ssm")
 
         # Source and sink mixing package --> make the link with the groundwater model
-        ssm = fp.mf6.ModflowGwessm(gwe, sources=sourcerecarray, filename=f"{gwename}.ssm", save_flows=True)
+        ssm = fp.mf6.ModflowGwessm(gwe, sources= , filename=f"{gwename}.ssm", save_flows=True)
 
     # set exisiting packages #
     def set_imsgwe(self, **kwargs):

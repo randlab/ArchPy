@@ -1693,7 +1693,7 @@ class archpy2modflow:
         # sim_e.register_ims_package(imsgwe, [gwe.name])
 
         # DIS 
-        # dis = self.get_gwf().dis
+        dis = self.get_gwf().dis
         # dis_e = fp.mf6.ModflowGwfdis(gwe, nlay=dis.nlay.array, nrow=dis.nrow.array, ncol=dis.ncol.array,
         #                                 delr=dis.delr.array, delc=dis.delc.array, top=dis.top.array, botm=dis.botm.array,
         #                                 idomain=dis.idomain.array)
@@ -1701,12 +1701,12 @@ class archpy2modflow:
         # determine grid type
         grid_type = dis.package_type
         if grid_type == "dis":
-            dis_e = fp.mf6.ModflowGwfdis(prt, nlay=dis.nlay.array, nrow=dis.nrow.array, ncol=dis.ncol.array,
+            dis_e = fp.mf6.ModflowGwfdis(gwe, nlay=dis.nlay.array, nrow=dis.nrow.array, ncol=dis.ncol.array,
                                             delr=dis.delr.array, delc=dis.delc.array, top=dis.top.array, botm=dis.botm.array,
                                             xorigin=dis.xorigin.array, yorigin=dis.yorigin.array,
                                             idomain=dis.idomain.array)
         elif grid_type == "disv":
-            dis_e = fp.mf6.ModflowGwfdisv(prt, nlay=dis.nlay.array, ncpl=dis.ncpl.array, 
+            dis_e = fp.mf6.ModflowGwfdisv(gwe, nlay=dis.nlay.array, ncpl=dis.ncpl.array, 
                                             top=dis.top.array, botm=dis.botm.array,
                                             xorigin=dis.xorigin.array, yorigin=dis.yorigin.array,
                                             vertices=dis.vertices.array, cell2d=dis.cell2d.array, nvert=dis.nvert.array,
@@ -1714,7 +1714,7 @@ class archpy2modflow:
         
         elif grid_type == "disu":
             # raise ValueError("disu grid type is not compatible with particle tracking yet")  # to do: add disu grid type
-            dis_e = fp.mf6.ModflowGwfdisu(prt, nodes=dis.nodes.array, nja=dis.nja.array, area=dis.area.array,
+            dis_e = fp.mf6.ModflowGwfdisu(gwe, nodes=dis.nodes.array, nja=dis.nja.array, area=dis.area.array,
                                             iac=dis.iac.array, jac=dis.jac.array, ihc=dis.ihc.array, cl12=dis.cl12.array, hwa=dis.hwa.array,
                                             top=dis.top.array, botm=dis.bot.array,
                                             xorigin=dis.xorigin.array, yorigin=dis.yorigin.array,
@@ -1794,7 +1794,7 @@ class archpy2modflow:
         gwe.remove_package("ssm")
 
         # Source and sink mixing package --> make the link with the groundwater model
-        ssm = fp.mf6.ModflowGwessm(gwe, sources= , filename=f"{gwename}.ssm", save_flows=True)
+        ssm = fp.mf6.ModflowGwessm(gwe, sources=sourcerecarray , filename=f"{gwename}.ssm", save_flows=True)
 
     # set exisiting packages #
     def set_imsgwe(self, **kwargs):

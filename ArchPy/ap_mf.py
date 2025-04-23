@@ -1993,11 +1993,6 @@ class archpy2modflow:
         
         if vb:
             print("est package updated")
-        # # remove existing est package
-        # gwe.remove_package("est")
 
-        # # Instantiating MODFLOW 6 heat transport mass storage package (consider renaming to est)
-        # est = fp.mf6.ModflowGweest(gwe, heat_capacity_water=cpw, density_water=rhow,
-        #                            latent_heat_vaporization=lhv, heat_capacity_solid=cps, density_solid=rhos,
-        #                            save_flows=save_flows, **kwargs)
+
 

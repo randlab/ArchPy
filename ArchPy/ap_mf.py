@@ -1611,8 +1611,10 @@ class archpy2modflow:
             dic_facies_path = {}
             # retrieve lithologies along the pathlines
             for fa in self.T1.get_all_facies():
+
                 id_fa = fa.ID
                 prop_fa = self.upscaled_facies[id_fa]
+                prop_fa = np.flip(prop_fa, axis=1)
 
                 facies_along_path = prop_fa[cells_path[:, 0], cells_path[:, 1], cells_path[:, 2]]
                 dic_facies_path[fa.ID] = facies_along_path

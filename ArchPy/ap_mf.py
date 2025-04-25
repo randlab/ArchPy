@@ -86,7 +86,33 @@ def array2cellids(array, idomain):
                     cellids.append((ilay, irow, icol))
     return cellids
 
-def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance=False, proportions=False):
+def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance=False, proportions=False,
+                                   time_unit="s", resampling="d"):
+
+    """
+    Plot the facies sequence of a particle in time and distance
+
+    Parameters
+    ----------
+    arch_table : :class:`base.Arch_table` object
+        ArchPy table object
+    df : pandas dataframe
+        dataframe with the particle data. Must contain the columns "facies" or "facies_prop_i" where i is the facies id
+        and "time" or "distance" or "cum_distance".
+    plot_time : bool, optional
+        if True, plot the facies sequence in time. The default is False.
+    plot_distance : bool, optional
+        if True, plot the facies sequence in distance. The default is False.    
+    proportions : bool, optional
+        if True, plot the proportions of each facies in time or distance. The default is False. 
+        df must contain the columns "facies_prop_i" where i is the facies id.
+    time_unit : str, optional
+        unit of time in the column "time". The default is "s".
+    resampling : str, optional
+        resampling frequency for the time series. The default is "d". Check pandas documentation for more information.
+    fac_time : float, optional
+        factor to apply to time column in case number are too large and cause an overflow error in pandas
+    """
 
     if plot_time and plot_distance:
         fig, ax = plt.subplots(2,1, figsize=(10, 1.5), dpi=200)
@@ -106,9 +132,11 @@ def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance
     if plot_time:
 
         if proportions:
-            df.set_index("time").iloc[:, -len(colors_fa):].plot(color=colors_fa, legend=False, ax=axi)
+            # df.set_index("time").iloc[:, -len(colors_fa):].plot(color=colors_fa, legend=False, ax=axi)
+            df.time = pd.to_datetime(df.time,unit=time_unit)  # set datetime to resample
+            df.set_index("time").resample(resampling).first().fillna(method="ffill").reset_index().iloc[:, -len(colors_fa):].plot(color=colors_fa, legend=False, ax=axi)
             axi.set_ylabel("Proportion")
-            axi.set_xlabel("time [days]")
+            axi.set_xlabel("time [{}]".format(resampling))
             axi.set_ylim(-.1, 1.1)
 
         else:
@@ -810,7 +838,8 @@ class archpy2modflow:
                 upscaled_facies = {}
 
                 for ifa in np.unique(facies_arr):
-                    upscaled_facies[ifa] = np.zeros((facies_arr.shape[0], facies_arr.shape[1], facies_arr.shape[2]))
+                    # upscaled_facies[ifa] = np.zeros((facies_arr.shape[0], facies_arr.shape[1], facies_arr.shape[2]))
+                    upscaled_facies[ifa] = np.zeros((nlay, nrow, ncol))
 
                 if k_average_method == "anisotropic":
                     new_k33 = np.ones((nlay, nrow, ncol))
@@ -866,7 +895,8 @@ class archpy2modflow:
                             arr = facies_arr[:, irow, icol][mask_unit[:, irow, icol]]  # array of facies values in the unit
                             prop = get_proportion(arr)
                             for ifa in np.unique(arr):
-                                upscaled_facies[ifa][:, irow, icol][mask_unit[:, irow, icol]] = prop[ifa]
+                                # upscaled_facies[ifa][:, irow, icol][mask_unit[:, irow, icol]] = prop[ifa]
+                                upscaled_facies[ifa][ilay, irow, icol] = prop[ifa]
                 
                 # save upscaled facies
                 self.upscaled_facies = upscaled_facies
@@ -921,7 +951,8 @@ class archpy2modflow:
                 facies_arr = self.T1.get_facies(iu, ifa, all_data=False)
                 upscaled_facies = {}
                 for ifa in np.unique(facies_arr):
-                    upscaled_facies[ifa] = np.zeros((facies_arr.shape[0], facies_arr.shape[1], facies_arr.shape[2]))
+                    # upscaled_facies[ifa] = np.zeros((facies_arr.shape[0], facies_arr.shape[1], facies_arr.shape[2]))
+                    upscaled_facies[ifa] = np.zeros((field_kxx.shape[0], field_kxx.shape[1], field_kxx.shape[2]))
                 
                 for ilay in range(0, self.T1.get_nz(), factor_z):
                     for irow in range(0, self.T1.get_ny(), factor_y):
@@ -930,7 +961,8 @@ class archpy2modflow:
                             arr = mask_unit.flatten()
                             prop = get_proportion(arr)
                             for ifa in np.unique(arr):
-                                upscaled_facies[ifa][ilay:ilay+factor_z, irow:irow+factor_y, icol:icol+factor_x] = prop[ifa]
+                                # upscaled_facies[ifa][ilay:ilay+factor_z, irow:irow+factor_y, icol:icol+factor_x] = prop[ifa]
+                                upscaled_facies[ifa][ilay//factor_z, irow//factor_y, icol//factor_x] = prop[ifa]
 
                 self.upscaled_facies = upscaled_facies
             
@@ -1467,14 +1499,6 @@ class archpy2modflow:
         # add a column to track distance traveled
         distances = ((df[["x", "y", "z"]].iloc[1:].values - df[["x", "y", "z"]].iloc[:-1].values)**2).sum(1)**0.5
 
-        # # add a column to track distance traveled
-        # df["distance"] = 0
-        # for i in range(1, df.shape[0]):
-        #     x0, y0, z0 = df[["x", "y", "z"]].iloc[i-1]
-        #     x1, y1, z1 = df[["x", "y", "z"]].iloc[i]
-        #     distance = np.sqrt((x1-x0)**2 + (y1-y0)**2 + (z1-z0)**2)
-        #     df.loc[df.index[i], "distance"] = distance
-
         # store everything in a new dataframe
         df_all = pd.DataFrame(columns=["dt", "time", "distance", "cum_distance", "x", "y", "z"])
         df_all["dt"] = dt
@@ -1521,10 +1545,12 @@ class archpy2modflow:
             df = df.loc[df["irpt"] == i_particle]
 
             # filter particle results to remove issues along the paths
-            df = df.groupby("icell").first().sort_values("t").reset_index()
+            # df = df.groupby("icell").first().sort_values("t").reset_index()
+            pd.concat((df.iloc[:2], df.iloc[2:].groupby("icell").first().sort_values("t").reset_index()), axis=0)
         else:
-            # filter all particles results to remove issues along the paths
-            df = df.groupby(["irpt", "icell"]).first().sort_values(["irpt", "t"]).reset_index()
+            # filter all particles results to remove issues along the paths (and keep first two lines which are always true ?)
+            # df = df.groupby(["irpt", "icell"]).first().sort_values(["irpt", "t"]).reset_index()
+            df = pd.concat((df.groupby(["irpt", "icell"]).first().reset_index(), df.groupby(["irpt"]).nth(1))).sort_values(["irpt", "t"]).reset_index(drop=True)
         
         # we also need to add origin to coordinate as it is not considerd in the csv file
         ox = self.get_gwf().modelgrid.xoffset
@@ -1547,7 +1573,7 @@ class archpy2modflow:
             return None
             
         time_ordered = df["t"].values.copy()
-        time_ordered *= 1/86400
+        time_ordered *= fac_time
         dt = np.diff(time_ordered)
 
         # add a column to track distance traveled
@@ -1556,7 +1582,7 @@ class archpy2modflow:
         # store everything in a new dataframe
         df_all = pd.DataFrame(columns=["dt", "time", "distance", "cum_distance", "x", "y", "z"])
         df_all["dt"] = dt
-        df_all["time"] = time_ordered[1:]
+        df_all["time"] = time_ordered[:-1]
         df_all["distance"] = distances
         df_all["cum_distance"] = df_all["distance"].cumsum()
         df_all["x"] = (df["x"].values[1:] + df["x"].values[:-1]) / 2
@@ -1568,9 +1594,13 @@ class archpy2modflow:
             cells_path = np.array(cells_path)
             # cells_path[:, 0] += 1  # add 1 to the layer index to match modflow convention
         else:
-            cells_path = np.array((((df_all["z"].values-self.T1.zg[0])//self.T1.sz).astype(int),
-                                    ((df_all["y"].values-self.T1.yg[0])//self.T1.sy).astype(int),
-                                    ((df_all["x"].values-self.T1.xg[0])//self.T1.sx).astype(int))).T
+            # cells_path = np.array((((df_all["z"].values-self.T1.zg[0])//self.T1.sz).astype(int),
+            #                         ((df_all["y"].values-self.T1.yg[0])//self.T1.sy).astype(int),
+            #                         ((df_all["x"].values-self.T1.xg[0])//self.T1.sx).astype(int))).T
+            nx = self.get_gwf().modelgrid.ncol
+            ny = self.get_gwf().modelgrid.nrow
+            cells_path = get_locs(df.icell-1, nx, ny)
+            cells_path = np.array(cells_path)[1:]
 
             # check that no cells path exceed the grid
             cells_path[:, 0][cells_path[:, 0] >= self.T1.nz] = self.T1.nz - 1

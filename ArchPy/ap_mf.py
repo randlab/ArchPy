@@ -143,7 +143,7 @@ def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance
             dt = df["dt"]
             for i, (facies, time) in enumerate(zip(df["facies"], df["time"])):
                 if i > 0:
-                    axi.barh(0, dt[i], left=df["time"].loc[i-1], color=arch_table.get_facies_obj(ID=facies, type="ID").c)
+                    axi.barh(0, dt[i], left=df["time"].loc[i], color=arch_table.get_facies_obj(ID=facies, type="ID").c)
                 else:
                     axi.barh(0, dt[i], left=0, color=arch_table.get_facies_obj(ID=facies, type="ID").c, label=arch_table.get_facies_obj(ID=facies, type="ID").name)
             
@@ -176,7 +176,6 @@ def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance
         axi.set_xlim(0, all_cum_dist[-1])
         axi.set_xlabel("Distance (m)")
         axi.set_yticks([])
-
 
 def get_nodes(locs, nx, ny):
     nodes = []
@@ -1625,6 +1624,7 @@ class archpy2modflow:
 
         elif grid_mode == "archpy":
             facies = self.T1.get_facies(iu, ifa, all_data=False)
+            facies = np.flip(np.flipud(facies), axis=1)
             facies_along_path = facies[cells_path[:, 0], cells_path[:, 1], cells_path[:, 2]]
             df_all["facies"] = facies_along_path
         

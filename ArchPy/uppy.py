@@ -1030,18 +1030,19 @@ def upscale_cell_disv(grid_ref_xver, grid_ref_yver, grid_ref_layers, grid_ref_to
             Kxx = field_cell[0, 0, 0]
             Kyy = field_cell[0, 0, 0]
             Kzz = field_cell[0, 0, 0]
-        elif field_cell.shape[0] == 1 and field_cell.shape[1] == 1 and field_cell.shape[2] == 2:
-            Kxx = hmean(field_cell[0, 0, 0], field_cell[0, 0, 1], dx[0, 0, 0], dx[0, 0, 1])
-            Kyy = mean(field_cell[0, 0, 0], field_cell[0, 0, 1], dx[0, 0, 0], dx[0, 0, 1])
-            Kzz = mean(field_cell[0, 0, 0], field_cell[0, 0, 1], dx[0, 0, 0], dx[0, 0, 1])
-        elif field_cell.shape[0] == 1 and field_cell.shape[1] == 2 and field_cell.shape[2] == 1:
-            Kxx = mean(field_cell[0, 0], field_cell[0, 1], dy[0, 0], dy[0, 1])[0]
-            Kyy = hmean(field_cell[0, 0], field_cell[0, 1], dy[0, 0], dy[0, 1])[0]
-            Kzz = mean(field_cell[0, 0], field_cell[0, 1], dy[0, 0], dy[0, 1])[0]
-        elif field_cell.shape[0] == 2 and field_cell.shape[1] == 1 and field_cell.shape[2] == 1:
-            Kxx = mean(field_cell[0, 0], field_cell[1, 0], dz[0, 0], dz[1, 0])[0]
-            Kyy = mean(field_cell[0, 0], field_cell[1, 0], dz[0, 0], dz[1, 0])[0]
-            Kzz = hmean(field_cell[0, 0], field_cell[1, 0], dz[0, 0], dz[1, 0])[0]
+        #special case if two cells --> issue when the two cells are equal to zero --> division by zero for hmean, needs to solve this    
+        # elif field_cell.shape[0] == 1 and field_cell.shape[1] == 1 and field_cell.shape[2] == 2:
+        #     Kxx = hmean(field_cell[0, 0, 0], field_cell[0, 0, 1], dx[0, 0, 0], dx[0, 0, 1])
+        #     Kyy = mean(field_cell[0, 0, 0], field_cell[0, 0, 1], dx[0, 0, 0], dx[0, 0, 1])
+        #     Kzz = mean(field_cell[0, 0, 0], field_cell[0, 0, 1], dx[0, 0, 0], dx[0, 0, 1])
+        # elif field_cell.shape[0] == 1 and field_cell.shape[1] == 2 and field_cell.shape[2] == 1:
+        #     Kxx = mean(field_cell[0, 0], field_cell[0, 1], dy[0, 0], dy[0, 1])[0]
+        #     Kyy = hmean(field_cell[0, 0], field_cell[0, 1], dy[0, 0], dy[0, 1])[0]
+        #     Kzz = mean(field_cell[0, 0], field_cell[0, 1], dy[0, 0], dy[0, 1])[0]
+        # elif field_cell.shape[0] == 2 and field_cell.shape[1] == 1 and field_cell.shape[2] == 1:
+        #     Kxx = mean(field_cell[0, 0], field_cell[1, 0], dz[0, 0], dz[1, 0])[0]
+        #     Kyy = mean(field_cell[0, 0], field_cell[1, 0], dz[0, 0], dz[1, 0])[0]
+        #     Kzz = hmean(field_cell[0, 0], field_cell[1, 0], dz[0, 0], dz[1, 0])[0]
         else:  # if more than 2 cells --> use simplified renormalization directly
             if method == "simplified_renormalization":
                 Kxx = simplified_renormalization(field_cell, dx, dy, dz, direction="x")

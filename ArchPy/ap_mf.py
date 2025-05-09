@@ -503,7 +503,11 @@ class archpy2modflow:
             new_idomain[new_idomain <= 0.5] = 0
 
             # set idomain
-            dis.idomain.set_data(new_idomain)
+            # return dis, new_idomain
+            if grid_mode == "disv":
+                dis.idomain.set_layered_data(new_idomain)
+            else:
+                dis.idomain.set_data(new_idomain)
             
         else:
                 
@@ -794,7 +798,8 @@ class archpy2modflow:
     def set_k(self, k_key="K",
               iu=0, ifa=0, ip=0,
               log=False, k=None, k22=None, k33=None, k_average_method="arithmetic", 
-              upscaling_method="simplified_renormalization"):
+              upscaling_method="simplified_renormalization",
+              xt3doptions=None):
 
         """
         Set the hydraulic conductivity for a specific facies
@@ -1048,7 +1053,7 @@ class archpy2modflow:
             new_k33 = k33
 
         # new_k = np.flip(new_k, axis=1)  # we have to flip in order to match modflow grid
-        npf = fp.mf6.ModflowGwfnpf(gwf, icelltype=0, k=new_k, k22=new_k22, k33=new_k33, save_flows=True, save_specific_discharge=True, save_saturation=True)
+        npf = fp.mf6.ModflowGwfnpf(gwf, icelltype=0, k=new_k, k22=new_k22, k33=new_k33, save_flows=True, save_specific_discharge=True, save_saturation=True, xt3doptions=xt3doptions)
         # npf.write()
 
     def set_strt(self, heads=None):

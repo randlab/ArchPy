@@ -1384,7 +1384,6 @@ class archpy2modflow:
         # period data (when to release the particles)
         period_data = {0: ["FIRST"]}
 
-        # package_data=[(0, (0, 105), 8.3085060975, 105.88924037150001, -6.25)]
         prp = fp.mf6.ModflowPrtprp(prt, pname="prp", filename="{}.prp".format(prt_name),
                                         packagedata=package_data,
                                         perioddata=period_data,
@@ -1653,7 +1652,10 @@ class archpy2modflow:
         return df_all
 
     ## transport model ##
-    def create_sim_transport(self, strt_conc=0.0, porosity=0.2, diff=1e-9, decay=0.0):
+    def create_sim_transport(self, strt_conc=0.0, porosity=0.2, diff=1e-9, 
+                            adv_scheme="upstream",
+                            alh=None, ath1=None,
+                            decay=0.0, decay_0=False, decay_1=False):
 
         """
         Create a simulation object for a transport model with some default values
@@ -1666,11 +1668,12 @@ class archpy2modflow:
         gwf = self.get_gwf()
 
         # create simulation
-        gwename = "gwt-" + sim_name
-        sim_t = fp.mf6.MFSimulation(sim_name=sim_name, sim_ws=workspace, exe_name=exe_name)
+        gwtname = "gwt-" + sim_name
+        sim_ws = os.path.join(workspace, gwtname)
+        sim_t = fp.mf6.MFSimulation(sim_name=sim_name, sim_ws=sim_ws, exe_name=exe_name)
 
         # Instantiating MODFLOW 6 groundwater transport model
-        gwt = fp.mf6.MFModel(sim_t, model_type="gwt6", modelname=gwename, model_nam_file=f"{gwename}.nam" )
+        gwt = fp.mf6.MFModel(sim_t, model_type="gwt6", modelname=gwtname, model_nam_file=f"{gwtname}.nam" )
 
         # TDIS
         perioddata = [(1, 100, 1.0)]
@@ -1681,12 +1684,329 @@ class archpy2modflow:
 
         # DIS
         dis = self.get_gwf().dis
-        dis_t = fp.mf6.ModflowGwfdis(gwt, nlay=dis.nlay.array, nrow=dis.nrow.array, ncol=dis.ncol.array,
-                                        delr=dis.delr.array, delc=dis.delc.array, top=dis.top.array, botm=dis.botm.array,
-                                        idomain=dis.idomain.array)      
 
-        pass
-    # TO DO
+        grid_type = dis.package_type
+        if grid_type == "dis":
+            dis_t = fp.mf6.ModflowGwfdis(gwt, nlay=dis.nlay.array, nrow=dis.nrow.array, ncol=dis.ncol.array,
+                                            delr=dis.delr.array, delc=dis.delc.array, top=dis.top.array, botm=dis.botm.array,
+                                            xorigin=dis.xorigin.array, yorigin=dis.yorigin.array,
+                                            idomain=dis.idomain.array)
+        elif grid_type == "disv":
+            dis_t = fp.mf6.ModflowGwfdisv(gwt, nlay=dis.nlay.array, ncpl=dis.ncpl.array, 
+                                            top=dis.top.array, botm=dis.botm.array,
+                                            xorigin=dis.xorigin.array, yorigin=dis.yorigin.array,
+                                            vertices=dis.vertices.array, cell2d=dis.cell2d.array, nvert=dis.nvert.array,
+                                            idomain=dis.idomain.array)
+        
+        elif grid_type == "disu":
+            dis_t = fp.mf6.ModflowGwfdisu(gwt, nodes=dis.nodes.array, nja=dis.nja.array, area=dis.area.array,
+                                            iac=dis.iac.array, jac=dis.jac.array, ihc=dis.ihc.array, cl12=dis.cl12.array, hwa=dis.hwa.array,
+                                            top=dis.top.array, botm=dis.bot.array,
+                                            xorigin=dis.xorigin.array, yorigin=dis.yorigin.array,
+                                            vertices=dis.vertices.array, cell2d=dis.cell2d.array, nvert=dis.nverts.array,
+                                            idomain=dis.idomain.array)
+        
+        # IC
+        ict = fp.mf6.ModflowGwtic(gwt, strt=strt_conc, filename=f"{gwtname}.ic")
+
+        # ADV (advection)
+        adv = fp.mf6.ModflowGwtadv(gwt, scheme=adv_scheme, filename=f"{gwtname}.adv")
+
+        # DSP (dispersion)$
+        if alh is None:
+            alh = max(max(dis.delr.array), max(dis.delc.array))
+        
+        if ath1 is None:
+            ath1 = alh
+
+        dsp = fp.mf6.ModflowGwtdsp(gwt, alh=alh, ath1=ath1, diffc=diff, pname="DSP", filename=f"{gwtname}.dsp")
+        
+        # MST
+        mst = fp.mf6.ModflowGwtmst(
+            gwt,
+            porosity=porosity,
+            zero_order_decay=decay_0,
+            first_order_decay=decay_1,
+            decay=decay,
+            decay_sorbed=None,
+            sorption=None,
+            bulk_density=None,
+            distcoef=None,
+            filename=f"{gwtname}.mst",
+        )
+
+        # OC --> Instantiating MODFLOW 6 transport output control package
+        oc_t = fp.mf6.ModflowGwtoc(
+            gwt,
+            budget_filerecord=f"{gwtname}.cbc",
+            concentration_filerecord=f"{gwtname}.ucn",
+            concentrationprintrecord=[("COLUMNS", 10, "WIDTH", 15, "DIGITS", 6, "GENERAL")],
+            saverecord=[("CONCENTRATION", "ALL"), ("BUDGET", "ALL")],
+            printrecord=[("CONCENTRATION", "LAST"), ("BUDGET", "LAST")],
+        )
+
+        # # Instantiating MODFLOW 6 flow-transport exchange mechanism
+        # gwfname = self.get_gwf().name
+        # sim = self.get_sim()
+        # fp.mf6.ModflowGwfgwt(
+        #     sim,
+        #     exgtype="GWF6-GWT6",
+        #     exgmnamea=gwfname,
+        #     exgmnameb=gwtname,
+        #     filename=f"{sim.name}.gwfgwt",
+        # )
+
+        # Instantiating MODFLOW 6 Flow-Model Interface package
+        pd = [
+            ("GWFHEAD", f"../{gwf.name}.hds", None),
+            ("GWFBUDGET", f"../{gwf.name}.cbc", None),
+        ]
+        fmi = fp.mf6.ModflowGwtfmi(gwt, packagedata=pd)
+
+        # register the packages
+        self.sim_t = sim_t
+        self.gwt = gwt
+
+
+    def create_ssm_t(self, sourcerecarray):
+        """
+        Create the ssm package for the transport model
+
+        Parameters
+        ----------
+        sourcerecarray : list of tuples
+            list of tuples where each indicate a gwf package which has auxiliar variables (package name, AUX, auxname)
+        """
+
+        sim_t = self.get_sim_transport()
+        gwt = self.get_gw_transport()
+        gwtname = gwt.name
+
+        # remove existing ssm package
+        gwt.remove_package("ssm")
+
+        # Source and sink mixing package --> make the link with the groundwater model
+        ssm = fp.mf6.ModflowGwtssm(gwt, sources=sourcerecarray , filename=f"{gwtname}.ssm", save_flows=True)
+
+    def get_sim_transport(self):
+        """
+        Get the MODFLOW 6 energy simulation object
+        """
+        return self.sim_t
+    
+    def get_gw_transport(self):
+        """
+        Get the MODFLOW 6 groundwater energy object
+        """
+        return self.gwt
+
+   # set exisiting packages #
+    def set_imsgwt(self, **kwargs):
+        """
+        Create the ims package for the transport model
+        """
+        sim_t = self.get_sim_transport()
+
+        # remove existing ims package
+        sim_t.remove_package("ims")
+
+        imsgwt = fp.mf6.ModflowIms(sim_t, print_option="SUMMARY", **kwargs)
+
+    def set_tdisgwt(self, perioddata):
+        """
+        Create the tdis package for the transport model
+
+        Parameters
+        ----------
+        perioddata : list of tuples
+            list of tuples where each tuple is a period data (perlen, nstp, tsmult)
+        """
+        sim_t = self.get_sim_transport()
+        
+        # remove existing tdis package
+        sim_t.remove_package("tdis")
+
+        # TDIS
+        tdis = fp.mf6.ModflowTdis(sim_t, time_units='SECONDS', perioddata=perioddata)
+
+    def set_strt_conc(self, strt_conc):
+        """
+        Set the initial concentration for the transport model
+
+        Parameters
+        ----------
+        strt_conc : float or array of model dimension
+            initial concentration
+        """
+        gwt = self.get_gw_transport()
+        gwt.remove_package("ic")
+        eic = fp.mf6.ModflowGweic(gwt, strt=strt_conc, filename=f"{gwt.name}.ic")
+
+    def set_oc_t(self, saverecord, printrecord, concentrationprintrecord):
+        """
+        Set the output control for the transport model
+
+        Parameters
+        ----------
+        budget_filerecord : str
+            name of the budget file
+        concentration_filerecord : str
+            name of the concentration file
+        """
+        gwt = self.get_gw_transport()
+        gwt.remove_package("oc")
+        oc_t = fp.mf6.ModflowGwtoc(
+            gwt,
+            budget_filerecord=f"{gwt.name}.cbc",
+            concentration_filerecord=f"{gwt.name}.ucn",
+            concentrationprintrecord=concentrationprintrecord,
+            saverecord=saverecord,
+            printrecord=printrecord,
+        )
+
+    def set_dsp(self, alh=None, ath1=None, alv=None, ath2=None, atv=None,
+                diffc=1e-9,
+                xt3d_off=False, xt3d_rhs=False,
+                vb=1):
+        """
+        Set the dispersion package for the transport model
+        Note that this package reinitalize pre assigned values
+
+        Parameters
+        ----------
+        alh : float
+            longitudinal dispersivity if flow is horizontal
+        ath1 : float
+            transverse dispersivity (in y direction) if flow is horizontal
+        ath2 : float
+            transverse dispersivity (in z direction) if flow is horizontal
+        alv : float
+            longitudinal dispersivity if flow is vertical
+        atv : float
+            transverse dispersivity (in xy direction) if flow is vertical
+        diffc : float
+            molecular diffusion coefficient
+        xt3d_off : bool 
+            xt3d formulation
+        """
+
+        assert self.sim_t is not None, "You need to create a transport simulation first, see :meth:`create_sim_transport`"
+
+        gwt = self.get_gw_transport()
+        gwtname=gwt.name
+        if xt3d_off is None:
+            xt3d_off = False
+
+        gwt = self.get_gw_transport()
+
+        # get upscaled properties if necessary
+        new_par = []
+        for par in [alh, alv, ath1, ath2, atv, diffc]:
+            if isinstance(par, str):
+                par = self.upscale_prop(par)
+            new_par.append(par)
+        alh, alv, ath1, ath2, atv, diffc = new_par
+        
+        # remove existing cnd package
+        gwt.remove_package("dsp")
+
+        # ensure that alh and ath1 are not None
+        if gwt.dis.package_type == "dis":
+            if alh is None:
+                alh = max(max(gwt.dis.delr.array), max(gwt.dis.delc.array))
+            
+            if ath1 is None:
+                ath1 = alh
+        else:
+            pass
+            # TO DO
+
+        # dispersion package
+        dsp = fp.mf6.ModflowGwtdsp(gwt, alh=alh, ath1=ath1, alv=alv, ath2=ath2, atv=atv,
+                                    diffc=diffc, pname="DSP", filename=f"{gwtname}.dsp",
+                                    xt3d_off=xt3d_off)
+
+        if vb:
+            print("dsp package updated")
+
+    def set_mst(self, porosity=None, 
+                decay=None, decay_0=False, decay_1=False,
+                decay_sorbed=None,
+                sorption=None, bulk_density=None, distcoef=None, sp2=None,
+                vb=1):
+
+        """
+        Set the mass storage package for the transport model
+        To assign a property from an Archpy model, use the name of the property as a string
+        
+        Parameters
+        ----------
+        porosity : float, array or string
+            porosity of the medium
+        decay : float, array or string
+            decay coefficient. A negative value indicates production
+        decay_0 : bool
+            if True, decay is a zero order decay
+        decay_1 : bool
+            if True, decay is a first order decay
+        decay_sorbed : float, array or string
+            decay coefficient for the sorbed phase
+        sorption : string
+            sorption keyword to indicate that soprtion is used.
+            Options are: linear, langmuir, freundlich
+        bulk_density : float, array or string
+            bulk density of the medium in mass/length^3
+            Bulk density corresponds to the amount of solid per unit volume of the medium
+        distcoef : float, array or string
+            distribution coefficient for the equilibrium sorption. unit is length^3/mass
+        sp2 : float, array or string
+            exponent for the freundlich isotherm
+        """
+
+        assert self.sim_t is not None, "You need to create a transport simulation first, see :meth:`create_sim_transport`"
+
+        gwt = self.get_gw_transport()
+        gwtname=gwt.name
+
+        gwt = self.get_gw_transport()
+        
+        # if porosity is None, keep previous value
+        if porosity is None:
+            porosity = gwt.mst.porosity.array
+        else:
+            # get upscaled properties if necessary
+            if isinstance(porosity, str):
+                porosity = self.upscale_prop(porosity)
+            
+
+        # get upscaled properties if necessary
+        new_par = []
+        for par in [decay, decay_sorbed, bulk_density, distcoef, sp2]:
+            if isinstance(par, str):
+                par = self.upscale_prop(par)
+            new_par.append(par)
+        decay, decay_sorbed, bulk_density, distcoef, sp2 = new_par
+        
+        # remove existing mst package
+        gwt.remove_package("mst")
+
+        # mass storage package
+        mst = fp.mf6.ModflowGwtmst(
+            gwt,
+            porosity=porosity,
+            zero_order_decay=decay_0,
+            first_order_decay=decay_1,
+            decay=decay,
+            decay_sorbed=decay_sorbed,
+            sorption=sorption,
+            bulk_density=bulk_density,
+            distcoef=distcoef,
+            sp2=sp2,
+            filename=f"{gwtname}.mst",
+        )
+
+        if vb:
+            print("mst package updated")
 
     ## energy model ##
     def create_sim_energy(self,
@@ -1813,7 +2133,7 @@ class archpy2modflow:
         return self.sim_prt
 
     # create additional packages (ssm, ctp, ...) #
-    def create_ssm(self, sourcerecarray):
+    def create_ssm_e(self, sourcerecarray):
         """
         Create the ssm package for the energy model
 
@@ -1917,6 +2237,9 @@ class archpy2modflow:
 
         if self.sim_e is not None:
             self.get_gw_energy().get_package("est").porosity.set_data(new_porosity)
+
+        if self.sim_t is not None:
+            self.get_gw_transport().get_package("mst").porosity.set_data(new_porosity)
 
     def set_cnd(self, xt3d_off=None, xt3d_rhs=None,
                 alh=1, alv=None, 

@@ -425,6 +425,7 @@ class archpy2modflow:
         self.sim = None
         self.sim_prt = None
         self.sim_e = None
+        self.sim_t = None
         self.grid_mode = None
         self.layers_names = None
         self.list_active_cells = None

@@ -587,7 +587,7 @@ class archpy2modflow:
                 idomain[thicknesses == 0] = -1
                 idomain[np.isnan(thicknesses)] = 0
 
-                # set nan of each layer to the mean of the layer previous + 1e-2
+                # set nan of each layer to the mean of the previous layer + 1e-2
                 prev_mean = None
                 for ilay in range(nlay-1, -1, -1):
                     mask = np.isnan(botm[ilay])
@@ -610,8 +610,10 @@ class archpy2modflow:
                     else:
                         s1 = botm[i]
                     s2 = botm[i+1]
-                    mask = np.abs(s2 - s1) < rtol
-                    s1[mask] += 1e-2
+                    # mask = np.abs(s2 - s1) < rtol
+                    # s1[mask] += 1e-2    
+                    mask = (s1 <= s2) | (np.abs(s2 - s1) < rtol)
+                    s1[mask] = s2[mask] + 1e-2
                     # mask = ((s2 < (s1 + np.ones(s1.shape)*rtol)) & (s2 > (s1 - np.ones(s1.shape)*rtol)))  # mask to identify cells where the thickness is == 0 with some tolerance
 
                     # 2nd loop over previous layers to ensure that the thickness is > 0

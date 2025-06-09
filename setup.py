@@ -39,7 +39,8 @@ setuptools.setup(
                 'geopandas',
                 'flopy',
                 'numba',
-                'pyshp']
+                'pyshp',
+                'seaborn']
     },
     packages=setuptools.find_packages(),
     include_package_data=True,

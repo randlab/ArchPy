@@ -75,10 +75,10 @@ Members of the project
 ArchPy is developped, tested and supported by a group of people from the Randlab. These include:
 
    - Ludovic Schorpp 
+   - Nina Egli
    - Alexis Neven
    - Julien Straubhaar
    - Philippe Renard
-   - Nina Egli
 
 
 How to cite

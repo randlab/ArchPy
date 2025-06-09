@@ -1552,7 +1552,7 @@ class archpy2modflow:
 
             # filter particle results to remove issues along the paths
             # df = df.groupby("icell").first().sort_values("t").reset_index()
-            pd.concat((df.iloc[:2], df.iloc[2:].groupby("icell").first().sort_values("t").reset_index()), axis=0)
+            df = pd.concat((df.iloc[:2], df.iloc[2:].groupby("icell").first().sort_values("t").reset_index()), axis=0)
         else:
             # filter all particles results to remove issues along the paths (and keep first two lines which are always true ?)
             # df = df.groupby(["irpt", "icell"]).first().sort_values(["irpt", "t"]).reset_index()

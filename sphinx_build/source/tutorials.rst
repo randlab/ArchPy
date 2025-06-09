@@ -55,9 +55,15 @@ Notebooks
    notebooks/modflow_coupling
    notebooks/modflow_coupling_unstructured_grid
    notebooks/modflow_energy_model
+   modflow_transport <notebooks/transport_simple_example>
 
 .. nbgallery::
    :caption: Upscaling
 
    notebooks/upscaling_3D_fields
    notebooks/unstructured_grids
+
+.. nbgallery::
+   :caption: paper notebooks
+   
+   notebooks/ap2_mf_paper

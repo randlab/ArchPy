@@ -800,12 +800,40 @@ class archpy2modflow:
 
     def set_k(self, k_key="K",
               iu=0, ifa=0, ip=0,
-              log=False, k=None, k22=None, k33=None, k_average_method="arithmetic", 
+              log=False, k=None, k22=None, k33=None, k_average_method="arithmetic",
+              average_facies=True, 
               upscaling_method="simplified_renormalization",
               xt3doptions=None):
 
         """
         Set the hydraulic conductivity for a specific facies
+
+        Parameters
+        ----------
+        k_key : str
+            name of the property to use for the hydraulic conductivity, default is "K"
+        iu : int
+            index of the unit simulation to use when grid_mode is "layers"
+        ifa : int
+            index of the facies simulation to use when grid_mode is "layers"
+        ip : int
+            index of the property simulation to use when grid_mode is "layers"
+        log : bool
+            if True, the hydraulic conductivity property is assumed to be in log10 scale, default is False
+        k : np.ndarray, optional
+            hydraulic conductivity in x direction
+            if provided, the hydraulic conductivity will be set to this value, default is None
+            if k is None, the hydraulic conductivity will be computed from the property defined in the ArchPy table
+        k22 : np.ndarray, optional
+            hydraulic conductivity in y direction
+        k33 : np.ndarray, optional
+            hydraulic conductivity in z direction
+        k_average_method : str
+            method to use for averaging the hydraulic conductivity when grid_mode is "layers"
+            can be "arithmetic", "harmonic" or "anisotropic", default is "arithmetic"
+        average_facies : bool
+            if True, the facies will be upscaled and saved in the model
+            if False, the facies will not be upscaled, default is True
         """
 
         # write a function to get proportion of each value in the array
@@ -898,12 +926,15 @@ class archpy2modflow:
                             else:
                                 raise ValueError("k_average_method must be one of 'arithmetic' or 'harmonic' or 'anisotropic'")
                             
-                            # facies upscaling
-                            arr = facies_arr[:, irow, icol][mask_unit[:, irow, icol]]  # array of facies values in the unit
-                            prop = get_proportion(arr)
-                            for ifa in np.unique(arr):
-                                # upscaled_facies[ifa][:, irow, icol][mask_unit[:, irow, icol]] = prop[ifa]
-                                upscaled_facies[ifa][ilay, irow, icol] = prop[ifa]
+                            if average_facies:
+                                # facies upscaling
+                                arr = facies_arr[:, irow, icol][mask_unit[:, irow, icol]]  # array of facies values in the unit
+                                prop = get_proportion(arr)
+                                for ifa in np.unique(arr):
+                                    # upscaled_facies[ifa][:, irow, icol][mask_unit[:, irow, icol]] = prop[ifa]
+                                    upscaled_facies[ifa][ilay, irow, icol] = prop[ifa]
+                            else:
+                                upscaled_facies = None
                 
                 # save upscaled facies
                 self.upscaled_facies = upscaled_facies
@@ -2010,6 +2041,144 @@ class archpy2modflow:
 
         if vb:
             print("mst package updated")
+
+    def set_model_dir(self, model_dir):
+        """
+        Set the model directory for the modflow simulation
+        """
+        self.model_dir = model_dir
+
+        # change directory in the simulation object
+        sim = self.get_sim()
+        sim.set_sim_path(model_dir)
+        if self.sim_t is not None:
+            self.sim_t.sim_path = model_dir
+        if self.sim_prt is not None:
+            self.sim_prt.sim_path = model_dir
+        if self.mp is not None:
+            self.mp.model_ws = model_dir
+
+        print(f"Model directory set to {model_dir}")
+
+    def set_grid_layers_mode(self, iu=0, unit_limit=None, lay_sep=1):
+        """
+        Change the ArchPy unit simulation used to defined the layers
+        with the Layers mode. Note that this preserves the modflow model 
+        and do not recreate a new simulation object. For this
+        use :meth:`create_sim` method.
+        """
+
+        # get gwf
+        gwf = self.get_gwf()
+        # remove dis
+        gwf.dis.remove()
+
+        nlay, nrow, ncol = self.T1.get_nz(), self.T1.get_ny(), self.T1.get_nx()
+        delr, delc = self.T1.get_sx(), self.T1.get_sy()
+        xoff, yoff = self.T1.get_ox(), self.T1.get_oy()
+
+        n_units = len(self.T1.get_surface()[1])
+        if isinstance(lay_sep, int):
+            lay_sep = [lay_sep] * n_units
+        assert len(lay_sep) == n_units, "lay_sep must have the same length as the number of units"
+        self.lay_sep = lay_sep  # save lay_sep
+
+        def list_unit_below_unit(T1, unit):
+            u = T1.get_unit(unit)
+            units = []
+            for u_name in T1.get_surface()[1]:
+                unit_to_compare = T1.get_unit(u_name)
+                if u_name == unit:
+                    units.append(unit_to_compare)
+                    continue
+                if unit_to_compare > u or unit_to_compare in u.get_baby_units(vb=0):  # if the unit is below the unit or is a baby unit
+                    units.append(unit_to_compare)
+            return units
+
+        # determine which units will be inactive
+        if unit_limit is not None:
+            units = list_unit_below_unit(self.T1, unit_limit)
+            n_units_removed = len(units)
+            n_units_removed = np.sum(lay_sep[-n_units_removed:])
+        else:
+            n_units_removed = None
+
+        # get surfaces of each unit
+        top = self.T1.get_surface(typ="top")[0][0, iu].copy()
+        top = np.flip(top, axis=0)
+        botm = self.T1.get_surface(typ="bot")[0][:, iu].copy()
+        botm = np.flip(botm, axis=1)
+
+        botm_org = botm.copy()  # copy of botm to ensure that we only select original surfaces and not new sublayers
+
+        # add sublayers to botm
+        for ilay in range(n_units):
+            if ilay == 0:
+                s1 = top
+            else:
+                s1 = botm_org[ilay-1]
+            s2 = botm_org[ilay]
+            for isublay in range(1, lay_sep[ilay]):
+
+                smean = s1*(1-isublay/lay_sep[ilay]) + s2*(isublay/lay_sep[ilay])  # mean of the two surfaces
+                botm = np.insert(botm, sum(lay_sep[0:ilay])+isublay-1, smean, axis=0)  # insert the surface at the right place
+
+        layers_names = self.T1.get_surface(typ="bot")[1]
+        self.layers_names = layers_names
+        nlay = botm.shape[0]
+
+        # define idomain (1 if thickness > 0, 0 if nan, -1 if thickness = 0)
+        idomain = np.ones((nlay, nrow, ncol))
+        thicknesses = -np.diff(np.vstack([top.reshape(-1, nrow, ncol), botm]), axis=0)
+        idomain[thicknesses == 0] = -1
+        idomain[np.isnan(thicknesses)] = 0
+
+        # set nan of each layer to the mean of the previous layer + 1e-2
+        prev_mean = None
+        for ilay in range(nlay-1, -1, -1):
+            mask = np.isnan(botm[ilay])
+            if ilay == nlay-1:
+                prev_mean = np.nanmean(botm[ilay])
+                botm[ilay][mask] = prev_mean
+            else:
+                prev_mean = max(np.nanmean(botm[ilay]), prev_mean + 1e-2)
+                botm[ilay][mask] = prev_mean
+
+        # inactive cells below unit limit
+        if n_units_removed is not None:
+            idomain[-n_units_removed:] = 0
+
+        rtol = 1e-7
+        # adapt botm in order that each layer has a thickness > 0 
+        for i in range(-1, nlay-1):
+            if i == -1:
+                s1 = top
+            else:
+                s1 = botm[i]
+            s2 = botm[i+1]
+            # mask = np.abs(s2 - s1) < rtol
+            # s1[mask] += 1e-2    
+            mask = (s1 <= s2) | (np.abs(s2 - s1) < rtol)
+            s1[mask] = s2[mask] + 1e-2
+            # mask = ((s2 < (s1 + np.ones(s1.shape)*rtol)) & (s2 > (s1 - np.ones(s1.shape)*rtol)))  # mask to identify cells where the thickness is == 0 with some tolerance
+
+            # 2nd loop over previous layers to ensure that the thickness is > 0
+            for o in range(i, -1, -1):
+                s2 = botm[o]
+                if o == 0:
+                    s1 = top
+                else:
+                    s1 = botm[o-1]
+                mask = (s1 <= s2) | (np.abs(s2 - s1) < rtol)
+                # mask = (s1 <= s2) | ((s2 < (s1 + np.ones(s1.shape)*rtol)) & (s2 > (s1 - np.ones(s1.shape)*rtol)))  # mask to identify cells where the thickness is <= 0 with some tolerance
+                s1[mask] = s2[mask] + 1e-2
+            
+        rot_angle = self.T1.get_rot_angle()
+        dis = fp.mf6.ModflowGwfdis(gwf, nlay=nlay, nrow=nrow, ncol=ncol,
+                                    delr=delr, delc=delc,
+                                    top=top, botm=botm,
+                                    xorigin=xoff, yorigin=yoff, 
+                                    idomain=idomain, angrot=rot_angle)
 
     ## energy model ##
     def create_sim_energy(self,

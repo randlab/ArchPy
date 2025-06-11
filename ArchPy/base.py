@@ -2121,6 +2121,50 @@ class Arch_table():
             else:
                 if self.verbose:
                     print("object isn't a Property object")
+    
+    def rem_prop(self, prop):
+
+        """
+        Remove a property from the Arch_Table
+
+        Parameters
+        ----------
+        prop: :class:`Prop` object or property name
+            property to remove from the Arch_Table
+        """
+
+        try:
+            for i in prop:
+                if (isinstance(i, Prop)) and (i in self.list_props):
+                    self.list_props.remove(i)
+                    if self.verbose:
+                        print("Property {} removed".format(i.name))
+
+                else:
+                    if isinstance(i, str):
+                        if i in [p.name for p in self.list_props]:
+                            self.list_props = [p for p in self.list_props if p.name != i]
+                            if self.verbose:
+                                print("Property {} removed".format(i))
+
+                    else:
+                        if self.verbose:
+                            print("object isn't a Property object or it is not in the list")
+
+        except:  # not a list of properties
+            if (isinstance(prop, Prop)) and (prop in self.list_props):
+                self.list_props.remove(prop)
+                if self.verbose:
+                    print("Property {} removed".format(prop.name))
+            elif isinstance(prop, str):
+                    if prop in [p.name for p in self.list_props]:
+                        self.list_props = [p for p in self.list_props if p.name != prop]
+                        if self.verbose:
+                            print("Property {} removed".format(prop))
+            else:
+                if self.verbose:
+                    print("object isn't a Property object or it is not in the list")
+        
 
     def add_bh(self, bhs):
 
@@ -5143,8 +5187,9 @@ class Arch_table():
         y0=self.get_oy()
         z0=self.get_oz()
 
-        stratis_domain=self.get_units_domains_realizations(iu=iu, fill="ID", h_level=h_level).astype(np.float32)
+        stratis_domain=self.get_units_domains_realizations(iu=iu, fill="ID", h_level=h_level, all_data=False).astype(np.float32).copy()
         lst_ID=np.unique(stratis_domain)
+        # lst_ID = [u.ID for u in self.get_all_units()]
         new_lst_ID = []
         if excludedVal is None:
             excludedVal=[]
@@ -5157,7 +5202,7 @@ class Arch_table():
             if i != 0:
                 if i not in excludedVal:
                     s=self.get_unit(ID=i, type="ID")
-            #         stratis_domain[stratis_domain == i]=new_id
+                    # stratis_domain[stratis_domain == i]=new_id
                     colors.append(s.c)
                     d[new_id - 0.5]=s.name
                     new_id += 1

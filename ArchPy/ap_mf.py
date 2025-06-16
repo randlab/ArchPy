@@ -2528,3 +2528,29 @@ class archpy2modflow:
 
 
 
+    ### methods for inversion ### (experimental)
+    def create_reduced_child_object(self, iu=0, ifa=0, ip=0):
+
+        """
+        This function creates a child object of the current archpy2modflow object. 
+        where the contained archpy model has only a limited number of units, facies and properties simulations
+        It is a copy of the current object but with a reduced number of units, facies and properties.
+        """
+        import copy
+
+        # arch Table
+        T1 = self.T1
+
+        # reduce table
+        T1_reduced = copy.deepcopy(T1)
+        
+        # change unit, facies and property simulation
+        unit_sim = T1.get_units_domains_realizations(iu=iu)
+        
+        # create a new object
+        
+        child = copy.deepcopy(self)
+        # set the number of units, facies and properties
+
+        # child = Archpy2Modflow(self.T1, self.sim_name, self.exe_name, model_dir=self.model_dir)
+        return

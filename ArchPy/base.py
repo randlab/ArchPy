@@ -5746,7 +5746,7 @@ class Arch_table():
         """
 
         #load property array and facies array
-        prop=self.get_prop(property)  # to modify
+        prop=self.get_prop(property).copy()  # to modify
         prop_shape=prop.shape
         facies=self.get_facies()
         facies_shape=facies.shape

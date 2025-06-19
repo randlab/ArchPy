@@ -891,7 +891,7 @@ class archpy2modflow:
                 ilay = 0
                 for l in layers:
                     if self.lay_sep[ilay] == 1:
-                        mask_units.append(self.T1.unit_mask(l).astype(bool))
+                        mask_units.append(self.T1.unit_mask(l, iu=iu).astype(bool))
                     else:
                         for isublay in range(self.lay_sep[ilay]):
                             if ilay == 0 and isublay == 0:
@@ -901,7 +901,7 @@ class archpy2modflow:
                                 s1 = botm[sum(self.lay_sep[0:ilay])+isublay-1]
                                 s2 = botm[sum(self.lay_sep[0:ilay])+isublay]
                             mask = self.T1.compute_domain(s1, s2)
-                            mask *= self.T1.unit_mask(l).astype(bool)  # apply mask of the whole unit to ensure that we only consider the cells of the unit
+                            mask *= self.T1.unit_mask(l, iu=iu).astype(bool)  # apply mask of the whole unit to ensure that we only consider the cells of the unit
                             mask_units.append(mask.astype(bool))
                     
                     ilay += 1

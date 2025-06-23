@@ -325,7 +325,7 @@ def merge(v1, v2, w1, w2, normalize=True):
 
 
 def find_c_3D(k_field, direction="x", typ="min", dx=None, dy=None, dz=None):
-    
+
     if typ == "min":
         if direction == "x":
             l_typ = ["x", "y", "z"]
@@ -467,21 +467,24 @@ def test_find_c():
     print("Test passed")
 
 # function to compute the most present value in an array
-from scipy.stats import mode
-def most_present_value(arr):
-    return mode(arr, axis=None).mode
+# from scipy.stats import mode
+# def most_present_value(arr):
+#     return mode(arr, axis=None).mode
 
 # now keq is a function of cmin and cmax according to keq = cmax**alpha*(cmin)**(1-alpha)
 def get_alpha(dx, dy, dz=None, direction="x"):
     
-    # check that dx, dy and dz are single values if array, find the most present value
+    # check that dx, dy and dz are single values if array, find the value in center of the array
     if isinstance(dx, np.ndarray):
-        dx = most_present_value(dx)
+        # dx = most_present_value(dx)
+        dx = dx[dx.shape[0]//2, dx.shape[1]//2, dx.shape[2]//2] if len(dx.shape) == 3 else dx[dx.shape[0]//2, dx.shape[1]//2]
     if isinstance(dy, np.ndarray):
-        dy = most_present_value(dy)
+        # dy = most_present_value(dy)
+        dy = dy[dy.shape[0]//2, dy.shape[1]//2, dy.shape[2]//2] if len(dy.shape) == 3 else dy[dy.shape[0]//2, dy.shape[1]//2]
     if dz is not None:
         if isinstance(dz, np.ndarray):
-            dz = most_present_value(dz)
+            # dz = most_present_value(dz)
+            dz = dz[dz.shape[0]//2, dz.shape[1]//2, dz.shape[2]//2] if len(dz.shape) == 3 else dz[dz.shape[0]//2, dz.shape[1]//2]
 
     def f_u(t):
         return np.arctan(np.sqrt(t)) / (np.pi/2)
@@ -518,8 +521,9 @@ def keq(cmin, cmax, alpha):
     return res
 
 def simplified_renormalization(field, dx, dy, dz, direction="x"):
-
+    
     cx_min, cx_max = find_c_3D(field, direction=direction, typ="min", dx=dx, dy=dy, dz=dz), find_c_3D(field, direction=direction, typ="max", dx=dx, dy=dy, dz=dz)
+
     return keq(cx_min, cx_max, get_alpha(dx, dy, dz, direction=direction)) 
 
 # Standard renormalization algorithm
@@ -910,8 +914,10 @@ def upscale_cell_disv(grid_ref_xver, grid_ref_yver, grid_ref_layers, grid_ref_to
     z2_cell : float
         maximal z-coordinate of the cell.
     """ 
+    import time
 
     ndim = field.ndim
+    
     
     ## get the indices of the cell in the reference grid ##
     # columns
@@ -995,6 +1001,7 @@ def upscale_cell_disv(grid_ref_xver, grid_ref_yver, grid_ref_layers, grid_ref_to
 
         return Kxx, Kyy
     else:
+        t1 = time.time()
         field_cell = field[iz_lay2-1:iz_lay1+1, iy_row2-1:iy_row1+1, ix_col1-1:ix_col2+1]
 
         # dx, dy, dz
@@ -1024,7 +1031,8 @@ def upscale_cell_disv(grid_ref_xver, grid_ref_yver, grid_ref_layers, grid_ref_to
 
             dy, dz, dx  = np.meshgrid(dy, dz, dx)  # transform arrays to 3D
         # upscaling 3D
-    
+            t2 = time.time()
+            # print(f"Time to get dx, dy, dz: {t2 - t1:.6f} seconds")
         # special case if only one cell
         if field_cell.shape[0] == 1 and field_cell.shape[1] == 1 and field_cell.shape[2] == 1:
             Kxx = field_cell[0, 0, 0]
@@ -1236,7 +1244,7 @@ def upscale_k(field, dx=1, dy=1, dz=1,
     scheme : str
         Scheme for standard renormalization. Options are direct and center. Center is generally more accurate and faster. Default is center
     """
-
+    import time 
     if grid is None:
         assert method in ["simplified_renormalization", "tensorial_renormalization", "standard_renormalization",
                            "arithmetic", "harmonic", "geometric"], "method must be simplified_renormalization, tensorial_renormalization, standard_renormalization, arithmetic, harmonic or geometric"
@@ -1315,6 +1323,7 @@ def upscale_k(field, dx=1, dy=1, dz=1,
         import flopy
         # grid_ref
         # field = np.flip(np.flipud(field), axis=1)  # flip the field to have the same orientation as the grid
+
         nrow = field.shape[1]
         ncol = field.shape[2]
         nlay = field.shape[0]
@@ -1351,13 +1360,13 @@ def upscale_k(field, dx=1, dy=1, dz=1,
             for ilay in range(grid.nlay):
                 l = []
                 for icell in range(len(cell2d)):
-
                     vert_cell = np.array(grid.get_cell_vertices(icell))
 
                     x1_cell = np.min(vert_cell[:, 0])
                     x2_cell = np.max(vert_cell[:, 0])
                     y1_cell = np.min(vert_cell[:, 1])
                     y2_cell = np.max(vert_cell[:, 1])
+                    
                     if ilay == 0:
                         z1_cell = botm[0, icell]
                         z2_cell = top[icell]
@@ -1365,6 +1374,7 @@ def upscale_k(field, dx=1, dy=1, dz=1,
                         z1_cell = botm[ilay, icell]
                         z2_cell = botm[ilay-1, icell]
 
+                    # UPSCALE_CELL_DISV takes too much time
                     # print(x1_cell, x2_cell, y1_cell, y2_cell, z1_cell, z2_cell)
                     Kxx, Kyy, Kzz = upscale_cell_disv(grid_ref_xver, grid_ref_yver, grid_ref_layers=grid_ref_layers, grid_ref_top=grid_ref_top, 
                                                       sx_grid=dx, sy_grid=dy, sz_grid=dz,
@@ -1374,6 +1384,7 @@ def upscale_k(field, dx=1, dy=1, dz=1,
                                                       z1_cell=z1_cell, z2_cell=z2_cell,
                                                       method=method)
                     l.append([Kxx, Kyy, Kzz])
+
                 new_k.append(l)
 
             new_k = np.array(new_k)

@@ -134,7 +134,7 @@ def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance
         if proportions:
             # df.set_index("time").iloc[:, -len(colors_fa):].plot(color=colors_fa, legend=False, ax=axi)
             df.time = pd.to_datetime(df.time,unit=time_unit)  # set datetime to resample
-            df.set_index("time").resample(resampling).first().fillna(method="ffill").reset_index().iloc[:, -len(colors_fa):].plot(color=colors_fa, legend=False, ax=axi)
+            df.set_index("time").resample(resampling).first().fillna(method="ffill").reset_index().iloc[:, -len(colors_fa):].plot.area(color=colors_fa, legend=False, ax=axi, linewidth=0)
             axi.set_ylabel("Proportion")
             axi.set_xlabel("time [{}]".format(resampling))
             axi.set_ylim(-.1, 1.1)
@@ -160,7 +160,10 @@ def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance
         all_cum_dist = df["cum_distance"].values
 
         if proportions:
-            df.set_index("cum_distance").iloc[:, -len(colors_fa):].plot(color=colors_fa, legend=False, ax=axi)
+            df_plot = df.set_index("cum_distance").iloc[:, -len(colors_fa):]
+            df_plot.loc[df_plot.sum(1).values == 0] = np.nan
+            df_plot = df_plot.fillna(method="ffill")
+            df_plot.plot.area(color=colors_fa, legend=False, ax=axi, linewidth=0)
             axi.set_ylabel("Proportion")
             axi.set_xlabel("Distance [m]")
             axi.set_ylim(-.1, 1.1)
@@ -1598,11 +1601,30 @@ class archpy2modflow:
 
         return df
 
-    def prt_get_facies_path_particle(self, i_particle=1, fac_time = 1/86400, iu = 0, ifa = 0):
+    def prt_get_facies_path_particle(self, i_particle=1, fac_time = 1/86400, iu = 0, ifa = 0, facies_archpy=False):
         """
         Function to retrieve the facies sequences along a pathline
+
+        Parameters
+        ----------
+
+        i_particle : int
+            index of the particle to retrieve the pathline for. 
+        fac_time : float
+            factor to convert time from seconds to days (default is 1/86400)
+        iu : int
+            index of the unit realization to retrieve the facies from (default is 0)
+        ifa : int
+            index of the facies realization to retrieve the facies from (default is 0)
+        facies_archpy : bool
+            if True, retrieve the facies from the the fine ArchPy model (not upscaled)
+
         """
-        grid_mode = self.grid_mode
+
+        if facies_archpy:
+            grid_mode = "archpy"
+        else:
+            grid_mode = self.grid_mode
         df = self.prt_get_pathlines(i_particle)
 
         if df.shape[0] == 0:
@@ -1631,13 +1653,15 @@ class archpy2modflow:
             cells_path = np.array(cells_path)
             # cells_path[:, 0] += 1  # add 1 to the layer index to match modflow convention
         else:
-            # cells_path = np.array((((df_all["z"].values-self.T1.zg[0])//self.T1.sz).astype(int),
-            #                         ((df_all["y"].values-self.T1.yg[0])//self.T1.sy).astype(int),
-            #                         ((df_all["x"].values-self.T1.xg[0])//self.T1.sx).astype(int))).T
-            nx = self.get_gwf().modelgrid.ncol
-            ny = self.get_gwf().modelgrid.nrow
-            cells_path = get_locs(df.icell-1, nx, ny)
-            cells_path = np.array(cells_path)[1:]
+            if facies_archpy:
+                cells_path = np.array((((df_all["z"].values-self.T1.zg[0])//self.T1.sz).astype(int),
+                                        ((df_all["y"].values-self.T1.yg[0])//self.T1.sy).astype(int),
+                                        ((df_all["x"].values-self.T1.xg[0])//self.T1.sx).astype(int))).T
+            else:
+                nx = self.get_gwf().modelgrid.ncol
+                ny = self.get_gwf().modelgrid.nrow
+                cells_path = get_locs(df.icell-1, nx, ny)
+                cells_path = np.array(cells_path)[1:]
 
             # check that no cells path exceed the grid
             cells_path[:, 0][cells_path[:, 0] >= self.T1.nz] = self.T1.nz - 1
@@ -1662,7 +1686,8 @@ class archpy2modflow:
 
         elif grid_mode == "archpy":
             facies = self.T1.get_facies(iu, ifa, all_data=False)
-            facies = np.flip(np.flipud(facies), axis=1)
+            if not facies_archpy:
+                facies = np.flip(np.flipud(facies), axis=1)
             facies_along_path = facies[cells_path[:, 0], cells_path[:, 1], cells_path[:, 2]]
             df_all["facies"] = facies_along_path
         

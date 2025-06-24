@@ -3896,6 +3896,9 @@ class Arch_table():
                                 if (fa in prop.facies) and (fa.ID in facies_domain): # simulation of the property (check if facies is inside strat unit)
                                     i=prop.facies.index(fa) # retrieve index
                                     m=prop.means[i] #mean value
+                                    if prop.log_void_ratio:
+                                        m = np.log10(m/(1-m))
+
                                     method=prop.int[i] #method of interpolation (sgs or fft)
 
                                     if method == "fft":
@@ -3942,6 +3945,11 @@ class Arch_table():
                     ma=((self.Geol.facies_domains[iu, ifa] == 0) * self.mask)
                     K_fa[:, ma]=prop.def_mean
 
+                    # void ratio log --> assumes that property is void ratio log-normally distributed (log10)
+                    if prop.log_void_ratio:
+                        K_fa = 10**K_fa
+                        K_fa = K_fa / (K_fa + 1)
+
                     if prop.vmin is not None:
                         K_fa[K_fa < prop.vmin]=prop.vmin
                     if prop.vmax is not None:
@@ -3960,7 +3968,7 @@ class Arch_table():
                     if self.verbose:
                         print("### {} {} models done".format(counter, prop.name))
 
-            if ~self.write_results:
+            if not self.write_results:
                 self.Geol.prop_values[prop.name]=prop_values
 
         self.prop_computed=1
@@ -7909,9 +7917,13 @@ class Prop():
         position of hard data 
     v : ndarray of size (n, 1 --> value)
         value of hard data
+    log_void_ratio : bool
+        Specific to porosity. Use the void ratio equation to compute porosity
+        This assumes that the property is actually void ratio log-normally distributed 
+        and that porosity will be determined from it
     """
 
-    def __init__(self, name, facies, covmodels, means, int_method="sgs", x=None, v= None, def_mean=1, vmin=None, vmax=None):
+    def __init__(self, name, facies, covmodels, means, int_method="sgs", x=None, v= None, def_mean=1, vmin=None, vmax=None, log_void_ratio=False):
 
 
         assert isinstance(facies, list), "Facies must be a list of facies, even there is only one"
@@ -7928,6 +7940,7 @@ class Prop():
         self.x=x
         self.v=v
         self.covmodels=None
+        self.log_void_ratio = log_void_ratio
 
         #means
         self.means=means

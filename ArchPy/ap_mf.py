@@ -988,22 +988,25 @@ class archpy2modflow:
                 new_k22[np.isnan(new_k22)] = np.nanmean(new_k22)
                 new_k33[np.isnan(new_k33)] = np.nanmean(new_k33)
 
-                # facies upscaling
-                facies_arr = self.T1.get_facies(iu, ifa, all_data=False)
-                upscaled_facies = {}
-                for ifa in np.unique(facies_arr):
-                    # upscaled_facies[ifa] = np.zeros((facies_arr.shape[0], facies_arr.shape[1], facies_arr.shape[2]))
-                    upscaled_facies[ifa] = np.zeros((field_kxx.shape[0], field_kxx.shape[1], field_kxx.shape[2]))
-                
-                for ilay in range(0, self.T1.get_nz(), factor_z):
-                    for irow in range(0, self.T1.get_ny(), factor_y):
-                        for icol in range(0, self.T1.get_nx(), factor_x):
-                            mask_unit = facies_arr[ilay:ilay+factor_z, irow:irow+factor_y, icol:icol+factor_x]
-                            arr = mask_unit.flatten()
-                            prop = get_proportion(arr)
-                            for ifa in np.unique(arr):
-                                # upscaled_facies[ifa][ilay:ilay+factor_z, irow:irow+factor_y, icol:icol+factor_x] = prop[ifa]
-                                upscaled_facies[ifa][ilay//factor_z, irow//factor_y, icol//factor_x] = prop[ifa]
+                if average_facies:
+                    # facies upscaling
+                    facies_arr = self.T1.get_facies(iu, ifa, all_data=False)
+                    upscaled_facies = {}
+                    for ifa in np.unique(facies_arr):
+                        # upscaled_facies[ifa] = np.zeros((facies_arr.shape[0], facies_arr.shape[1], facies_arr.shape[2]))
+                        upscaled_facies[ifa] = np.zeros((field_kxx.shape[0], field_kxx.shape[1], field_kxx.shape[2]))
+                    
+                    for ilay in range(0, self.T1.get_nz(), factor_z):
+                        for irow in range(0, self.T1.get_ny(), factor_y):
+                            for icol in range(0, self.T1.get_nx(), factor_x):
+                                mask_unit = facies_arr[ilay:ilay+factor_z, irow:irow+factor_y, icol:icol+factor_x]
+                                arr = mask_unit.flatten()
+                                prop = get_proportion(arr)
+                                for ifa in np.unique(arr):
+                                    # upscaled_facies[ifa][ilay:ilay+factor_z, irow:irow+factor_y, icol:icol+factor_x] = prop[ifa]
+                                    upscaled_facies[ifa][ilay//factor_z, irow//factor_y, icol//factor_x] = prop[ifa]
+                else:
+                    upscaled_facies = None
 
                 self.upscaled_facies = upscaled_facies
             
@@ -1059,30 +1062,33 @@ class archpy2modflow:
                     new_k[np.isnan(new_k)] = np.nanmean(new_k)
                     new_k22[np.isnan(new_k22)] = np.nanmean(new_k22)
                     new_k33[np.isnan(new_k33)] = np.nanmean(new_k33)
+                
+                if average_facies:
+                    # facies upscaling
+                    facies_arr = self.T1.get_facies(iu, ifa, all_data=False)
+                    facies_arr = np.flip(np.flipud(facies_arr), axis=1)  # flip the array to have the same orientation as the ArchPy table
+
+                    upscaled_facies = {}
+                    for ifa in [fa.ID for fa in self.T1.get_all_facies()]:
+
+                        upscaled_facies[ifa] = np.zeros((facies_arr.shape[0], facies_arr.shape[1], facies_arr.shape[2]))
+
+                        field = facies_arr.copy()
+                        field[facies_arr == ifa] = 1
+                        field[facies_arr != ifa] = 0
+                        
+
+                        field_up, _, _ = upscale_k(field, method="arithmetic", 
+                                                dx=dx, dy=dy, dz=dz,
+                                                ox=ox, oy=oy, oz=oz,
+                                                grid=grid)
+                        
+                        upscaled_facies[ifa] = field_up.astype(float)
+                        upscaled_facies[ifa][np.isnan(upscaled_facies[ifa])] = 0
+                else:
+                    upscaled_facies = None
                     
-                # facies upscaling
-                facies_arr = self.T1.get_facies(iu, ifa, all_data=False)
-                facies_arr = np.flip(np.flipud(facies_arr), axis=1)  # flip the array to have the same orientation as the ArchPy table
-
-                upscaled_facies = {}
-                for ifa in [fa.ID for fa in self.T1.get_all_facies()]:
-
-                    upscaled_facies[ifa] = np.zeros((facies_arr.shape[0], facies_arr.shape[1], facies_arr.shape[2]))
-
-                    field = facies_arr.copy()
-                    field[facies_arr == ifa] = 1
-                    field[facies_arr != ifa] = 0
-                    
-
-                    field_up, _, _ = upscale_k(field, method="arithmetic", 
-                                               dx=dx, dy=dy, dz=dz,
-                                               ox=ox, oy=oy, oz=oz,
-                                               grid=grid)
-                    
-                    upscaled_facies[ifa] = field_up.astype(float)
-                    upscaled_facies[ifa][np.isnan(upscaled_facies[ifa])] = 0
-
-                    self.upscaled_facies = upscaled_facies
+                self.upscaled_facies = upscaled_facies
 
         else:
             new_k = k

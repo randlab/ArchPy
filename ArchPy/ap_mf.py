@@ -419,7 +419,7 @@ class archpy2modflow:
         path to the mf6 executable
     """
 
-    def __init__(self, T1, sim_name="sim_test", model_dir="workspace", model_name="test", exe_name="mf6"):
+    def __init__(self, T1, sim_name="sim_test", model_dir="workspace", model_name="test", exe_name="mf6", vb=1):
         self.T1 = T1
         self.sim_name = sim_name
         self.model_dir = model_dir
@@ -436,6 +436,7 @@ class archpy2modflow:
         self.factor_x = None
         self.factor_y = None
         self.factor_z = None
+        self.vb = vb  # verbosity level, 0 = no output, 1 = normal output
 
     def create_sim(self, grid_mode="archpy", iu=0, 
                    lay_sep=1,
@@ -699,8 +700,11 @@ class archpy2modflow:
         npf = fp.mf6.ModflowGwfnpf(gwf, icelltype=0, k=1e-3, save_flows=True, save_saturation=True)
 
         self.sim = sim
-        print("Simulation created")
-        print("To retrieve the simulation, use the get_sim() method")
+        if self.vb > 0:
+            print("Simulation created with the following parameters:")
+            print(f"Grid mode: {grid_mode}")
+
+            print("To retrieve the simulation, use the get_sim() method")
 
     def upscale_prop(self, prop_key, iu=0, ifa=0, ip=0, method="arithmetic", log=False):
 
@@ -803,7 +807,7 @@ class archpy2modflow:
 
     def set_k(self, k_key="K",
               iu=0, ifa=0, ip=0,
-              log=False, k=None, k22=None, k33=None, k_average_method="arithmetic",
+              log=False, k=None, k22=None, k33=None, k_average_method="anisotropic",
               average_facies=True, 
               upscaling_method="simplified_renormalization",
               xt3doptions=None):
@@ -2560,7 +2564,8 @@ class archpy2modflow:
 
 
     ### methods for inversion ### (experimental)
-    def create_reduced_child_object(self, iu=0, ifa=0, ip=0):
+
+    def create_reduced_child_object(self, iu=0, ifa=0, ip=0, properties=None):
 
         """
         This function creates a child object of the current archpy2modflow object. 
@@ -2569,19 +2574,56 @@ class archpy2modflow:
         """
         import copy
 
-        # arch Table
+        if properties is None:
+            properties = self.T1.get_prop_names()
+
+        nx, ny, nz = self.T1.get_nx(), self.T1.get_ny(), self.T1.get_nz()
+
+        # get arch Table and remove from parent object
         T1 = self.T1
 
-        # reduce table
+        # reduce table (copy of the big table)
         T1_reduced = copy.deepcopy(T1)
-        
-        # change unit, facies and property simulation
-        unit_sim = T1.get_units_domains_realizations(iu=iu)
-        
-        # create a new object
-        
-        child = copy.deepcopy(self)
-        # set the number of units, facies and properties
+        del(T1_reduced.Geol.surfaces_by_piles)
+        del(T1_reduced.Geol.surfaces_bot_by_piles)
+        del(T1_reduced.Geol.units_domains)    
+        del(T1_reduced.Geol.facies_domains)
+        del(T1_reduced.Geol.prop_values)
 
-        # child = Archpy2Modflow(self.T1, self.sim_name, self.exe_name, model_dir=self.model_dir)
-        return
+        # change surfaces, unit, facies and property simulation
+        surfs_by_piles = {}
+        for pile in T1.Geol.surfaces_by_piles.keys():
+            surfs = T1.Geol.surfaces_by_piles[pile][iu]
+            surfs_by_piles[pile] = surfs.reshape(1, *surfs.shape)
+        
+        surfs_bot_by_piles = {}
+        for pile in T1.Geol.surfaces_bot_by_piles.keys():
+            surfs = T1.Geol.surfaces_bot_by_piles[pile][iu]
+            surfs_bot_by_piles[pile] = surfs.reshape(1, *surfs.shape)
+
+        unit_sim = T1.get_units_domains_realizations(iu=iu, all_data=False)
+        facies_sim = T1.get_facies(iu=iu, ifa=ifa, all_data=False)
+        prop_sim = {}
+        for prop in properties:
+            prop_sim[prop] = T1.get_prop(prop, iu=iu, ifa=ifa, ip=ip, all_data=False).reshape(1, 1, 1, nz, ny, nx)
+
+        T1_reduced.Geol.surfaces_by_piles = surfs_by_piles
+        T1_reduced.Geol.surfaces_bot_by_piles = surfs_bot_by_piles       
+        T1_reduced.Geol.units_domains = unit_sim.reshape(1, nz, ny, nx)
+        T1_reduced.Geol.facies_domains = facies_sim.reshape(1, 1, nz, ny, nx)
+        T1_reduced.Geol.prop_values = prop_sim
+
+
+        # create a new object from a copy
+        # child = copy.deepcopy(self)
+        child = archpy2modflow(T1_reduced, exe_name=self.exe_name, vb=self.vb)  # create the modflow model
+        child.create_sim(grid_mode="layers", iu=0, unit_limit="u12")
+        child.T1 = T1_reduced  # set new table
+
+        # set the number of units, facies and properties
+        T1_reduced.nreal_units = 1
+        T1_reduced.nreal_fa = 1
+        T1_reduced.nreal_prop = 1
+
+
+        return child

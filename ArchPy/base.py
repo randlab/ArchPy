@@ -2542,7 +2542,7 @@ class Arch_table():
             
         return lst
 
-    def process_geological_map(self, typ="all", step = 5):
+    def process_geological_map(self, typ="all", step_uniform = 5, step_boundaries=5):
         
         """
         Process the geological map attributed to ArchTable model. 
@@ -2561,7 +2561,7 @@ class Arch_table():
             that much more data are sampled from the raster but this increases
             the computational burden. Default is 5 (every 5th cell is sampled)
         """
-        
+
         xg = self.get_xg()
         yg = self.get_yg()
         xgc = self.get_xgc()
@@ -2587,10 +2587,11 @@ class Arch_table():
             sample_boundaries = True
 
         if sample_raster:
+            assert step_uniform is not None, "step_uniform must be informed"
             mask2d = self.mask.any(0)
             bhs_map = []
-            for ix in np.arange(0, len(xg)-1, step):
-                for iy in np.arange(0, len(yg)-1, step):
+            for ix in np.arange(0, len(xg)-1, step_uniform):
+                for iy in np.arange(0, len(yg)-1, step_uniform):
                     if mask2d[iy, ix]:
                         unit_id = raster[iy, ix]
                         unit = self.get_unit(ID=unit_id, type="ID", vb=0)
@@ -2606,7 +2607,8 @@ class Arch_table():
             self.list_map_bhs += bhs_map
 
         if sample_boundaries:
-            bhs = self.geol_contours(step=step)
+            assert step_boundaries is not None, "step_boundaries must be informed"
+            bhs = self.geol_contours(step=step_boundaries)
             self.list_map_bhs += bhs
 
         if self.verbose:

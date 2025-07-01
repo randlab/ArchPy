@@ -2581,14 +2581,18 @@ class archpy2modflow:
 
         # get arch Table and remove from parent object
         T1 = self.T1
+        Geol_copy = copy.deepcopy(T1.Geol)
+        T1.Geol = None
 
         # reduce table (copy of the big table)
         T1_reduced = copy.deepcopy(T1)
-        del(T1_reduced.Geol.surfaces_by_piles)
-        del(T1_reduced.Geol.surfaces_bot_by_piles)
-        del(T1_reduced.Geol.units_domains)    
-        del(T1_reduced.Geol.facies_domains)
-        del(T1_reduced.Geol.prop_values)
+        # del(T1_reduced.Geol.surfaces_by_piles)
+        # del(T1_reduced.Geol.surfaces_bot_by_piles)
+        # del(T1_reduced.Geol.units_domains)    
+        # del(T1_reduced.Geol.facies_domains)
+        # del(T1_reduced.Geol.prop_values)
+        T1_reduced.Geol = ArchPy.base.Geol()
+        T1.Geol = Geol_copy
 
         # change surfaces, unit, facies and property simulation
         surfs_by_piles = {}

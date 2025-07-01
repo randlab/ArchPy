@@ -3713,7 +3713,7 @@ class Arch_table():
 
                     self.Geol.units_domains[iu] = arr_test
         else:
-            if self.vb:
+            if self.verbose:
                 print("Invalid method")
 
     def compute_facies(self, nreal=1, verbose_methods=0):
@@ -4751,6 +4751,71 @@ class Arch_table():
         
         return df_unit, df_facies
 
+    ## inverse utils functions ##
+    def set_results_from_another_table(self, Table, iu, ifa, ip, properties=None):
+        
+        """
+        This function set results from another Table to the given self table. For inverse purpose
+
+        Parameters
+        ----------
+        Table: :class:`Table` object
+            Table object from which we want to set the results
+        iu: int
+            unit realization index (0, 1, ..., Nu)
+        ifa: int    
+            facies realization index (0, 1, ..., Nfa)
+        ip: int
+            property realization index (0, 1, ..., Np)
+        properties: list of str
+            list of properties to set in the current table, if None, all properties are set
+        vb: int
+            verbosity level, if 1, print a message when the results are set
+        
+        """
+
+        if properties is None:
+            properties = Table.get_prop_names()
+
+        nx, ny, nz = Table.get_nx(), Table.get_ny(), Table.get_nz()
+
+        surfs_by_piles = {}
+        for pile in Table.Geol.surfaces_by_piles.keys():
+            surfs = Table.Geol.surfaces_by_piles[pile][iu].copy()
+            surfs_by_piles[pile] = surfs.reshape(1, *surfs.shape)
+
+        surfs_bot_by_piles = {}
+        for pile in Table.Geol.surfaces_bot_by_piles.keys():
+            surfs = Table.Geol.surfaces_bot_by_piles[pile][iu].copy()
+            surfs_bot_by_piles[pile] = surfs.reshape(1, *surfs.shape)
+
+        unit_sim = Table.get_units_domains_realizations(iu=iu, all_data=False)
+
+        facies_sim = Table.get_facies(iu=iu, ifa=ifa, all_data=False)
+        prop_sim = {}
+        for prop in properties:
+            prop_sim[prop] = Table.get_prop(prop, iu=iu, ifa=ifa, ip=ip, all_data=False).reshape(1, 1, 1, nz, ny, nx).copy()
+
+        self.Geol.surfaces_by_piles = surfs_by_piles
+        self.Geol.surfaces_bot_by_piles = surfs_bot_by_piles       
+        self.Geol.units_domains = unit_sim.reshape(1, nz, ny, nx)
+        self.Geol.facies_domains = facies_sim.reshape(1, 1, nz, ny, nx)
+        self.Geol.prop_values = prop_sim
+
+        if self.verbose:
+            print("Results from Table {} set in the current ArchTable".format(Table.name))
+    
+    def split_table(self, iu=0, ifa=0, ip=0, erase_object=False):
+
+        """
+        Split the current ArchTable into multiple ArchTable objects with a predifined number of simulations.
+
+
+        """
+        
+        # TO DO
+
+
     ### plotting ###
 
     def plot_pile(self, plot_facies=True, ax=None):
@@ -5118,7 +5183,7 @@ class Arch_table():
                 with open(fpath, "rb") as f:
                     ud=pickle.load(f)
             else:
-                ud=self.Geol.units_domains.copy()[iu]
+                ud=self.Geol.units_domains[iu].copy()
 
             if fill == "ID":
                 units_domains=ud
@@ -6340,6 +6405,7 @@ class Arch_table():
 
         if legend:
             ax.legend()
+
 
 
 # CLASSES PILE + UNIT + SURFACE

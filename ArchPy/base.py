@@ -3898,8 +3898,8 @@ class Arch_table():
                                 if (fa in prop.facies) and (fa.ID in facies_domain): # simulation of the property (check if facies is inside strat unit)
                                     i=prop.facies.index(fa) # retrieve index
                                     m=prop.means[i] #mean value
-                                    if prop.log_void_ratio:
-                                        m = np.log10(m/(1-m))
+                                    # if prop.log_void_ratio:
+                                        # m = np.log10(m/(1-m))
 
                                     method=prop.int[i] #method of interpolation (sgs or fft)
 
@@ -7648,9 +7648,10 @@ class Unit():
                             pt.set_varname("code")
 
                             # automatic inference of orientations
-                            if kwargs["rotAzi"] == "inference" and kwargs["rotDip"] == "inference":  # only if these two are set on inference
-                                azi, dip=ArchTable.orientation_map(self, azi_top = kwargs["azi_top"],  dip_top= kwargs["dip_top"],
-                                                                azi_bot=kwargs["azi_bot"], dip_bot=kwargs["dip_bot"], smooth=2)  # get azimuth and dip
+                            if isinstance(kwargs["rotAzi"], str) and isinstance(kwargs["rotDip"], str):
+                                if kwargs["rotAzi"] == "inference" and kwargs["rotDip"] == "inference":  # only if these two are set on inference
+                                    azi, dip=ArchTable.orientation_map(self, azi_top = kwargs["azi_top"],  dip_top= kwargs["dip_top"],
+                                                                    azi_bot=kwargs["azi_bot"], dip_bot=kwargs["dip_bot"], smooth=2)  # get azimuth and dip
 
                                 kwargs["rotAzi"] = azi
                                 kwargs["rotDip"] = dip

@@ -20,7 +20,7 @@ def create_env():
     # Define the name of the new conda environment
     
     # Create the new conda environment
-    subprocess.run(f"conda create --name {env_name} python=3.14 -yf", shell=True)
+    subprocess.run(f"conda create --name {env_name} python=3.11 -yf", shell=True)
 
     # Activate the new conda environment and install packages
     subprocess.run(f"conda activate {env_name} && pip install .[all]", shell=True)
@@ -38,7 +38,7 @@ def run_notebooks():
     # use an alias
 
     # get list of all notebooks
-    notebooks_subfolders = []
+    notebooks_subfolders = ["01_basic", "02_3D_ArchPy", "04_hierarchies", "05_mps_surfaces", "06_cross_validation", "07_Geological_map", "10_rotation_grid", "11_modflow_coupling", "12_modflow_energy", "upscaling"]
 
     for folder in notebooks_subfolders:
         for notebook in os.listdir(f"{notebook_folder}/{folder}"):

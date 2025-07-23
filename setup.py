@@ -27,7 +27,7 @@ setuptools.setup(
                       'shapely',
                       ],  
     extras_require={
-        "all": ['pyvista==0.44.0',
+        "all": ['pyvista',
                 'trame',
                 'trame-vuetify',
                 'trame-vtk',

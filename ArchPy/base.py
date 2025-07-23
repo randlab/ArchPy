@@ -2121,6 +2121,50 @@ class Arch_table():
             else:
                 if self.verbose:
                     print("object isn't a Property object")
+    
+    def rem_prop(self, prop):
+
+        """
+        Remove a property from the Arch_Table
+
+        Parameters
+        ----------
+        prop: :class:`Prop` object or property name
+            property to remove from the Arch_Table
+        """
+
+        try:
+            for i in prop:
+                if (isinstance(i, Prop)) and (i in self.list_props):
+                    self.list_props.remove(i)
+                    if self.verbose:
+                        print("Property {} removed".format(i.name))
+
+                else:
+                    if isinstance(i, str):
+                        if i in [p.name for p in self.list_props]:
+                            self.list_props = [p for p in self.list_props if p.name != i]
+                            if self.verbose:
+                                print("Property {} removed".format(i))
+
+                    else:
+                        if self.verbose:
+                            print("object isn't a Property object or it is not in the list")
+
+        except:  # not a list of properties
+            if (isinstance(prop, Prop)) and (prop in self.list_props):
+                self.list_props.remove(prop)
+                if self.verbose:
+                    print("Property {} removed".format(prop.name))
+            elif isinstance(prop, str):
+                    if prop in [p.name for p in self.list_props]:
+                        self.list_props = [p for p in self.list_props if p.name != prop]
+                        if self.verbose:
+                            print("Property {} removed".format(prop))
+            else:
+                if self.verbose:
+                    print("object isn't a Property object or it is not in the list")
+        
 
     def add_bh(self, bhs):
 
@@ -2498,7 +2542,7 @@ class Arch_table():
             
         return lst
 
-    def process_geological_map(self, typ="all", step = 5):
+    def process_geological_map(self, typ="all", step_uniform = 5, step_boundaries=5):
         
         """
         Process the geological map attributed to ArchTable model. 
@@ -2517,7 +2561,7 @@ class Arch_table():
             that much more data are sampled from the raster but this increases
             the computational burden. Default is 5 (every 5th cell is sampled)
         """
-        
+
         xg = self.get_xg()
         yg = self.get_yg()
         xgc = self.get_xgc()
@@ -2543,10 +2587,11 @@ class Arch_table():
             sample_boundaries = True
 
         if sample_raster:
+            assert step_uniform is not None, "step_uniform must be informed"
             mask2d = self.mask.any(0)
             bhs_map = []
-            for ix in np.arange(0, len(xg)-1, step):
-                for iy in np.arange(0, len(yg)-1, step):
+            for ix in np.arange(0, len(xg)-1, step_uniform):
+                for iy in np.arange(0, len(yg)-1, step_uniform):
                     if mask2d[iy, ix]:
                         unit_id = raster[iy, ix]
                         unit = self.get_unit(ID=unit_id, type="ID", vb=0)
@@ -2562,7 +2607,8 @@ class Arch_table():
             self.list_map_bhs += bhs_map
 
         if sample_boundaries:
-            bhs = self.geol_contours(step=step)
+            assert step_boundaries is not None, "step_boundaries must be informed"
+            bhs = self.geol_contours(step=step_boundaries)
             self.list_map_bhs += bhs
 
         if self.verbose:
@@ -3667,7 +3713,7 @@ class Arch_table():
 
                     self.Geol.units_domains[iu] = arr_test
         else:
-            if self.vb:
+            if self.verbose:
                 print("Invalid method")
 
     def compute_facies(self, nreal=1, verbose_methods=0):
@@ -3852,6 +3898,9 @@ class Arch_table():
                                 if (fa in prop.facies) and (fa.ID in facies_domain): # simulation of the property (check if facies is inside strat unit)
                                     i=prop.facies.index(fa) # retrieve index
                                     m=prop.means[i] #mean value
+                                    # if prop.log_void_ratio:
+                                        # m = np.log10(m/(1-m))
+
                                     method=prop.int[i] #method of interpolation (sgs or fft)
 
                                     if method == "fft":
@@ -3898,6 +3947,11 @@ class Arch_table():
                     ma=((self.Geol.facies_domains[iu, ifa] == 0) * self.mask)
                     K_fa[:, ma]=prop.def_mean
 
+                    # void ratio log --> assumes that property is void ratio log-normally distributed (log10)
+                    if prop.log_void_ratio:
+                        K_fa = 10**K_fa
+                        K_fa = K_fa / (K_fa + 1)
+
                     if prop.vmin is not None:
                         K_fa[K_fa < prop.vmin]=prop.vmin
                     if prop.vmax is not None:
@@ -3916,7 +3970,7 @@ class Arch_table():
                     if self.verbose:
                         print("### {} {} models done".format(counter, prop.name))
 
-            if ~self.write_results:
+            if not self.write_results:
                 self.Geol.prop_values[prop.name]=prop_values
 
         self.prop_computed=1
@@ -4697,6 +4751,71 @@ class Arch_table():
         
         return df_unit, df_facies
 
+    ## inverse utils functions ##
+    def set_results_from_another_table(self, Table, iu, ifa, ip, properties=None):
+        
+        """
+        This function set results from another Table to the given self table. For inverse purpose
+
+        Parameters
+        ----------
+        Table: :class:`Table` object
+            Table object from which we want to set the results
+        iu: int
+            unit realization index (0, 1, ..., Nu)
+        ifa: int    
+            facies realization index (0, 1, ..., Nfa)
+        ip: int
+            property realization index (0, 1, ..., Np)
+        properties: list of str
+            list of properties to set in the current table, if None, all properties are set
+        vb: int
+            verbosity level, if 1, print a message when the results are set
+        
+        """
+
+        if properties is None:
+            properties = Table.get_prop_names()
+
+        nx, ny, nz = Table.get_nx(), Table.get_ny(), Table.get_nz()
+
+        surfs_by_piles = {}
+        for pile in Table.Geol.surfaces_by_piles.keys():
+            surfs = Table.Geol.surfaces_by_piles[pile][iu].copy()
+            surfs_by_piles[pile] = surfs.reshape(1, *surfs.shape)
+
+        surfs_bot_by_piles = {}
+        for pile in Table.Geol.surfaces_bot_by_piles.keys():
+            surfs = Table.Geol.surfaces_bot_by_piles[pile][iu].copy()
+            surfs_bot_by_piles[pile] = surfs.reshape(1, *surfs.shape)
+
+        unit_sim = Table.get_units_domains_realizations(iu=iu, all_data=False)
+
+        facies_sim = Table.get_facies(iu=iu, ifa=ifa, all_data=False)
+        prop_sim = {}
+        for prop in properties:
+            prop_sim[prop] = Table.get_prop(prop, iu=iu, ifa=ifa, ip=ip, all_data=False).reshape(1, 1, 1, nz, ny, nx).copy()
+
+        self.Geol.surfaces_by_piles = surfs_by_piles
+        self.Geol.surfaces_bot_by_piles = surfs_bot_by_piles       
+        self.Geol.units_domains = unit_sim.reshape(1, nz, ny, nx)
+        self.Geol.facies_domains = facies_sim.reshape(1, 1, nz, ny, nx)
+        self.Geol.prop_values = prop_sim
+
+        if self.verbose:
+            print("Results from Table {} set in the current ArchTable".format(Table.name))
+    
+    def split_table(self, iu=0, ifa=0, ip=0, erase_object=False):
+
+        """
+        Split the current ArchTable into multiple ArchTable objects with a predifined number of simulations.
+
+
+        """
+        
+        # TO DO
+
+
     ### plotting ###
 
     def plot_pile(self, plot_facies=True, ax=None):
@@ -5064,7 +5183,7 @@ class Arch_table():
                 with open(fpath, "rb") as f:
                     ud=pickle.load(f)
             else:
-                ud=self.Geol.units_domains.copy()[iu]
+                ud=self.Geol.units_domains[iu].copy()
 
             if fill == "ID":
                 units_domains=ud
@@ -5143,8 +5262,9 @@ class Arch_table():
         y0=self.get_oy()
         z0=self.get_oz()
 
-        stratis_domain=self.get_units_domains_realizations(iu=iu, fill="ID", h_level=h_level).astype(np.float32)
+        stratis_domain=self.get_units_domains_realizations(iu=iu, fill="ID", h_level=h_level, all_data=False).astype(np.float32).copy()
         lst_ID=np.unique(stratis_domain)
+        # lst_ID = [u.ID for u in self.get_all_units()]
         new_lst_ID = []
         if excludedVal is None:
             excludedVal=[]
@@ -5157,7 +5277,7 @@ class Arch_table():
             if i != 0:
                 if i not in excludedVal:
                     s=self.get_unit(ID=i, type="ID")
-            #         stratis_domain[stratis_domain == i]=new_id
+                    # stratis_domain[stratis_domain == i]=new_id
                     colors.append(s.c)
                     d[new_id - 0.5]=s.name
                     new_id += 1
@@ -5701,7 +5821,7 @@ class Arch_table():
         """
 
         #load property array and facies array
-        prop=self.get_prop(property)  # to modify
+        prop=self.get_prop(property).copy()  # to modify
         prop_shape=prop.shape
         facies=self.get_facies()
         facies_shape=facies.shape
@@ -6285,6 +6405,7 @@ class Arch_table():
 
         if legend:
             ax.legend()
+
 
 
 # CLASSES PILE + UNIT + SURFACE
@@ -7527,9 +7648,10 @@ class Unit():
                             pt.set_varname("code")
 
                             # automatic inference of orientations
-                            if kwargs["rotAzi"] == "inference" and kwargs["rotDip"] == "inference":  # only if these two are set on inference
-                                azi, dip=ArchTable.orientation_map(self, azi_top = kwargs["azi_top"],  dip_top= kwargs["dip_top"],
-                                                                azi_bot=kwargs["azi_bot"], dip_bot=kwargs["dip_bot"], smooth=2)  # get azimuth and dip
+                            if isinstance(kwargs["rotAzi"], str) and isinstance(kwargs["rotDip"], str):
+                                if kwargs["rotAzi"] == "inference" and kwargs["rotDip"] == "inference":  # only if these two are set on inference
+                                    azi, dip=ArchTable.orientation_map(self, azi_top = kwargs["azi_top"],  dip_top= kwargs["dip_top"],
+                                                                    azi_bot=kwargs["azi_bot"], dip_bot=kwargs["dip_bot"], smooth=2)  # get azimuth and dip
 
                                 kwargs["rotAzi"] = azi
                                 kwargs["rotDip"] = dip
@@ -7864,9 +7986,13 @@ class Prop():
         position of hard data 
     v : ndarray of size (n, 1 --> value)
         value of hard data
+    log_void_ratio : bool
+        Specific to porosity. Use the void ratio equation to compute porosity
+        This assumes that the property is actually void ratio log-normally distributed 
+        and that porosity will be determined from it
     """
 
-    def __init__(self, name, facies, covmodels, means, int_method="sgs", x=None, v= None, def_mean=1, vmin=None, vmax=None):
+    def __init__(self, name, facies, covmodels, means, int_method="sgs", x=None, v= None, def_mean=1, vmin=None, vmax=None, log_void_ratio=False):
 
 
         assert isinstance(facies, list), "Facies must be a list of facies, even there is only one"
@@ -7883,6 +8009,7 @@ class Prop():
         self.x=x
         self.v=v
         self.covmodels=None
+        self.log_void_ratio = log_void_ratio
 
         #means
         self.means=means

@@ -134,7 +134,7 @@ def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance
         if proportions:
             # df.set_index("time").iloc[:, -len(colors_fa):].plot(color=colors_fa, legend=False, ax=axi)
             df.time = pd.to_datetime(df.time,unit=time_unit)  # set datetime to resample
-            df.set_index("time").resample(resampling).first().fillna(method="ffill").reset_index().iloc[:, -len(colors_fa):].plot(color=colors_fa, legend=False, ax=axi)
+            df.set_index("time").resample(resampling).first().fillna(method="ffill").reset_index().iloc[:, -len(colors_fa):].plot.area(color=colors_fa, legend=False, ax=axi, linewidth=0)
             axi.set_ylabel("Proportion")
             axi.set_xlabel("time [{}]".format(resampling))
             axi.set_ylim(-.1, 1.1)
@@ -160,7 +160,10 @@ def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance
         all_cum_dist = df["cum_distance"].values
 
         if proportions:
-            df.set_index("cum_distance").iloc[:, -len(colors_fa):].plot(color=colors_fa, legend=False, ax=axi)
+            df_plot = df.set_index("cum_distance").iloc[:, -len(colors_fa):]
+            df_plot.loc[df_plot.sum(1).values == 0] = np.nan
+            df_plot = df_plot.fillna(method="ffill")
+            df_plot.plot.area(color=colors_fa, legend=False, ax=axi, linewidth=0)
             axi.set_ylabel("Proportion")
             axi.set_xlabel("Distance [m]")
             axi.set_ylim(-.1, 1.1)
@@ -416,7 +419,7 @@ class archpy2modflow:
         path to the mf6 executable
     """
 
-    def __init__(self, T1, sim_name="sim_test", model_dir="workspace", model_name="test", exe_name="mf6"):
+    def __init__(self, T1, sim_name="sim_test", model_dir="workspace", model_name="test", exe_name="mf6", vb=1):
         self.T1 = T1
         self.sim_name = sim_name
         self.model_dir = model_dir
@@ -433,6 +436,7 @@ class archpy2modflow:
         self.factor_x = None
         self.factor_y = None
         self.factor_z = None
+        self.vb = vb  # verbosity level, 0 = no output, 1 = normal output
 
     def create_sim(self, grid_mode="archpy", iu=0, 
                    lay_sep=1,
@@ -696,8 +700,11 @@ class archpy2modflow:
         npf = fp.mf6.ModflowGwfnpf(gwf, icelltype=0, k=1e-3, save_flows=True, save_saturation=True)
 
         self.sim = sim
-        print("Simulation created")
-        print("To retrieve the simulation, use the get_sim() method")
+        if self.vb > 0:
+            print("Simulation created with the following parameters:")
+            print(f"Grid mode: {grid_mode}")
+
+            print("To retrieve the simulation, use the get_sim() method")
 
     def upscale_prop(self, prop_key, iu=0, ifa=0, ip=0, method="arithmetic", log=False):
 
@@ -800,12 +807,40 @@ class archpy2modflow:
 
     def set_k(self, k_key="K",
               iu=0, ifa=0, ip=0,
-              log=False, k=None, k22=None, k33=None, k_average_method="arithmetic", 
+              log=False, k=None, k22=None, k33=None, k_average_method="anisotropic",
+              average_facies=True, 
               upscaling_method="simplified_renormalization",
               xt3doptions=None):
 
         """
         Set the hydraulic conductivity for a specific facies
+
+        Parameters
+        ----------
+        k_key : str
+            name of the property to use for the hydraulic conductivity, default is "K"
+        iu : int
+            index of the unit simulation to use when grid_mode is "layers"
+        ifa : int
+            index of the facies simulation to use when grid_mode is "layers"
+        ip : int
+            index of the property simulation to use when grid_mode is "layers"
+        log : bool
+            if True, the hydraulic conductivity property is assumed to be in log10 scale, default is False
+        k : np.ndarray, optional
+            hydraulic conductivity in x direction
+            if provided, the hydraulic conductivity will be set to this value, default is None
+            if k is None, the hydraulic conductivity will be computed from the property defined in the ArchPy table
+        k22 : np.ndarray, optional
+            hydraulic conductivity in y direction
+        k33 : np.ndarray, optional
+            hydraulic conductivity in z direction
+        k_average_method : str
+            method to use for averaging the hydraulic conductivity when grid_mode is "layers"
+            can be "arithmetic", "harmonic" or "anisotropic", default is "arithmetic"
+        average_facies : bool
+            if True, the facies will be upscaled and saved in the model
+            if False, the facies will not be upscaled, default is True
         """
 
         # write a function to get proportion of each value in the array
@@ -863,7 +898,7 @@ class archpy2modflow:
                 ilay = 0
                 for l in layers:
                     if self.lay_sep[ilay] == 1:
-                        mask_units.append(self.T1.unit_mask(l).astype(bool))
+                        mask_units.append(self.T1.unit_mask(l, iu=iu).astype(bool))
                     else:
                         for isublay in range(self.lay_sep[ilay]):
                             if ilay == 0 and isublay == 0:
@@ -873,7 +908,7 @@ class archpy2modflow:
                                 s1 = botm[sum(self.lay_sep[0:ilay])+isublay-1]
                                 s2 = botm[sum(self.lay_sep[0:ilay])+isublay]
                             mask = self.T1.compute_domain(s1, s2)
-                            mask *= self.T1.unit_mask(l).astype(bool)  # apply mask of the whole unit to ensure that we only consider the cells of the unit
+                            mask *= self.T1.unit_mask(l, iu=iu).astype(bool)  # apply mask of the whole unit to ensure that we only consider the cells of the unit
                             mask_units.append(mask.astype(bool))
                     
                     ilay += 1
@@ -898,12 +933,15 @@ class archpy2modflow:
                             else:
                                 raise ValueError("k_average_method must be one of 'arithmetic' or 'harmonic' or 'anisotropic'")
                             
-                            # facies upscaling
-                            arr = facies_arr[:, irow, icol][mask_unit[:, irow, icol]]  # array of facies values in the unit
-                            prop = get_proportion(arr)
-                            for ifa in np.unique(arr):
-                                # upscaled_facies[ifa][:, irow, icol][mask_unit[:, irow, icol]] = prop[ifa]
-                                upscaled_facies[ifa][ilay, irow, icol] = prop[ifa]
+                            if average_facies:
+                                # facies upscaling
+                                arr = facies_arr[:, irow, icol][mask_unit[:, irow, icol]]  # array of facies values in the unit
+                                prop = get_proportion(arr)
+                                for ifa in np.unique(arr):
+                                    # upscaled_facies[ifa][:, irow, icol][mask_unit[:, irow, icol]] = prop[ifa]
+                                    upscaled_facies[ifa][ilay, irow, icol] = prop[ifa]
+                            else:
+                                upscaled_facies = None
                 
                 # save upscaled facies
                 self.upscaled_facies = upscaled_facies
@@ -954,22 +992,25 @@ class archpy2modflow:
                 new_k22[np.isnan(new_k22)] = np.nanmean(new_k22)
                 new_k33[np.isnan(new_k33)] = np.nanmean(new_k33)
 
-                # facies upscaling
-                facies_arr = self.T1.get_facies(iu, ifa, all_data=False)
-                upscaled_facies = {}
-                for ifa in np.unique(facies_arr):
-                    # upscaled_facies[ifa] = np.zeros((facies_arr.shape[0], facies_arr.shape[1], facies_arr.shape[2]))
-                    upscaled_facies[ifa] = np.zeros((field_kxx.shape[0], field_kxx.shape[1], field_kxx.shape[2]))
-                
-                for ilay in range(0, self.T1.get_nz(), factor_z):
-                    for irow in range(0, self.T1.get_ny(), factor_y):
-                        for icol in range(0, self.T1.get_nx(), factor_x):
-                            mask_unit = facies_arr[ilay:ilay+factor_z, irow:irow+factor_y, icol:icol+factor_x]
-                            arr = mask_unit.flatten()
-                            prop = get_proportion(arr)
-                            for ifa in np.unique(arr):
-                                # upscaled_facies[ifa][ilay:ilay+factor_z, irow:irow+factor_y, icol:icol+factor_x] = prop[ifa]
-                                upscaled_facies[ifa][ilay//factor_z, irow//factor_y, icol//factor_x] = prop[ifa]
+                if average_facies:
+                    # facies upscaling
+                    facies_arr = self.T1.get_facies(iu, ifa, all_data=False)
+                    upscaled_facies = {}
+                    for ifa in np.unique(facies_arr):
+                        # upscaled_facies[ifa] = np.zeros((facies_arr.shape[0], facies_arr.shape[1], facies_arr.shape[2]))
+                        upscaled_facies[ifa] = np.zeros((field_kxx.shape[0], field_kxx.shape[1], field_kxx.shape[2]))
+                    
+                    for ilay in range(0, self.T1.get_nz(), factor_z):
+                        for irow in range(0, self.T1.get_ny(), factor_y):
+                            for icol in range(0, self.T1.get_nx(), factor_x):
+                                mask_unit = facies_arr[ilay:ilay+factor_z, irow:irow+factor_y, icol:icol+factor_x]
+                                arr = mask_unit.flatten()
+                                prop = get_proportion(arr)
+                                for ifa in np.unique(arr):
+                                    # upscaled_facies[ifa][ilay:ilay+factor_z, irow:irow+factor_y, icol:icol+factor_x] = prop[ifa]
+                                    upscaled_facies[ifa][ilay//factor_z, irow//factor_y, icol//factor_x] = prop[ifa]
+                else:
+                    upscaled_facies = None
 
                 self.upscaled_facies = upscaled_facies
             
@@ -1025,30 +1066,33 @@ class archpy2modflow:
                     new_k[np.isnan(new_k)] = np.nanmean(new_k)
                     new_k22[np.isnan(new_k22)] = np.nanmean(new_k22)
                     new_k33[np.isnan(new_k33)] = np.nanmean(new_k33)
+                
+                if average_facies:
+                    # facies upscaling
+                    facies_arr = self.T1.get_facies(iu, ifa, all_data=False)
+                    facies_arr = np.flip(np.flipud(facies_arr), axis=1)  # flip the array to have the same orientation as the ArchPy table
+
+                    upscaled_facies = {}
+                    for ifa in [fa.ID for fa in self.T1.get_all_facies()]:
+
+                        upscaled_facies[ifa] = np.zeros((facies_arr.shape[0], facies_arr.shape[1], facies_arr.shape[2]))
+
+                        field = facies_arr.copy()
+                        field[facies_arr == ifa] = 1
+                        field[facies_arr != ifa] = 0
+                        
+
+                        field_up, _, _ = upscale_k(field, method="arithmetic", 
+                                                dx=dx, dy=dy, dz=dz,
+                                                ox=ox, oy=oy, oz=oz,
+                                                grid=grid)
+                        
+                        upscaled_facies[ifa] = field_up.astype(float)
+                        upscaled_facies[ifa][np.isnan(upscaled_facies[ifa])] = 0
+                else:
+                    upscaled_facies = None
                     
-                # facies upscaling
-                facies_arr = self.T1.get_facies(iu, ifa, all_data=False)
-                facies_arr = np.flip(np.flipud(facies_arr), axis=1)  # flip the array to have the same orientation as the ArchPy table
-
-                upscaled_facies = {}
-                for ifa in [fa.ID for fa in self.T1.get_all_facies()]:
-
-                    upscaled_facies[ifa] = np.zeros((facies_arr.shape[0], facies_arr.shape[1], facies_arr.shape[2]))
-
-                    field = facies_arr.copy()
-                    field[facies_arr == ifa] = 1
-                    field[facies_arr != ifa] = 0
-                    
-
-                    field_up, _, _ = upscale_k(field, method="arithmetic", 
-                                               dx=dx, dy=dy, dz=dz,
-                                               ox=ox, oy=oy, oz=oz,
-                                               grid=grid)
-                    
-                    upscaled_facies[ifa] = field_up.astype(float)
-                    upscaled_facies[ifa][np.isnan(upscaled_facies[ifa])] = 0
-
-                    self.upscaled_facies = upscaled_facies
+                self.upscaled_facies = upscaled_facies
 
         else:
             new_k = k
@@ -1567,11 +1611,30 @@ class archpy2modflow:
 
         return df
 
-    def prt_get_facies_path_particle(self, i_particle=1, fac_time = 1/86400, iu = 0, ifa = 0):
+    def prt_get_facies_path_particle(self, i_particle=1, fac_time = 1/86400, iu = 0, ifa = 0, facies_archpy=False):
         """
         Function to retrieve the facies sequences along a pathline
+
+        Parameters
+        ----------
+
+        i_particle : int
+            index of the particle to retrieve the pathline for. 
+        fac_time : float
+            factor to convert time from seconds to days (default is 1/86400)
+        iu : int
+            index of the unit realization to retrieve the facies from (default is 0)
+        ifa : int
+            index of the facies realization to retrieve the facies from (default is 0)
+        facies_archpy : bool
+            if True, retrieve the facies from the the fine ArchPy model (not upscaled)
+
         """
-        grid_mode = self.grid_mode
+
+        if facies_archpy:
+            grid_mode = "archpy"
+        else:
+            grid_mode = self.grid_mode
         df = self.prt_get_pathlines(i_particle)
 
         if df.shape[0] == 0:
@@ -1600,13 +1663,15 @@ class archpy2modflow:
             cells_path = np.array(cells_path)
             # cells_path[:, 0] += 1  # add 1 to the layer index to match modflow convention
         else:
-            # cells_path = np.array((((df_all["z"].values-self.T1.zg[0])//self.T1.sz).astype(int),
-            #                         ((df_all["y"].values-self.T1.yg[0])//self.T1.sy).astype(int),
-            #                         ((df_all["x"].values-self.T1.xg[0])//self.T1.sx).astype(int))).T
-            nx = self.get_gwf().modelgrid.ncol
-            ny = self.get_gwf().modelgrid.nrow
-            cells_path = get_locs(df.icell-1, nx, ny)
-            cells_path = np.array(cells_path)[1:]
+            if facies_archpy:
+                cells_path = np.array((((df_all["z"].values-self.T1.zg[0])//self.T1.sz).astype(int),
+                                        ((df_all["y"].values-self.T1.yg[0])//self.T1.sy).astype(int),
+                                        ((df_all["x"].values-self.T1.xg[0])//self.T1.sx).astype(int))).T
+            else:
+                nx = self.get_gwf().modelgrid.ncol
+                ny = self.get_gwf().modelgrid.nrow
+                cells_path = get_locs(df.icell-1, nx, ny)
+                cells_path = np.array(cells_path)[1:]
 
             # check that no cells path exceed the grid
             cells_path[:, 0][cells_path[:, 0] >= self.T1.nz] = self.T1.nz - 1
@@ -1631,7 +1696,8 @@ class archpy2modflow:
 
         elif grid_mode == "archpy":
             facies = self.T1.get_facies(iu, ifa, all_data=False)
-            facies = np.flip(np.flipud(facies), axis=1)
+            if not facies_archpy:
+                facies = np.flip(np.flipud(facies), axis=1)
             facies_along_path = facies[cells_path[:, 0], cells_path[:, 1], cells_path[:, 2]]
             df_all["facies"] = facies_along_path
         
@@ -2011,6 +2077,144 @@ class archpy2modflow:
         if vb:
             print("mst package updated")
 
+    def set_model_dir(self, model_dir):
+        """
+        Set the model directory for the modflow simulation
+        """
+        self.model_dir = model_dir
+
+        # change directory in the simulation object
+        sim = self.get_sim()
+        sim.set_sim_path(model_dir)
+        if self.sim_t is not None:
+            self.sim_t.sim_path = model_dir
+        if self.sim_prt is not None:
+            self.sim_prt.sim_path = model_dir
+        if self.mp is not None:
+            self.mp.model_ws = model_dir
+
+        print(f"Model directory set to {model_dir}")
+
+    def set_grid_layers_mode(self, iu=0, unit_limit=None, lay_sep=1):
+        """
+        Change the ArchPy unit simulation used to defined the layers
+        with the Layers mode. Note that this preserves the modflow model 
+        and do not recreate a new simulation object. For this
+        use :meth:`create_sim` method.
+        """
+
+        # get gwf
+        gwf = self.get_gwf()
+        # remove dis
+        gwf.dis.remove()
+
+        nlay, nrow, ncol = self.T1.get_nz(), self.T1.get_ny(), self.T1.get_nx()
+        delr, delc = self.T1.get_sx(), self.T1.get_sy()
+        xoff, yoff = self.T1.get_ox(), self.T1.get_oy()
+
+        n_units = len(self.T1.get_surface()[1])
+        if isinstance(lay_sep, int):
+            lay_sep = [lay_sep] * n_units
+        assert len(lay_sep) == n_units, "lay_sep must have the same length as the number of units"
+        self.lay_sep = lay_sep  # save lay_sep
+
+        def list_unit_below_unit(T1, unit):
+            u = T1.get_unit(unit)
+            units = []
+            for u_name in T1.get_surface()[1]:
+                unit_to_compare = T1.get_unit(u_name)
+                if u_name == unit:
+                    units.append(unit_to_compare)
+                    continue
+                if unit_to_compare > u or unit_to_compare in u.get_baby_units(vb=0):  # if the unit is below the unit or is a baby unit
+                    units.append(unit_to_compare)
+            return units
+
+        # determine which units will be inactive
+        if unit_limit is not None:
+            units = list_unit_below_unit(self.T1, unit_limit)
+            n_units_removed = len(units)
+            n_units_removed = np.sum(lay_sep[-n_units_removed:])
+        else:
+            n_units_removed = None
+
+        # get surfaces of each unit
+        top = self.T1.get_surface(typ="top")[0][0, iu].copy()
+        top = np.flip(top, axis=0)
+        botm = self.T1.get_surface(typ="bot")[0][:, iu].copy()
+        botm = np.flip(botm, axis=1)
+
+        botm_org = botm.copy()  # copy of botm to ensure that we only select original surfaces and not new sublayers
+
+        # add sublayers to botm
+        for ilay in range(n_units):
+            if ilay == 0:
+                s1 = top
+            else:
+                s1 = botm_org[ilay-1]
+            s2 = botm_org[ilay]
+            for isublay in range(1, lay_sep[ilay]):
+
+                smean = s1*(1-isublay/lay_sep[ilay]) + s2*(isublay/lay_sep[ilay])  # mean of the two surfaces
+                botm = np.insert(botm, sum(lay_sep[0:ilay])+isublay-1, smean, axis=0)  # insert the surface at the right place
+
+        layers_names = self.T1.get_surface(typ="bot")[1]
+        self.layers_names = layers_names
+        nlay = botm.shape[0]
+
+        # define idomain (1 if thickness > 0, 0 if nan, -1 if thickness = 0)
+        idomain = np.ones((nlay, nrow, ncol))
+        thicknesses = -np.diff(np.vstack([top.reshape(-1, nrow, ncol), botm]), axis=0)
+        idomain[thicknesses == 0] = -1
+        idomain[np.isnan(thicknesses)] = 0
+
+        # set nan of each layer to the mean of the previous layer + 1e-2
+        prev_mean = None
+        for ilay in range(nlay-1, -1, -1):
+            mask = np.isnan(botm[ilay])
+            if ilay == nlay-1:
+                prev_mean = np.nanmean(botm[ilay])
+                botm[ilay][mask] = prev_mean
+            else:
+                prev_mean = max(np.nanmean(botm[ilay]), prev_mean + 1e-2)
+                botm[ilay][mask] = prev_mean
+
+        # inactive cells below unit limit
+        if n_units_removed is not None:
+            idomain[-n_units_removed:] = 0
+
+        rtol = 1e-7
+        # adapt botm in order that each layer has a thickness > 0 
+        for i in range(-1, nlay-1):
+            if i == -1:
+                s1 = top
+            else:
+                s1 = botm[i]
+            s2 = botm[i+1]
+            # mask = np.abs(s2 - s1) < rtol
+            # s1[mask] += 1e-2    
+            mask = (s1 <= s2) | (np.abs(s2 - s1) < rtol)
+            s1[mask] = s2[mask] + 1e-2
+            # mask = ((s2 < (s1 + np.ones(s1.shape)*rtol)) & (s2 > (s1 - np.ones(s1.shape)*rtol)))  # mask to identify cells where the thickness is == 0 with some tolerance
+
+            # 2nd loop over previous layers to ensure that the thickness is > 0
+            for o in range(i, -1, -1):
+                s2 = botm[o]
+                if o == 0:
+                    s1 = top
+                else:
+                    s1 = botm[o-1]
+                mask = (s1 <= s2) | (np.abs(s2 - s1) < rtol)
+                # mask = (s1 <= s2) | ((s2 < (s1 + np.ones(s1.shape)*rtol)) & (s2 > (s1 - np.ones(s1.shape)*rtol)))  # mask to identify cells where the thickness is <= 0 with some tolerance
+                s1[mask] = s2[mask] + 1e-2
+            
+        rot_angle = self.T1.get_rot_angle()
+        dis = fp.mf6.ModflowGwfdis(gwf, nlay=nlay, nrow=nrow, ncol=ncol,
+                                    delr=delr, delc=delc,
+                                    top=top, botm=botm,
+                                    xorigin=xoff, yorigin=yoff, 
+                                    idomain=idomain, angrot=rot_angle)
+
     ## energy model ##
     def create_sim_energy(self,
                           strt_temp = 10,  # initial temperature
@@ -2359,3 +2563,71 @@ class archpy2modflow:
 
 
 
+    ### methods for inversion ### (experimental)
+
+    def create_reduced_child_object(self, iu=0, ifa=0, ip=0, properties=None):
+
+        """
+        This function creates a child object of the current archpy2modflow object. 
+        where the contained archpy model has only a limited number of units, facies and properties simulations
+        It is a copy of the current object but with a reduced number of units, facies and properties.
+        """
+        import copy
+
+        if properties is None:
+            properties = self.T1.get_prop_names()
+
+        nx, ny, nz = self.T1.get_nx(), self.T1.get_ny(), self.T1.get_nz()
+
+        # get arch Table and remove from parent object
+        T1 = self.T1
+        Geol_copy = copy.deepcopy(T1.Geol)
+        T1.Geol = None
+
+        # reduce table (copy of the big table)
+        T1_reduced = copy.deepcopy(T1)
+        # del(T1_reduced.Geol.surfaces_by_piles)
+        # del(T1_reduced.Geol.surfaces_bot_by_piles)
+        # del(T1_reduced.Geol.units_domains)    
+        # del(T1_reduced.Geol.facies_domains)
+        # del(T1_reduced.Geol.prop_values)
+        T1_reduced.Geol = ArchPy.base.Geol()
+        T1.Geol = Geol_copy
+
+        # change surfaces, unit, facies and property simulation
+        surfs_by_piles = {}
+        for pile in T1.Geol.surfaces_by_piles.keys():
+            surfs = T1.Geol.surfaces_by_piles[pile][iu]
+            surfs_by_piles[pile] = surfs.reshape(1, *surfs.shape)
+        
+        surfs_bot_by_piles = {}
+        for pile in T1.Geol.surfaces_bot_by_piles.keys():
+            surfs = T1.Geol.surfaces_bot_by_piles[pile][iu]
+            surfs_bot_by_piles[pile] = surfs.reshape(1, *surfs.shape)
+
+        unit_sim = T1.get_units_domains_realizations(iu=iu, all_data=False)
+        facies_sim = T1.get_facies(iu=iu, ifa=ifa, all_data=False)
+        prop_sim = {}
+        for prop in properties:
+            prop_sim[prop] = T1.get_prop(prop, iu=iu, ifa=ifa, ip=ip, all_data=False).reshape(1, 1, 1, nz, ny, nx)
+
+        T1_reduced.Geol.surfaces_by_piles = surfs_by_piles
+        T1_reduced.Geol.surfaces_bot_by_piles = surfs_bot_by_piles       
+        T1_reduced.Geol.units_domains = unit_sim.reshape(1, nz, ny, nx)
+        T1_reduced.Geol.facies_domains = facies_sim.reshape(1, 1, nz, ny, nx)
+        T1_reduced.Geol.prop_values = prop_sim
+
+
+        # create a new object from a copy
+        # child = copy.deepcopy(self)
+        child = archpy2modflow(T1_reduced, exe_name=self.exe_name, vb=self.vb)  # create the modflow model
+        child.create_sim(grid_mode="layers", iu=0, unit_limit="u12")
+        child.T1 = T1_reduced  # set new table
+
+        # set the number of units, facies and properties
+        T1_reduced.nreal_units = 1
+        T1_reduced.nreal_fa = 1
+        T1_reduced.nreal_prop = 1
+
+
+        return child

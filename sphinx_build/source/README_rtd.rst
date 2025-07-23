@@ -47,7 +47,7 @@ and then import `ArchPy`.
 
 Requirements
 ------------
-ArchPy has been tested with python>=3.8
+ArchPy has been tested with python 3.11
 
 ArchPy requires the following packages:
 

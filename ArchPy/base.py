@@ -581,9 +581,10 @@ def split_logs(bh):
         If in a borehole with a certain subsubunit (e.g. B11), this information must be also transfer to unit B1 and B
         This function does that (I guess...)
         """
-        
+
+        # sub-unit --> indicate that major unit is also present
         if h_lev > 1:
-            if s in [i[0] for i in l_logs[h_lev-1]]:  # sub_unit already present
+            if s in [i[0] for i in l_logs[h_lev-1]]:  # sub_unit already present --> remove to not have the same unit multiple times
                 if s == l_logs[h_lev-1][-1][0]:  # last unit added is the same --> adapt bot
                     l_logs[h_lev-1][-1][-1]=bot  # change bot
                 elif s.mummy_unit.SubPile.nature == "3d_categorical":
@@ -592,9 +593,9 @@ def split_logs(bh):
                 l_logs[h_lev-1].append([s, top, bot])
             h_lev -= 1
             bidule(s.mummy_unit, h_lev)
-        elif h_lev == 1:
-            if s not in [i[0] for i in l_logs[h_lev-1]]:  # add unit only if it's not in log
-                l_logs[h_lev-1].append([s, top])
+        elif h_lev == 1:  # major unit
+            # if s not in [i[0] for i in l_logs[h_lev-1]]:  # add unit only if it's not in log
+            l_logs[h_lev-1].append([s, top, bot])
 
     for i in range(len(log_s)):
         s=log_s[i] #get unit and contact
@@ -610,43 +611,88 @@ def split_logs(bh):
             h_lev=1
         top =s[1]
 
-        if h_lev == 1:
-            l_logs[h_lev-1].append([unit, top])
-        elif h_lev > 1:
-            bidule(unit, h_lev)
+        # if h_lev == 1:
+        #     if unit not in [u[0] for u in l_logs[h_lev-1]]:
+        #         l_logs[h_lev-1].append([unit, top])
+        # elif h_lev > 1:
+        bidule(unit, h_lev)
+
+    # check for hole in the borehole
+    for log in l_logs:
+        for i in range(len(log) - 1):
+            u1_bot = log[i][2]
+            u2_top = log[i + 1][1]
+            if u2_top < u1_bot:  # hole --> fill with none
+                log.insert(i + 1, [None, u1_bot, u2_top])
+
+    # remove multiple occurence of the same unit
+    u_exist = []
+    new_log = []
+    for i in range(len(l_logs[0])):
+        u = l_logs[0][i]
+        if u[0] not in u_exist:
+            u_exist.append(u[0])
+            new_log.append(u)
+        else:
+            pass
+    
+    l_logs[0] = new_log
+
 
     #1st order log
-    bh=borehole(bhID, bhID, bhx, bhy, bhz, depth, log_strati=l_logs[0], log_facies=bh.log_facies) # first borehole
+    log_strati=[s[: -1] for s in l_logs[0]]
+    bh=borehole(bhID, bhID, bhx, bhy, bhz, depth, log_strati=log_strati, log_facies=bh.log_facies) # first borehole
     l_bhs.append(bh)
-
+    print(l_logs)
     #2 and more order logs
     for log in l_logs[1: ]: #loop over different logs hierarchy levels
         i_0=0
-        if len(log) > 1: #more than 1 unit is present
+        if len(log) > 1:  # more than 1 unit is present
             for i in range(1, len(log)):
+                # print(i)
                 unit=log[i-1][0]
-                unit_after=log[i][0]
-                if unit.mummy_unit != unit_after.mummy_unit:  # check that two successive units does not belong to the same hierarchic group
-                    new_log=log[i_0: i]
-                    depth=new_log[0][1] - new_log[-1][2]
-                    log_strati=[s[: -1] for s in new_log]
-                    bh=borehole(str(bhID)+"_"+unit.name, str(bhID)+"_"+unit.name, bhx, bhy, log_strati[0][1], depth, log_strati=log_strati)
-                    l_bhs.append(bh)
-                    i_0=i
-                if i == len(log)-1:
-                    new_log=log[i_0: ]
-                    depth=new_log[0][1] - new_log[-1][2]
-                    log_strati=[s[: -1] for s in new_log]
-                    bh=borehole(str(bhID)+"_"+unit_after.name, str(bhID)+"_"+unit_after.name, bhx, bhy, log_strati[0][1],
-                                  depth, log_strati=log_strati)
-                    l_bhs.append(bh)
+                if i <= len(log) - 1:
+                    if unit is None:
+                        continue
+                    
+                    o = i
+                    while log[o][0] is None:
+                        o += 1
+                    unit_after=log[o][0]
+                    print(unit, unit_after)
+                    if unit.mummy_unit != unit_after.mummy_unit:  # check that two successive units does not belong to the same hierarchic group
+
+                        new_log=log[i_0: o]
+                        depth=new_log[0][1] - new_log[-1][2]
+                        log_strati=[s[: -1] for s in new_log]
+                        bh=borehole(str(bhID)+"_"+unit.name, str(bhID)+"_"+unit.name, bhx, bhy, log_strati[0][1], depth, log_strati=log_strati)
+                        l_bhs.append(bh)
+                        i_0=o
+
+                    if o == len(log)-1:
+                        new_log=log[i_0: ]
+                        depth=new_log[0][1] - new_log[-1][2]
+                        log_strati=[s[: -1] for s in new_log]
+                        bh=borehole(str(bhID)+"_"+unit_after.name, str(bhID)+"_"+unit_after.name, bhx, bhy, log_strati[0][1],
+                                        depth, log_strati=log_strati)
+                        l_bhs.append(bh)
+                
+                # if i == len(log)-1:
+                    
+                #     new_log=log[i_0: ]
+                #     depth=new_log[0][1] - new_log[-1][2]
+                #     log_strati=[s[: -1] for s in new_log]
+                #     bh=borehole(str(bhID)+"_"+unit_after.name, str(bhID)+"_"+unit_after.name, bhx, bhy, log_strati[0][1],
+                #                     depth, log_strati=log_strati)
+                #     l_bhs.append(bh)
 
         else:
+
             unit=log[0][0]
             depth=log[0][1] - log[-1][2]
             log_strati=[s[: -1] for s in log]
             bh=borehole(str(bhID)+"_"+unit.name, str(bhID)+"_"+unit.name, bhx, bhy, log_strati[0][1],
-                          depth, log_strati=log_strati)
+                            depth, log_strati=log_strati)
             l_bhs.append(bh)
 
     return l_bhs
@@ -3226,6 +3272,7 @@ class Arch_table():
                 if bh.log_strati is not None:
                     if len([i[0] for i in bh.log_strati if i[0] is not None]) > 0:
                         for new_bh in split_logs(bh):
+
                             new_bh_lst.append(new_bh)
                 elif bh.log_facies is not None:
                     new_bh_lst.append(bh)

@@ -6395,7 +6395,11 @@ class Arch_table():
                 else:
                     bh_x, bh_y = bh.x, bh.y
                 x_proj = (a**2 * bh_x + b**2 * p2[0] + a * b * (bh_y - p2[1])) / (a**2 + b**2)
-                y_proj = (b * x_proj - b * p2[0] + a * p2[1]) / a
+                # y_proj = (b * x_proj - b * p2[0] + a * p2[1]) / a
+                if a == 0:
+                    y_proj = bh_y
+                else:
+                    y_proj = (b * x_proj - b * p2[0] + a * p2[1]) / a
 
                 dist_line = ((bh_x - x_proj) ** 2 + (bh_y - y_proj) ** 2)**0.5
                 if dist_line < dist_max:

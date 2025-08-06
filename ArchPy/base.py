@@ -6365,6 +6365,7 @@ class Arch_table():
 
         #get boreholes
         dist_tot = 0
+        plotted_bhs = []
         for ip in range(len(p_list)-1):
 
             p1 = p_list[ip]
@@ -6403,12 +6404,14 @@ class Arch_table():
 
                 dist_line = ((bh_x - x_proj) ** 2 + (bh_y - y_proj) ** 2)**0.5
                 if dist_line < dist_max:
-                    if ((x_proj > min_x_p) and (x_proj < max_x_p)) and ((y_proj > min_y_p) and (y_proj < max_y_p)):
-                        dist = ((x_proj - p1[0]) ** 2 + (y_proj - p1[1]) ** 2)**0.5
-                        dist_to_plot = dist_tot + dist
+                    # if ((x_proj > min_x_p) and (x_proj < max_x_p)) and ((y_proj > min_y_p) and (y_proj < max_y_p)):
+                    dist = ((x_proj - p1[0]) ** 2 + (y_proj - p1[1]) ** 2)**0.5
+                    dist_to_plot = dist_tot + dist
 
-                        # plot bh
+                    # plot bh
+                    if bh not in plotted_bhs:
                         plot_bh(bh, dist_to_plot, typ=bh_type)
+                        plotted_bhs.append(bh)  # avoid plotting multiple times the same borehole
 
             # increment total distance
             dist_points = ((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2)**0.5

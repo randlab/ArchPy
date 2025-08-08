@@ -103,7 +103,7 @@ def get_size(obj, seen=None):
     return size
 
 
-def resample_to_grid(xc, yc, rxc, ryc, raster_band, method="nearest"):
+def resample_to_grid(xc, yc, rxc, ryc, raster_band, method="nearest", ignore_nans=True):
 
     """
     Function to resample the raster data to a
@@ -154,6 +154,13 @@ def resample_to_grid(xc, yc, rxc, ryc, raster_band, method="nearest"):
 
     #flatten array
     arr=raster_band.flatten()
+
+    if ignore_nans:
+        # filter nan
+        mask = np.isnan(arr)
+        rxc = rxc[~mask]
+        ryc = ryc[~mask]
+        arr = arr[~mask]
 
     # interpolation
     data=griddata((rxc, ryc), arr, (xc, yc), method=method)
@@ -1622,7 +1629,9 @@ class Arch_table():
             ib = band
         return resample_to_grid(xc, yc, rxc, ryc, DEM.read()[ib], method=rspl_method)  # resampling
 
-    def add_grid(self, dimensions, spacing, origin, top=None, bot=None, rspl_method="nearest", polygon=None, mask=None, rotation_angle=0):
+    def add_grid(self, dimensions, spacing, origin, top=None, bot=None,
+                  rspl_method="nearest", polygon=None, mask=None, rotation_angle=0,
+                  epsg=None):
 
         """
         Method to add/change simulation grid, regular grid.
@@ -1650,6 +1659,9 @@ class Arch_table():
                 If given, top, bot and polygon are ignored.
         rotation_angle: float
                 angle of rotation of the grid in degrees
+        epsg: int
+                epsg code target of the project. Used to reproject polygon in case it is different.
+                WARNING: Not used on the rasters.
         """
 
         if self.verbose:
@@ -1726,7 +1738,7 @@ class Arch_table():
         # self.yc_tree=KDTree(ygc.reshape(-1, 1))
 
         ## resample top and bot if needed
-        if isinstance(top, str) or isinstance(bot, str):
+        if isinstance(top, str):
 
             #import rasterio
             import rasterio
@@ -1744,27 +1756,31 @@ class Arch_table():
             xc=self.xcellcenters
             yc=self.ycellcenters
 
-            if isinstance(top, str):
-                if self.verbose:
-                    print("Top is a raster - resampling activated")
-                top=resample_to_grid(xc, yc, rxc, ryc, DEM.read()[0], method=rspl_method)  # resampling
+            if self.verbose:
+                print("Top is a raster - resampling activated")
+            top=resample_to_grid(xc, yc, rxc, ryc, DEM.read()[0], method=rspl_method)  # resampling
+            # top[np.isnan(top)] = -9999
 
-            if isinstance(bot, str):
-                if self.verbose:
-                    print("Bot is a raster - resampling activated")
-                rast=rasterio.open(bot)
-                x0, y0, x1, y1=rast.bounds
-                rxlen=rast.read().shape[2]
-                rylen=rast.read().shape[1]
-                x=np.linspace(x0, x1, rxlen)
-                y=np.linspace(y1, y0, rylen)
-                rxc, ryc=np.meshgrid(x, y)
-                bot=resample_to_grid(xc, yc, rxc, ryc, rast.read()[0], method=rspl_method)  # resampling
+        if isinstance(bot, str):
+            import rasterio
 
-        if top is not None:
-            assert top.shape == (ny, nx), "Top shape is not adequat respectively to coordinate vectors (which are the vectors of edge cells). \n Must be have a size of -1 respectively to coordinate vectors xg and yg"
-        if bot is not None:
-            assert bot.shape == (ny, nx), "Bot shape is not adequat respectively to coordinate vectors(which are the vectors of edge cells). \n Must be have a size of -1 respectively to coordinate vectors xg and yg"
+            if self.verbose:
+                print("Bot is a raster - resampling activated")
+
+            rast=rasterio.open(bot)
+            x0, y0, x1, y1=rast.bounds
+            rxlen=rast.read().shape[2]
+            rylen=rast.read().shape[1]
+            x=np.linspace(x0, x1, rxlen)
+            y=np.linspace(y1, y0, rylen)
+            rxc, ryc=np.meshgrid(x, y)
+
+            #take grid cell centers
+            xc=self.xcellcenters
+            yc=self.ycellcenters
+            
+            bot=resample_to_grid(xc, yc, rxc, ryc, rast.read()[0], method=rspl_method)  # resampling
+            # bot[np.isnan(bot)] = -9999
 
         #define top/bot
         if (top is None) and (mask is None):
@@ -1778,6 +1794,13 @@ class Arch_table():
                         if mask[iz, iy, ix]:
                             top[iy, ix]=zgc[iz]
                             break
+        elif isinstance(top, int) or isinstance(top, float):
+            top=np.ones([ny, nx], dtype=np.float32)*top
+
+        if top is not None:
+            assert top.shape == (ny, nx), "Top shape is not adequat respectively to coordinate vectors (which are the vectors of edge cells). \n Must be have a size of -1 respectively to coordinate vectors xg and yg"
+        if bot is not None:
+            assert bot.shape == (ny, nx), "Bot shape is not adequat respectively to coordinate vectors(which are the vectors of edge cells). \n Must be have a size of -1 respectively to coordinate vectors xg and yg"
 
         # cut top
         top[top>zg[-1]]=zg[-1]
@@ -1828,6 +1851,8 @@ class Arch_table():
             if polygon.split(".")[-1] == "shp":
                 import geopandas as gp 
                 poly = gp.read_file(polygon)
+                if epsg is not None:
+                    poly = poly.to_crs(f"EPSG:{epsg}")  # reproject shapefile 
                 if poly.shape[0] == 1:
                     polygon = Polygon(poly.geometry.iloc[0])
                 elif poly.shape[0] > 1:
@@ -1854,6 +1879,8 @@ class Arch_table():
             for icell, cell in enumerate(cell_l):
                 if cell.intersects(polygon):
                     l.append(cell_name[icell])
+            if len(l) == 0:
+                raise ValueError("Polygon does not intersect the simulation domain \n Please check the projection of the polygon and the simulation domain \n or check epsg code of the project")
             polygon_array[np.array(l)]=1
             polygon=polygon_array.reshape(ny, nx)
 

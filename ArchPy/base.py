@@ -650,7 +650,7 @@ def split_logs(bh):
     log_strati=[s[: -1] for s in l_logs[0]]
     bh=borehole(bhID, bhID, bhx, bhy, bhz, depth, log_strati=log_strati, log_facies=bh.log_facies) # first borehole
     l_bhs.append(bh)
-    print(l_logs)
+    # print(l_logs)
     #2 and more order logs
     for log in l_logs[1: ]: #loop over different logs hierarchy levels
         i_0=0
@@ -2557,7 +2557,6 @@ class Arch_table():
         
             return contours
 
-
         def combi_p2(lst):
 
             res = []
@@ -2568,7 +2567,6 @@ class Arch_table():
                     res.append((lst[i], lst[o2]))
                     o2 += 1   
             return np.array(res)  
-
 
         # retrieve some things
         geol_map = self.geol_map  
@@ -2586,6 +2584,10 @@ class Arch_table():
             u1 = self.get_unit(ID=u1_id, type="ID", vb=0)
             u2 = self.get_unit(ID=u2_id, type="ID", vb=0)
             
+            # check that u1 and u2 are not hierarchically related
+            if u1 in u2.get_baby_units(vb=0) or u2 in u1.get_baby_units(vb=0):
+                continue
+
             if u1 is not None and u2 is not None:
                 conts_u1_u2 = unit_contact(u1_id, u2_id, geol_map)  # extract contacts between u1 and u2
                 

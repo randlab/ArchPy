@@ -1034,7 +1034,7 @@ def simple_kriging(x, xu, cov_model, mean):
         # covariance model in 1D is used
         cov0 = cov_func(0.) # covariance function at origin (lag=0)
     else:
-        cov0 = cov_func(np.zeros(d)) # covariance function at origin (lag=0)
+        cov0 = cov_func(np.zeros(d))[0] # covariance function at origin (lag=0)
 
     # Fill matrix of ordinary kriging system (matOK)
     nSK = n # order of the matrix
@@ -1048,7 +1048,7 @@ def simple_kriging(x, xu, cov_model, mean):
         cov_h = cov_func(h)
         matSK[i, (i+1):] = cov_h
         matSK[(i+1):, i] = cov_h
-        matSK[i,i] = cov0
+        matSK[i, i] = cov0
 
     # Right hand side of the ordinary kriging system (b):
     #   b is a matrix of dimension nOK x nu

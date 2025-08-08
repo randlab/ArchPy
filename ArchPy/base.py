@@ -666,7 +666,7 @@ def split_logs(bh):
                     while log[o][0] is None:
                         o += 1
                     unit_after=log[o][0]
-                    print(unit, unit_after)
+                    # print(unit, unit_after)
                     if unit.mummy_unit != unit_after.mummy_unit:  # check that two successive units does not belong to the same hierarchic group
 
                         new_log=log[i_0: o]
@@ -7189,6 +7189,9 @@ class Unit():
     #     return  l[0]
 
     def __gt__(self, other): # inequality comparison
+
+        if self == other:
+            return False
 
         l = []
         def fun(big_unit):  # recursive function to go down the hierarchy

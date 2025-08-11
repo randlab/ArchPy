@@ -4881,24 +4881,23 @@ class Arch_table():
         if self.verbose:
             print("Results from Table {} set in the current ArchTable".format(Table.name))
     
-    def split_table(self, iu=0, ifa=0, ip=0, erase_object=False):
+    # def split_table(self, iu=0, ifa=0, ip=0, erase_object=False):
 
-        """
-        Split the current ArchTable into multiple ArchTable objects with a predifined number of simulations.
+    #     """
+    #     Split the current ArchTable into multiple ArchTable objects with a predifined number of simulations.
 
 
-        """
+    #     """
         
-        # TO DO
+    #     # TO DO
 
 
     ### plotting ###
-
     def plot_pile(self, plot_facies=True, ax=None):
         
         if ax is None:
             fig, ax = plt.subplots()
-      
+        
         d = {}  # dic_bottom by level
         l_fa_rect = []  # list of facies rectangles
         l_fa_in_legend = []  # list of facies in legend
@@ -4908,6 +4907,8 @@ class Arch_table():
             for un in pile.list_units[::-1]:
 
                 rect = plt.bar(x, incr, bottom=i, label=un.name, width=.8, alpha=1, edgecolor="black", facecolor=un.c, linewidth=0, zorder=0)
+                if un.surface.contact == "erode":
+                    plt.plot((x - 0.9/2, x + 0.9/2), (i+incr, i+incr), linestyle="--", c="k", linewidth=2)
                 l_un_rect.append(rect)
 
                 if plot_facies:
@@ -4924,7 +4925,7 @@ class Arch_table():
                             j = 0
                             
                         fa_rect = plt.bar(x_fac + j * 1.6*incr_x + 0.8*incr_x, incr/3, width=(0.8/5)*4/n_fa_per_line, bottom=bottom,
-                                 label=f.name, alpha=1, facecolor=f.c, edgecolor="black", linewidth=1)
+                                    label=f.name, alpha=1, facecolor=f.c, edgecolor="black", linewidth=1)
                         if f.name not in l_fa_in_legend:  # to avoid duplicate in legend
                             l_fa_in_legend.append(f.name)
                             l_fa_rect.append(fa_rect)

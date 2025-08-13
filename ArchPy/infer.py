@@ -48,6 +48,8 @@ def cm_any_nan(cm):
                         if np.isnan(ri):
                             yes = True
                             break
+    
+    return yes
                             
                             
 def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1, plot=True,
@@ -132,17 +134,22 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
                 
                 # covmodel to fit
                 if cm_to_fit is None:
+
                     if cm_any_nan(surf.covmodel):  # check if there is any nan inside cm
+
                         cm_to_fit = surf.covmodel  # if so it will be passed to fit function
+
                     else:
                         # default covmodel to fit
                         cm_to_fit = gcm.CovModel1D(elem=[("cubic",{"w":np.nan,"r":np.nan}),
-                                                         ("exponential",{"w":np.nan,"r":np.nan}),
-                                                         ("spherical",{"w":np.nan,"r":np.nan}),
+                                                        #  ("exponential",{"w":np.nan,"r":np.nan}),
+                                                        #  ("spherical",{"w":np.nan,"r":np.nan}),
                                                          ("nugget",{"w":np.nan})])
                         
-                        bounds = ((0, 0, 0, 0, 0, 0, 0),  # min bounds
-                                  (np.var(v), dmax*2, np.var(v), dmax*2, np.var(v), dmax*2, max_nugget)) # max bounds
+                        # bounds = ((0, 0, 0, 0, 0, 0, 0),  # min bounds
+                        #           (np.var(v), dmax*2, np.var(v), dmax*2, np.var(v), dmax*2, max_nugget)) # max bounds
+                        bounds = ((0, 0, 0),  # min bounds
+                                  (np.var(v), dmax*2, max_nugget)) # max bounds
                      
                 else:
                     # ensure that bounds exist

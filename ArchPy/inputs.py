@@ -1662,7 +1662,7 @@ def bhs_analysis(db,  Strat_ID="Strat_ID", Facies_ID="Facies_ID", top_col="top",
     
     
     print("### Units proportion in boreholes")
-    print(t.groupby(["Strat_ID"])["thickness"].sum())
+    print(t.groupby(["Strat_ID"])["thickness"].sum() / t["thickness"].sum())
     
     
     if ax is None:

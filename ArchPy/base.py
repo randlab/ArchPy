@@ -1894,6 +1894,10 @@ class Arch_table():
         self.mask=mask
         self.mask2d = mask.any(0)
 
+        # set nan to top and bot where model is not present
+        self.top[~self.mask2d] = np.nan
+        self.bot[~self.mask2d] = np.nan
+
         if self.verbose:
             print("## Grid added and is now simulation grid ##")
 
@@ -4959,7 +4963,7 @@ class Arch_table():
 
         plt.axis('off')    
 
-    def plot_bhs(self, log="strati", plotter=None, v_ex=1, plot_top=False, plot_bot=False):
+    def plot_bhs(self, log="strati", plotter=None, v_ex=1, plot_top=False, plot_bot=False, unit_rgb=False, facies_rgb=False):
 
         """
         Plot the boreholes of the Arch_table project.
@@ -5051,7 +5055,12 @@ class Arch_table():
                             break
             
             wells = wells.combine()   
-            p.add_mesh(wells, render_lines_as_tubes=True, line_width=15, scalars=IDs, cmap=list(d_colors.values()), show_scalar_bar=False)
+
+            if unit_rgb:
+                IDs_color = np.array([d_colors[id] for id in IDs])
+                p.add_mesh(wells, render_lines_as_tubes=True, line_width=15, scalars=IDs_color[:, :3], show_scalar_bar=False, rgb=True)
+            else:
+                p.add_mesh(wells, render_lines_as_tubes=True, line_width=15, scalars=IDs, cmap=list(d_colors.values()), show_scalar_bar=False)
 
         elif log == "facies":
             for bh in self.list_bhs:
@@ -5078,7 +5087,12 @@ class Arch_table():
                             break
 
             wells = wells.combine()   
-            p.add_mesh(wells, render_lines_as_tubes=True, line_width=15, scalars=IDs, cmap=list(d_colors_f.values()), show_scalar_bar=False)
+
+            if facies_rgb:
+                IDs_color_f = np.array([d_colors_f[id] for id in IDs])
+                p.add_mesh(wells, render_lines_as_tubes=True, line_width=15, scalars=IDs_color_f[:, :3], show_scalar_bar=False, rgb=True)
+            else:
+                p.add_mesh(wells, render_lines_as_tubes=True, line_width=15, scalars=IDs, cmap=list(d_colors_f.values()), show_scalar_bar=False)
 
         """
         if log == "strati":
@@ -6547,7 +6561,7 @@ class Pile():
                     i.verbose = self.verbose
                     self.list_units.append(i)
                     if self.verbose:
-                        print("Stratigraphic unit {} added".format(i.name))
+                        print("Stratigraphic unit {} added ✅".format(i.name))
                 elif (isinstance(i, Unit)):
                     if self.verbose:
                         print("object is already in the list")
@@ -6559,7 +6573,7 @@ class Pile():
                 self.list_units.append(unit)
                 unit.verbose = self.verbose
                 if self.verbose:
-                    print("Stratigraphic unit {} added".format(unit.name))
+                    print("Stratigraphic unit {} added ✅".format(unit.name))
             elif (isinstance(unit, Unit)):
                 if self.verbose:
                     print("object is already in the list")
@@ -7450,7 +7464,7 @@ class Unit():
                 if (isinstance(i, Facies)) and (i not in self.list_facies): # check Facies object belong to Facies class
                     self.list_facies.append(i)
                     if self.verbose:
-                        print("Facies {} added to unit {}".format(i.name, self.name))
+                        print("Facies {} added to unit {} ✅".format(i.name, self.name))
                 else:
                     if self.verbose:
                         print("object isn't a Facies object or Facies object has already been added")
@@ -7458,7 +7472,7 @@ class Unit():
             if (isinstance(facies, Facies))  and (facies not in self.list_facies):
                 self.list_facies.append(facies)
                 if self.verbose:
-                    print("Facies {} added to unit {}".format(facies.name, self.name))
+                    print("Facies {} added to unit {} ✅".format(facies.name, self.name))
             else:
                 if self.verbose:
                     print("object isn't a Facies object or Facies object has already been added")
@@ -7980,14 +7994,14 @@ class Surface():
             if the chosen method is grf, grf ineq or kriging
         """
 
-        if isinstance(covmodel, geone.covModel.CovModel2D):
+        if isinstance(covmodel, geone.covModel.CovModel2D) or isinstance(covmodel, geone.covModel.CovModel1D):
             self.covmodel=covmodel
             self.dic_surf["covmodel"]=covmodel
             if vb:
                 print("Surface {}: covmodel added".format(self.name))
         else:
             if vb:
-                print("Surface {}: covmodel not a geone 2D covmodel".format(self.name))
+                print("Surface {}: covmodel not a geone 1D or 2D covmodel".format(self.name))
 
     def get_surface_covmodel(self, vb=1):
         if self.covmodel is None:

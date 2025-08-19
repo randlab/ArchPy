@@ -2587,12 +2587,13 @@ class Arch_table():
             
             u1 = self.get_unit(ID=u1_id, type="ID", vb=0)
             u2 = self.get_unit(ID=u2_id, type="ID", vb=0)
-            
-            # check that u1 and u2 are not hierarchically related
-            if u1 in u2.get_baby_units(vb=0) or u2 in u1.get_baby_units(vb=0):
-                continue
 
             if u1 is not None and u2 is not None:
+                
+                # check that u1 and u2 are not hierarchically related
+                if u1 in u2.get_baby_units(vb=0) or u2 in u1.get_baby_units(vb=0):
+                    continue
+
                 conts_u1_u2 = unit_contact(u1_id, u2_id, geol_map)  # extract contacts between u1 and u2
                 
                 if u1.mummy_unit != u2.mummy_unit:  # units are not from the same (sub)-pile

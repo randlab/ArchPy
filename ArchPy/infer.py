@@ -138,44 +138,47 @@ def infer_surface(ArchTable, unit, hmax=np.nan, cm_to_fit=None, auto=True, dim=1
                     if cm_any_nan(surf.covmodel):  # check if there is any nan inside cm
 
                         cm_to_fit = surf.covmodel  # if so it will be passed to fit function
-
+                        # print(cm_to_fit)
                     else:
+                        
                         # default covmodel to fit
                         cm_to_fit = gcm.CovModel1D(elem=[("cubic",{"w":np.nan,"r":np.nan}),
                                                         #  ("exponential",{"w":np.nan,"r":np.nan}),
                                                         #  ("spherical",{"w":np.nan,"r":np.nan}),
                                                          ("nugget",{"w":np.nan})])
-                        
+
                         # bounds = ((0, 0, 0, 0, 0, 0, 0),  # min bounds
                         #           (np.var(v), dmax*2, np.var(v), dmax*2, np.var(v), dmax*2, max_nugget)) # max bounds
-                        bounds = ((0, 0, 0),  # min bounds
-                                  (np.var(v), dmax*2, max_nugget)) # max bounds
-                     
-                else:
-                    # ensure that bounds exist
-                    if bounds is None:
-                        bmin = []
-                        bmax = []
+                        # bounds = ((0, 0, 0),  # min bounds
+                        #           (np.var(v), dmax*2, max_nugget)) # max bounds
+                        # print(bounds)
+                else:   
 
-                        for el in cm_to_fit.elem:
-                            if el[0] != "nugget":
-                                for k in el[1].keys():
-                                    if k == "w":
-                                        bmin.append(0)
-                                        bmax.append(vmax)
-                                    elif k == "r":
-                                        bmin.append(0)
-                                        bmax.append(rmax)
-                            else:
-                                bmin.append(0)
-                                bmax.append(max_nugget)
-                        bounds = (bmin, bmax)
-                
+                    pass
+                    # ensure that bounds exist
+                if bounds is None:
+                    bmin = []
+                    bmax = []
+
+                    for el in cm_to_fit.elem:
+                        if el[0] != "nugget":
+                            for k in el[1].keys():
+                                if k == "w":
+                                    bmin.append(0)
+                                    bmax.append(vmax)
+                                elif k == "r":
+                                    bmin.append(0)
+                                    bmax.append(rmax)
+                        else:
+                            bmin.append(0)
+                            bmax.append(max_nugget)
+                    bounds = (bmin, bmax)
+            
                 # automatic fitting
                 cm_fitted = gcm.covModel1D_fit(x, v, cm_to_fit, 
                                                hmax=hmax, bounds=bounds, make_plot=False)[0]
                 
-                
+                # print(bounds)
                 #TO DO : add a check to see if fitting is good enough
 
                 #remove unutilized structures

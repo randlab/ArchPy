@@ -3735,6 +3735,9 @@ class Arch_table():
             y_pred = y_fit[res]
             arr_test = arr.copy()
             arr_test[mask] = y_pred[:, 0]  # reassign values
+        
+        else:
+            arr_test = arr.copy()  # if no mask, return original array
 
         return arr_test
 

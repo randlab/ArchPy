@@ -6434,32 +6434,38 @@ class Arch_table():
             for bh in sel_bhs:
                 a = p2[0] - p1[0]
                 b = p2[1] - p1[1]
-                min_x_p = min(p1[0], p2[0])
-                max_x_p = max(p1[0], p2[0])
-                min_y_p = min(p1[1], p2[1])
-                max_y_p = max(p1[1], p2[1])
+                min_x_p = min(p1[0], p2[0]) - dist_max
+                max_x_p = max(p1[0], p2[0]) + dist_max
+                min_y_p = min(p1[1], p2[1]) - dist_max
+                max_y_p = max(p1[1], p2[1]) + dist_max
 
                 if rotate:
                     bh_x, bh_y = self.rotate(np.array([bh.x, bh.y]), self.get_rot_angle())
                 else:
                     bh_x, bh_y = bh.x, bh.y
-                x_proj = (a**2 * bh_x + b**2 * p2[0] + a * b * (bh_y - p2[1])) / (a**2 + b**2)
-                # y_proj = (b * x_proj - b * p2[0] + a * p2[1]) / a
-                if a == 0:
+
+                if a**2 + b**2 == 0:
+                    x_proj = bh_x
                     y_proj = bh_y
                 else:
-                    y_proj = (b * x_proj - b * p2[0] + a * p2[1]) / a
+                    x_proj = (a**2 * bh_x + b**2 * p2[0] + a * b * (bh_y - p2[1])) / (a**2 + b**2)
+                    if a == 0:
+                        y_proj = bh_y
+                    else:
+                        y_proj = (b * x_proj - b * p2[0] + a * p2[1]) / a
 
                 dist_line = ((bh_x - x_proj) ** 2 + (bh_y - y_proj) ** 2)**0.5
                 if dist_line < dist_max:
-                    # if ((x_proj > min_x_p) and (x_proj < max_x_p)) and ((y_proj > min_y_p) and (y_proj < max_y_p)):
-                    dist = ((x_proj - p1[0]) ** 2 + (y_proj - p1[1]) ** 2)**0.5
-                    dist_to_plot = dist_tot + dist
 
-                    # plot bh
-                    if bh not in plotted_bhs:
-                        plot_bh(bh, dist_to_plot, typ=bh_type)
-                        plotted_bhs.append(bh)  # avoid plotting multiple times the same borehole
+                    # check now that bh is not too far from the section in parallel direction
+                    if ((x_proj > min_x_p) and (x_proj < max_x_p)) and ((y_proj > min_y_p) and (y_proj < max_y_p)):
+                        dist_x = ((x_proj - p1[0]) ** 2 + (y_proj - p1[1]) ** 2)**0.5
+                        dist_to_plot = dist_tot + dist_x
+
+                        # plot bh
+                        if bh not in plotted_bhs:
+                            plot_bh(bh, dist_to_plot, typ=bh_type)
+                            plotted_bhs.append(bh)  # avoid plotting multiple times the same borehole
 
             # increment total distance
             dist_points = ((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2)**0.5

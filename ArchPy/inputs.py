@@ -439,6 +439,9 @@ def load_bh_files(list_bhs, facies_data, units_data,
     list_bhs=list_bhs[["bh_ID", "bh_x", "bh_y", "bh_z", "bh_depth"]].copy() #keep only wanted columns
     list_bhs.set_index("bh_ID", inplace=True)
 
+    # check that two boreholes doesnt have the same name
+    assert list_bhs.index.is_unique, "Boreholes names are not unique. Please check your list_bhs file."
+
     #apply dictionnaries to changes identifier 
     fa_data.replace(dic_facies_names, inplace=True)
     s_data.replace(dic_units_names, inplace=True)

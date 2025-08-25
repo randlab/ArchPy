@@ -7565,7 +7565,8 @@ class Unit():
         kwargs=self.dic_facies  # retrieve keyword arguments
 
         #default kwargs for SIS
-        kwargs_def_SIS={"neig": 10, "r": 1, "probability": None,"SIS_orientation": False,"azimuth": 0,"dip": 0,"plunge": 0}
+        kwargs_def_SIS={"neig": 10, "r": 1, "probability": None,"SIS_orientation": False, "follow_surfaces_smooth":5,
+                        "azimuth": 0,"dip": 0,"plunge": 0}
 
         kwargs_def_MPS={"varname":"code", "nv":1, "dataImage":None, "distanceType":["categorical"], "outputVarFlag":None,
                          "xr": 1, "yr": 1, "zr": 1, "maxscan": 0.25, "neig": 24, "thresh": 0.05, "xloc": False, "yloc": False, "zloc": False,
@@ -7644,7 +7645,7 @@ class Unit():
                             if (kwargs["SIS_orientation"]) == "follow_surfaces": # if orientations must follow surfaces
                                 # Warning: This option changes alpha and beta angles assuming that rz is smaller than rx and ry. Moreover, rx and ry must be similar.
 
-                                azi,dip=ArchTable.orientation_map(self, smooth=5)
+                                azi,dip=ArchTable.orientation_map(self, smooth=kwargs["follow_surfaces_smooth"], iu=iu)
                                 for cm in self.list_f_covmodel: # iterate through all facies covmodels and change angles
                                     cm.alpha=azi
                                     cm.beta=dip

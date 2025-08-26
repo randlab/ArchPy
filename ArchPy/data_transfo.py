@@ -3,7 +3,50 @@ import scipy
 from scipy.stats import norm
 from scipy.stats import uniform
 
+## Functions from ESMDA paper
+def ecdf(data):
+    # Compute ECDF
+    x = np.sort(data)
+    n = x.size
+    y = np.arange(1, n+1) / n
+    return(x,y)
 
+from scipy.stats import norm
+from scipy.interpolate import interp1d
+
+class N_transform():
+
+    def __init__(self, min_val = None, max_val = None):
+        self.min_val = min_val
+        self.max_val = max_val
+
+
+    def fit(self, data):
+        size = data.shape
+
+        x,y = ecdf(data)
+        y[y>0.9999] = 0.9999
+        y[y<0.0001] = 0.0001
+
+        x, idx = np.unique(x,return_index=True)
+        y = y[idx]
+
+        distrib = norm()
+        ppf = distrib.ppf(y)
+
+        self.func = interp1d(x,ppf,kind='linear',fill_value="extrapolate",bounds_error=False)
+
+        if self.min_val is not None:
+            ppf = np.insert(ppf,0,min(ppf) *20)
+            x = np.insert(x,0,self.min_val)
+
+        if self.max_val is not None:
+            ppf = np.append(ppf,max(ppf)*20)
+            x = np.append(x,self.max_val)
+
+        self.func_inv = interp1d(ppf,x,kind='linear',fill_value="extrapolate",bounds_error=False)
+
+## Old functions
 class distri():
 
     """

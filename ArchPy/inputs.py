@@ -1379,9 +1379,9 @@ def create_d_unit(unit, ws):
     if isinstance(unit.c, str):
         c=unit.c
         d["color"]=c
-    elif isinstance(unit.c, tuple) or isinstance(unit.c, np.array) or isinstance(unit.color, list):
+    elif isinstance(unit.c, tuple) or isinstance(unit.c, np.ndarray) or isinstance(unit.c, list):
         new_c=[]
-        for ic in unit.color:
+        for ic in unit.c:
             new_c.append(float(ic)) #change data format cause yaml doesn't support np.float
         d["color"]=new_c
     

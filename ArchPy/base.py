@@ -375,19 +375,24 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, mask2D=None, seed=123456789, 
                     if hasattr(litho, "distribution"):
                         di = litho.distribution
                     else:
-                        di=store_distri(zp, t=kwargs["tau"])
-                    norm_zp=NScore_trsf(zp, di)
+                        # di=store_distri(zp, t=kwargs["tau"])
+                        di = N_transform()
+                        di.fit(zp)
+                    # norm_zp=NScore_trsf(zp, di)
+                    norm_zp = di.func(zp)
 
                     # need to recompute variogram TO DO
 
                     if kwargs["grf_method"] == "fft":
                         np.random.seed(int(seed))  # set seed for fft
                         sim=geone.grf.grf2D(covmodel, [nx, ny], [sx, sy], [ox, oy], x=data, v=norm_zp, nreal=1, mean=0, var=1, printInfo=False)
-                        s=NScore_Btrsf(sim[0].flatten(), di)# back transform
+                        # s=NScore_Btrsf(sim[0].flatten(), di)# back transform
+                        s = di.func_inv(sim[0].flatten())
                         s=s.reshape(ny, nx)
                     elif kwargs["grf_method"] == "sgs":
                         sim=gci.simulate2D(covmodel, [nx, ny], [sx, sy], [ox, oy], x=data, v=norm_zp, nreal=1, mean=0, var=1, verbose=verbose, nthreads=ncpu, seed=seed, mask=mask2D)
-                        s=NScore_Btrsf(sim["image"].val[0,0].flatten(), di)# back transform
+                        # s=NScore_Btrsf(sim["image"].val[0,0].flatten(), di)# back transform
+                        s = di.func_inv(sim["image"].val[0,0].flatten())
                         s=s.reshape(ny, nx)
 
                 else: # no normal score
@@ -420,11 +425,17 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, mask2D=None, seed=123456789, 
                 if hasattr(litho, "distribution"):
                     di = litho.distribution
                 else:
-                    di=store_distri(v_eq, t=kwargs["tau"])
+                    # di=store_distri(v_eq, t=kwargs["tau"])
+                    di  = N_transform()
+                    di.fit(zp)
 
-                v_eq=NScore_trsf(v_eq, di)
-                vIneq_min=NScore_trsf(vIneq_min, di)
-                vIneq_max=NScore_trsf(vIneq_max, di)
+                    norm_zp = di.func(zp)
+                # v_eq=NScore_trsf(v_eq, di)
+                v_eq = di.func(zp)
+                # vIneq_min=NScore_trsf(vIneq_min, di)
+                vIneq_min = di.func(vIneq_min)
+                # vIneq_max=NScore_trsf(vIneq_max, di)
+                vIneq_max=di.func(vIneq_max)
                 var=1
                 mean=0
 
@@ -460,7 +471,8 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, mask2D=None, seed=123456789, 
                                  seed=seed, nneighborMax=kwargs["nmax"], nthreads=ncpu, mask=mask2D)["image"].val[0, 0]
 
             if litho.N_transfo:
-                s=NScore_Btrsf(sim.flatten(), di)
+                # s=NScore_Btrsf(sim.flatten(), di)
+                s = di.func_inv(sim.flatten())
                 s=s.reshape(ny, nx)
             else:
                 s=sim
@@ -2917,6 +2929,8 @@ class Arch_table():
         For each unit, the distribution is computed using the Normal Score Transform
         """
 
+        from ArchPy.data_transfo import N_transform
+
         if self.verbose:
             print("\n ## Computing distributions for Normal Score Transform ##\n")
 
@@ -2925,30 +2939,34 @@ class Arch_table():
             if unit.surface.N_transfo:
 
                 data = np.array(unit.surface.z)
-                tau = unit.surface.dic_surf["tau"]
-                bandwidth_mult = unit.surface.dic_surf["bandwidth_mult"]
+                # tau = unit.surface.dic_surf["tau"]
+                # bandwidth_mult = unit.surface.dic_surf["bandwidth_mult"]
                 n = len(data)
 
                 if n > 10:
 
-                    if bandwidth_mult > 0:
+                    # if bandwidth_mult > 0:
 
-                        from sklearn.neighbors import KernelDensity
-                        from scipy.stats import iqr
+                    #     from sklearn.neighbors import KernelDensity
+                    #     from scipy.stats import iqr
 
-                        bandwidth = bandwidth_mult* 0.9 * min (np.std(data), iqr(data)) * n**(-1/5)
-                        if bandwidth > 0:
+                    #     bandwidth = bandwidth_mult* 0.9 * min (np.std(data), iqr(data)) * n**(-1/5)
+                    #     if bandwidth > 0:
 
-                            kde = KernelDensity(kernel='gaussian', bandwidth=bandwidth).fit(data.reshape(-1, 1))
-                            data_kern = kde.sample(1000)
-                            di = store_distri(data_kern, t=0)
-                            unit.surface.distribution = di
-                        else:
-                            pass
-                    else:
+                    #         kde = KernelDensity(kernel='gaussian', bandwidth=bandwidth).fit(data.reshape(-1, 1))
+                    #         data_kern = kde.sample(1000)
+                    #         di = store_distri(data_kern, t=0)
+                    #         unit.surface.distribution = di
+                    #     else:
+                    #         pass
+                    # else:
 
-                        di = store_distri(data_kern, t=0)
-                        unit.surface.distribution = di
+                    #     di = store_distri(data_kern, t=0)
+                    #     unit.surface.distribution = di
+
+                    di = N_transform()
+                    di.fit(data)
+                    unit.surface.distribution = di
 
                 else:
                     if self.verbose:
@@ -5309,8 +5327,10 @@ class Arch_table():
         return units_domains
 
 
-    def plot_units(self, iu=0, v_ex=1, plotter=None, h_level="all", slicex=None, slicey=None, slicez=None,
+    def plot_units(self, iu=0, v_ex=1, plotter=None, h_level="all",
+                  slicex=None, slicey=None, slicez=None,
                    excludedVal=None,
+                   arr = None,
                     scalar_bar_kwargs=None, show_scalar_bar=True, **kwargs):
 
         """
@@ -5334,6 +5354,9 @@ class Arch_table():
             fraction of y axis where to slice
         slicez: float or sequence of floats
             fraction of z axis where to slice
+        arr: numpy array of shape (nz, ny, nx), optional
+            if provided, this array will be plotted instead of the units realization
+            If arr is provided, iu and h_level are ignored
         scalar_bar_kwargs: dict
             kwargs to pass to the scalar bar
         show_scalar_bar: bool
@@ -5357,7 +5380,11 @@ class Arch_table():
         y0=self.get_oy()
         z0=self.get_oz()
 
-        stratis_domain=self.get_units_domains_realizations(iu=iu, fill="ID", h_level=h_level, all_data=False).astype(np.float32).copy()
+        if arr is None:
+            stratis_domain=self.get_units_domains_realizations(iu=iu, fill="ID", h_level=h_level, all_data=False).astype(np.float32).copy()
+        else:
+            stratis_domain = arr.astype(np.float32).copy()
+
         lst_ID=np.unique(stratis_domain)
         # lst_ID = [u.ID for u in self.get_all_units()]
         new_lst_ID = []
@@ -5562,6 +5589,7 @@ class Arch_table():
 
     def plot_facies(self, iu=0, ifa=0, v_ex=1, inside_units=None, excludedVal=None,
                     plotter=None, slicex=None, slicey=None, slicez=None,
+                    arr = None,
                     scalar_bar_kwargs=None, show_scalar_bar=True, **kwargs):
 
         """
@@ -5585,6 +5613,9 @@ class Arch_table():
             fraction of y axis where to slice
         slicez: float or sequence of floats
             fraction of z axis where to slice
+        arr: numpy array of shape (nz, ny, nx), optional
+            if provided, this array will be plotted instead of the facies realization
+            If arr is provided, iu and ifa are ignored
         scalar_bar_kwargs: dict
             kwargs for the scalar bar
         show_scalar_bar: bool
@@ -5593,8 +5624,11 @@ class Arch_table():
             kwargs to pass to geone.imgplot.drawImage3D_slice or geone.imgplot.drawImage3D_surface
         """
 
-        fa_domains=self.get_facies(iu, ifa, all_data=False).astype(np.float32)
-
+        if arr is None:
+            fa_domains=self.get_facies(iu, ifa, all_data=False).astype(np.float32)
+        else:
+            fa_domains = arr.astype(np.float32)
+    
         #keep facies in only wanted units
         if inside_units is not None:
             mask_all=np.zeros([self.get_nz(), self.get_ny(), self.get_nx()])
@@ -6185,6 +6219,7 @@ class Arch_table():
                     y_d += d2*lam
                     # ix=int((x_d - ox)/sx)
                     # iy=int((y_d - oy)/sy)
+                    
                     cell = self.coord2cell(x_d, y_d, rotate=rotate)
                     iy, ix = cell[0], cell[1]
 
@@ -6202,6 +6237,8 @@ class Arch_table():
                     # ix=int((x_d - ox)/sx)
                     # iy=int((y_d - oy)/sy)
                     cell = self.coord2cell(x_d, y_d, rotate=rotate)
+                    if cell is None:
+                        continue
                     iy, ix = cell[0], cell[1]
                     fp=f[:,iy,ix]
                     if ip == 0:
@@ -6223,7 +6260,9 @@ class Arch_table():
     """
     Boreholes appear multiple times on the cross-section, have to think about that
     """
-    def plot_cross_section(self, p_list, typ="units", arr=None, iu=0, ifa=0, ip=0,
+    def plot_cross_section(self, p_list, typ="units",
+                           arr=None, arr_type="continuous",
+                           iu=0, ifa=0, ip=0,
                            property=None, esp=None, ax=None, colorbar=False,
                            ratio_aspect=2, i=0,
                            dist_max = 100, width=.5, bh_type="units",
@@ -6297,13 +6336,13 @@ class Arch_table():
                             s2 = bh.log_strati[i+1][1]
 
                         if unit is not None:
-                            ax.bar(ix, s - s2, bottom=s2, color=unit.c, alpha=1, edgecolor = 'black', width=width)
+                            ax.bar(ix, s - s2, bottom=s2, facecolor=unit.c, alpha=1, edgecolor = 'black', width=width)
 
                     s = bh.log_strati[i+1][1]
                     unit = bh.log_strati[i+1][0]
                     s2 = bh.z - bh.depth
                     if unit is not None:
-                        ax.bar(ix, s - s2, bottom=s2, color=unit.c, alpha=1, edgecolor = 'black', width=width)
+                        ax.bar(ix, s - s2, bottom=s2, facecolor=unit.c, alpha=1, edgecolor = 'black', width=width)
             
             elif typ == "facies":
                 if bh.log_facies is not None:
@@ -6395,7 +6434,36 @@ class Arch_table():
             del(facies_domains)
 
         elif typ =="arr":
-            pass
+            nz = self.get_nz()
+            ny = self.get_ny()
+            nx = self.get_nx()
+            if arr_type == "unit":
+
+                typ = "units"  # change type of cross_section
+
+                # set colors
+                units_domains=np.zeros([nreal, nz, ny, nx, 4], dtype=np.float32)
+                for unit in self.get_all_units():
+                    if unit.f_method != "Subpile":
+                        mask=(arr == unit.ID)
+                        units_domains[mask,: ]=matplotlib.colors.to_rgba(unit.c)
+
+                arr = units_domains
+            elif arr_type == "facies":
+
+                typ = "facies"
+
+                # set colors
+                new_arr=np.zeros([arr.shape[0], arr.shape[1], arr.shape[2], 4])
+                list_fa=np.unique(arr)
+                for IDfa in list_fa:
+                    if IDfa != 0:
+                        fa = self.get_facies_obj(ID=IDfa, type="ID")  # get facies object
+                        mask = (arr == IDfa)
+                        new_arr[mask,: ]=colors.to_rgba(fa.c)
+                arr=new_arr
+
+
         else:
             assert 'Typ unknown'
             return
@@ -8029,6 +8097,10 @@ class Surface():
 
     def set_dic_surf(self, dic_surf):
         self.dic_surf=dic_surf
+
+    def set_N_transfo(self, N_transfo):
+        self.N_transfo = N_transfo
+        self.dic_surf["N_transfo"] = N_transfo
 
 class Facies():
 

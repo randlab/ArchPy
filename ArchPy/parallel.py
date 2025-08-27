@@ -155,9 +155,11 @@ def parallel_compute(Arch_Table, n_real = 1, n_real_fa = 0, n_real_prop = 0, l_u
     Arch_Table.Geol.units_domains = u_domains
     Arch_Table.Geol.surfaces_by_piles = surf
     Arch_Table.Geol.surfaces_bot_by_piles = surf_bot
+    Arch_Table.surfaces_computed = 1
     if n_real_fa > 0:
         # put results in facies_domains
         Arch_Table.Geol.facies_domains = fa_domains
+        Arch_Table.facies_computed = 1
             
     if n_real_prop > 0:
         # put results in prop_values
@@ -168,6 +170,7 @@ def parallel_compute(Arch_Table, n_real = 1, n_real_fa = 0, n_real_prop = 0, l_u
                 l.append(iprop[prop_obj.name][0])
             new_d[prop_obj.name] = np.array(l).reshape(n_real, n_real_fa, n_real_prop, nz, ny, nx)
         Arch_Table.Geol.prop_values = new_d
+        Arch_Table.prop_computed = 1
                
     # print("done")
 

@@ -5213,6 +5213,51 @@ class Arch_table():
         else:
             plotter.add_mesh(grid,"red",scalars=arr.reshape((nx*ny, 4),order="F"), opacity=0.5, rgb=True)
 
+    def plot_surface_data_point(self, unit, typ="top", **kwargs):
+
+        """
+        Plot the thickness or top or bottom of a unit from borehole data on a map.
+        unit: :class:`Unit` object
+            unit to plot
+        typ: string
+            "top", "bot" or "thk" for thickness
+        **kwargs: keyword arguments for plt.scatter
+        """
+
+        v = []
+        x = []
+        y = []
+
+        for bh in self.list_bhs:
+
+            if bh.get_list_stratis() is not None:
+                if unit in bh.get_list_stratis():
+                    for i, s in enumerate(bh.log_strati):
+                        if s[0] == unit:
+                            if typ == "thk":
+                                try:
+                                    thk = s[1] - bh.log_strati[i+1][1]
+                                except:
+                                    thk = s[1] - (bh.z - bh.depth)
+                            elif typ =="top":
+                                thk = s[1]
+                            elif typ == "bot":
+                                try:
+                                    thk = bh.log_strati[i+1][1]
+                                except:
+                                    thk = bh.z - bh.depth
+
+                            x.append(bh.x)
+                            y.append(bh.y)
+                            v.append(thk)
+
+        plt.scatter(x, y, c=v, **kwargs)
+        plt.colorbar(label="{} of unit {}".format(typ, unit.name))
+        plt.xlabel("X")
+        plt.ylabel("Y")
+
+
+
     def get_units_domains_realizations(self, iu=None, all_data=True, fill="ID", h_level="all"):
 
         """
@@ -8312,12 +8357,18 @@ class borehole():
 
 
     def get_list_stratis(self):
-        self.list_stratis=[s for s, d in self.log_strati]
-        return self.list_stratis
+        if self.log_strati is not None:
+            self.list_stratis=[s for s, d in self.log_strati]
+            return self.list_stratis
+        else:
+            return []
 
     def get_list_facies(self):
-        self.list_facies =[s for s, d in self.log_facies]
-        return self.list_facies
+        if self.log_facies is not None:
+            self.list_facies =[s for s, d in self.log_facies]
+            return self.list_facies
+        else:
+            return []
 
     def __eq__(self, other):
         if  (self.ID == other.ID) & \

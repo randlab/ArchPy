@@ -3596,7 +3596,8 @@ class Arch_table():
             return
 
         if self.bhs_processed == 0:
-            print("Boreholes not processed, fully unconditional simulations will be tempted")
+            if self.verbose:
+                print("Boreholes not processed, fully unconditional simulations will be tempted")
         #assert self.bhs_processed == 1, "Boreholes not processed"
 
         # create work directory if it doesn't exist

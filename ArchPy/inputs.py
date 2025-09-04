@@ -820,7 +820,11 @@ def import_d_units(dic_project, all_facies, ws=None):
                 else:
                     dic_s[k]=v
             else:
-                dic_s[k]=v
+                if isinstance(v, str) and v.split(".")[-1] == "npy":
+                    print(v)
+                    dic_s[k]=np.load(os.path.join(ws, v))
+                else:
+                    dic_s[k]=v
         S=ArchPy.base.Surface(name=para["surface"]["name"],
                                 contact= para["surface"]["contact"],
                                 dic_surf=dic_s)    
@@ -1354,12 +1358,12 @@ def create_d_surface(surface, unit, ws):
             d_dic_s[k]=new_v
         
         elif isinstance(v, np.ndarray):  # numpy array --> store it in binary file
-            f_name=surface.name + "_dic_surf_" + str(k) 
+            f_name=surface.name + "_dic_surf_" + str(k) + ".npy" 
             np.save(os.path.join(ws, f_name),v)
             d_dic_s[k]=f_name
             
         elif isinstance(v, geone.img.Img):  # geone image --> just save file in ws
-            f_name=surface.name + "_dic_surf_" + str(k)
+            f_name=surface.name + "_dic_surf_" + str(k) + ".gslib"
             geone.img.writeImageGslib(v, os.path.join(ws, f_name))  # write file
             d_dic_s[k]=f_name
             

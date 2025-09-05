@@ -39,8 +39,6 @@ Piles:
     seed: 1
     verbose: 1
 Results:
-  facies: P1.fac
-  properties: P1.pro
   surfaces: P1.sf
   surfaces_bot: P1.sfb
   units: P1.unt
@@ -76,9 +74,6 @@ Units:
     ID: 3
     color: purple
     dic_facies:
-      SIS_orientation: false
-      azimuth: 0
-      dip: 0
       f_covmodel:
       - alpha: 0.0
         beta: 0.0
@@ -126,13 +121,11 @@ Units:
         gamma: 0.0
       f_method: SIS
       neig: 10
-      plunge: 0
       probability:
       - 0.2
       - 0.4
       - 0.25
       - 0.15
-      r: 1
     list_facies:
     - Sand
     - Gravel
@@ -162,9 +155,6 @@ Units:
     ID: 2
     color: blue
     dic_facies:
-      SIS_orientation: false
-      azimuth: 0
-      dip: 0
       f_covmodel:
       - alpha: 0.0
         beta: 0.0
@@ -179,11 +169,9 @@ Units:
         gamma: 0.0
       f_method: SIS
       neig: 10
-      plunge: 0
       probability:
       - 0.3
       - 0.7
-      r: 1
     list_facies:
     - Clay
     - Silt
@@ -295,7 +283,7 @@ boreholes:
   list_fake_bhs: fake_P1.lbh
   units_data: P1.ud
   units_fake_data: fake_P1.ud
-facies_computed: 1
+facies_computed: 0
 grid:
   bot: P1.bot
   dimensions: !!python/tuple
@@ -315,10 +303,10 @@ grid:
   top: P1.top
 name: P1
 ncpu: -1
-nreal_fa: 1
-nreal_prop: 1
+nreal_fa: 0
+nreal_prop: 0
 nreal_units: 1
-prop_computed: 1
+prop_computed: 0
 properties:
   K:
     covmodels:

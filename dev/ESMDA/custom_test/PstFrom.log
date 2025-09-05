@@ -1,30 +1,4 @@
-2025-09-04 12:29:45.128287 starting: opening PstFrom.log for logging
-2025-09-04 12:29:45.128287 starting PstFrom process
-2025-09-04 12:29:45.129250 starting: setting up dirs
-2025-09-04 12:29:45.130250 starting: removing existing new_d 'template'
-2025-09-04 12:29:45.131248 finished: removing existing new_d 'template' took: 0:00:00.000998
-2025-09-04 12:29:45.131248 starting: copying original_d 'reference' to new_d 'template'
-2025-09-04 12:29:45.166591 finished: copying original_d 'reference' to new_d 'template' took: 0:00:00.035343
-2025-09-04 12:29:45.167597 finished: setting up dirs took: 0:00:00.038347
-2025-09-04 12:29:45.303524 starting: adding observations from output file head_obs_ref.csv
-2025-09-04 12:29:45.304548 starting: adding observations from tabular output file '['head_obs_ref.csv']'
-2025-09-04 12:29:45.304548 starting: reading list-style file: template\head_obs_ref.csv
-2025-09-04 12:29:45.310541 finished: reading list-style file: template\head_obs_ref.csv took: 0:00:00.005993
-2025-09-04 12:29:45.314538 starting: building insfile for tabular output file head_obs_ref.csv
-2025-09-04 12:29:45.325542 finished: building insfile for tabular output file head_obs_ref.csv took: 0:00:00.011004
-2025-09-04 12:29:45.325542 starting: adding observation from instruction file 'template\head_obs_ref.csv.ins'
-2025-09-04 12:29:45.335623 finished: adding observation from instruction file 'template\head_obs_ref.csv.ins' took: 0:00:00.010081
-2025-09-04 12:29:45.336572 finished: adding observations from tabular output file '['head_obs_ref.csv']' took: 0:00:00.032024
-2025-09-04 12:29:45.336572 finished: adding observations from output file head_obs_ref.csv took: 0:00:00.033048
-2025-09-04 12:29:45.390550 transform was not passed, setting default tranform to 'log'
-2025-09-04 12:29:45.390550 starting: adding grid type m style parameters for file(s) ['Surf_C.txt']
-2025-09-04 12:29:45.391549 starting: loading array template\Surf_C.txt
-2025-09-04 12:29:45.422067 finished: loading array template\Surf_C.txt took: 0:00:00.030518
-2025-09-04 12:29:45.422067 loaded array 'reference\Surf_C.txt' of shape (70, 140)
-2025-09-04 12:29:45.433067 starting: writing array-style template file 'template\surf_c_inst0_grid.csv.tpl'
-2025-09-04 12:29:45.433067 starting: writing template file template\surf_c_inst0_grid.csv.tpl for ['surf_c_inst:0']
-2025-09-04 12:29:45.567890 finished: writing template file template\surf_c_inst0_grid.csv.tpl for ['surf_c_inst:0'] took: 0:00:00.134823
-2025-09-04 12:29:45.567890 starting: writing array-based template file 'template\surf_c_inst0_grid.csv.tpl'
-2025-09-04 12:29:45.586346 finished: adding grid type m style parameters for file(s) ['Surf_C.txt'] took: 0:00:00.195796
-2025-09-04 12:29:46.077766 forward_run line:pyemu.os_utils.run(r'mf6')
-
+2025-09-05 20:15:14.792400 starting: opening PstFrom.log for logging
+2025-09-05 20:15:14.792400 starting PstFrom process
+2025-09-05 20:15:14.795409 starting: setting up dirs
+2025-09-05 20:15:14.795409 starting: removing existing new_d 'template'

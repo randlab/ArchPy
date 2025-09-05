@@ -1,2 +1,0 @@
-,org_file,model_file,use_cols,index_cols,fmt,sep,head_rows,upper_bound,lower_bound,operator,mlt_file,apply_order,zero_based
-0,org\Surf_C.txt,Surf_C.txt,,,%25.18E,,0,100,0.01,m,mult\surf_c_inst0_grid.csv,999,False

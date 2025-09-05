@@ -1104,8 +1104,10 @@ def import_project(project_name, ws, import_bhs=True, import_results=True, impor
                 print("No results files provided in the yaml file \n")
                 print("Trying to find results files in working_directory")
                 load_results(ArchTable)
-            
-            
+
+    # Set hierarchical relations
+    ArchTable.hierarchy_relations()        
+    
     print("\n\n ### SUCCESSFUL IMPORT ### \n")
     return ArchTable
 

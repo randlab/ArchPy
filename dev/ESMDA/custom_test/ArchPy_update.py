@@ -10,7 +10,7 @@ from ArchPy.ap_mf import archpy2modflow, array2cellids
 
 def update_gw_model():
     T1 = ArchPy.inputs.import_project("P1", "../ArchPy_workspace")
-    surf_C = np.loadtxt("surf_C.txt")
+    surf_C = np.flipud(np.loadtxt("mean_C.txt"))
     surfaces_by_piles = {}
     surfaces_by_piles["P1"] = T1.Geol.surfaces_by_piles["P1"].copy()
     surfaces_by_piles["PD"] = T1.Geol.surfaces_by_piles["PD"].copy()
@@ -25,7 +25,7 @@ def update_gw_model():
 
     # import modflow model
     tmp_model_ws = "./"
-    sim = fp.mf6.MFSimulation.load(sim_ws=tmp_model_ws, load_only=["obs, chd"])
+    sim = fp.mf6.MFSimulation.load(sim_ws=tmp_model_ws, load_only=["obs", "chd"])
     gwf_ref = sim.get_model()
 
     # update

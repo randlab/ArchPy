@@ -1,0 +1,59 @@
+             pestpp-ies - a GLM iterative Ensemble Smoother
+                      for PEST(++) datasets 
+
+                 by the PEST++ developement team
+
+
+
+
+
+version: 5.2.16
+binary compiled on Dec  1 2024 at 07:49:50
+
+using control file: "test.pst"
+in directory: "C:\Users\emmal\Documents\Github\ArchPy\dev\ESMDA\custom_test\template"
+on host: "DESKTOP-ELO3UMU"
+started at 09/07/25 20:52:43
+
+control file parsing warning: unrecognized '* control data keyword' key-value pair on line: 
+    'phimlim                           1.0e-10'
+
+control file parsing warning: unrecognized '* control data keyword' key-value pair on line: 
+    'phimaccept                       1.05e-10'
+
+control file parsing warning: unrecognized '* control data keyword' key-value pair on line: 
+    'fracphim                              0.1'
+
+control file parsing warning: unrecognized '* control data keyword' key-value pair on line: 
+    'wfinit                                1.0'
+
+...reading external file 'test.pargp_data.csv'
+...header line: PARGPNME,INCTYP,DERINC,DERINCLB,FORCEN,DERINCMUL,DERMTHD,SPLITTHRESH,SPLITRELDIFF,SPLITACTION
+...read 6 lines from external file
+...reading external file 'test.par_data.csv'
+...header line: PARNME,PARTRANS,PARCHGLIM,PARVAL1,PARLBND,PARUBND,PARGP,SCALE,OFFSET,DERCOM,I,INST,J,PNAME,PSTYLE,PTYPE,X,Y
+...read 39211 lines from external file
+...reading external file 'test.obs_data.csv'
+...header line: OBSNME,OBSVAL,WEIGHT,OBGNME,ONAME,OTYPE,TIME,USECOL
+...read 11 lines from external file
+...reading external file 'test.tplfile_data.csv'
+...header line: PEST_FILE,MODEL_FILE
+...read 6 lines from external file
+...reading external file 'test.insfile_data.csv'
+...header line: PEST_FILE,MODEL_FILE
+...read 2 lines from external file
+...reading external file 'test.pi_data.csv'
+...header line: PILBL,EQUATION,OBGNME,WEIGHT,NAMES
+...read 39201 lines from external file
+control file parsing error:  the following control data keyword lines were not accepted:
+phimlim                           1.0e-10,phimaccept                       1.05e-10,fracphim                              0.1,wfinit                                1.0,
+forgive_unknown_args is 'false' so this is treated as an error
+
+Error processing control file: test.pst
+
+control file parsing error:  the following control data keyword lines were not accepted:
+phimlim                           1.0e-10,phimaccept                       1.05e-10,fracphim                              0.1,wfinit                                1.0,
+forgive_unknown_args is 'false' so this is treated as an error
+
+
+

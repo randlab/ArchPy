@@ -10,12 +10,17 @@ from ArchPy.ap_mf import archpy2modflow, array2cellids
 
 def update_gw_model():
     T1 = ArchPy.inputs.import_project("P1", "../ArchPy_workspace")
+    surf_D1 = np.flipud(np.loadtxt("mean_D1.txt"))
     surf_C = np.flipud(np.loadtxt("mean_C.txt"))
+    surf_B = np.flipud(np.loadtxt("mean_B.txt"))
+    surf_A = np.flipud(np.loadtxt("mean_A.txt"))
     surfaces_by_piles = {}
     surfaces_by_piles["P1"] = T1.Geol.surfaces_by_piles["P1"].copy()
     surfaces_by_piles["PD"] = T1.Geol.surfaces_by_piles["PD"].copy()
     surfaces_by_piles["P1"][0, 1] = surf_C  # update surface C
-
+    surfaces_by_piles["P1"][0, 2] = surf_B  # update surface C
+    surfaces_by_piles["P1"][0, 3] = surf_A  # update surface C
+    surfaces_by_piles["PD"][0, 0] = surf_D1
     T1.define_domains(surfaces_by_piles)
 
     # archpy2modflow --> apply modifications and retrieve new botoms and idomain

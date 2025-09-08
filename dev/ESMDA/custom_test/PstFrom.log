@@ -1,60 +1,60 @@
-2025-09-07 20:27:26.949554 starting: opening PstFrom.log for logging
-2025-09-07 20:27:26.950555 starting PstFrom process
-2025-09-07 20:27:26.950555 starting: setting up dirs
-2025-09-07 20:27:26.951556 starting: removing existing new_d 'template'
-2025-09-07 20:27:26.965568 finished: removing existing new_d 'template' took: 0:00:00.014012
-2025-09-07 20:27:26.965568 starting: copying original_d 'reference' to new_d 'template'
-2025-09-07 20:27:27.011610 finished: copying original_d 'reference' to new_d 'template' took: 0:00:00.046042
-2025-09-07 20:27:27.012612 finished: setting up dirs took: 0:00:00.062057
-2025-09-07 20:27:27.066010 starting: adding observations from output file head_obs_ref.csv
-2025-09-07 20:27:27.066010 starting: adding observations from tabular output file '['head_obs_ref.csv']'
-2025-09-07 20:27:27.066010 starting: reading list-style file: template\head_obs_ref.csv
-2025-09-07 20:27:27.080023 finished: reading list-style file: template\head_obs_ref.csv took: 0:00:00.014013
-2025-09-07 20:27:27.082025 starting: building insfile for tabular output file head_obs_ref.csv
-2025-09-07 20:27:27.092035 finished: building insfile for tabular output file head_obs_ref.csv took: 0:00:00.010010
-2025-09-07 20:27:27.092035 starting: adding observation from instruction file 'template\head_obs_ref.csv.ins'
-2025-09-07 20:27:27.114054 finished: adding observation from instruction file 'template\head_obs_ref.csv.ins' took: 0:00:00.022019
-2025-09-07 20:27:27.115055 finished: adding observations from tabular output file '['head_obs_ref.csv']' took: 0:00:00.049045
-2025-09-07 20:27:27.115055 finished: adding observations from output file head_obs_ref.csv took: 0:00:00.049045
-2025-09-07 20:27:27.161656 transform was not passed, setting default tranform to 'log'
-2025-09-07 20:27:27.161656 starting: adding grid type m style parameters for file(s) ['mean_C.txt']
-2025-09-07 20:27:27.161656 starting: loading array template\mean_C.txt
-2025-09-07 20:27:27.187678 finished: loading array template\mean_C.txt took: 0:00:00.026022
-2025-09-07 20:27:27.187678 loaded array 'reference\mean_C.txt' of shape (70, 140)
-2025-09-07 20:27:27.198688 starting: writing array-style template file 'template\mean_c_inst0_grid.csv.tpl'
-2025-09-07 20:27:27.198688 starting: writing template file template\mean_c_inst0_grid.csv.tpl for ['mean_c_inst:0']
-2025-09-07 20:27:27.306787 finished: writing template file template\mean_c_inst0_grid.csv.tpl for ['mean_c_inst:0'] took: 0:00:00.108099
-2025-09-07 20:27:27.307787 starting: writing array-based template file 'template\mean_c_inst0_grid.csv.tpl'
-2025-09-07 20:27:27.332810 finished: adding grid type m style parameters for file(s) ['mean_C.txt'] took: 0:00:00.171154
-2025-09-07 20:27:27.356357 transform was not passed, setting default tranform to 'log'
-2025-09-07 20:27:27.357357 starting: adding grid type m style parameters for file(s) ['mean_D1.txt']
-2025-09-07 20:27:27.357357 starting: loading array template\mean_D1.txt
-2025-09-07 20:27:27.388386 finished: loading array template\mean_D1.txt took: 0:00:00.031029
-2025-09-07 20:27:27.389388 loaded array 'reference\mean_D1.txt' of shape (70, 140)
-2025-09-07 20:27:27.399396 starting: writing array-style template file 'template\mean_d1_inst0_grid.csv.tpl'
-2025-09-07 20:27:27.399396 starting: writing template file template\mean_d1_inst0_grid.csv.tpl for ['mean_d1_inst:0']
-2025-09-07 20:27:27.509495 finished: writing template file template\mean_d1_inst0_grid.csv.tpl for ['mean_d1_inst:0'] took: 0:00:00.110099
-2025-09-07 20:27:27.509495 starting: writing array-based template file 'template\mean_d1_inst0_grid.csv.tpl'
-2025-09-07 20:27:27.522507 finished: adding grid type m style parameters for file(s) ['mean_D1.txt'] took: 0:00:00.165150
-2025-09-07 20:27:27.550683 transform was not passed, setting default tranform to 'log'
-2025-09-07 20:27:27.550683 starting: adding grid type m style parameters for file(s) ['mean_B.txt']
-2025-09-07 20:27:27.550683 starting: loading array template\mean_B.txt
-2025-09-07 20:27:27.564696 finished: loading array template\mean_B.txt took: 0:00:00.014013
-2025-09-07 20:27:27.564696 loaded array 'reference\mean_B.txt' of shape (70, 140)
-2025-09-07 20:27:27.574705 starting: writing array-style template file 'template\mean_b_inst0_grid.csv.tpl'
-2025-09-07 20:27:27.574705 starting: writing template file template\mean_b_inst0_grid.csv.tpl for ['mean_b_inst:0']
-2025-09-07 20:27:27.705824 finished: writing template file template\mean_b_inst0_grid.csv.tpl for ['mean_b_inst:0'] took: 0:00:00.131119
-2025-09-07 20:27:27.705824 starting: writing array-based template file 'template\mean_b_inst0_grid.csv.tpl'
-2025-09-07 20:27:27.723841 finished: adding grid type m style parameters for file(s) ['mean_B.txt'] took: 0:00:00.173158
-2025-09-07 20:27:27.752028 transform was not passed, setting default tranform to 'log'
-2025-09-07 20:27:27.753028 starting: adding grid type m style parameters for file(s) ['mean_A.txt']
-2025-09-07 20:27:27.753028 starting: loading array template\mean_A.txt
-2025-09-07 20:27:27.769043 finished: loading array template\mean_A.txt took: 0:00:00.016015
-2025-09-07 20:27:27.769043 loaded array 'reference\mean_A.txt' of shape (70, 140)
-2025-09-07 20:27:27.779052 starting: writing array-style template file 'template\mean_a_inst0_grid.csv.tpl'
-2025-09-07 20:27:27.779052 starting: writing template file template\mean_a_inst0_grid.csv.tpl for ['mean_a_inst:0']
-2025-09-07 20:27:27.899161 finished: writing template file template\mean_a_inst0_grid.csv.tpl for ['mean_a_inst:0'] took: 0:00:00.120109
-2025-09-07 20:27:27.899161 starting: writing array-based template file 'template\mean_a_inst0_grid.csv.tpl'
-2025-09-07 20:27:27.916177 finished: adding grid type m style parameters for file(s) ['mean_A.txt'] took: 0:00:00.163149
-2025-09-07 20:27:35.872670 forward_run line:pyemu.os_utils.run(r'..\..\..\..\..\..\exe\mf6')
+2025-09-08 09:32:49.624306 starting: opening PstFrom.log for logging
+2025-09-08 09:32:49.624306 starting PstFrom process
+2025-09-08 09:32:49.625307 starting: setting up dirs
+2025-09-08 09:32:49.625307 starting: removing existing new_d 'template'
+2025-09-08 09:32:49.645325 finished: removing existing new_d 'template' took: 0:00:00.020018
+2025-09-08 09:32:49.645325 starting: copying original_d 'reference' to new_d 'template'
+2025-09-08 09:32:49.684362 finished: copying original_d 'reference' to new_d 'template' took: 0:00:00.039037
+2025-09-08 09:32:49.685362 finished: setting up dirs took: 0:00:00.060055
+2025-09-08 09:32:49.727081 starting: adding observations from output file head_obs_ref.csv
+2025-09-08 09:32:49.727081 starting: adding observations from tabular output file '['head_obs_ref.csv']'
+2025-09-08 09:32:49.727081 starting: reading list-style file: template\head_obs_ref.csv
+2025-09-08 09:32:49.739093 finished: reading list-style file: template\head_obs_ref.csv took: 0:00:00.012012
+2025-09-08 09:32:49.741094 starting: building insfile for tabular output file head_obs_ref.csv
+2025-09-08 09:32:49.744096 finished: building insfile for tabular output file head_obs_ref.csv took: 0:00:00.003002
+2025-09-08 09:32:49.744096 starting: adding observation from instruction file 'template\head_obs_ref.csv.ins'
+2025-09-08 09:32:49.756108 finished: adding observation from instruction file 'template\head_obs_ref.csv.ins' took: 0:00:00.012012
+2025-09-08 09:32:49.757109 finished: adding observations from tabular output file '['head_obs_ref.csv']' took: 0:00:00.030028
+2025-09-08 09:32:49.757109 finished: adding observations from output file head_obs_ref.csv took: 0:00:00.030028
+2025-09-08 09:32:49.809623 transform was not passed, setting default tranform to 'log'
+2025-09-08 09:32:49.810624 starting: adding grid type m style parameters for file(s) ['mean_C.txt']
+2025-09-08 09:32:49.810624 starting: loading array template\mean_C.txt
+2025-09-08 09:32:49.826639 finished: loading array template\mean_C.txt took: 0:00:00.016015
+2025-09-08 09:32:49.826639 loaded array 'reference\mean_C.txt' of shape (70, 140)
+2025-09-08 09:32:49.835646 starting: writing array-style template file 'template\mean_c_inst0_grid.csv.tpl'
+2025-09-08 09:32:49.835646 starting: writing template file template\mean_c_inst0_grid.csv.tpl for ['mean_c_inst:0']
+2025-09-08 09:32:49.939742 finished: writing template file template\mean_c_inst0_grid.csv.tpl for ['mean_c_inst:0'] took: 0:00:00.104096
+2025-09-08 09:32:49.940742 starting: writing array-based template file 'template\mean_c_inst0_grid.csv.tpl'
+2025-09-08 09:32:49.953754 finished: adding grid type m style parameters for file(s) ['mean_C.txt'] took: 0:00:00.143130
+2025-09-08 09:32:49.974783 transform was not passed, setting default tranform to 'log'
+2025-09-08 09:32:49.974783 starting: adding grid type m style parameters for file(s) ['mean_D1.txt']
+2025-09-08 09:32:49.975783 starting: loading array template\mean_D1.txt
+2025-09-08 09:32:49.993800 finished: loading array template\mean_D1.txt took: 0:00:00.018017
+2025-09-08 09:32:49.993800 loaded array 'reference\mean_D1.txt' of shape (70, 140)
+2025-09-08 09:32:50.002808 starting: writing array-style template file 'template\mean_d1_inst0_grid.csv.tpl'
+2025-09-08 09:32:50.002808 starting: writing template file template\mean_d1_inst0_grid.csv.tpl for ['mean_d1_inst:0']
+2025-09-08 09:32:50.104901 finished: writing template file template\mean_d1_inst0_grid.csv.tpl for ['mean_d1_inst:0'] took: 0:00:00.102093
+2025-09-08 09:32:50.104901 starting: writing array-based template file 'template\mean_d1_inst0_grid.csv.tpl'
+2025-09-08 09:32:50.116912 finished: adding grid type m style parameters for file(s) ['mean_D1.txt'] took: 0:00:00.142129
+2025-09-08 09:32:50.138070 transform was not passed, setting default tranform to 'log'
+2025-09-08 09:32:50.138070 starting: adding grid type m style parameters for file(s) ['mean_B.txt']
+2025-09-08 09:32:50.138070 starting: loading array template\mean_B.txt
+2025-09-08 09:32:50.154085 finished: loading array template\mean_B.txt took: 0:00:00.016015
+2025-09-08 09:32:50.154085 loaded array 'reference\mean_B.txt' of shape (70, 140)
+2025-09-08 09:32:50.163093 starting: writing array-style template file 'template\mean_b_inst0_grid.csv.tpl'
+2025-09-08 09:32:50.163093 starting: writing template file template\mean_b_inst0_grid.csv.tpl for ['mean_b_inst:0']
+2025-09-08 09:32:50.264184 finished: writing template file template\mean_b_inst0_grid.csv.tpl for ['mean_b_inst:0'] took: 0:00:00.101091
+2025-09-08 09:32:50.265186 starting: writing array-based template file 'template\mean_b_inst0_grid.csv.tpl'
+2025-09-08 09:32:50.279197 finished: adding grid type m style parameters for file(s) ['mean_B.txt'] took: 0:00:00.141127
+2025-09-08 09:32:50.299834 transform was not passed, setting default tranform to 'log'
+2025-09-08 09:32:50.299834 starting: adding grid type m style parameters for file(s) ['mean_A.txt']
+2025-09-08 09:32:50.300834 starting: loading array template\mean_A.txt
+2025-09-08 09:32:50.321854 finished: loading array template\mean_A.txt took: 0:00:00.021020
+2025-09-08 09:32:50.321854 loaded array 'reference\mean_A.txt' of shape (70, 140)
+2025-09-08 09:32:50.331863 starting: writing array-style template file 'template\mean_a_inst0_grid.csv.tpl'
+2025-09-08 09:32:50.331863 starting: writing template file template\mean_a_inst0_grid.csv.tpl for ['mean_a_inst:0']
+2025-09-08 09:32:50.432954 finished: writing template file template\mean_a_inst0_grid.csv.tpl for ['mean_a_inst:0'] took: 0:00:00.101091
+2025-09-08 09:32:50.432954 starting: writing array-based template file 'template\mean_a_inst0_grid.csv.tpl'
+2025-09-08 09:32:50.444965 finished: adding grid type m style parameters for file(s) ['mean_A.txt'] took: 0:00:00.145131
+2025-09-08 09:33:05.211878 forward_run line:pyemu.os_utils.run(r'..\..\..\..\..\..\exe\mf6')
 

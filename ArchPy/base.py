@@ -6237,26 +6237,26 @@ class Arch_table():
 
         dist_tot=0
         for ip in range(len(p_list)-1): # loop over points
-            p1=np.array(p_list[ip])
-            p2=np.array(p_list[ip+1])
+            p1 = np.array(p_list[ip])
+            p2 = np.array(p_list[ip+1])
             d1, d2=p2-p1
-            dist=np.sqrt(d1**2 + d2**2)
-            lam=esp/dist
+            dist = np.sqrt(d1**2 + d2**2)
+            lam = esp/dist
 
             x_d, y_d=p1  # starting point
 
-            f=arr_to_plot.copy()
-            no_color=False
+            f = arr_to_plot.copy()
+            no_color = False
             if len(f.shape) == 4:
-                no_color=False
-                x_sec_i=np.zeros([f.shape[0], int(dist/esp)+1, 4])
+                no_color = False
+                x_sec_i = np.zeros([f.shape[0], int(dist/esp)+1, 4])
                 if ip == 0:
-                    x_sec=np.zeros([f.shape[0], int(dist/esp)+1, 4])
+                    x_sec = np.zeros([f.shape[0], int(dist/esp)+1, 4])
             elif len(f.shape) == 3:
-                no_color=True
-                x_sec_i=np.zeros([f.shape[0],int(dist/esp)+1])
+                no_color = True
+                x_sec_i = np.zeros([f.shape[0], int(dist/esp)+1])
                 if ip == 0:
-                    x_sec=np.zeros([f.shape[0],int(dist/esp)+1])
+                    x_sec=np.zeros([f.shape[0], int(dist/esp)+1])
 
             if no_color:
                 i=0
@@ -6265,15 +6265,18 @@ class Arch_table():
                     y_d += d2*lam
                     # ix=int((x_d - ox)/sx)
                     # iy=int((y_d - oy)/sy)
-                    
                     cell = self.coord2cell(x_d, y_d, rotate=rotate)
+                    if cell is None:
+                        i += 1
+                        continue
+                    
                     iy, ix = cell[0], cell[1]
 
-                    fp=f[:,iy,ix]
+                    fp = f[:, iy, ix]
                     if ip == 0:
-                        x_sec[:,i]=fp
+                        x_sec[:, i]=fp
                     else:
-                        x_sec_i[:,i]=fp
+                        x_sec_i[:, i]=fp
                     i += 1
             else:
                 i=0
@@ -6284,6 +6287,7 @@ class Arch_table():
                     # iy=int((y_d - oy)/sy)
                     cell = self.coord2cell(x_d, y_d, rotate=rotate)
                     if cell is None:
+                        i+=1
                         continue
                     iy, ix = cell[0], cell[1]
                     fp=f[:,iy,ix]
@@ -6483,12 +6487,12 @@ class Arch_table():
             nz = self.get_nz()
             ny = self.get_ny()
             nx = self.get_nx()
-            if arr_type == "unit":
+            if arr_type == "units":
 
                 typ = "units"  # change type of cross_section
 
                 # set colors
-                units_domains=np.zeros([nreal, nz, ny, nx, 4], dtype=np.float32)
+                units_domains=np.zeros([nz, ny, nx, 4], dtype=np.float32)
                 for unit in self.get_all_units():
                     if unit.f_method != "Subpile":
                         mask=(arr == unit.ID)

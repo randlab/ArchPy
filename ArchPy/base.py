@@ -4439,13 +4439,31 @@ class Arch_table():
         arr = self.get_prop(k_key, iu, ifa, ip, all_data=False).copy()  # get the property array, important to copy it
         mask_unit = self.unit_mask(unit_name, iu=iu).astype(bool)  # get the unit mask for a specific unit, modify if you want to compute transmissivity for another unit or group of units
         arr[~mask_unit] = np.nan  # set the values outside the unit to NaN
-        thk = np.sum(~np.isnan(arr), axis=0)  # count the number of non-NaN values in each column
+        thk = np.sum(~np.isnan(arr), axis=0) * self.get_sz()  # count the number of non-NaN values in each column and multiply by cell thickness
         if log:
             K_moy = np.nanmean(10**arr, axis=0)  # calculate the mean of the property values in each column
         else:
             K_moy = np.nanmean(arr, axis=0)  # calculate the mean of the property values in each column
         T_moy = K_moy * thk  # calculate the mean of the property values in each column multiplied by the thickness
         return T_moy  # return the mean transmissivity for the unit
+
+    def get_thickness_in_unit(self, unit_name, iu=0):
+
+        """
+        Compute the transmissivity in a unit for a given realization
+
+        Parameters
+        ----------
+        unit_name: string
+            unit name defined when creating the unit object
+        iu: int
+            unit realization index (0, 1, ..., Nreal_units)
+        """
+
+        mask_unit = self.unit_mask(unit_name, iu=iu).astype(bool)  # get the unit mask for a specific unit, modify if you want to compute transmissivity for another unit or group of units
+        
+        thk = np.sum(mask_unit, axis=0) * self.get_sz()  # count the number of non-NaN values in each column and multiply by cell thickness
+        return thk  # return the mean transmissivity for the unit
 
     def realizations_aggregation(self, method="basic",
                              depth=100, ignore_units=None,
@@ -5214,7 +5232,7 @@ class Arch_table():
         else:
             plotter.add_mesh(grid,"red",scalars=arr.reshape((nx*ny, 4),order="F"), opacity=0.5, rgb=True)
 
-    def plot_surface_data_point(self, unit, typ="top", **kwargs):
+    def plot_unit_data_point(self, unit, typ="top", **kwargs):
 
         """
         Plot the thickness or top or bottom of a unit from borehole data on a map.

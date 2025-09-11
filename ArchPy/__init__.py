@@ -10,5 +10,6 @@ from . import _version
 from . import ap_mf
 from . import uppy
 from . import automatic_pile
+from . import parallel
 
 __version__ = _version.__version__

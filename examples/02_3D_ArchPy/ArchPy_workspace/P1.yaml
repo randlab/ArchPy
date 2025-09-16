@@ -122,6 +122,7 @@ Units:
             w: 0.25
         gamma: 0.0
       f_method: SIS
+      follow_surfaces_smooth: 5
       neig: 10
       plunge: 0
       probability: null
@@ -170,6 +171,7 @@ Units:
             w: 0.25
         gamma: 0.0
       f_method: SIS
+      follow_surfaces_smooth: 5
       neig: 10
       plunge: 0
       probability: null
@@ -218,6 +220,7 @@ Units:
             w: 0.25
         gamma: 0.0
       f_method: SIS
+      follow_surfaces_smooth: 5
       neig: 10
       plunge: 0
       probability: null
@@ -266,6 +269,7 @@ Units:
             w: 0.25
         gamma: 0.0
       f_method: SIS
+      follow_surfaces_smooth: 5
       neig: 10
       plunge: 0
       probability: null

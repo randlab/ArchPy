@@ -821,7 +821,6 @@ def import_d_units(dic_project, all_facies, ws=None):
                     dic_s[k]=v
             else:
                 if isinstance(v, str) and v.split(".")[-1] == "npy":
-                    print(v)
                     dic_s[k]=np.load(os.path.join(ws, v))
                 else:
                     dic_s[k]=v

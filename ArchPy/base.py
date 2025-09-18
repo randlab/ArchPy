@@ -563,6 +563,286 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, mask2D=None, seed=123456789, 
 
     return s
 
+def interp1D(litho, xu, verbose=0, ncpu=1, mask2D=None, seed=123456789, **kwargs):
+
+    """
+    Function to realize a 1D interpolation (borehole log) based on a
+    multitude of methods (scipy.interpolate, geone (kriging, MPS, ...))
+
+    Parameters
+    ----------
+    litho: :class:`Surface` object
+        ArchPy surface object on which we want to interpolate
+        the surface
+    xg: ndarray of size nx
+        central coordinates in x direction
+    yg: ndarray of size ny
+        central coordinates in y direction
+    xu: ndarray of size (n, 1)
+        position at which we want to know
+        the estimation (not used for every interp method)
+
+    **kwargs
+        Different parameters for surface interpolation
+
+        - nit: int
+            Number of iterations for gibbs sampler
+            (depends on the number of data)
+        - nmax: int
+            Number of neighbours in grf
+            with inequalities (to speed up the simulations)
+        - krig_type: str
+            Can be either "ordinary_kigring" or "simple kriging" method 
+            for kriging interpolation and grf with inequalities
+        - mean: float or 2D array
+            Mean value to use with grf methods
+        - unco: bool
+            Unconditional or not
+        - All other MPS and GRF parameters (see geone documentation)
+
+    Returns
+    -------
+    ndarray
+        array of same size as x, interpolated values
+    """
+
+    l_x = litho.x
+    l_y = litho.y
+    l_z = litho.z
+    l_ineq = litho.ineq
+
+    xp = np.array(l_x)
+    yp = np.array(l_y)
+    zp = np.array(l_z)
+    ineq_data = l_ineq  #inequality data
+    method = litho.int_method
+
+    ##kwargs
+    kwargs_def_grf={"nit": 50, "nmax": 20, "krig_type": "simple_kriging",  # number of gibbs sampler iterations, number of neigbors, krig type
+                      "grf_method": "sgs", "mean": None,"unco": False}  # and grf method, mean and unconditional flag
+
+    kw={}
+    #assign default values
+    if method in ["kriging", "grf", "grf_ineq"]:
+        kw=kwargs_def_grf
+
+    for k, v in kw.items():
+        if k not in kwargs.keys():
+            kwargs[k]=v
+
+    #if no data --> unco set to True
+    if len(xp)+len(ineq_data) == 0:
+        kwargs["unco"]=True
+    else:
+        kwargs["unco"]=False
+
+    ##DATA
+    # handle inequalities (setup equality points to lower/upper bounds of inequalities if krig ineq or GRF ineq are not used for the interpolation)
+
+    if len(litho.ineq) == 0 and method == "grf_ineq":
+        method = "grf"
+
+    x_in=[]
+    y_in=[]
+    z_in=[]
+    if method in ["kriging", "cubic", "linear", "nearest", "grf"]:
+        if litho.get_surface_covmodel(vb=0) is not None and len(ineq_data) > 0:
+
+            # gibbs sampler to estimate values at inequality point, requires a covmodel
+            eq_d = np.array([xp, yp, zp]).T
+            dmy = np.nan*np.ones([2, len(litho.x)+len(litho.sto_x)]).T
+            eq_d = np.concatenate([eq_d, dmy], 1)  # append all data together in right format
+            all_data = np.concatenate([eq_d, np.array(ineq_data)])
+            all_data = ArchPy.ineq.Gibbs_estimate(all_data, litho.get_surface_covmodel(), krig_type="simple_kriging", nit=50)  # Gibbs sampler
+
+            xp=all_data[:, 0]
+            yp=all_data[:, 1]
+            zp=all_data[:, 2]
+
+        else:
+            for in_data in ineq_data:  # handle inequality with non ineq methods
+                if (in_data[3] == in_data[3]) & (in_data[4] != in_data[4]): # inf ineq
+                    x_in.append(in_data[0])
+                    y_in.append(in_data[1])
+                    z_in.append(in_data[3])
+
+                elif (in_data[3] != in_data[3]) & (in_data[4] == in_data[4]): # sup ineq
+                    x_in.append(in_data[0])
+                    y_in.append(in_data[1])
+                    z_in.append(in_data[4])
+
+                elif (in_data[3] == in_data[3]) & (in_data[4] == in_data[4]): # sup and inf ineq
+                    x_in.append(in_data[0])
+                    y_in.append(in_data[1])
+                    z_in.append((in_data[3]+in_data[4])/2)
+
+            # append data
+            xp=np.concatenate((xp, x_in))
+            yp=np.concatenate((yp, y_in))
+            zp=np.concatenate((zp, z_in))
+
+        data=np.concatenate([xp.reshape(-1, 1), yp.reshape(-1, 1)], axis=1)
+
+    ## dealt with inequality data in the right format
+    elif method.lower() in ["grf_ineq"]:
+
+        # equality data
+        x_eq=np.array([xp, yp]).T
+        v_eq=zp
+
+        if len(litho.ineq) == 0:
+            xIneq_min = None
+            vIneq_min = None
+            xIneq_max = None
+            vIneq_max = None
+
+        elif len(litho.ineq) > 0:
+            #ineq
+            ineq_data=np.array(litho.ineq)
+            mask=(ineq_data[:, 3] == ineq_data[:, 3]) # inf boundary
+            xIneq_min=ineq_data[:,: 2][mask]
+            vIneq_min=ineq_data[:, 3][mask]
+
+            mask=(ineq_data[:, 4] == ineq_data[:, 4]) # sup boundary
+            xIneq_max=ineq_data[:,: 2][mask]
+            vIneq_max=ineq_data[:, 4][mask]
+
+
+    ### interpolations methods ###
+    if method.lower() in ["linear", "cubic", "nearest"]: # spline methods
+        if kwargs["unco"] == False:
+            s = scipy.interpolate.griddata(np.array([xp, yp]).T, zp, xu, method=method, fill_value=np.mean(zp))
+            s = s.reshape(ny, nx)
+        else:
+            raise ValueError ("Error: No data point found or unconditional spline interpolation requested")
+
+    ## MULTI-GAUSSIAN ### covmodel required
+    elif method.lower() in ["kriging", "grf", "grf_ineq"]:
+        covmodel=copy.deepcopy(litho.get_surface_covmodel())
+        if method.lower() == "kriging":
+            if kwargs["unco"] == False:
+                s, var=gcm.krige(data, zp, xu, covmodel, method=kwargs["krig_type"])
+                #s=gci.estimate2D(covmodel, [nx, ny], [sx, sy], [ox, oy], x=data, v=zp,
+                #                   method="ordinary_kriging", nneighborMax=10, searchRadiusRelative=1.0)["image"].val[0]
+                s=s.reshape(ny, nx)
+            else:
+                raise ValueError ("Error: No data point found or unconditional kriging requested")
+
+        elif method.lower() == "grf":
+            if kwargs["unco"] == False: #conditional
+                #transform data into normal distr
+                if litho.N_transfo:
+
+                    if hasattr(litho, "distribution"):
+                        di = litho.distribution
+                    else:
+                        # di=store_distri(zp, t=kwargs["tau"])
+                        di = N_transform()
+                        di.fit(zp)
+                    # norm_zp=NScore_trsf(zp, di)
+                    norm_zp = di.func(zp)
+
+                    # need to recompute variogram TO DO
+
+                    if kwargs["grf_method"] == "fft":
+                        np.random.seed(int(seed))  # set seed for fft
+                        sim=geone.grf.grf2D(covmodel, [nx, ny], [sx, sy], [ox, oy], x=data, v=norm_zp, nreal=1, mean=0, var=1, printInfo=False)
+                        # s=NScore_Btrsf(sim[0].flatten(), di)# back transform
+                        s = di.func_inv(sim[0].flatten())
+                        s=s.reshape(ny, nx)
+                    elif kwargs["grf_method"] == "sgs":
+                        sim=gci.simulate2D(covmodel, [nx, ny], [sx, sy], [ox, oy], x=data, v=norm_zp, nreal=1, mean=0, var=1, verbose=verbose, nthreads=ncpu, seed=seed, mask=mask2D)
+                        # s=NScore_Btrsf(sim["image"].val[0,0].flatten(), di)# back transform
+                        s = di.func_inv(sim["image"].val[0,0].flatten())
+                        s=s.reshape(ny, nx)
+
+                else: # no normal score
+                    if "mean" not in kwargs.keys():
+                        mean = np.mean(zp)
+                    else:
+                        mean = kwargs["mean"]
+
+                    if kwargs["grf_method"] == "fft":
+                        np.random.seed(int(seed))  # set seed for fft
+                        sim=geone.grf.grf2D(covmodel, [nx, ny], [sx, sy], [ox, oy], x=data, v=zp, nreal=1, mean=mean, printInfo=False)
+                        s=sim[0]
+                    elif kwargs["grf_method"] == "sgs":
+                        sim=gci.simulate2D(covmodel, [nx, ny], [sx, sy], [ox, oy], x=data, v=zp, nreal=1, mean=mean, verbose=verbose, nthreads=ncpu, seed=seed, mask=mask2D)
+                        s=sim["image"].val[0,0]
+
+            else:  # unconditional
+                if kwargs["grf_method"] == "fft":
+                    np.random.seed(int(seed))  # set seed for fft
+                    sim=geone.grf.grf2D(covmodel, [nx, ny], [sx, sy], [ox, oy], nreal=1, mean=kwargs["mean"], printInfo=False)
+                    s=sim[0]
+                elif kwargs["grf_method"] == "sgs":
+                        sim=gci.simulate2D(covmodel, [nx, ny], [sx, sy], [ox, oy], nreal=1, mean=kwargs["mean"], verbose=verbose, nthreads=ncpu, seed=seed, mask=mask2D)
+                        s=sim["image"].val[0,0]
+
+        elif method.lower() == "grf_ineq":
+            # Normal transform
+            if litho.N_transfo:
+
+                if hasattr(litho, "distribution"):
+                    di = litho.distribution
+                else:
+                    # di=store_distri(v_eq, t=kwargs["tau"])
+                    di  = N_transform()
+                    di.fit(zp)
+
+                    norm_zp = di.func(zp)
+                # v_eq=NScore_trsf(v_eq, di)
+                v_eq = di.func(zp)
+                # vIneq_min=NScore_trsf(vIneq_min, di)
+                vIneq_min = di.func(vIneq_min)
+                # vIneq_max=NScore_trsf(vIneq_max, di)
+                vIneq_max=di.func(vIneq_max)
+                var=1
+                mean=0
+
+                # need to recompute variogram TO DO
+
+            else:
+                var=covmodel.sill()
+                # define mean
+                if "mean" not in kwargs:
+                    if len(v_eq) == 0: # if only inequality data what to do ??
+                        mean=np.mean(np.concatenate((vIneq_max, vIneq_min)))
+                    else:
+                        mean=(np.mean(zp))
+                else:
+                    mean = kwargs["mean"]
+
+            # set None if no data
+            if len(v_eq) == 0:
+                v_eq=None
+                x_eq=None
+            if len(vIneq_min) == 0:
+                vIneq_min=None
+                xIneq_min=None
+            if len(vIneq_max) == 0:
+                vIneq_max=None
+                xIneq_max=None
+            sim=gci.simulate2D(covmodel, (nx, ny), (sx, sy), (ox, oy), method=kwargs["krig_type"], mean=mean,
+                                x=x_eq, v=v_eq,
+                                xIneqMin=xIneq_min, vIneqMin=vIneq_min,
+                                xIneqMax=xIneq_max, vIneqMax=vIneq_max,
+                                searchRadiusRelative=1, verbose=verbose,
+                                nGibbsSamplerPathMin=kwargs["nit"],nGibbsSamplerPathMax=2*kwargs["nit"],
+                                 seed=seed, nneighborMax=kwargs["nmax"], nthreads=ncpu, mask=mask2D)["image"].val[0, 0]
+
+            if litho.N_transfo:
+                # s=NScore_Btrsf(sim.flatten(), di)
+                s = di.func_inv(sim.flatten())
+                s=s.reshape(ny, nx)
+            else:
+                s=sim
+        
+        else:
+            raise ValueError ("Error: {} is not a valid or implemented method".format(method))
+
+    return s
+
 def split_logs(bh):
 
     """
@@ -1743,9 +2023,10 @@ class Arch_table():
         self.ycellcenters=yc
         self.rot_angle = rotation_angle
 
-        z_tree=KDTree(zg.reshape(-1, 1))
-        self.z_tree=z_tree
-        self.zc_tree=KDTree(zgc.reshape(-1, 1))
+        # z_tree=KDTree(zg.reshape(-1, 1))
+        # zc_tree = KDTree(zgc.reshape(-1, 1))
+        # self.z_tree = z_tree
+        # self.zc_tree = KDTree(zgc.reshape(-1, 1))
         # self.xc_tree=KDTree(xgc.reshape(-1, 1))
         # self.yc_tree=KDTree(ygc.reshape(-1, 1))
 
@@ -1838,8 +2119,16 @@ class Arch_table():
         # create mask from top and bot if none
         if mask is None:
             mask=np.zeros([nz, ny, nx], dtype=bool)
-            iu=z_tree.query(top.reshape(-1, 1), return_distance=False).reshape(ny, nx)
-            il=z_tree.query(bot.reshape(-1, 1), return_distance=False).reshape(ny, nx)
+            # iu=zc_tree.query(top.reshape(-1, 1), return_distance=False).reshape(ny, nx)
+            # il=zc_tree.query(bot.reshape(-1, 1), return_distance=False).reshape(ny, nx)
+            # iu = ((top - zgc[0]) // sz).astype(int) + 1
+            iu = (np.round((top - zg[0])/sz)).astype(int)
+            # il = ((bot - zgc[0]) // sz).astype(int)
+            il = (np.round((bot - zg[0])/sz)).astype(int)
+            iu[iu > nz - 1] = nz - 1
+            il[il > nz - 1] = nz - 1
+            iu[iu < 0] = 0
+            il[il < 0] = 0
 
             for ix in range(len(xgc)):
                 for iy in range(len(ygc)):
@@ -1897,7 +2186,7 @@ class Arch_table():
             polygon=polygon_array.reshape(ny, nx)
 
         if polygon is not None:
-            polygon=polygon.astype(bool) #ensure polygon is a boolean array
+            polygon=polygon.astype(bool)  # ensure polygon is a boolean array
             for ix in range(nx):
                 for iy in range(ny):
                     if ~polygon[iy, ix]:
@@ -3906,6 +4195,7 @@ class Arch_table():
         """
 
         zg=self.get_zg()
+        zgc = self.get_zgc()
         xg=self.get_xg()
         yg=self.get_yg()
         sz=self.get_sz()
@@ -3926,6 +4216,13 @@ class Arch_table():
 
         idx_s1=(np.round((s1-z0)/sz)).astype(int)
         idx_s2=(np.round((s2-z0)/sz)).astype(int)
+        # idx_s1 = ((s1 - zgc[0]) // sz).astype(int) + 1
+        # idx_s2 = ((s2 - zgc[0]) // sz).astype(int)
+        # idx_s1[idx_s1 < 0] = 0
+        # idx_s2[idx_s2 < 0] = 0
+
+        # iu = ((top - zgc[0]) // sz).astype(int) + 1
+        # il = ((bot - zgc[0]) // sz).astype(int)
 
         #domain
         a=np.zeros([nz, ny, nx], dtype=bool)
@@ -6066,7 +6363,7 @@ class Arch_table():
         self.plot_arr(arr,property,v_ex=v_ex, plotter=plotter, slicex=slicex, slicey=slicey, slicez=slicez,
                       cmin=cmin, cmax=cmax, scalar_bar_kwargs=scalar_bar_kwargs, **kwargs)
 
-    def plot_grid(self, v_ex=1):
+    def plot_grid(self, v_ex=1, plotter=None):
 
         """
         Function that plots the grid of the simulation domain
@@ -6077,6 +6374,11 @@ class Arch_table():
             vertical exaggeration
 
         """
+
+        if plotter is None:
+            p=pv.Plotter()
+        else:
+            p=plotter
 
         nx=self.get_nx()
         ny=self.get_ny()
@@ -6096,7 +6398,12 @@ class Arch_table():
         im=geone.img.Img(nx, ny, nz, sx, sy, sz*v_ex, x0, y0, z0, nv=1, val=arr, varname="grid")
 
         #plot
-        imgplt3.drawImage3D_surface(im, categ=True, categCol=["lightgrey"], show_edges=True)
+        imgplt3.drawImage3D_surface(im, categ=True, categCol=["lightgrey"], show_edges=True, plotter=p)
+
+        if plotter is None:
+            p.add_bounding_box()
+            p.show_axes()
+            p.show()
 
 
     def plot_arr(self,arr,var_name ="V0",v_ex=1, plotter=None, slicex=None, slicey=None, slicez=None, filtering_interval=None,
@@ -6761,7 +7068,7 @@ class Pile():
     def order_units(self, vb=1):
 
         """
-        Order list_liths according the order attributes of each lithologies
+        Order list_units according the order attributes of each lithologies
 
         Parameters
         ----------
@@ -6809,6 +7116,164 @@ class Pile():
                 if self.list_units[i].order != i+1:
                     self.list_units[i].order=i+1
 
+    def compute_surf_1D(self, ArchTable, xu, nreal=1, fl_top=False, subpile=False, tops=None, bots=None, vb=1):
+
+        """
+        Compute the elevation of the surfaces units (1st hierarchic order)
+        contained in the Pile object. This function perform the interpolation at xu location
+        as 1D simulations.
+
+        Parameters
+        ----------
+        ArchTable: :class:`Arch_table` object
+            ArchTable object containing the architecture of the pile
+        xu: 2D array,
+            location to interpolate the borehole
+        nreal: int
+            number of realization
+        fl_top: bool
+            to not interpolate first layer and assign it=top
+        subpile: bool
+            if the pile is a subpile
+        tops, bots: 3D arrays of shape (nreal_units, ny, nx)
+            sequence of 2D arrays of size (ny, nx) of top/bot for subpile surface.
+            Each 2D array correspond to one unit real
+        vb: int
+            level of verbosity, 0 for no print, 1 for print
+
+        """
+
+        if ArchTable.check_piles_name() == 0: # check consistency in unit
+            return None
+
+        ArchTable.nreal_units=nreal  # store number of realizations
+
+        #simulation 
+        if not subpile:
+            top=ArchTable.top
+            bot=ArchTable.bot
+
+        nlay=len(self.list_units)
+        nbh = xu.shape[0]
+
+        if vb:
+            print("########## PILE {} ##########".format(self.name))
+        #make sure to have ordered lithologies
+        self.order_units(vb=vb)
+
+        ### initialize surfaces by setting to 0
+        surfs=np.zeros([nreal, nlay], dtype=np.float32)
+        surfs_bot=np.zeros([nreal, nlay], dtype=np.float32)
+        org_surfs=np.zeros([nreal, nlay], dtype=np.float32)
+        # real_domains=np.zeros([nreal, nlay], dtype=np.int8)
+
+        for ireal in range(nreal): # loop over real
+
+            #top/bot
+            if subpile:
+                top=tops[ireal]
+                bot=bots[ireal]
+
+            # counter for current simulated surface
+            i=-1
+
+            for litho in self.list_units[:: -1]:
+                if vb:
+                    print("\n#### COMPUTING SURFACE OF UNIT {}".format(litho.name))
+                i += 1  # index for simulated surface
+                start=time.time()
+                if (fl_top) and (i == nlay-1): # first layer assign to top
+                    s1=top
+                elif (litho.surface.int_method in ["kriging", "linear", "cubic", "nearest"]) and (ireal > 0): # determinist method
+                    s1=org_surfs[0, (nlay-1)-i].copy()
+                    if vb:
+                        print("{}: determinist interpolation method, reuse the first surface".format(litho.name))
+                else:
+
+                    s1 = interp1D(litho.surface, seed = ArchTable.seed + litho.ID * 1e3 + ireal,
+                                verbose=ArchTable.verbose, **litho.surface.dic_surf)
+                    pass
+                    # # change mean if thickness mode is activated
+                    # if "thickness" in litho.surface.dic_surf.keys():
+                    #     if litho.surface.dic_surf["thickness"] is not None:
+                    #         if i == 0:
+                    #             litho.surface.dic_surf["mean"] = bot + litho.surface.dic_surf["thickness"]
+                    #         else:
+                    #             litho.surface.dic_surf["mean"] = s1 + litho.surface.dic_surf["thickness"]
+
+
+                    # s1=interp2D(litho.surface, ArchTable.get_xg(), ArchTable.get_yg(), ArchTable.xu2D,
+                    #              seed=ArchTable.seed + litho.ID * 1e3 + ireal, verbose=ArchTable.verbose, ncpu=ArchTable.ncpu, mask2D=mask2D,
+                    #              **litho.surface.dic_surf) # simulation
+
+                    # remove mean
+                    # if "thickness" in litho.surface.dic_surf.keys():
+                    #     if litho.surface.dic_surf["thickness"] is not None:
+                    #         litho.surface.dic_surf["mean"] = None
+
+                end=time.time()
+                
+                if vb:
+                    print("{}: time elapsed for computing surface {} s".format(litho.name, (end - start)))
+
+                ## if nan inside the domain (non simulated area) --> set values from surface below
+                # mask_nan = np.zeros([ny, nx], dtype=bool)
+                # mask_nan[mask2D] = np.isnan(s1[mask2D])
+                # if mask_nan.any():
+                #     if i > 0:
+                #         s1[mask_nan] = org_surfs[ireal, (nlay-1)-i+1][mask_nan]
+                #     else:
+                #         s1[mask_nan] = bot[mask_nan]
+
+                org_surfs[ireal, (nlay-1)-i] = s1.copy()
+
+                # adapt altitude if above/below top/bot
+                s1[s1 > top] = top[s1 > top]
+                s1[s1 < bot] = bot[s1 < bot]
+
+                #strati consistency and erosion rules
+                if i > 0:
+                    for o in range(i): # index for checking already simulated surfaces
+                        litho2=self.list_units[:: -1][o]
+                        s2=surfs[ireal, (nlay-1)-o] #idx from nlay-1 to nlay-i-1
+                        if litho != litho2:
+                            if (litho.order < litho2.order) & (litho.surface.contact == "onlap"): # si couche simulée sup et onlap
+                                s1[s1 < s2]=s2[s1 < s2]
+                            elif (litho.order < litho2.order) & (litho.surface.contact == "erode"): # si couche simulée érode une ancienne
+                                s2[s2 > s1]=s1[s2 > s1]
+                                if o == i-1 and litho.contact == "erode": # if index "o" is underlying layer
+                                    s1[s1 > s2]=s2[s1 > s2] # prevent erosion layers having volume
+
+                surfs[ireal, (nlay-1)-i]=s1  #add surface
+
+            #compute domains
+            start=time.time()
+            surfs_ir=surfs[ireal]
+
+            for i in range(surfs_ir.shape[0]):
+                if i < surfs_ir.shape[0]-1:
+                    s_bot=surfs_ir[i+1] # bottom
+                else:
+                    s_bot=bot
+                s_top=surfs_ir[i] # top
+                a=ArchTable.compute_domain(s_top, s_bot)
+                real_domains[ireal, i]=a*mask*self.list_units[i].ID
+                surfs_bot[ireal, i]=s_bot
+
+            end=time.time()
+            if vb:
+                print("\nTime elapsed for getting domains {} s".format((end - start)))
+
+        #only 1 big array
+        a=np.sum(real_domains, axis=1)
+        ArchTable.Geol.units_domains[a != 0]=a[a != 0]
+        ArchTable.Geol.surfaces_by_piles[self.name]=surfs
+        ArchTable.Geol.surfaces_bot_by_piles[self.name]=surfs_bot
+        ArchTable.Geol.org_surfaces_by_piles[self.name]=org_surfs
+
+        if vb:
+            print("##########################\n")
+
     def compute_surf(self, ArchTable, nreal=1, fl_top=False, subpile=False, tops=None, bots=None, vb=1):
 
         """
@@ -6832,7 +7297,7 @@ class Pile():
 
         """
 
-        def add_sto_contact(s, x, y, z, type="equality", z2=None): #function to add a stochastic hd point to a surface
+        def add_sto_contact(s, x, y, z, type="equality", z2=None):  # function to add a stochastic hd point to a surface
             # warning no check that point is inside domain
             if type == "equality":
                 s.surface.sto_x.append(x)
@@ -6870,7 +7335,6 @@ class Pile():
         self.order_units(vb=vb)
 
         ### initialize surfaces by setting to 0
-
         surfs=np.zeros([nreal, nlay, ny, nx], dtype=np.float32)
         surfs_bot=np.zeros([nreal, nlay, ny, nx], dtype=np.float32)
         org_surfs=np.zeros([nreal, nlay, ny, nx], dtype=np.float32)

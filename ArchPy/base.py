@@ -5529,6 +5529,46 @@ class Arch_table():
         else:
             plotter.add_mesh(grid,"red",scalars=arr.reshape((nx*ny, 4),order="F"), opacity=0.5, rgb=True)
 
+    def get_unit_data_point(self, unit, typ="top", **kwargs):
+
+        """
+        Plot the thickness or top or bottom of a unit from borehole data on a map.
+        unit: :class:`Unit` object
+            unit to plot
+        typ: string
+            "top", "bot" or "thk" for thickness
+        **kwargs: keyword arguments for plt.scatter
+        """
+
+        v = []
+        x = []
+        y = []
+
+        for bh in self.list_bhs:
+
+            if bh.get_list_stratis() is not None:
+                if unit in bh.get_list_stratis():
+                    for i, s in enumerate(bh.log_strati):
+                        if s[0] == unit:
+                            if typ == "thk":
+                                try:
+                                    thk = s[1] - bh.log_strati[i+1][1]
+                                except:
+                                    thk = s[1] - (bh.z - bh.depth)
+                            elif typ =="top":
+                                thk = s[1]
+                            elif typ == "bot":
+                                try:
+                                    thk = bh.log_strati[i+1][1]
+                                except:
+                                    thk = bh.z - bh.depth
+
+                            x.append(bh.x)
+                            y.append(bh.y)
+                            v.append(thk)
+        
+        return x, y, v
+
     def plot_unit_data_point(self, unit, typ="top", **kwargs):
 
         """

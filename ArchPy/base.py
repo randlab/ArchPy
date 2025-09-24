@@ -8549,11 +8549,14 @@ class Unit():
                             for ireal in range(nreal):
                                 facies_domains[iu, ireal][mask]=simus[mask]
 
-
-                if mode == "facies":
-                    ArchTable.Geol.facies_domains[iu,:, mask]=facies_domains[iu,:, mask]  # store results
-                elif mode == "units":
+                if mode == "units":
                     ArchTable.Geol.units_domains[iu, mask] = facies_domains[iu, 0, mask]  # store results
+            if mode == "facies":
+                mask_2 = facies_domains != 0
+                ArchTable.Geol.facies_domains[mask_2] = facies_domains[mask_2]
+                # ArchTable.Geol.facies_domains[iu,:, mask] = facies_domains[iu,:, mask]  # store results
+                
+                
         elif method == "SubPile": # Hierarchical filling
             if ArchTable.verbose:
                 print("SubPile filling method, nothing happened")

@@ -166,7 +166,7 @@ def krige(x, v, xu, cov_model, method='simple_kriging', mean=None):
         cov_h = cov_func(h)
         mat[i, (i+1):n] = cov_h
         mat[(i+1):n, i] = cov_h
-        mat[i,i] = cov0
+        mat[i,i] = cov0[0]
 
     b = np.ones((nmat, nu))
     for i in range(n):
@@ -178,10 +178,10 @@ def krige(x, v, xu, cov_model, method='simple_kriging', mean=None):
         b[i,:] = cov_func(h)
 
     if ordinary_kriging:
-        mat[-2,-2] = cov0
+        mat[-2,-2] = cov0[0]
         mat[-1,-1] = 0.0
     else:
-        mat[-1,-1] = cov0
+        mat[-1,-1] = cov0[0]
 
     # Solve the kriging system
     w = np.linalg.solve(mat, b) # w: matrix of dimension nmat x nu
@@ -498,9 +498,9 @@ def Gibbs_estimate(data_org, covmodel, nit=50, krig_type="simple_kriging", mean=
         xu = ineq_data[i]
         idx = tree.query(xu[:2].reshape(1,-1),k=nmax,return_distance=False)[0] # search nearest neighbours
         x = data[idx[1:]] # select nearest neig
-        w,vu_std = krige(x[:,:2],x[:,3],xu[:2].reshape(-1,2),cov_model = covmodel,method = krig_type,mean=mean)
+        w,vu_std = krige(x[:,:2],x[:,3],xu[:2].reshape(-1,2), cov_model = covmodel, method = krig_type, mean=mean)
         weight_arr[i,idx[1:]] = w[:,0]
-        std_arr[i] = vu_std
+        std_arr[i] = vu_std[0]
         
     ### loop over inequality data, Gibbs sampler ###
     vals=np.zeros([nineq, nit+1])
@@ -518,7 +518,7 @@ def Gibbs_estimate(data_org, covmodel, nit=50, krig_type="simple_kriging", mean=
             idx2 = idx2[:nmax]
             x = np.array(x_tmp)[idx2]
             v = np.array(v_tmp)[idx2]
-            m,s = gcm.krige(x, v, xu[:2].reshape(-1,2), cov_model=covmodel, method=krig_type, mean=mean)
+            m,s = gcm.krige(x, v, xu[:2].reshape(-1,2), cov_model=covmodel, method=krig_type, mean_xu=mean)
             if np.abs(m) != np.inf and s > 0:
                 ## truncation
                 if (xu[3] != xu[3]) and (xu[4] == xu[4]):

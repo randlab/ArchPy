@@ -17,6 +17,7 @@ import ArchPy
 import ArchPy.base
 import ArchPy.uppy
 from ArchPy.uppy import upscale_k, rotate_point
+from numba import jit
 
 # some functions
 def mask_below_unit(T1, unit, iu=0):
@@ -399,6 +400,14 @@ def points2grid_index(points, grid):
 
     return np.array(list_index)
 
+@jit()
+def mean_speed(a):
+    return a.sum() / len(a)
+
+@jit()
+def hmean_speed(a):
+    return 1 / (1/a).sum()
+
 ## archpy to modflow class ##
 class archpy2modflow:
 
@@ -563,9 +572,10 @@ class archpy2modflow:
 
                 # get surfaces of each unit
                 top = self.T1.get_surface(typ="top")[0][0, iu].copy()
-                top = np.flip(top, axis=0)
                 botm = self.T1.get_surface(typ="bot")[0][:, iu].copy()
+
                 botm = np.flip(botm, axis=1)
+                top = np.flip(top, axis=0)
 
                 botm_org = botm.copy()  # copy of botm to ensure that we only select original surfaces and not new sublayers
 
@@ -630,6 +640,9 @@ class archpy2modflow:
                         mask = (s1 <= s2) | (np.abs(s2 - s1) < rtol)
                         # mask = (s1 <= s2) | ((s2 < (s1 + np.ones(s1.shape)*rtol)) & (s2 > (s1 - np.ones(s1.shape)*rtol)))  # mask to identify cells where the thickness is <= 0 with some tolerance
                         s1[mask] = s2[mask] + 1e-2
+                
+                # ensure top has not any nan
+                top[np.isnan(top)] = botm[0][np.isnan(top)] + 1e-2
 
             elif grid_mode == "new_resolution":
                 assert factor_x is not None, "factor_x must be provided"
@@ -804,11 +817,20 @@ class archpy2modflow:
                                  grid=grid)
 
         return new_prop
+    
+    def gmean(a):
+        if np.all(a > 0):
+            return np.exp(np.mean(np.log(a)))
+        elif np.all(a < 0):
+            a = np.abs(a)
+            return -np.exp(np.mean(np.log(a)))
+        else:
+            raise ValueError("Array must be all positive or all negative")
 
     def set_k(self, k_key="K",
               iu=0, ifa=0, ip=0,
               log=False, k=None, k22=None, k33=None, k_average_method="anisotropic",
-              average_facies=True, 
+              average_facies=False, 
               upscaling_method="simplified_renormalization",
               xt3doptions=None):
 
@@ -840,13 +862,16 @@ class archpy2modflow:
             can be "arithmetic", "harmonic" or "anisotropic", default is "arithmetic"
         average_facies : bool
             if True, the facies will be upscaled and saved in the model
-            if False, the facies will not be upscaled, default is True
+            if False, the facies will not be upscaled, default is False
         """
 
-        # write a function to get proportion of each value in the array
+        # Efficiently compute the proportion of each unique value in the array
         def get_proportion(arr):
-            unique, counts = np.unique(arr, return_counts=True)
-            return dict(zip(unique, counts/np.sum(counts)))
+            if arr.size == 0:
+                return {}
+            values, counts = np.unique(arr, return_counts=True)
+            total = counts.sum()
+            return {v: c / total for v, c in zip(values, counts)}
 
         # remove the npf package if it already exists
         gwf = self.get_gwf()
@@ -921,17 +946,17 @@ class archpy2modflow:
 
                             # extract values in the new cell
                             k_vals = kh[:, irow, icol][mask_unit[:, irow, icol]]
-
-                            # mask_unit = mask_units[ilay]
-                            if k_average_method == "arithmetic":
-                                new_k[ilay, irow, icol] = np.mean(k_vals)
-                            elif k_average_method == "harmonic":
-                                new_k[ilay, irow, icol] = 1 / np.mean(1 / k_vals)
-                            elif k_average_method == "anisotropic":
-                                new_k[ilay, irow, icol] = np.mean(k_vals)
-                                new_k33[ilay, irow, icol] = 1 / np.mean(1 / k_vals)
-                            else:
-                                raise ValueError("k_average_method must be one of 'arithmetic' or 'harmonic' or 'anisotropic'")
+                            if len(k_vals) >0:
+                                # mask_unit = mask_units[ilay]
+                                if k_average_method == "arithmetic":
+                                    new_k[ilay, irow, icol] = mean_speed(k_vals)
+                                elif k_average_method == "harmonic":
+                                    new_k[ilay, irow, icol] = hmean_speed(k_vals)
+                                elif k_average_method == "anisotropic":
+                                    new_k[ilay, irow, icol] = mean_speed(k_vals)
+                                    new_k33[ilay, irow, icol] = hmean_speed(k_vals)
+                                else:
+                                    raise ValueError("k_average_method must be one of 'arithmetic' or 'harmonic' or 'anisotropic'")
                             
                             if average_facies:
                                 # facies upscaling
@@ -942,7 +967,7 @@ class archpy2modflow:
                                     upscaled_facies[ifa][ilay, irow, icol] = prop[ifa]
                             else:
                                 upscaled_facies = None
-                
+
                 # save upscaled facies
                 self.upscaled_facies = upscaled_facies
 
@@ -1095,6 +1120,10 @@ class archpy2modflow:
                 self.upscaled_facies = upscaled_facies
 
         else:
+            # ensure no nan
+            k[np.isnan(k)] = np.mean(k[~np.isnan(k)])
+            k[np.isnan(k22)] = np.mean(k[~np.isnan(k22)])
+            k[np.isnan(k33)] = np.mean(k[~np.isnan(k33)])
             new_k = k
             new_k22 = k22
             new_k33 = k33

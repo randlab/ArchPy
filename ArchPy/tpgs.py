@@ -878,14 +878,14 @@ def run_tpgs(nsim,xg,yg,zg,data,Gk,flag,nit=100,nmax = 24,grf_method="fft",mask=
             mean = np.mean(x[:,3])
             w,vu_std = simple_kriging(x[:,:3],xu[0:3].reshape(-1,3),covmodel,mean=mean)
             weight_arr[0,i,idx[1:]] = w
-            std_arr[0,i] = vu_std
+            std_arr[0,i] = vu_std[0]
 
             #G2
             covmodel = G2
             mean = np.mean(x[:,4])
             w,vu_std = simple_kriging(x[:,:3],xu[0:3].reshape(-1,3),covmodel,mean=mean)
             weight_arr[1,i,idx[1:]] = w
-            std_arr[1,i] = vu_std
+            std_arr[1,i] = vu_std[0]
 
         #gibbs sampler
         for ireal in range(nsim):

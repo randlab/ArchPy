@@ -1,5 +1,0 @@
-,org_file,model_file,use_cols,index_cols,fmt,sep,head_rows,upper_bound,lower_bound,operator,mlt_file,apply_order,zero_based
-0,org\mean_C.txt,mean_C.txt,,,%25.18E,,0,10,0.1,m,mult\mean_c_inst0_grid.csv,999,False
-1,org\mean_D1.txt,mean_D1.txt,,,%25.18E,,0,10,0.1,m,mult\mean_d1_inst0_grid.csv,999,False
-2,org\mean_B.txt,mean_B.txt,,,%25.18E,,0,10,0.1,m,mult\mean_b_inst0_grid.csv,999,False
-3,org\mean_A.txt,mean_A.txt,,,%25.18E,,0,10,0.1,m,mult\mean_a_inst0_grid.csv,999,False

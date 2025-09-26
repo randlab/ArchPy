@@ -1540,8 +1540,8 @@ def save_project(ArchTable, results=True):
     d={}
     d["name"]=ArchTable.name
     d["ws"]=ArchTable.ws
-    if ArchTable.ws not in os.listdir():
-        os.makedirs(ArchTable.ws)
+    # if ArchTable.ws not in os.listdir():
+    os.makedirs(ArchTable.ws, exist_ok=True)
     d["seed"] = ArchTable.seed
     d["verbose"]=ArchTable.verbose
     d["Pile_master"]=ArchTable.get_pile_master().name

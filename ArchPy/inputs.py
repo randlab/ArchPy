@@ -529,8 +529,8 @@ def load_bh_files(list_bhs, facies_data, units_data,
     s_data.index.rename("bh_ID", inplace=True)
 
     #sort everything
-    fa_data=fa_data.reset_index().sort_values(by=["bh_ID","top"],ascending=False).set_index("bh_ID")
-    s_data=s_data.reset_index().sort_values(by=["bh_ID","top"],ascending=False).set_index("bh_ID")
+    fa_data=fa_data.reset_index().sort_values(by=["bh_ID","top"], ascending=False).set_index("bh_ID")
+    s_data=s_data.reset_index().sort_values(by=["bh_ID","top"], ascending=False).set_index("bh_ID")
 
     #merge
     final_db=merge_dbs(fa_data, s_data)
@@ -661,7 +661,6 @@ def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()
                     #idepth --> variable to ensure that the depth of the bh will be reached
                     if (list_bhs.loc[list_bhs["bh_ID"] == bh_ID]["bh_z"].values[0] - df.loc[idx,"bot"]) > idepth:
                         idepth=list_bhs.loc[list_bhs["bh_ID"] == bh_ID]["bh_z"].values[0] - df.loc[idx,"bot"]
-
                         
                 else:
                     if vb:

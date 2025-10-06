@@ -948,6 +948,9 @@ def upscale_cell_disv(grid_ref_xver, grid_ref_yver, grid_ref_layers, grid_ref_to
     if ndim == 2:
         field_cell = field[iy_row2-1:iy_row1+1, ix_col1-1:ix_col2+1]
 
+        # fill nans
+        # fill_nan_values_with_gmean(field_cell)
+
         # dx, dy
         if field_cell.shape[0] == 1 and field_cell.shape[1] == 1:
             pass
@@ -1003,7 +1006,10 @@ def upscale_cell_disv(grid_ref_xver, grid_ref_yver, grid_ref_layers, grid_ref_to
     else:
         t1 = time.time()
         field_cell = field[iz_lay2-1:iz_lay1+1, iy_row2-1:iy_row1+1, ix_col1-1:ix_col2+1]
-
+        # print(field)
+        if np.isnan(field_cell).any():
+            field_cell = fill_nan_values_with_gmean(field_cell)
+        
         # dx, dy, dz
         if field_cell.shape[0] == 1 and field_cell.shape[1] == 1 and field_cell.shape[2] == 1:
             pass

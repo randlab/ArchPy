@@ -87,8 +87,7 @@ def array2cellids(array, idomain):
                     cellids.append((ilay, irow, icol))
     return cellids
 
-def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance=False, proportions=False,
-                                   time_unit="s", resampling="d"):
+def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance=False, proportions=False, fac_time=1/86400):
 
     """
     Plot the facies sequence of a particle in time and distance
@@ -134,11 +133,16 @@ def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance
 
         if proportions:
             # df.set_index("time").iloc[:, -len(colors_fa):].plot(color=colors_fa, legend=False, ax=axi)
-            df.time = pd.to_datetime(df.time,unit=time_unit)  # set datetime to resample
-            df.set_index("time").resample(resampling).first().fillna(method="ffill").reset_index().iloc[:, -len(colors_fa):].plot.area(color=colors_fa, legend=False, ax=axi, linewidth=0)
+            # df.time = pd.to_datetime(df.time,unit=time_unit)  # set datetime to resample
+            # df.set_index("time").resample(resampling).first().fillna(method="ffill").reset_index().iloc[:, -len(colors_fa):].plot.area(color=colors_fa, legend=False, ax=axi, linewidth=0)
+            # axi.set_ylabel("Proportion")
+            # axi.set_xlabel("time [{}]".format(resampling))
+            # axi.set_ylim(-.1, 1.1)
+            df.time *= fac_time
+            df.iloc[:, [1] + [i for i in range(-len(colors_fa), 0, 1)]].plot.area(color=colors_fa, legend=False, ax=axi, linewidth=0, x="time")
             axi.set_ylabel("Proportion")
-            axi.set_xlabel("time [{}]".format(resampling))
-            axi.set_ylim(-.1, 1.1)
+            axi.set_xlabel(f"time [days]")
+            axi.set_ylim(-.1, 1)
 
         else:
             dt = df["dt"]
@@ -815,6 +819,7 @@ class archpy2modflow:
                                  dx=dx, dy=dy, dz=dz, ox=ox, oy=oy, oz=oz,
                                  factor_x=self.factor_x, factor_y=self.factor_y, factor_z=self.factor_z,
                                  grid=grid)
+                                 
 
         return new_prop
     
@@ -1122,8 +1127,10 @@ class archpy2modflow:
         else:
             # ensure no nan
             k[np.isnan(k)] = np.mean(k[~np.isnan(k)])
-            k[np.isnan(k22)] = np.mean(k[~np.isnan(k22)])
-            k[np.isnan(k33)] = np.mean(k[~np.isnan(k33)])
+            if k22 is not None:
+                k22[np.isnan(k22)] = np.mean(k22[~np.isnan(k22)])
+            if k33 is not None:
+                k33[np.isnan(k33)] = np.mean(k33[~np.isnan(k33)])
             new_k = k
             new_k22 = k22
             new_k33 = k33

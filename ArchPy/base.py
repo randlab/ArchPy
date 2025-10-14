@@ -2874,10 +2874,12 @@ class Arch_table():
             - "uniform" for only superficial information (no contact or boundaries)
             - "boundaries" for only the contact between the units
             - "all" for both
-        step : int
-            step for sampling the geological map, small values implies
+        step_uniform : int
+            step for sampling the geological map when using uniform typ, small values implies
             that much more data are sampled from the raster but this increases
             the computational burden. Default is 5 (every 5th cell is sampled)
+        step_boundaries : int
+            step for sampling the geological map when using boundaries typ
         """
 
         xg = self.get_xg()

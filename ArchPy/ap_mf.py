@@ -2,27 +2,24 @@
 This module propose several functions a class to interface ArchPy with MODFLOW 6
 """
 
-import numpy as np
-from matplotlib import colors
-import matplotlib.pyplot as plt
-import geone
-import geone.covModel as gcm
-import geone.imgplot3d as imgplt3
-import pyvista as pv
-import sys
 import os
+
 import flopy as fp
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
+from numba import jit
+
 import ArchPy
 import ArchPy.base
 import ArchPy.uppy
-from ArchPy.uppy import upscale_k, rotate_point
-from numba import jit
+from ArchPy.uppy import rotate_point, upscale_k
+
 
 # some functions
 def mask_below_unit(T1, unit, iu=0):
     u = T1.get_unit(unit)
-    
+
     mask_tot = np.zeros([T1.nz, T1.ny, T1.nx])
     mask_unit = T1.unit_mask(u.name, iu=iu)
     mask_tot[mask_unit.astype(bool)] = 1
@@ -35,25 +32,26 @@ def mask_below_unit(T1, unit, iu=0):
         if unit_to_compare > u:
             mask_unit = T1.unit_mask(unit_to_compare.name, iu=iu)
             mask_tot[mask_unit.astype(bool)] = 1
-    
+
     return mask_tot
 
-def cellidBD(idomain, layer=0):   
-    
+
+def cellidBD(idomain, layer=0):
     """
     extract the cellids at the boundary of the domain at a given layer
     idomain : 3D array, idomain array which determine if a cell is active or not (1 active, 0 inactive)
     layer : int, layer on which the boundary cells are extract
     """
-    lst_cellBD=[]
+    lst_cellBD = []
 
     for irow in range(idomain.shape[1]):
         for icol in range(idomain.shape[2]):
-            if idomain[layer][irow,icol]==1:
-                #check neighbours
-                if np.sum(idomain[layer][irow-1:irow+2,icol-1:icol+2]==1) < 8:
-                    lst_cellBD.append((layer,irow,icol))
+            if idomain[layer][irow, icol] == 1:
+                # check neighbours
+                if np.sum(idomain[layer][irow - 1 : irow + 2, icol - 1 : icol + 2] == 1) < 8:
+                    lst_cellBD.append((layer, irow, icol))
     return lst_cellBD
+
 
 def check_thk(top, botm):
     """
@@ -62,14 +60,14 @@ def check_thk(top, botm):
     output : lst of bool (false mean everything's okay in that specific layer !)
     """
     nlay = botm.shape[0]
-    bol_lst=[]
-    bol_lst.append(not ((top-botm[0])<=0).any())
-    for ilay in range(nlay-1):
-        bol_lst.append(not ((botm[ilay]-botm[ilay+1])<=0).any())
+    bol_lst = []
+    bol_lst.append(not ((top - botm[0]) <= 0).any())
+    for ilay in range(nlay - 1):
+        bol_lst.append(not ((botm[ilay] - botm[ilay + 1]) <= 0).any())
     return bol_lst
 
-def array2cellids(array, idomain):
 
+def array2cellids(array, idomain):
     """
     Convert an array to a list of cellids
     array : 3D array, array to convert
@@ -87,9 +85,8 @@ def array2cellids(array, idomain):
                     cellids.append((ilay, irow, icol))
     return cellids
 
-def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance=False, proportions=False,
-                                   time_unit="s", resampling="d"):
 
+def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance=False, proportions=False, time_unit="s", resampling="d"):
     """
     Plot the facies sequence of a particle in time and distance
 
@@ -103,9 +100,9 @@ def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance
     plot_time : bool, optional
         if True, plot the facies sequence in time. The default is False.
     plot_distance : bool, optional
-        if True, plot the facies sequence in distance. The default is False.    
+        if True, plot the facies sequence in distance. The default is False.
     proportions : bool, optional
-        if True, plot the proportions of each facies in time or distance. The default is False. 
+        if True, plot the proportions of each facies in time or distance. The default is False.
         df must contain the columns "facies_prop_i" where i is the facies id.
     time_unit : str, optional
         unit of time in the column "time". The default is "s".
@@ -116,10 +113,10 @@ def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance
     """
 
     if plot_time and plot_distance:
-        fig, ax = plt.subplots(2,1, figsize=(10, 1.5), dpi=200)
+        fig, ax = plt.subplots(2, 1, figsize=(10, 1.5), dpi=200)
         axi = ax[0]
     elif plot_time or plot_distance:
-        fig, axi = plt.subplots(1,1, figsize=(10, 0.5), dpi=200)
+        fig, axi = plt.subplots(1, 1, figsize=(10, 0.5), dpi=200)
     plt.subplots_adjust(hspace=1.5)
 
     if proportions:
@@ -131,14 +128,13 @@ def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance
                 colors_fa.append(color_fa)
 
     if plot_time:
-
         if proportions:
             # df.set_index("time").iloc[:, -len(colors_fa):].plot(color=colors_fa, legend=False, ax=axi)
-            df.time = pd.to_datetime(df.time,unit=time_unit)  # set datetime to resample
-            df.set_index("time").resample(resampling).first().fillna(method="ffill").reset_index().iloc[:, -len(colors_fa):].plot.area(color=colors_fa, legend=False, ax=axi, linewidth=0)
+            df.time = pd.to_datetime(df.time, unit=time_unit)  # set datetime to resample
+            df.set_index("time").resample(resampling).first().fillna(method="ffill").reset_index().iloc[:, -len(colors_fa) :].plot.area(color=colors_fa, legend=False, ax=axi, linewidth=0)
             axi.set_ylabel("Proportion")
             axi.set_xlabel("time [{}]".format(resampling))
-            axi.set_ylim(-.1, 1.1)
+            axi.set_ylim(-0.1, 1.1)
 
         else:
             dt = df["dt"]
@@ -147,33 +143,32 @@ def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance
                     axi.barh(0, dt[i], left=df["time"].loc[i], color=arch_table.get_facies_obj(ID=facies, type="ID").c)
                 else:
                     axi.barh(0, dt[i], left=0, color=arch_table.get_facies_obj(ID=facies, type="ID").c, label=arch_table.get_facies_obj(ID=facies, type="ID").name)
-            
+
             axi.set_xlim(0, df["time"].iloc[-1])
             axi.set_xlabel("Time (days)")
             axi.set_yticks([])
 
         if plot_distance:
             axi = ax[1]
-    
+
     # plot facies function of the distance traveled
     if plot_distance:
         all_dist = df["distance"].values
         all_cum_dist = df["cum_distance"].values
 
         if proportions:
-            df_plot = df.set_index("cum_distance").iloc[:, -len(colors_fa):]
+            df_plot = df.set_index("cum_distance").iloc[:, -len(colors_fa) :]
             df_plot.loc[df_plot.sum(1).values == 0] = np.nan
             df_plot = df_plot.fillna(method="ffill")
             df_plot.plot.area(color=colors_fa, legend=False, ax=axi, linewidth=0)
             axi.set_ylabel("Proportion")
             axi.set_xlabel("Distance [m]")
-            axi.set_ylim(-.1, 1.1)
+            axi.set_ylim(-0.1, 1.1)
 
         else:
-
             for i in range(int(len(df["facies"]) - 1)):
                 facies = df["facies"].iloc[i]
-                width = all_dist[i+1]
+                width = all_dist[i + 1]
                 distance = all_cum_dist[i]
                 axi.barh(0, width, left=distance, color=arch_table.get_facies_obj(ID=facies, type="ID").c)
 
@@ -181,11 +176,13 @@ def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance
         axi.set_xlabel("Distance (m)")
         axi.set_yticks([])
 
+
 def get_nodes(locs, nx, ny):
     nodes = []
     for k, i, j in locs:
         nodes.append(k * nx * ny + i * nx + j)
     return nodes
+
 
 def get_locs(nodes, nx, ny):
     locs = []
@@ -195,6 +192,7 @@ def get_locs(nodes, nx, ny):
         j = node - k * nx * ny - i * nx
         locs.append((k, i, j))
     return locs
+
 
 def points2grid_index(points, grid):
     """
@@ -215,17 +213,12 @@ def points2grid_index(points, grid):
         if grid is disu, return (icell)
     """
     # import packages
-    from scipy.spatial import cKDTree
-    from matplotlib.path import Path
     from flopy.utils.geometry import is_clockwise
+    from matplotlib.path import Path
+    from scipy.spatial import cKDTree
 
     # functions to intersect the points with the grid
-    def intersect_point_fast_ug(self, index_cells, x, y, z=None,
-                                xv=None, yv=None, zv=None,
-                                local=False, forgive=False):
-
-        
-        
+    def intersect_point_fast_ug(self, index_cells, x, y, z=None, xv=None, yv=None, zv=None, local=False, forgive=False):
         """
         Get the CELL2D number of a point with coordinates x and y
 
@@ -255,22 +248,16 @@ def points2grid_index(points, grid):
         if local:
             # transform x and y to real-world coordinates
             x, y = super().get_coords(x, y)
-        
+
         if xv is None or yv is None or zv is None:
             # get the vertices of the grid cells
             xv, yv, zv = self.xyzvertices
 
         for icell2d in index_cells:
-            
             xa = np.array(xv[icell2d])
             ya = np.array(yv[icell2d])
             # x and y at least have to be within the bounding box of the cell
-            if (
-                np.any(x <= xa)
-                and np.any(x >= xa)
-                and np.any(y <= ya)
-                and np.any(y >= ya)
-            ):
+            if np.any(x <= xa) and np.any(x >= xa) and np.any(y <= ya) and np.any(y >= ya):
                 if is_clockwise(xa, ya):
                     radius = -1e-9
                 else:
@@ -293,12 +280,10 @@ def points2grid_index(points, grid):
 
         raise Exception("point given is outside of the model area")
 
-    def intersect_point_fast_vg(self, index_cells, x, y, z=None, 
-                        xv=None, yv=None, zv=None,
-                        local=False, forgive=False):
-
-        from matplotlib.path import Path
+    def intersect_point_fast_vg(self, index_cells, x, y, z=None, xv=None, yv=None, zv=None, local=False, forgive=False):
         from flopy.utils.geometry import is_clockwise
+        from matplotlib.path import Path
+
         """
         Get the CELL2D number of a point with coordinates x and y
 
@@ -329,7 +314,7 @@ def points2grid_index(points, grid):
         if local:
             # transform x and y to real-world coordinates
             x, y = super().get_coords(x, y)
-        
+
         if xv is None or yv is None or zv is None:
             # get the vertices of the grid cells
             xv, yv, zv = self.xyzvertices
@@ -338,12 +323,7 @@ def points2grid_index(points, grid):
             xa = np.array(xv[icell2d])
             ya = np.array(yv[icell2d])
             # x and y at least have to be within the bounding box of the cell
-            if (
-                np.any(x <= xa)
-                and np.any(x >= xa)
-                and np.any(y <= ya)
-                and np.any(y >= ya)
-            ):
+            if np.any(x <= xa) and np.any(x >= xa) and np.any(y <= ya) and np.any(y >= ya):
                 path = Path(np.stack((xa, ya)).transpose())
                 # use a small radius, so that the edge of the cell is included
                 if is_clockwise(xa, ya):
@@ -355,11 +335,7 @@ def points2grid_index(points, grid):
                         return icell2d
 
                     for lay in range(self.nlay):
-                        if (
-                            self.top_botm[lay, icell2d]
-                            >= z
-                            >= self.top_botm[lay + 1, icell2d]
-                        ):
+                        if self.top_botm[lay, icell2d] >= z >= self.top_botm[lay + 1, icell2d]:
                             return lay, icell2d
 
         if forgive:
@@ -376,7 +352,7 @@ def points2grid_index(points, grid):
     xv, yv, zv = grid.xyzvertices
 
     list_points = np.array(points)
-    
+
     tree = cKDTree(np.array([xc, yc, zc[0]]).T)
     dist, index = tree.query(list_points, k=10)  # find the nearest cells for each point in list_points
 
@@ -384,33 +360,29 @@ def points2grid_index(points, grid):
     for list_of_index_cells, point in zip(index, list_points):
         x, y, z = point
         if grid.grid_type == "vertex":
-            p = intersect_point_fast_vg(grid, list_of_index_cells, x, y, z=z,
-                                        xv=xv, yv=yv, zv=zv, 
-                                        local=False, forgive=True
-                                        )
+            p = intersect_point_fast_vg(grid, list_of_index_cells, x, y, z=z, xv=xv, yv=yv, zv=zv, local=False, forgive=True)
         elif grid.grid_type == "unstructured":
-            p = intersect_point_fast_ug(grid, list_of_index_cells, x, y, z=z,
-                                        xv=xv, yv=yv, zv=zv,
-                                        local=False, forgive=True
-                                        )   
+            p = intersect_point_fast_ug(grid, list_of_index_cells, x, y, z=z, xv=xv, yv=yv, zv=zv, local=False, forgive=True)
         else:
             raise ValueError("Grid type not supported")
-        
+
         list_index.append(p)
 
     return np.array(list_index)
+
 
 @jit()
 def mean_speed(a):
     return a.sum() / len(a)
 
+
 @jit()
 def hmean_speed(a):
-    return 1 / (1/a).sum()
+    return 1 / (1 / a).sum()
+
 
 ## archpy to modflow class ##
 class archpy2modflow:
-
     """
     Class to convert an ArchPy table to a MODFLOW 6 model
 
@@ -446,16 +418,27 @@ class archpy2modflow:
         self.factor_y = None
         self.factor_z = None
         self.vb = vb  # verbosity level, 0 = no output, 1 = normal output
+        self.surface_layer = False
 
-    def create_sim(self, grid_mode="archpy", iu=0, 
-                   lay_sep=1,
-                   modflowgrid_props=None, xorigin=0, yorigin=0, angrot=0,
-                   factor_x=None, factor_y=None, factor_z=None, 
-                   unit_limit=None):
-
+    def create_sim(
+        self,
+        grid_mode="archpy",
+        iu=0,
+        lay_sep=1,
+        modflowgrid_props=None,
+        xorigin=0,
+        yorigin=0,
+        angrot=0,
+        factor_x=None,
+        factor_y=None,
+        factor_z=None,
+        unit_limit=None,
+        surface_layer=False,
+        surface_thickness=0.05,
+    ):
         """
         Create a modflow simulation from an ArchPy table
-        
+
         Parameters
         ----------
         grid_mode : str
@@ -471,31 +454,32 @@ class archpy2modflow:
             factor to change the resolution of the grid in the x direction. e.g. 2 means that the resolution will be divided by 2
         factor_y : float
             factor to change the resolution of the grid in the y direction.
-        factor_z : float    
+        factor_z : float
             factor to change the resolution of the grid in the z direction.
         unit_limit: unit name
             unit under which cells are considered as inactive
+        surface_layer: bool
+            if grid_mode is layers, surface_layer indicates whether to add a thin layer (of thickness surface_thickness) on top of all others within the model domain
+        surface_thickness: float
+            if grid_mode is layers and surface_layer is True, indicates the thickness of the additional surface layer
         """
 
-        sim = fp.mf6.MFSimulation(sim_name=self.sim_name, version='mf6', exe_name=self.exe_name, 
-                         sim_ws=self.model_dir)
-        gwf = fp.mf6.ModflowGwf(sim, modelname=self.model_name,
-                                model_nam_file='{}.nam'.format(self.model_name))
+        sim = fp.mf6.MFSimulation(sim_name=self.sim_name, version="mf6", exe_name=self.exe_name, sim_ws=self.model_dir)
+        gwf = fp.mf6.ModflowGwf(sim, modelname=self.model_name, model_nam_file="{}.nam".format(self.model_name))
 
         # upscale idomain
         sx_grid, sy_grid, sz_grid = self.T1.get_sx(), self.T1.get_sy(), self.T1.get_sz()
         ox_grid, oy_grid, oz_grid = self.T1.get_ox(), self.T1.get_oy(), self.T1.get_oz()
 
-        if grid_mode in ["disv", "disu"]:  
-
+        if grid_mode in ["disv", "disu"]:
             if grid_mode == "disv":
                 dis = fp.mf6.ModflowGwfdisv(gwf, **modflowgrid_props, xorigin=xorigin, yorigin=yorigin)
             else:
                 dis = fp.mf6.ModflowGwfdisu(gwf, **modflowgrid_props, xorigin=xorigin, yorigin=yorigin)
-            
+
             grid = gwf.modelgrid  # get the grid object
             # rotate grid around the origin of archpy model
-            xorigin_rot, yorigin_rot = rotate_point((xorigin, yorigin), origin=(ox_grid, oy_grid), angle=-angrot) 
+            xorigin_rot, yorigin_rot = rotate_point((xorigin, yorigin), origin=(ox_grid, oy_grid), angle=-angrot)
             grid.set_coord_info(xoff=xorigin_rot, yoff=yorigin_rot, angrot=-angrot)
 
             # idomain #
@@ -506,11 +490,9 @@ class archpy2modflow:
                 mask = np.flip(np.flipud(mask), axis=1)  # flip the array to have the same orientation as the ArchPy table
                 idomain[mask == 1] = 0
 
-            new_idomain = upscale_k(idomain, method="arithmetic",
-                                    dx=sx_grid, dy=sy_grid, dz=sz_grid,
-                                    ox=ox_grid, oy=oy_grid, oz=oz_grid,
-                                    factor_x=factor_x, factor_y=factor_y, factor_z=factor_z,
-                                    grid=grid)[0]
+            new_idomain = upscale_k(
+                idomain, method="arithmetic", dx=sx_grid, dy=sy_grid, dz=sz_grid, ox=ox_grid, oy=oy_grid, oz=oz_grid, factor_x=factor_x, factor_y=factor_y, factor_z=factor_z, grid=grid
+            )[0]
 
             # idomain --> superior to 0.5 set to 1
             new_idomain[new_idomain > 0.5] = 1
@@ -522,10 +504,9 @@ class archpy2modflow:
                 dis.idomain.set_layered_data(new_idomain)
             else:
                 dis.idomain.set_data(new_idomain)
-            
+
         else:
-                
-            #grid
+            # grid
             nlay, nrow, ncol = self.T1.get_nz(), self.T1.get_ny(), self.T1.get_nx()
             delr, delc = self.T1.get_sx(), self.T1.get_sy()
             xoff, yoff = self.T1.get_ox(), self.T1.get_oy()
@@ -543,7 +524,6 @@ class archpy2modflow:
                     idomain[mask == 1] = 0
 
             elif grid_mode == "layers":
-                
                 n_units = len(self.T1.get_surface()[1])
                 if isinstance(lay_sep, int):
                     lay_sep = [lay_sep] * n_units
@@ -584,12 +564,11 @@ class archpy2modflow:
                     if ilay == 0:
                         s1 = top
                     else:
-                        s1 = botm_org[ilay-1]
+                        s1 = botm_org[ilay - 1]
                     s2 = botm_org[ilay]
                     for isublay in range(1, lay_sep[ilay]):
-
-                        smean = s1*(1-isublay/lay_sep[ilay]) + s2*(isublay/lay_sep[ilay])  # mean of the two surfaces
-                        botm = np.insert(botm, sum(lay_sep[0:ilay])+isublay-1, smean, axis=0)  # insert the surface at the right place
+                        smean = s1 * (1 - isublay / lay_sep[ilay]) + s2 * (isublay / lay_sep[ilay])  # mean of the two surfaces
+                        botm = np.insert(botm, sum(lay_sep[0:ilay]) + isublay - 1, smean, axis=0)  # insert the surface at the right place
 
                 layers_names = self.T1.get_surface(typ="bot")[1]
                 self.layers_names = layers_names
@@ -603,9 +582,9 @@ class archpy2modflow:
 
                 # set nan of each layer to the mean of the previous layer + 1e-2
                 prev_mean = None
-                for ilay in range(nlay-1, -1, -1):
+                for ilay in range(nlay - 1, -1, -1):
                     mask = np.isnan(botm[ilay])
-                    if ilay == nlay-1:
+                    if ilay == nlay - 1:
                         prev_mean = np.nanmean(botm[ilay])
                         botm[ilay][mask] = prev_mean
                     else:
@@ -617,15 +596,15 @@ class archpy2modflow:
                     idomain[-n_units_removed:] = 0
 
                 rtol = 1e-7
-                # adapt botm in order that each layer has a thickness > 0 
-                for i in range(-1, nlay-1):
+                # adapt botm in order that each layer has a thickness > 0
+                for i in range(-1, nlay - 1):
                     if i == -1:
                         s1 = top
                     else:
                         s1 = botm[i]
-                    s2 = botm[i+1]
+                    s2 = botm[i + 1]
                     # mask = np.abs(s2 - s1) < rtol
-                    # s1[mask] += 1e-2    
+                    # s1[mask] += 1e-2
                     mask = (s1 <= s2) | (np.abs(s2 - s1) < rtol)
                     s1[mask] = s2[mask] + 1e-2
                     # mask = ((s2 < (s1 + np.ones(s1.shape)*rtol)) & (s2 > (s1 - np.ones(s1.shape)*rtol)))  # mask to identify cells where the thickness is == 0 with some tolerance
@@ -636,13 +615,21 @@ class archpy2modflow:
                         if o == 0:
                             s1 = top
                         else:
-                            s1 = botm[o-1]
+                            s1 = botm[o - 1]
                         mask = (s1 <= s2) | (np.abs(s2 - s1) < rtol)
                         # mask = (s1 <= s2) | ((s2 < (s1 + np.ones(s1.shape)*rtol)) & (s2 > (s1 - np.ones(s1.shape)*rtol)))  # mask to identify cells where the thickness is <= 0 with some tolerance
                         s1[mask] = s2[mask] + 1e-2
-                
+
                 # ensure top has not any nan
                 top[np.isnan(top)] = botm[0][np.isnan(top)] + 1e-2
+
+                if surface_layer:
+                    nlay += 1
+                    botm = np.concatenate((np.reshape(top, (1, nrow, ncol)), botm), axis=0)
+                    top = top + surface_thickness
+                    idomain_surface = (~np.all(idomain == 0, axis=0)).astype(int)
+                    idomain = np.concatenate((np.reshape(idomain_surface, (1, nrow, ncol)), idomain), axis=0)
+                    self.surface_layer = True
 
             elif grid_mode == "new_resolution":
                 assert factor_x is not None, "factor_x must be provided"
@@ -658,7 +645,7 @@ class archpy2modflow:
                 delc = delc * factor_y
                 top = np.ones((nrow, ncol)) * self.T1.get_zg()[-1]
                 botm = np.ones((nlay, nrow, ncol)) * self.T1.get_zg()[::-factor_z][1:].reshape(-1, 1, 1)
-                
+
                 # how to define idomain ?
                 idomain = np.zeros((nlay, nrow, ncol))
                 mask_org = self.T1.get_mask().astype(int)
@@ -671,43 +658,41 @@ class archpy2modflow:
                 for ilay in range(0, self.T1.get_nz(), factor_z):
                     for irow in range(0, self.T1.get_ny(), factor_y):
                         for icol in range(0, self.T1.get_nx(), factor_x):
-                            mask = mask_org[ilay:ilay+factor_z, irow:irow+factor_y, icol:icol+factor_x]
+                            mask = mask_org[ilay : ilay + factor_z, irow : irow + factor_y, icol : icol + factor_x]
                             if mask.mean() >= 0.5:
-                                idomain[ilay//factor_z, irow//factor_y, icol//factor_x] = 1
-                
+                                idomain[ilay // factor_z, irow // factor_y, icol // factor_x] = 1
+
                 idomain = np.flip(np.flipud(idomain), axis=1)  # flip the array to have the same orientation as the ArchPy table
 
                 self.factor_x = factor_x
                 self.factor_y = factor_y
                 self.factor_z = factor_z
-            
+
             assert (np.array(check_thk(top, botm))).all(), "Error in the processing of the surfaces, some cells have a thickness < 0"
 
             rot_angle = self.T1.get_rot_angle()
-            dis = fp.mf6.ModflowGwfdis(gwf, nlay=nlay, nrow=nrow, ncol=ncol,
-                                        delr=delr, delc=delc,
-                                        top=top, botm=botm,
-                                        xorigin=xoff, yorigin=yoff, 
-                                        idomain=idomain, angrot=rot_angle)
+            dis = fp.mf6.ModflowGwfdis(gwf, nlay=nlay, nrow=nrow, ncol=ncol, delr=delr, delc=delc, top=top, botm=botm, xorigin=xoff, yorigin=yoff, idomain=idomain, angrot=rot_angle)
 
         # save grid mode
         self.grid_mode = grid_mode
 
         perioddata = [(1, 1, 1.0)]
-        tdis = fp.mf6.ModflowTdis(sim, time_units='SECONDS',perioddata=perioddata)
+        tdis = fp.mf6.ModflowTdis(sim, time_units="SECONDS", perioddata=perioddata)
 
         ims = fp.mf6.ModflowIms(sim, complexity="simple")
 
-        #Initial condition
-        ic   = fp.mf6.ModflowGwfic(gwf, strt=1)
+        # Initial condition
+        ic = fp.mf6.ModflowGwfic(gwf, strt=1)
 
         # output control
-        oc   = fp.mf6.ModflowGwfoc(gwf,budget_filerecord='{}.cbc'.format(self.model_name),
-                                    head_filerecord='{}.hds'.format(self.model_name),
-                                    saverecord=[('HEAD', 'LAST'),
-                                                ('BUDGET', 'LAST')],
-                                    printrecord=[('BUDGET', 'ALL')])
-        
+        oc = fp.mf6.ModflowGwfoc(
+            gwf,
+            budget_filerecord="{}.cbc".format(self.model_name),
+            head_filerecord="{}.hds".format(self.model_name),
+            saverecord=[("HEAD", "LAST"), ("BUDGET", "LAST")],
+            printrecord=[("BUDGET", "ALL")],
+        )
+
         # npf package
         # empty package
         npf = fp.mf6.ModflowGwfnpf(gwf, icelltype=0, k=1e-3, save_flows=True, save_saturation=True)
@@ -720,7 +705,6 @@ class archpy2modflow:
             print("To retrieve the simulation, use the get_sim() method")
 
     def upscale_prop(self, prop_key, iu=0, ifa=0, ip=0, method="arithmetic", log=False):
-
         gwf = self.get_gwf()
         grid_mode = self.grid_mode
         if grid_mode == "archpy":
@@ -730,7 +714,7 @@ class archpy2modflow:
             new_prop = np.flip(np.flipud(prop), axis=1)  # flip the array to have the same orientation as the ArchPy table
         elif grid_mode == "layers":
             nrow, ncol, nlay = gwf.modelgrid.nrow, gwf.modelgrid.ncol, gwf.modelgrid.nlay
-            
+
             # get prop
             prop = self.T1.get_prop(prop_key)[iu, ifa, ip]
             if log:
@@ -766,8 +750,8 @@ class archpy2modflow:
             new_prop = np.flip(new_prop, axis=1)  # we have to flip in order to match modflow grid
 
         elif grid_mode == "new_resolution":
-
             from ArchPy.uppy import upscale_k
+
             assert self.factor_x is not None, "factor_x must be defined, try setting the hydraulic conductivity first"
             assert self.factor_y is not None, "factor_y must be defined, try setting the hydraulic conductivity first"
             assert self.factor_z is not None, "factor_z must be defined, try setting the hydraulic conductivity first"
@@ -776,18 +760,16 @@ class archpy2modflow:
             prop = np.flip(np.flipud(prop), axis=1)  # flip the array to have the same orientation as the ArchPy table
             if log:
                 prop = 10**prop
-            new_prop, _, _ = upscale_k(prop, method=method,
-                                 dx=self.T1.get_sx(), dy=self.T1.get_sy(), dz=self.T1.get_sz(),
-                                 factor_x=self.factor_x, factor_y=self.factor_y, factor_z=self.factor_z)
+            new_prop, _, _ = upscale_k(prop, method=method, dx=self.T1.get_sx(), dy=self.T1.get_sy(), dz=self.T1.get_sz(), factor_x=self.factor_x, factor_y=self.factor_y, factor_z=self.factor_z)
 
             # fill nan values
             new_prop[np.isnan(new_prop)] = np.nanmean(new_prop)
 
         elif grid_mode in ["disv", "disu"]:
-
             from ArchPy.uppy import upscale_k
+
             dx, dy, dz = self.T1.get_sx(), self.T1.get_sy(), self.T1.get_sz()
-            ox, oy, oz = self.T1.get_ox(), self.T1.get_oy(), self.T1.get_oz()   
+            ox, oy, oz = self.T1.get_ox(), self.T1.get_oy(), self.T1.get_oz()
 
             prop = self.T1.get_prop(prop_key)[iu, ifa, ip]
             prop = np.flip(np.flipud(prop), axis=1)  # flip the array to have the same orientation as the ArchPy table
@@ -796,28 +778,26 @@ class archpy2modflow:
 
             # get the grid object --> needs to be rotated
             import copy
+
             grid = gwf.modelgrid
             grid = copy.deepcopy(grid)  # create a copy of the grid to avoid modifying the original one
 
             # rotate grid around the origin of archpy model
 
-            # retrieve origin of the new grid and archpy grid as well as the rotation angle 
+            # retrieve origin of the new grid and archpy grid as well as the rotation angle
             xorigin, yorigin = grid.xoffset, grid.yoffset
             ox_grid, oy_grid = self.T1.get_ox(), self.T1.get_oy()
             angrot = self.T1.get_rot_angle()
-            xorigin_rot, yorigin_rot = rotate_point((xorigin, yorigin), origin=(ox_grid, oy_grid), angle=-angrot) 
+            xorigin_rot, yorigin_rot = rotate_point((xorigin, yorigin), origin=(ox_grid, oy_grid), angle=-angrot)
 
             # rotation
             grid.set_coord_info(xoff=xorigin_rot, yoff=yorigin_rot, angrot=-angrot)
 
             # upscale
-            new_prop, _, _ = upscale_k(prop, method=method,
-                                 dx=dx, dy=dy, dz=dz, ox=ox, oy=oy, oz=oz,
-                                 factor_x=self.factor_x, factor_y=self.factor_y, factor_z=self.factor_z,
-                                 grid=grid)
+            new_prop, _, _ = upscale_k(prop, method=method, dx=dx, dy=dy, dz=dz, ox=ox, oy=oy, oz=oz, factor_x=self.factor_x, factor_y=self.factor_y, factor_z=self.factor_z, grid=grid)
 
         return new_prop
-    
+
     def gmean(a):
         if np.all(a > 0):
             return np.exp(np.mean(np.log(a)))
@@ -827,13 +807,22 @@ class archpy2modflow:
         else:
             raise ValueError("Array must be all positive or all negative")
 
-    def set_k(self, k_key="K",
-              iu=0, ifa=0, ip=0,
-              log=False, k=None, k22=None, k33=None, k_average_method="anisotropic",
-              average_facies=False, 
-              upscaling_method="simplified_renormalization",
-              xt3doptions=None):
-
+    def set_k(
+        self,
+        k_key="K",
+        iu=0,
+        ifa=0,
+        ip=0,
+        log=False,
+        k=None,
+        k22=None,
+        k33=None,
+        k_average_method="anisotropic",
+        average_facies=False,
+        upscaling_method="simplified_renormalization",
+        xt3doptions=None,
+        surface_k=10 ** (-6.0),
+    ):
         """
         Set the hydraulic conductivity for a specific facies
 
@@ -863,6 +852,9 @@ class archpy2modflow:
         average_facies : bool
             if True, the facies will be upscaled and saved in the model
             if False, the facies will not be upscaled, default is False
+        surface_k : float
+            hydraulic conductivity to set for the surface layer, default is -6 #FIXME
+            only used when grid_mode is 'layers'
         """
 
         # Efficiently compute the proportion of each unique value in the array
@@ -890,12 +882,14 @@ class archpy2modflow:
                     new_k = k
 
             elif grid_mode == "layers":
-
                 new_k22 = None
                 nrow, ncol, nlay = gwf.modelgrid.nrow, gwf.modelgrid.ncol, gwf.modelgrid.nlay
 
+                if self.surface_layer:
+                    nlay -= 1
+
                 # initialize new_k and new_k33
-                kh = self.T1.get_prop(k_key)[iu, ifa, ip] 
+                kh = self.T1.get_prop(k_key)[iu, ifa, ip]
                 if log:
                     kh = 10**kh
                 new_k = np.ones((nlay, nrow, ncol))
@@ -930,13 +924,14 @@ class archpy2modflow:
                                 s1 = np.flip(gwf.dis.top.array, axis=1)
                                 s2 = botm[isublay]
                             else:
-                                s1 = botm[sum(self.lay_sep[0:ilay])+isublay-1]
-                                s2 = botm[sum(self.lay_sep[0:ilay])+isublay]
+                                s1 = botm[sum(self.lay_sep[0:ilay]) + isublay - 1]
+                                s2 = botm[sum(self.lay_sep[0:ilay]) + isublay]
                             mask = self.T1.compute_domain(s1, s2)
                             mask *= self.T1.unit_mask(l, iu=iu).astype(bool)  # apply mask of the whole unit to ensure that we only consider the cells of the unit
                             mask_units.append(mask.astype(bool))
-                    
+
                     ilay += 1
+
                 self.mask_units = mask_units
 
                 for irow in range(nrow):
@@ -946,7 +941,7 @@ class archpy2modflow:
 
                             # extract values in the new cell
                             k_vals = kh[:, irow, icol][mask_unit[:, irow, icol]]
-                            if len(k_vals) >0:
+                            if len(k_vals) > 0:
                                 # mask_unit = mask_units[ilay]
                                 if k_average_method == "arithmetic":
                                     new_k[ilay, irow, icol] = mean_speed(k_vals)
@@ -957,7 +952,7 @@ class archpy2modflow:
                                     new_k33[ilay, irow, icol] = hmean_speed(k_vals)
                                 else:
                                     raise ValueError("k_average_method must be one of 'arithmetic' or 'harmonic' or 'anisotropic'")
-                            
+
                             if average_facies:
                                 # facies upscaling
                                 arr = facies_arr[:, irow, icol][mask_unit[:, irow, icol]]  # array of facies values in the unit
@@ -968,7 +963,7 @@ class archpy2modflow:
                             else:
                                 upscaled_facies = None
 
-                # save upscaled facies
+                # save upscaled facies #FIXME
                 self.upscaled_facies = upscaled_facies
 
                 # fill nan values with the mean of the layer
@@ -976,24 +971,30 @@ class archpy2modflow:
                     mask = np.isnan(new_k[ilay])
                     new_k[ilay][mask] = np.nanmean(new_k[ilay])
 
+                if self.surface_layer:
+                    new_k = np.concatenate((surface_k * np.ones((1, nrow, ncol)), new_k), axis=0)
+
                 new_k = np.flip(new_k, axis=1)  # we have to flip in order to match modflow grid
 
                 if k_average_method == "anisotropic":
                     for ilay in range(nlay):
                         mask = np.isnan(new_k33[ilay])
                         new_k33[ilay][mask] = np.nanmean(new_k33[ilay])
-                    
+
+                    if self.surface_layer:
+                        new_k33 = np.concatenate((surface_k * np.ones((1, nrow, ncol)), new_k33), axis=0)
+
                     new_k33 = np.flip(new_k33, axis=1)
 
             elif grid_mode == "new_resolution":
-
                 from ArchPy.uppy import upscale_k
+
                 dx, dy, dz = self.T1.get_sx(), self.T1.get_sy(), self.T1.get_sz()
-                
+
                 factor_x = self.factor_x
                 factor_y = self.factor_y
                 factor_z = self.factor_z
-                
+
                 field = self.T1.get_prop(k_key)[iu, ifa, ip]
                 field = np.flip(np.flipud(field), axis=1)  # flip the array to have the same orientation as the ArchPy table
                 if log:
@@ -1011,7 +1012,7 @@ class archpy2modflow:
                 new_k = field_kxx
                 new_k22 = field_kyy
                 new_k33 = field_kzz
-                
+
                 # fill nan values
                 new_k[np.isnan(new_k)] = np.nanmean(new_k)
                 new_k22[np.isnan(new_k22)] = np.nanmean(new_k22)
@@ -1024,24 +1025,24 @@ class archpy2modflow:
                     for ifa in np.unique(facies_arr):
                         # upscaled_facies[ifa] = np.zeros((facies_arr.shape[0], facies_arr.shape[1], facies_arr.shape[2]))
                         upscaled_facies[ifa] = np.zeros((field_kxx.shape[0], field_kxx.shape[1], field_kxx.shape[2]))
-                    
+
                     for ilay in range(0, self.T1.get_nz(), factor_z):
                         for irow in range(0, self.T1.get_ny(), factor_y):
                             for icol in range(0, self.T1.get_nx(), factor_x):
-                                mask_unit = facies_arr[ilay:ilay+factor_z, irow:irow+factor_y, icol:icol+factor_x]
+                                mask_unit = facies_arr[ilay : ilay + factor_z, irow : irow + factor_y, icol : icol + factor_x]
                                 arr = mask_unit.flatten()
                                 prop = get_proportion(arr)
                                 for ifa in np.unique(arr):
                                     # upscaled_facies[ifa][ilay:ilay+factor_z, irow:irow+factor_y, icol:icol+factor_x] = prop[ifa]
-                                    upscaled_facies[ifa][ilay//factor_z, irow//factor_y, icol//factor_x] = prop[ifa]
+                                    upscaled_facies[ifa][ilay // factor_z, irow // factor_y, icol // factor_x] = prop[ifa]
                 else:
                     upscaled_facies = None
 
                 self.upscaled_facies = upscaled_facies
-            
-            elif grid_mode in ["disv", "disu"]:
 
+            elif grid_mode in ["disv", "disu"]:
                 from ArchPy.uppy import upscale_k
+
                 dx, dy, dz = self.T1.get_sx(), self.T1.get_sy(), self.T1.get_sz()
                 ox, oy, oz = self.T1.get_ox(), self.T1.get_oy(), self.T1.get_oz()
 
@@ -1050,15 +1051,15 @@ class archpy2modflow:
                 new_k33 = None
 
                 # get the grid object --> needs to be rotated
-                grid = gwf.modelgrid  
+                grid = gwf.modelgrid
 
                 # rotate grid around the origin of archpy model
 
-                # retrieve origin of the new grid and archpy grid as well as the rotation angle 
+                # retrieve origin of the new grid and archpy grid as well as the rotation angle
                 xorigin, yorigin = grid.xoffset, grid.yoffset
                 ox_grid, oy_grid = self.T1.get_ox(), self.T1.get_oy()
                 angrot = self.T1.get_rot_angle()
-                xorigin_rot, yorigin_rot = rotate_point((xorigin, yorigin), origin=(ox_grid, oy_grid), angle=-angrot) 
+                xorigin_rot, yorigin_rot = rotate_point((xorigin, yorigin), origin=(ox_grid, oy_grid), angle=-angrot)
 
                 # rotation
                 grid.set_coord_info(xoff=xorigin_rot, yoff=yorigin_rot, angrot=-angrot)
@@ -1069,10 +1070,9 @@ class archpy2modflow:
                 if log:
                     field = 10**field
 
-                field_kxx, field_kyy, field_kzz = upscale_k(field, method=upscaling_method,
-                                                            dx=dx, dy=dy, dz=dz, ox=ox, oy=oy, oz=oz,
-                                                            factor_x=self.factor_x, factor_y=self.factor_y, factor_z=self.factor_z,
-                                                            grid=grid)
+                field_kxx, field_kyy, field_kzz = upscale_k(
+                    field, method=upscaling_method, dx=dx, dy=dy, dz=dz, ox=ox, oy=oy, oz=oz, factor_x=self.factor_x, factor_y=self.factor_y, factor_z=self.factor_z, grid=grid
+                )
 
                 new_k = field_kxx.astype(float)
 
@@ -1086,12 +1086,12 @@ class archpy2modflow:
                 else:
                     new_k22 = field_kyy
                     new_k33 = field_kzz
-                
+
                     # fill nan values
                     new_k[np.isnan(new_k)] = np.nanmean(new_k)
                     new_k22[np.isnan(new_k22)] = np.nanmean(new_k22)
                     new_k33[np.isnan(new_k33)] = np.nanmean(new_k33)
-                
+
                 if average_facies:
                     # facies upscaling
                     facies_arr = self.T1.get_facies(iu, ifa, all_data=False)
@@ -1099,24 +1099,19 @@ class archpy2modflow:
 
                     upscaled_facies = {}
                     for ifa in [fa.ID for fa in self.T1.get_all_facies()]:
-
                         upscaled_facies[ifa] = np.zeros((facies_arr.shape[0], facies_arr.shape[1], facies_arr.shape[2]))
 
                         field = facies_arr.copy()
                         field[facies_arr == ifa] = 1
                         field[facies_arr != ifa] = 0
-                        
 
-                        field_up, _, _ = upscale_k(field, method="arithmetic", 
-                                                dx=dx, dy=dy, dz=dz,
-                                                ox=ox, oy=oy, oz=oz,
-                                                grid=grid)
-                        
+                        field_up, _, _ = upscale_k(field, method="arithmetic", dx=dx, dy=dy, dz=dz, ox=ox, oy=oy, oz=oz, grid=grid)
+
                         upscaled_facies[ifa] = field_up.astype(float)
                         upscaled_facies[ifa][np.isnan(upscaled_facies[ifa])] = 0
                 else:
                     upscaled_facies = None
-                    
+
                 self.upscaled_facies = upscaled_facies
 
         else:
@@ -1133,7 +1128,6 @@ class archpy2modflow:
         # npf.write()
 
     def set_strt(self, heads=None):
-
         """
         Set the starting heads
         """
@@ -1184,7 +1178,7 @@ class archpy2modflow:
         """
         assert self.sim is not None, "You need to create the simulation first"
         return self.sim
-    
+
     def get_gwf(self):
         """
         Get the MODFLOW 6 groundwater flow object
@@ -1200,23 +1194,20 @@ class archpy2modflow:
         gwf = self.get_gwf()
         head = gwf.output.head().get_data(kstpkper=kstpkper)
         return head
-    
+
     # plots
     def plot_3D_heads(self, kstpkper=(0, 0), ax=None, **kwargs):
-
         """
         Plot the heads of the simulation
         """
         assert self.grid_mode == "archpy", "This function only works with the 'archpy' grid mode"
-        
+
         head = self.get_heads(kstpkper=kstpkper)
         head[head == 1e30] = np.nan
 
         self.T1.plot_arr(np.flipud(np.flip(head, axis=1)), "head", 2)
 
-    def mp_create(self, mpexe, trackdir="forward",
-                  locs=None, rowcelldivisions=1, columncelldivisions=1, layercelldivisions=1,
-                  list_p_coords=None):
+    def mp_create(self, mpexe, trackdir="forward", locs=None, rowcelldivisions=1, columncelldivisions=1, layercelldivisions=1, list_p_coords=None):
         """
         Create a modpath simulation from an ArchPy table
 
@@ -1243,7 +1234,7 @@ class archpy2modflow:
         workspace = self.model_dir
         model_name = gwf.name
         mpnamf = f"{model_name}_mp_forward"
-        
+
         if locs is not None:
             nodes = get_nodes(locs, gwf.modelgrid.ncol, gwf.modelgrid.nrow)
             if len(nodes) == 0:
@@ -1252,20 +1243,20 @@ class archpy2modflow:
             elif len(nodes) == 1:
                 nodes = nodes[0]
             mp = fp.modpath.Modpath7.create_mp7(
-                                                modelname=mpnamf,
-                                                trackdir=trackdir,
-                                                flowmodel=gwf,
-                                                model_ws=workspace,
-                                                rowcelldivisions=rowcelldivisions,
-                                                columncelldivisions=columncelldivisions,
-                                                layercelldivisions=layercelldivisions,
-                                                nodes = nodes,
-                                                exe_name=mpexe,
-                                            )
+                modelname=mpnamf,
+                trackdir=trackdir,
+                flowmodel=gwf,
+                model_ws=workspace,
+                rowcelldivisions=rowcelldivisions,
+                columncelldivisions=columncelldivisions,
+                layercelldivisions=layercelldivisions,
+                nodes=nodes,
+                exe_name=mpexe,
+            )
         else:
             if list_p_coords is not None:
                 # write a function to find the modlfow cellids as well as localx, localy and localz from a coordinate
-                from shapely.geometry import Point, MultiPoint
+                from shapely.geometry import Point
 
                 grid = self.get_gwf().modelgrid
                 ix = fp.utils.gridintersect.GridIntersect(mfgrid=grid)
@@ -1288,20 +1279,20 @@ class archpy2modflow:
                 for i in range(len(cellids)):
                     cid = cellids[i]
                     exem_i = list_p_coords[i]
-            
-                    local_dx = (grid.xvertices[cid[1], cid[2]+1] - grid.xvertices[cid[1], cid[2]]) / 2
-                    local_dy = - (grid.yvertices[cid[1]+1, cid[2]] - grid.yvertices[cid[1], cid[2]]) / 2
+
+                    local_dx = (grid.xvertices[cid[1], cid[2] + 1] - grid.xvertices[cid[1], cid[2]]) / 2
+                    local_dy = -(grid.yvertices[cid[1] + 1, cid[2]] - grid.yvertices[cid[1], cid[2]]) / 2
                     # local_dz = - (grid.zcellcenters[cid[0]+1, cid[1], cid[2]] - grid.zcellcenters[cid[0], cid[1], cid[2]]) / 2
-                    local_dz = (grid.botm[cid[0]-1, cid[1], cid[2]] - grid.botm[cid[0], cid[1], cid[2]]) / 2
-                    localx = (exem_i[0] - (grid.xcellcenters[cid[1], cid[2]] - local_dx)) / (2*local_dx)
-                    localy = (exem_i[1] - (grid.ycellcenters[cid[1], cid[2]] - local_dy)) / (2*local_dy)
-                    localz = (exem_i[2] - (grid.zcellcenters[cid[0], cid[1], cid[2]] - local_dz)) / (2*local_dz)
+                    local_dz = (grid.botm[cid[0] - 1, cid[1], cid[2]] - grid.botm[cid[0], cid[1], cid[2]]) / 2
+                    localx = (exem_i[0] - (grid.xcellcenters[cid[1], cid[2]] - local_dx)) / (2 * local_dx)
+                    localy = (exem_i[1] - (grid.ycellcenters[cid[1], cid[2]] - local_dy)) / (2 * local_dy)
+                    localz = (exem_i[2] - (grid.zcellcenters[cid[0], cid[1], cid[2]] - local_dz)) / (2 * local_dz)
 
                     p1 = fp.modpath.mp7particledata.ParticleData([tuple(cid)], structured=True, localx=localx, localy=localy, localz=localz)
                     pg = fp.modpath.mp7particlegroup.ParticleGroup(particledata=p1)
 
                     l.append(pg)
-                    
+
                 # create a modpath simulation
                 mp = fp.modpath.Modpath7(
                     modelname=mpnamf,
@@ -1328,9 +1319,7 @@ class archpy2modflow:
         self.mp = mp  # save the modpath object
         self.mpnamf = mpnamf  # save the name of the modpath file
 
-
     def prt_create(self, prt_name="test", workspace="./", trackdir="forward", list_p_coords=None):
-        
         """
         Create a particle tracking simulation from a list of coordinates
 
@@ -1363,17 +1352,34 @@ class archpy2modflow:
         # determine grid type
         grid_type = dis.package_type
         if grid_type == "dis":
-            dis_prt = fp.mf6.ModflowGwfdis(prt, nlay=dis.nlay.array, nrow=dis.nrow.array, ncol=dis.ncol.array,
-                                            delr=dis.delr.array, delc=dis.delc.array, top=dis.top.array, botm=dis.botm.array,
-                                            xorigin=dis.xorigin.array, yorigin=dis.yorigin.array,
-                                            idomain=dis.idomain.array)
+            dis_prt = fp.mf6.ModflowGwfdis(
+                prt,
+                nlay=dis.nlay.array,
+                nrow=dis.nrow.array,
+                ncol=dis.ncol.array,
+                delr=dis.delr.array,
+                delc=dis.delc.array,
+                top=dis.top.array,
+                botm=dis.botm.array,
+                xorigin=dis.xorigin.array,
+                yorigin=dis.yorigin.array,
+                idomain=dis.idomain.array,
+            )
         elif grid_type == "disv":
-            dis_prt = fp.mf6.ModflowGwfdisv(prt, nlay=dis.nlay.array, ncpl=dis.ncpl.array, 
-                                            top=dis.top.array, botm=dis.botm.array,
-                                            xorigin=dis.xorigin.array, yorigin=dis.yorigin.array,
-                                            vertices=dis.vertices.array, cell2d=dis.cell2d.array, nvert=dis.nvert.array,
-                                            idomain=dis.idomain.array)
-        
+            dis_prt = fp.mf6.ModflowGwfdisv(
+                prt,
+                nlay=dis.nlay.array,
+                ncpl=dis.ncpl.array,
+                top=dis.top.array,
+                botm=dis.botm.array,
+                xorigin=dis.xorigin.array,
+                yorigin=dis.yorigin.array,
+                vertices=dis.vertices.array,
+                cell2d=dis.cell2d.array,
+                nvert=dis.nvert.array,
+                idomain=dis.idomain.array,
+            )
+
         elif grid_type == "disu":
             raise ValueError("disu grid type is not compatible with particle tracking yet")  # to do: add disu grid type
             # dis_prt = fp.mf6.ModflowGwfdisu(prt, nodes=dis.nodes.array, nja=dis.nja.array, area=dis.area.array,
@@ -1383,9 +1389,8 @@ class archpy2modflow:
             #                                 vertices=dis.vertices.array, cell2d=dis.cell2d.array, nvert=dis.nverts.array,
             #                                 idomain=dis.idomain.array)
 
-
         # construct package data for the particles
-        from shapely.geometry import Point, MultiPoint
+        from shapely.geometry import Point
 
         grid = self.get_gwf().modelgrid
         ix = fp.utils.gridintersect.GridIntersect(mfgrid=grid)
@@ -1417,7 +1422,7 @@ class archpy2modflow:
                             if idomain[cid[0] - o, cid[1], cid[2]] == 1:
                                 flag_neg = True
                                 break
-                            
+
                         elif cid[0] + o < idomain.shape[0]:
                             if idomain[cid[0] + o, cid[1], cid[2]] == 1:
                                 flag_neg = False
@@ -1439,10 +1444,9 @@ class archpy2modflow:
             # package data (irptno, cellid, x, y, z)
             package_data = []
             for i in range(len(cellids)):
-                package_data.append((i, cellids[i], list_p_coords[i][0] -grid.xoffset, list_p_coords[i][1] - grid.yoffset, list_p_coords[i][2]))
+                package_data.append((i, cellids[i], list_p_coords[i][0] - grid.xoffset, list_p_coords[i][1] - grid.yoffset, list_p_coords[i][2]))
 
         elif grid_type in ["disv", "disu"]:
-            
             # rotate the grid
             grid.set_coord_info(xoff=grid.xoffset, yoff=grid.yoffset, angrot=0)
 
@@ -1460,12 +1464,17 @@ class archpy2modflow:
         # period data (when to release the particles)
         period_data = {0: ["FIRST"]}
 
-        prp = fp.mf6.ModflowPrtprp(prt, pname="prp", filename="{}.prp".format(prt_name),
-                                        packagedata=package_data,
-                                        perioddata=period_data,
-                                        nreleasepts=len(package_data),
-                                        drape=True,
-                                        exit_solve_tolerance=1e-5, extend_tracking=True)
+        prp = fp.mf6.ModflowPrtprp(
+            prt,
+            pname="prp",
+            filename="{}.prp".format(prt_name),
+            packagedata=package_data,
+            perioddata=period_data,
+            nreleasepts=len(package_data),
+            drape=True,
+            exit_solve_tolerance=1e-5,
+            extend_tracking=True,
+        )
 
         # output control package
         budgetfile_prt_name = "{}.bud".format(prt_name)
@@ -1474,13 +1483,7 @@ class archpy2modflow:
         budget_record = [budgetfile_prt_name]
         track_record = [trackfile_name]
         trackcsv_record = [trackcsvfile_name]
-        oc = fp.mf6.ModflowPrtoc(
-            prt,
-            pname="oc",
-            budget_filerecord=budget_record,
-            track_filerecord=track_record,
-            trackcsv_filerecord=trackcsv_record,
-            saverecord=[("BUDGET", "ALL")])
+        oc = fp.mf6.ModflowPrtoc(prt, pname="oc", budget_filerecord=budget_record, track_filerecord=track_record, trackcsv_filerecord=trackcsv_record, saverecord=[("BUDGET", "ALL")])
 
         # load head and budget files
         gwf_ws = self.get_gwf().simulation_data.mfpath.get_sim_path()
@@ -1497,16 +1500,22 @@ class archpy2modflow:
             head_file.reverse(workspace + "/" + headfile_bkwd_name)
             budget_file.reverse(workspace + "/" + budgetfile_bkwd_name)
 
-            fmi = fp.mf6.ModflowPrtfmi(prt, packagedata=[
-                ("GWFHEAD", headfile_bkwd_name),
-                ("GWFBUDGET", budgetfile_bkwd_name),
-            ])
+            fmi = fp.mf6.ModflowPrtfmi(
+                prt,
+                packagedata=[
+                    ("GWFHEAD", headfile_bkwd_name),
+                    ("GWFBUDGET", budgetfile_bkwd_name),
+                ],
+            )
 
         else:
-            fmi = fp.mf6.ModflowPrtfmi(prt, packagedata=[
-                ("GWFHEAD", head_file_path),
-                ("GWFBUDGET", budget_file_path),
-            ])
+            fmi = fp.mf6.ModflowPrtfmi(
+                prt,
+                packagedata=[
+                    ("GWFHEAD", head_file_path),
+                    ("GWFBUDGET", budget_file_path),
+                ],
+            )
 
         ems = fp.mf6.ModflowEms(sim_prt, pname="ems", filename="{}.ems".format(prt_name))
         sim_prt.register_solution_package(ems, [prt.name])
@@ -1541,7 +1550,7 @@ class archpy2modflow:
         Get the modpath object
         """
         return self.mp
-    
+
     def mp_get_pathlines_object(self):
         """
         Get the pathlines object from the modpath simulation
@@ -1558,7 +1567,7 @@ class archpy2modflow:
         e = fp.utils.EndpointFile(fpth)
         return e
 
-    def mp_get_facies_path_particle(self, i_particle, fac_time = 1/86400, iu = 0, ifa = 0):
+    def mp_get_facies_path_particle(self, i_particle, fac_time=1 / 86400, iu=0, ifa=0):
         """
         Function to retrieve the facies sequence along a pathline
         """
@@ -1566,17 +1575,16 @@ class archpy2modflow:
         p = self.mp_get_pathlines_object()
         pathline = p.get_data(i_particle)
         df = pd.DataFrame(pathline)
-        cells_path = np.array((((df["z"].values-self.T1.zg[0])//self.T1.sz).astype(int),
-                                ((df["y"].values-self.T1.yg[0])//self.T1.sy).astype(int),
-                                ((df["x"].values-self.T1.xg[0])//self.T1.sx).astype(int))).T
-        
+        cells_path = np.array(
+            (((df["z"].values - self.T1.zg[0]) // self.T1.sz).astype(int), ((df["y"].values - self.T1.yg[0]) // self.T1.sy).astype(int), ((df["x"].values - self.T1.xg[0]) // self.T1.sx).astype(int))
+        ).T
 
         time_ordered = df["time"].values.copy()
         time_ordered *= fac_time
         dt = np.diff(time_ordered)
 
         # add a column to track distance traveled
-        distances = ((df[["x", "y", "z"]].iloc[1:].values - df[["x", "y", "z"]].iloc[:-1].values)**2).sum(1)**0.5
+        distances = ((df[["x", "y", "z"]].iloc[1:].values - df[["x", "y", "z"]].iloc[:-1].values) ** 2).sum(1) ** 0.5
 
         # store everything in a new dataframe
         df_all = pd.DataFrame(columns=["dt", "time", "distance", "cum_distance", "x", "y", "z"])
@@ -1599,7 +1607,7 @@ class archpy2modflow:
                 dic_facies_path[fa.ID] = facies_along_path
             colors_fa = []
             for k, v in dic_facies_path.items():
-                df_all["facies_prop_"+ str(k)] = v[:-1]
+                df_all["facies_prop_" + str(k)] = v[:-1]
                 colors_fa.append(self.T1.get_facies_obj(ID=k, type="ID").c)
 
         elif grid_mode == "archpy":
@@ -1630,7 +1638,7 @@ class archpy2modflow:
             # filter all particles results to remove issues along the paths (and keep first two lines which are always true ?)
             # df = df.groupby(["irpt", "icell"]).first().sort_values(["irpt", "t"]).reset_index()
             df = pd.concat((df.groupby(["irpt", "icell"]).first().reset_index(), df.groupby(["irpt"]).nth(1))).sort_values(["irpt", "t"]).reset_index(drop=True)
-        
+
         # we also need to add origin to coordinate as it is not considerd in the csv file
         ox = self.get_gwf().modelgrid.xoffset
         oy = self.get_gwf().modelgrid.yoffset
@@ -1640,7 +1648,7 @@ class archpy2modflow:
 
         return df
 
-    def prt_get_facies_path_particle(self, i_particle=1, fac_time = 1/86400, iu = 0, ifa = 0, facies_archpy=False):
+    def prt_get_facies_path_particle(self, i_particle=1, fac_time=1 / 86400, iu=0, ifa=0, facies_archpy=False):
         """
         Function to retrieve the facies sequences along a pathline
 
@@ -1648,7 +1656,7 @@ class archpy2modflow:
         ----------
 
         i_particle : int
-            index of the particle to retrieve the pathline for. 
+            index of the particle to retrieve the pathline for.
         fac_time : float
             factor to convert time from seconds to days (default is 1/86400)
         iu : int
@@ -1669,13 +1677,13 @@ class archpy2modflow:
         if df.shape[0] == 0:
             print("No particle found")
             return None
-            
+
         time_ordered = df["t"].values.copy()
         time_ordered *= fac_time
         dt = np.diff(time_ordered)
 
         # add a column to track distance traveled
-        distances = ((df[["x", "y", "z"]].iloc[1:].values - df[["x", "y", "z"]].iloc[:-1].values)**2).sum(1)**0.5
+        distances = ((df[["x", "y", "z"]].iloc[1:].values - df[["x", "y", "z"]].iloc[:-1].values) ** 2).sum(1) ** 0.5
 
         # store everything in a new dataframe
         df_all = pd.DataFrame(columns=["dt", "time", "distance", "cum_distance", "x", "y", "z"])
@@ -1693,13 +1701,17 @@ class archpy2modflow:
             # cells_path[:, 0] += 1  # add 1 to the layer index to match modflow convention
         else:
             if facies_archpy:
-                cells_path = np.array((((df_all["z"].values-self.T1.zg[0])//self.T1.sz).astype(int),
-                                        ((df_all["y"].values-self.T1.yg[0])//self.T1.sy).astype(int),
-                                        ((df_all["x"].values-self.T1.xg[0])//self.T1.sx).astype(int))).T
+                cells_path = np.array(
+                    (
+                        ((df_all["z"].values - self.T1.zg[0]) // self.T1.sz).astype(int),
+                        ((df_all["y"].values - self.T1.yg[0]) // self.T1.sy).astype(int),
+                        ((df_all["x"].values - self.T1.xg[0]) // self.T1.sx).astype(int),
+                    )
+                ).T
             else:
                 nx = self.get_gwf().modelgrid.ncol
                 ny = self.get_gwf().modelgrid.nrow
-                cells_path = get_locs(df.icell-1, nx, ny)
+                cells_path = get_locs(df.icell - 1, nx, ny)
                 cells_path = np.array(cells_path)[1:]
 
             # check that no cells path exceed the grid
@@ -1711,7 +1723,6 @@ class archpy2modflow:
             dic_facies_path = {}
             # retrieve lithologies along the pathlines
             for fa in self.T1.get_all_facies():
-
                 id_fa = fa.ID
                 prop_fa = self.upscaled_facies[id_fa]
                 prop_fa = np.flip(prop_fa, axis=1)
@@ -1720,7 +1731,7 @@ class archpy2modflow:
                 dic_facies_path[fa.ID] = facies_along_path
             colors_fa = []
             for k, v in dic_facies_path.items():
-                df_all["facies_prop_"+ str(k)] = v
+                df_all["facies_prop_" + str(k)] = v
                 colors_fa.append(self.T1.get_facies_obj(ID=k, type="ID").c)
 
         elif grid_mode == "archpy":
@@ -1729,7 +1740,7 @@ class archpy2modflow:
                 facies = np.flip(np.flipud(facies), axis=1)
             facies_along_path = facies[cells_path[:, 0], cells_path[:, 1], cells_path[:, 2]]
             df_all["facies"] = facies_along_path
-        
+
         elif grid_mode == "disv":
             dic_facies_path = {}
             # retrieve lithologies along the pathlines
@@ -1742,19 +1753,15 @@ class archpy2modflow:
 
             colors_fa = []
             for k, v in dic_facies_path.items():
-                df_all["facies_prop_"+ str(k)] = v
+                df_all["facies_prop_" + str(k)] = v
                 colors_fa.append(self.T1.get_facies_obj(ID=k, type="ID").c)
         else:
             raise ValueError
-        
+
         return df_all
 
     ## transport model ##
-    def create_sim_transport(self, strt_conc=0.0, porosity=0.2, diff=1e-9, 
-                            adv_scheme="upstream",
-                            alh=None, ath1=None,
-                            decay=0.0, decay_0=False, decay_1=False):
-
+    def create_sim_transport(self, strt_conc=0.0, porosity=0.2, diff=1e-9, adv_scheme="upstream", alh=None, ath1=None, decay=0.0, decay_0=False, decay_1=False):
         """
         Create a simulation object for a transport model with some default values
         """
@@ -1771,11 +1778,11 @@ class archpy2modflow:
         sim_t = fp.mf6.MFSimulation(sim_name=sim_name, sim_ws=sim_ws, exe_name=exe_name)
 
         # Instantiating MODFLOW 6 groundwater transport model
-        gwt = fp.mf6.MFModel(sim_t, model_type="gwt6", modelname=gwtname, model_nam_file=f"{gwtname}.nam" )
+        gwt = fp.mf6.MFModel(sim_t, model_type="gwt6", modelname=gwtname, model_nam_file=f"{gwtname}.nam")
 
         # TDIS
         perioddata = [(1, 100, 1.0)]
-        tdis = fp.mf6.ModflowTdis(sim_t, time_units='SECONDS', perioddata=perioddata)
+        tdis = fp.mf6.ModflowTdis(sim_t, time_units="SECONDS", perioddata=perioddata)
 
         # IMS
         imsgwt = fp.mf6.ModflowIms(sim_t, print_option="SUMMARY", complexity="moderate")
@@ -1785,25 +1792,55 @@ class archpy2modflow:
 
         grid_type = dis.package_type
         if grid_type == "dis":
-            dis_t = fp.mf6.ModflowGwfdis(gwt, nlay=dis.nlay.array, nrow=dis.nrow.array, ncol=dis.ncol.array,
-                                            delr=dis.delr.array, delc=dis.delc.array, top=dis.top.array, botm=dis.botm.array,
-                                            xorigin=dis.xorigin.array, yorigin=dis.yorigin.array,
-                                            idomain=dis.idomain.array)
+            dis_t = fp.mf6.ModflowGwfdis(
+                gwt,
+                nlay=dis.nlay.array,
+                nrow=dis.nrow.array,
+                ncol=dis.ncol.array,
+                delr=dis.delr.array,
+                delc=dis.delc.array,
+                top=dis.top.array,
+                botm=dis.botm.array,
+                xorigin=dis.xorigin.array,
+                yorigin=dis.yorigin.array,
+                idomain=dis.idomain.array,
+            )
         elif grid_type == "disv":
-            dis_t = fp.mf6.ModflowGwfdisv(gwt, nlay=dis.nlay.array, ncpl=dis.ncpl.array, 
-                                            top=dis.top.array, botm=dis.botm.array,
-                                            xorigin=dis.xorigin.array, yorigin=dis.yorigin.array,
-                                            vertices=dis.vertices.array, cell2d=dis.cell2d.array, nvert=dis.nvert.array,
-                                            idomain=dis.idomain.array)
-        
+            dis_t = fp.mf6.ModflowGwfdisv(
+                gwt,
+                nlay=dis.nlay.array,
+                ncpl=dis.ncpl.array,
+                top=dis.top.array,
+                botm=dis.botm.array,
+                xorigin=dis.xorigin.array,
+                yorigin=dis.yorigin.array,
+                vertices=dis.vertices.array,
+                cell2d=dis.cell2d.array,
+                nvert=dis.nvert.array,
+                idomain=dis.idomain.array,
+            )
+
         elif grid_type == "disu":
-            dis_t = fp.mf6.ModflowGwfdisu(gwt, nodes=dis.nodes.array, nja=dis.nja.array, area=dis.area.array,
-                                            iac=dis.iac.array, jac=dis.jac.array, ihc=dis.ihc.array, cl12=dis.cl12.array, hwa=dis.hwa.array,
-                                            top=dis.top.array, botm=dis.bot.array,
-                                            xorigin=dis.xorigin.array, yorigin=dis.yorigin.array,
-                                            vertices=dis.vertices.array, cell2d=dis.cell2d.array, nvert=dis.nverts.array,
-                                            idomain=dis.idomain.array)
-        
+            dis_t = fp.mf6.ModflowGwfdisu(
+                gwt,
+                nodes=dis.nodes.array,
+                nja=dis.nja.array,
+                area=dis.area.array,
+                iac=dis.iac.array,
+                jac=dis.jac.array,
+                ihc=dis.ihc.array,
+                cl12=dis.cl12.array,
+                hwa=dis.hwa.array,
+                top=dis.top.array,
+                botm=dis.bot.array,
+                xorigin=dis.xorigin.array,
+                yorigin=dis.yorigin.array,
+                vertices=dis.vertices.array,
+                cell2d=dis.cell2d.array,
+                nvert=dis.nverts.array,
+                idomain=dis.idomain.array,
+            )
+
         # IC
         ict = fp.mf6.ModflowGwtic(gwt, strt=strt_conc, filename=f"{gwtname}.ic")
 
@@ -1813,12 +1850,12 @@ class archpy2modflow:
         # DSP (dispersion)$
         if alh is None:
             alh = max(max(dis.delr.array), max(dis.delc.array))
-        
+
         if ath1 is None:
             ath1 = alh
 
         dsp = fp.mf6.ModflowGwtdsp(gwt, alh=alh, ath1=ath1, diffc=diff, pname="DSP", filename=f"{gwtname}.dsp")
-        
+
         # MST
         mst = fp.mf6.ModflowGwtmst(
             gwt,
@@ -1865,7 +1902,6 @@ class archpy2modflow:
         self.sim_t = sim_t
         self.gwt = gwt
 
-
     def create_ssm_t(self, sourcerecarray):
         """
         Create the ssm package for the transport model
@@ -1884,21 +1920,21 @@ class archpy2modflow:
         gwt.remove_package("ssm")
 
         # Source and sink mixing package --> make the link with the groundwater model
-        ssm = fp.mf6.ModflowGwtssm(gwt, sources=sourcerecarray , filename=f"{gwtname}.ssm", save_flows=True)
+        ssm = fp.mf6.ModflowGwtssm(gwt, sources=sourcerecarray, filename=f"{gwtname}.ssm", save_flows=True)
 
     def get_sim_transport(self):
         """
         Get the MODFLOW 6 energy simulation object
         """
         return self.sim_t
-    
+
     def get_gw_transport(self):
         """
         Get the MODFLOW 6 groundwater energy object
         """
         return self.gwt
 
-   # set exisiting packages #
+    # set exisiting packages #
     def set_imsgwt(self, **kwargs):
         """
         Create the ims package for the transport model
@@ -1920,12 +1956,12 @@ class archpy2modflow:
             list of tuples where each tuple is a period data (perlen, nstp, tsmult)
         """
         sim_t = self.get_sim_transport()
-        
+
         # remove existing tdis package
         sim_t.remove_package("tdis")
 
         # TDIS
-        tdis = fp.mf6.ModflowTdis(sim_t, time_units='SECONDS', perioddata=perioddata)
+        tdis = fp.mf6.ModflowTdis(sim_t, time_units="SECONDS", perioddata=perioddata)
 
     def set_strt_conc(self, strt_conc):
         """
@@ -1962,10 +1998,7 @@ class archpy2modflow:
             printrecord=printrecord,
         )
 
-    def set_dsp(self, alh=None, ath1=None, alv=None, ath2=None, atv=None,
-                diffc=1e-9,
-                xt3d_off=False, xt3d_rhs=False,
-                vb=1):
+    def set_dsp(self, alh=None, ath1=None, alv=None, ath2=None, atv=None, diffc=1e-9, xt3d_off=False, xt3d_rhs=False, vb=1):
         """
         Set the dispersion package for the transport model
         Note that this package reinitalize pre assigned values
@@ -1984,14 +2017,14 @@ class archpy2modflow:
             transverse dispersivity (in xy direction) if flow is vertical
         diffc : float
             molecular diffusion coefficient
-        xt3d_off : bool 
+        xt3d_off : bool
             xt3d formulation
         """
 
         assert self.sim_t is not None, "You need to create a transport simulation first, see :meth:`create_sim_transport`"
 
         gwt = self.get_gw_transport()
-        gwtname=gwt.name
+        gwtname = gwt.name
         if xt3d_off is None:
             xt3d_off = False
 
@@ -2004,7 +2037,7 @@ class archpy2modflow:
                 par = self.upscale_prop(par)
             new_par.append(par)
         alh, alv, ath1, ath2, atv, diffc = new_par
-        
+
         # remove existing cnd package
         gwt.remove_package("dsp")
 
@@ -2012,7 +2045,7 @@ class archpy2modflow:
         if gwt.dis.package_type == "dis":
             if alh is None:
                 alh = max(max(gwt.dis.delr.array), max(gwt.dis.delc.array))
-            
+
             if ath1 is None:
                 ath1 = alh
         else:
@@ -2020,23 +2053,16 @@ class archpy2modflow:
             # TO DO
 
         # dispersion package
-        dsp = fp.mf6.ModflowGwtdsp(gwt, alh=alh, ath1=ath1, alv=alv, ath2=ath2, atv=atv,
-                                    diffc=diffc, pname="DSP", filename=f"{gwtname}.dsp",
-                                    xt3d_off=xt3d_off)
+        dsp = fp.mf6.ModflowGwtdsp(gwt, alh=alh, ath1=ath1, alv=alv, ath2=ath2, atv=atv, diffc=diffc, pname="DSP", filename=f"{gwtname}.dsp", xt3d_off=xt3d_off)
 
         if vb:
             print("dsp package updated")
 
-    def set_mst(self, porosity=None, 
-                decay=None, decay_0=False, decay_1=False,
-                decay_sorbed=None,
-                sorption=None, bulk_density=None, distcoef=None, sp2=None,
-                vb=1):
-
+    def set_mst(self, porosity=None, decay=None, decay_0=False, decay_1=False, decay_sorbed=None, sorption=None, bulk_density=None, distcoef=None, sp2=None, vb=1):
         """
         Set the mass storage package for the transport model
         To assign a property from an Archpy model, use the name of the property as a string
-        
+
         Parameters
         ----------
         porosity : float, array or string
@@ -2064,10 +2090,10 @@ class archpy2modflow:
         assert self.sim_t is not None, "You need to create a transport simulation first, see :meth:`create_sim_transport`"
 
         gwt = self.get_gw_transport()
-        gwtname=gwt.name
+        gwtname = gwt.name
 
         gwt = self.get_gw_transport()
-        
+
         # if porosity is None, keep previous value
         if porosity is None:
             porosity = gwt.mst.porosity.array
@@ -2075,7 +2101,6 @@ class archpy2modflow:
             # get upscaled properties if necessary
             if isinstance(porosity, str):
                 porosity = self.upscale_prop(porosity)
-            
 
         # get upscaled properties if necessary
         new_par = []
@@ -2084,7 +2109,7 @@ class archpy2modflow:
                 par = self.upscale_prop(par)
             new_par.append(par)
         decay, decay_sorbed, bulk_density, distcoef, sp2 = new_par
-        
+
         # remove existing mst package
         gwt.remove_package("mst")
 
@@ -2127,7 +2152,7 @@ class archpy2modflow:
     def set_grid_layers_mode(self, iu=0, unit_limit=None, lay_sep=1):
         """
         Change the ArchPy unit simulation used to defined the layers
-        with the Layers mode. Note that this preserves the modflow model 
+        with the Layers mode. Note that this preserves the modflow model
         and do not recreate a new simulation object. For this
         use :meth:`create_sim` method.
         """
@@ -2180,12 +2205,11 @@ class archpy2modflow:
             if ilay == 0:
                 s1 = top
             else:
-                s1 = botm_org[ilay-1]
+                s1 = botm_org[ilay - 1]
             s2 = botm_org[ilay]
             for isublay in range(1, lay_sep[ilay]):
-
-                smean = s1*(1-isublay/lay_sep[ilay]) + s2*(isublay/lay_sep[ilay])  # mean of the two surfaces
-                botm = np.insert(botm, sum(lay_sep[0:ilay])+isublay-1, smean, axis=0)  # insert the surface at the right place
+                smean = s1 * (1 - isublay / lay_sep[ilay]) + s2 * (isublay / lay_sep[ilay])  # mean of the two surfaces
+                botm = np.insert(botm, sum(lay_sep[0:ilay]) + isublay - 1, smean, axis=0)  # insert the surface at the right place
 
         layers_names = self.T1.get_surface(typ="bot")[1]
         self.layers_names = layers_names
@@ -2199,9 +2223,9 @@ class archpy2modflow:
 
         # set nan of each layer to the mean of the previous layer + 1e-2
         prev_mean = None
-        for ilay in range(nlay-1, -1, -1):
+        for ilay in range(nlay - 1, -1, -1):
             mask = np.isnan(botm[ilay])
-            if ilay == nlay-1:
+            if ilay == nlay - 1:
                 prev_mean = np.nanmean(botm[ilay])
                 botm[ilay][mask] = prev_mean
             else:
@@ -2213,15 +2237,15 @@ class archpy2modflow:
             idomain[-n_units_removed:] = 0
 
         rtol = 1e-7
-        # adapt botm in order that each layer has a thickness > 0 
-        for i in range(-1, nlay-1):
+        # adapt botm in order that each layer has a thickness > 0
+        for i in range(-1, nlay - 1):
             if i == -1:
                 s1 = top
             else:
                 s1 = botm[i]
-            s2 = botm[i+1]
+            s2 = botm[i + 1]
             # mask = np.abs(s2 - s1) < rtol
-            # s1[mask] += 1e-2    
+            # s1[mask] += 1e-2
             mask = (s1 <= s2) | (np.abs(s2 - s1) < rtol)
             s1[mask] = s2[mask] + 1e-2
             # mask = ((s2 < (s1 + np.ones(s1.shape)*rtol)) & (s2 > (s1 - np.ones(s1.shape)*rtol)))  # mask to identify cells where the thickness is == 0 with some tolerance
@@ -2232,33 +2256,29 @@ class archpy2modflow:
                 if o == 0:
                     s1 = top
                 else:
-                    s1 = botm[o-1]
+                    s1 = botm[o - 1]
                 mask = (s1 <= s2) | (np.abs(s2 - s1) < rtol)
                 # mask = (s1 <= s2) | ((s2 < (s1 + np.ones(s1.shape)*rtol)) & (s2 > (s1 - np.ones(s1.shape)*rtol)))  # mask to identify cells where the thickness is <= 0 with some tolerance
                 s1[mask] = s2[mask] + 1e-2
-            
+
         rot_angle = self.T1.get_rot_angle()
-        dis = fp.mf6.ModflowGwfdis(gwf, nlay=nlay, nrow=nrow, ncol=ncol,
-                                    delr=delr, delc=delc,
-                                    top=top, botm=botm,
-                                    xorigin=xoff, yorigin=yoff, 
-                                    idomain=idomain, angrot=rot_angle)
+        dis = fp.mf6.ModflowGwfdis(gwf, nlay=nlay, nrow=nrow, ncol=ncol, delr=delr, delc=delc, top=top, botm=botm, xorigin=xoff, yorigin=yoff, idomain=idomain, angrot=rot_angle)
 
     ## energy model ##
-    def create_sim_energy(self,
-                          strt_temp = 10,  # initial temperature
-                          ktw = 0.56,  # thermal conductivity of water W/mK
-                          kts=2.5,  # thermal conductivity of material W/mK
-                          al = 1,  # dispersivity in longitudinal direction m
-                          ath1 = 1,  # dispersivity in transverse direction m 
-                          prsity = 0.2,  # porosity
-                          cpw = 4186,  # specific heat capacity of water J/kg·K
-                          cps = 840,  # specific heat capacity of solid J/kg·K
-                          rhow = 1000,  # density of water kg/m3
-                          rhos = 2650,  # density of solid kg/m3
-                          lhv = 2.26e6  # latent heat of vaporization J/kg
-                          ):
-
+    def create_sim_energy(
+        self,
+        strt_temp=10,  # initial temperature
+        ktw=0.56,  # thermal conductivity of water W/mK
+        kts=2.5,  # thermal conductivity of material W/mK
+        al=1,  # dispersivity in longitudinal direction m
+        ath1=1,  # dispersivity in transverse direction m
+        prsity=0.2,  # porosity
+        cpw=4186,  # specific heat capacity of water J/kg·K
+        cps=840,  # specific heat capacity of solid J/kg·K
+        rhow=1000,  # density of water kg/m3
+        rhos=2650,  # density of solid kg/m3
+        lhv=2.26e6,  # latent heat of vaporization J/kg
+    ):
         """
         Create a simulation object for an energy model with some default values
         """
@@ -2279,13 +2299,13 @@ class archpy2modflow:
 
         # TDIS
         perioddata = [(1, 1, 1.0)]
-        tdis = fp.mf6.ModflowTdis(sim_e, time_units='SECONDS', perioddata=perioddata)
+        tdis = fp.mf6.ModflowTdis(sim_e, time_units="SECONDS", perioddata=perioddata)
 
         # IMS
         imsgwe = fp.mf6.ModflowIms(sim_e, print_option="SUMMARY", complexity="moderate")
         # sim_e.register_ims_package(imsgwe, [gwe.name])
 
-        # DIS 
+        # DIS
         dis = self.get_gwf().dis
         # dis_e = fp.mf6.ModflowGwfdis(gwe, nlay=dis.nlay.array, nrow=dis.nrow.array, ncol=dis.ncol.array,
         #                                 delr=dis.delr.array, delc=dis.delc.array, top=dis.top.array, botm=dis.botm.array,
@@ -2294,25 +2314,55 @@ class archpy2modflow:
         # determine grid type
         grid_type = dis.package_type
         if grid_type == "dis":
-            dis_e = fp.mf6.ModflowGwfdis(gwe, nlay=dis.nlay.array, nrow=dis.nrow.array, ncol=dis.ncol.array,
-                                            delr=dis.delr.array, delc=dis.delc.array, top=dis.top.array, botm=dis.botm.array,
-                                            xorigin=dis.xorigin.array, yorigin=dis.yorigin.array,
-                                            idomain=dis.idomain.array)
+            dis_e = fp.mf6.ModflowGwfdis(
+                gwe,
+                nlay=dis.nlay.array,
+                nrow=dis.nrow.array,
+                ncol=dis.ncol.array,
+                delr=dis.delr.array,
+                delc=dis.delc.array,
+                top=dis.top.array,
+                botm=dis.botm.array,
+                xorigin=dis.xorigin.array,
+                yorigin=dis.yorigin.array,
+                idomain=dis.idomain.array,
+            )
         elif grid_type == "disv":
-            dis_e = fp.mf6.ModflowGwfdisv(gwe, nlay=dis.nlay.array, ncpl=dis.ncpl.array, 
-                                            top=dis.top.array, botm=dis.botm.array,
-                                            xorigin=dis.xorigin.array, yorigin=dis.yorigin.array,
-                                            vertices=dis.vertices.array, cell2d=dis.cell2d.array, nvert=dis.nvert.array,
-                                            idomain=dis.idomain.array)
-        
+            dis_e = fp.mf6.ModflowGwfdisv(
+                gwe,
+                nlay=dis.nlay.array,
+                ncpl=dis.ncpl.array,
+                top=dis.top.array,
+                botm=dis.botm.array,
+                xorigin=dis.xorigin.array,
+                yorigin=dis.yorigin.array,
+                vertices=dis.vertices.array,
+                cell2d=dis.cell2d.array,
+                nvert=dis.nvert.array,
+                idomain=dis.idomain.array,
+            )
+
         elif grid_type == "disu":
             # raise ValueError("disu grid type is not compatible with particle tracking yet")  # to do: add disu grid type
-            dis_e = fp.mf6.ModflowGwfdisu(gwe, nodes=dis.nodes.array, nja=dis.nja.array, area=dis.area.array,
-                                            iac=dis.iac.array, jac=dis.jac.array, ihc=dis.ihc.array, cl12=dis.cl12.array, hwa=dis.hwa.array,
-                                            top=dis.top.array, botm=dis.bot.array,
-                                            xorigin=dis.xorigin.array, yorigin=dis.yorigin.array,
-                                            vertices=dis.vertices.array, cell2d=dis.cell2d.array, nvert=dis.nverts.array,
-                                            idomain=dis.idomain.array)
+            dis_e = fp.mf6.ModflowGwfdisu(
+                gwe,
+                nodes=dis.nodes.array,
+                nja=dis.nja.array,
+                area=dis.area.array,
+                iac=dis.iac.array,
+                jac=dis.jac.array,
+                ihc=dis.ihc.array,
+                cl12=dis.cl12.array,
+                hwa=dis.hwa.array,
+                top=dis.top.array,
+                botm=dis.bot.array,
+                xorigin=dis.xorigin.array,
+                yorigin=dis.yorigin.array,
+                vertices=dis.vertices.array,
+                cell2d=dis.cell2d.array,
+                nvert=dis.nverts.array,
+                idomain=dis.idomain.array,
+            )
 
         # Instantiating MODFLOW 6 heat transport initial temperature
         eic = fp.mf6.ModflowGweic(gwe, strt=strt_temp, filename=f"{gwename}.ic")
@@ -2320,15 +2370,22 @@ class archpy2modflow:
         # Instantiating MODFLOW 6 heat transport advection package
         eadv = fp.mf6.ModflowGweadv(gwe, scheme="TVD", filename=f"{gwename}.adv")
 
-        # conduction and dispersion 
+        # conduction and dispersion
         cnd = fp.mf6.ModflowGwecnd(gwe, alh=al, ath1=ath1, ktw=ktw, kts=kts, pname="CND", filename=f"{gwename}.dsp")
 
         # Instantiating MODFLOW 6 heat transport mass storage package (consider renaming to est)
-        est = fp.mf6.ModflowGweest(gwe, porosity=prsity, heat_capacity_water=cpw, density_water=rhow,
-                                   latent_heat_vaporization=lhv, heat_capacity_solid=cps, density_solid=rhos,
-                                   pname="EST", filename=f"{gwename}.est", 
-                                   save_flows=True,
-                                   )
+        est = fp.mf6.ModflowGweest(
+            gwe,
+            porosity=prsity,
+            heat_capacity_water=cpw,
+            density_water=rhow,
+            latent_heat_vaporization=lhv,
+            heat_capacity_solid=cps,
+            density_solid=rhos,
+            pname="EST",
+            filename=f"{gwename}.est",
+            save_flows=True,
+        )
 
         # Instantiating MODFLOW 6 heat transport output control package
         oc = fp.mf6.ModflowGweoc(
@@ -2355,7 +2412,7 @@ class archpy2modflow:
         Get the MODFLOW 6 energy simulation object
         """
         return self.sim_e
-    
+
     def get_gw_energy(self):
         """
         Get the MODFLOW 6 groundwater energy object
@@ -2387,7 +2444,7 @@ class archpy2modflow:
         gwe.remove_package("ssm")
 
         # Source and sink mixing package --> make the link with the groundwater model
-        ssm = fp.mf6.ModflowGwessm(gwe, sources=sourcerecarray , filename=f"{gwename}.ssm", save_flows=True)
+        ssm = fp.mf6.ModflowGwessm(gwe, sources=sourcerecarray, filename=f"{gwename}.ssm", save_flows=True)
 
     # set exisiting packages #
     def set_imsgwe(self, **kwargs):
@@ -2412,12 +2469,12 @@ class archpy2modflow:
             list of tuples where each tuple is a period data (perlen, nstp, tsmult)
         """
         sim_e = self.get_sim_energy()
-        
+
         # remove existing tdis package
         sim_e.remove_package("tdis")
 
         # TDIS
-        tdis = fp.mf6.ModflowTdis(sim_e, time_units='SECONDS', perioddata=perioddata)
+        tdis = fp.mf6.ModflowTdis(sim_e, time_units="SECONDS", perioddata=perioddata)
 
     def set_strt_temp(self, strt_temp):
         """
@@ -2431,12 +2488,8 @@ class archpy2modflow:
         gwe = self.get_gw_energy()
         gwe.remove_package("ic")
         eic = fp.mf6.ModflowGweic(gwe, strt=strt_temp, filename=f"{gwe.name}.ic")
-    
-    def set_porosity(self, 
-                     iu = 0, ifa = 0, ip = 0, 
-                     porosity=None, prop_key="porosity",
-                     packages=None):
 
+    def set_porosity(self, iu=0, ifa=0, ip=0, porosity=None, prop_key="porosity", packages=None):
         """
         Set the porosity of the model
 
@@ -2456,7 +2509,7 @@ class archpy2modflow:
             list of packages to update the porosity. Can be "mp", "prt" and "energy".
             If None, all existing packages are updated
         """
-        
+
         gwf = self.get_gwf()
         if porosity is None:
             new_porosity = self.upscale_prop(prop_key, iu, ifa, ip)
@@ -2466,7 +2519,7 @@ class archpy2modflow:
         # update porosity in required packages
         if self.mp is not None:
             mpbas = fp.modpath.Modpath7Bas(self.get_mp(), porosity=new_porosity)
-        
+
         if self.sim_prt is not None:
             mip = self.get_sim_prt().get_model().mip
             mip.porosity.set_data(new_porosity)
@@ -2477,10 +2530,7 @@ class archpy2modflow:
         if self.sim_t is not None:
             self.get_gw_transport().get_package("mst").porosity.set_data(new_porosity)
 
-    def set_cnd(self, xt3d_off=None, xt3d_rhs=None,
-                alh=1, alv=None, 
-                ath1=1, ath2=None, atv=None, 
-                ktw=0.56, kts=2.5, vb=1, **kwargs):
+    def set_cnd(self, xt3d_off=None, xt3d_rhs=None, alh=1, alv=None, ath1=1, ath2=None, atv=None, ktw=0.56, kts=2.5, vb=1, **kwargs):
         """
         Set the conduction and dispersion package
 
@@ -2508,7 +2558,7 @@ class archpy2modflow:
         vb : int (0 or 1)
             flag to print messages
         """
-        
+
         assert self.sim_e is not None, "You need to create an energy simulation first, see :meth:`create_sim_energy`"
         gwe = self.get_gw_energy()
 
@@ -2519,7 +2569,7 @@ class archpy2modflow:
                 par = self.upscale_prop(par)
             new_par.append(par)
         alh, alv, ath1, ath2, atv, ktw, kts = new_par
-        
+
         # remove existing cnd package
         gwe.remove_package("cnd")
 
@@ -2529,11 +2579,7 @@ class archpy2modflow:
         if vb:
             print("cnd package updated")
 
-    def set_est(self, cpw=4184.0, cps=840,
-                rhow=1000, rhos=2500,
-                lhv=2453500.0,
-                porosity=None,
-                save_flows=True, vb=1, **kwargs):
+    def set_est(self, cpw=4184.0, cps=840, rhow=1000, rhos=2500, lhv=2453500.0, porosity=None, save_flows=True, vb=1, **kwargs):
         """
         Set the heat transport mass storage package
 
@@ -2552,9 +2598,9 @@ class archpy2modflow:
         lhv : float
             latent heat of vaporization
         porosity : float or array of model dimension or string
-            porosity. Note that it is preferable to update 
+            porosity. Note that it is preferable to update
             the porosity using the :meth:`set_porosity` method.
-            As this method only update porosity in the est package but 
+            As this method only update porosity in the est package but
             not in the other packages (mp, prt, ...)
             if a string is provided, it is assumed to be the name of the property in the ArchPy table
         save_flows : bool
@@ -2586,18 +2632,15 @@ class archpy2modflow:
 
         if porosity is not None:
             est.porosity.set_data(porosity)
-        
+
         if vb:
             print("est package updated")
-
-
 
     ### methods for inversion ### (experimental)
 
     def create_reduced_child_object(self, iu=0, ifa=0, ip=0, properties=None):
-
         """
-        This function creates a child object of the current archpy2modflow object. 
+        This function creates a child object of the current archpy2modflow object.
         where the contained archpy model has only a limited number of units, facies and properties simulations
         It is a copy of the current object but with a reduced number of units, facies and properties.
         """
@@ -2617,7 +2660,7 @@ class archpy2modflow:
         T1_reduced = copy.deepcopy(T1)
         # del(T1_reduced.Geol.surfaces_by_piles)
         # del(T1_reduced.Geol.surfaces_bot_by_piles)
-        # del(T1_reduced.Geol.units_domains)    
+        # del(T1_reduced.Geol.units_domains)
         # del(T1_reduced.Geol.facies_domains)
         # del(T1_reduced.Geol.prop_values)
         T1_reduced.Geol = ArchPy.base.Geol()
@@ -2628,7 +2671,7 @@ class archpy2modflow:
         for pile in T1.Geol.surfaces_by_piles.keys():
             surfs = T1.Geol.surfaces_by_piles[pile][iu]
             surfs_by_piles[pile] = surfs.reshape(1, *surfs.shape)
-        
+
         surfs_bot_by_piles = {}
         for pile in T1.Geol.surfaces_bot_by_piles.keys():
             surfs = T1.Geol.surfaces_bot_by_piles[pile][iu]
@@ -2641,11 +2684,10 @@ class archpy2modflow:
             prop_sim[prop] = T1.get_prop(prop, iu=iu, ifa=ifa, ip=ip, all_data=False).reshape(1, 1, 1, nz, ny, nx)
 
         T1_reduced.Geol.surfaces_by_piles = surfs_by_piles
-        T1_reduced.Geol.surfaces_bot_by_piles = surfs_bot_by_piles       
+        T1_reduced.Geol.surfaces_bot_by_piles = surfs_bot_by_piles
         T1_reduced.Geol.units_domains = unit_sim.reshape(1, nz, ny, nx)
         T1_reduced.Geol.facies_domains = facies_sim.reshape(1, 1, nz, ny, nx)
         T1_reduced.Geol.prop_values = prop_sim
-
 
         # create a new object from a copy
         # child = copy.deepcopy(self)
@@ -2657,6 +2699,5 @@ class archpy2modflow:
         T1_reduced.nreal_units = 1
         T1_reduced.nreal_fa = 1
         T1_reduced.nreal_prop = 1
-
 
         return child

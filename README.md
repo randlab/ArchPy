@@ -43,20 +43,20 @@ Works and tested with 3.8 <= python <= 3.11
 
 The following python packages are absolutely necessary:
    - [Geone](https://github.com/randlab/geone)
-   - matplotlib (tested with 3.10.6)
+   - matplotlib (tested with 3.10.7)
    - numpy (tested with 1.26.4)
-   - scipy (tested with 1.16.2)
+   - scipy (tested with 1.16.3)
    - sklearn (tested with 1.7.2)
-   - pandas (tested with 2.3.2)
+   - pandas (tested with 2.3.3)
    - shapely (tested with 2.1.2)
 
 These are not required but highly recommanded. They are installed with ArchPy by default.
-   - pyvista (tested with 0.46.3)
+   - pyvista (tested with 0.46.4)
    - yaml (tested with 6.0.3)
    - rasterio (tested with 1.4.3)
    - geopandas (tested with 1.1.1)
-   - ipywidgets (tested with 8.1.7)
-   - flopy (tested with 3.9.3)
+   - ipywidgets (tested with 8.1.8)
+   - flopy (tested with 3.9.5)
    
  ## Examples
  There is some example notebooks :

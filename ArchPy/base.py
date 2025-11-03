@@ -1952,6 +1952,8 @@ class Arch_table():
         self.ycellcenters=yc
         self.rot_angle = rotation_angle
 
+        self.xu2D = np.array([xc.flatten(), yc.flatten()]).T
+
         # z_tree=KDTree(zg.reshape(-1, 1))
         # zc_tree = KDTree(zgc.reshape(-1, 1))
         # self.z_tree = z_tree
@@ -1959,119 +1961,8 @@ class Arch_table():
         # self.xc_tree=KDTree(xgc.reshape(-1, 1))
         # self.yc_tree=KDTree(ygc.reshape(-1, 1))
 
-        ## resample top and bot if needed
-        if isinstance(top, str):
-
-            #import rasterio
-            import rasterio
-
-            #open raster and extract cell centers
-            DEM=rasterio.open(top)
-            x0, y0, x1, y1=DEM.bounds
-            rxlen=DEM.read().shape[2]
-            rylen=DEM.read().shape[1]
-            x=np.linspace(x0, x1, rxlen)
-            y=np.linspace(y1, y0, rylen)
-            rxc, ryc=np.meshgrid(x, y)
-
-            #take grid cell centers
-            xc=self.xcellcenters
-            yc=self.ycellcenters
-
-            if self.verbose:
-                print("Top is a raster - resampling activated")
-            top=resample_to_grid(xc, yc, rxc, ryc, DEM.read()[0], method=rspl_method)  # resampling
-            # top[np.isnan(top)] = -9999
-
-        if isinstance(bot, str):
-            import rasterio
-
-            if self.verbose:
-                print("Bot is a raster - resampling activated")
-
-            rast=rasterio.open(bot)
-            x0, y0, x1, y1=rast.bounds
-            rxlen=rast.read().shape[2]
-            rylen=rast.read().shape[1]
-            x=np.linspace(x0, x1, rxlen)
-            y=np.linspace(y1, y0, rylen)
-            rxc, ryc=np.meshgrid(x, y)
-
-            #take grid cell centers
-            xc=self.xcellcenters
-            yc=self.ycellcenters
-            
-            bot=resample_to_grid(xc, yc, rxc, ryc, rast.read()[0], method=rspl_method)  # resampling
-            # bot[np.isnan(bot)] = -9999
-
-        #define top/bot
-        if (top is None) and (mask is None):
-            top=np.ones([ny, nx], dtype=np.float32)*np.max(zg)
-
-        elif (top is None) and (mask is not None):  # if mask is provided but not top
-            top =np.zeros([ny, nx], dtype=np.float32)*np.nan
-            for ix in range(nx):
-                for iy in range(ny):
-                    for iz in range(nz-1, -1, -1):
-                        if mask[iz, iy, ix]:
-                            top[iy, ix]=zgc[iz]
-                            break
-        elif isinstance(top, int) or isinstance(top, float):
-            top=np.ones([ny, nx], dtype=np.float32)*top
-
-        if top is not None:
-            assert top.shape == (ny, nx), "Top shape is not adequat respectively to coordinate vectors (which are the vectors of edge cells). \n Must be have a size of -1 respectively to coordinate vectors xg and yg"
-        if bot is not None:
-            assert bot.shape == (ny, nx), "Bot shape is not adequat respectively to coordinate vectors(which are the vectors of edge cells). \n Must be have a size of -1 respectively to coordinate vectors xg and yg"
-
-        # cut top
-        top[top>zg[-1]]=zg[-1]
-        top[top<zg[0]]=zg[0]
-        self.top=top.astype(np.float32)
-
-        if (bot is None) and (mask is None):
-            bot=np.ones([ny, nx], dtype=np.float32)*np.min(zg)
-
-        elif (bot is None) and (mask is not None):  # if mask is provided but not top
-            bot =np.zeros([ny, nx], dtype=np.float32)*np.nan
-            for ix in range(nx):
-                for iy in range(ny):
-                    for iz in range(nz):
-                        if mask[iz, iy, ix]:
-                            bot[iy, ix]=zgc[iz]
-                            break
-        # cut bot
-        bot[bot>zg[-1]]=zg[-1]
-        bot[bot<zg[0]]=zg[0]
-        self.bot=bot.astype(np.float32)
-
-        # create mask from top and bot if none
-        if mask is None:
-            mask=np.zeros([nz, ny, nx], dtype=bool)
-            # iu=zc_tree.query(top.reshape(-1, 1), return_distance=False).reshape(ny, nx)
-            # il=zc_tree.query(bot.reshape(-1, 1), return_distance=False).reshape(ny, nx)
-            # iu = ((top - zgc[0]) // sz).astype(int) + 1
-            iu = (np.round((top - zg[0])/sz)).astype(int)
-            # il = ((bot - zgc[0]) // sz).astype(int)
-            il = (np.round((bot - zg[0])/sz)).astype(int)
-            iu[iu > nz - 1] = nz - 1
-            il[il > nz - 1] = nz - 1
-            iu[iu < 0] = 0
-            il[il < 0] = 0
-
-            for ix in range(len(xgc)):
-                for iy in range(len(ygc)):
-                    mask[il[iy, ix]: iu[iy, ix], iy, ix]=1
-
-        # list of coordinates 2D and 3D
-        # X, Y=np.meshgrid(xgc, ygc)
-        # self.xu2D=np.array([X.flatten(), Y.flatten()], dtype=np.float32).T
-        self.xu2D = np.array([xc.flatten(), yc.flatten()]).T
-
-        #X, Y, Z=np.meshgrid(xgc, ygc, zgc)
-        #self.xu3D=np.array([X.flatten(), Y.flatten(), Z.flatten()]).T
-
-        #apply polygon
+        # polygon first
+                #apply polygon
 
         # if polygon is a shapefile
         if isinstance(polygon, str):  # if polygon is a shapefile
@@ -2113,6 +2004,127 @@ class Arch_table():
                 raise ValueError("Polygon does not intersect the simulation domain \n Please check the projection of the polygon and the simulation domain \n or check epsg code of the project")
             polygon_array[np.array(l)]=1
             polygon=polygon_array.reshape(ny, nx)
+
+        ## resample top and bot if needed
+        if isinstance(top, str):
+
+            #import rasterio
+            import rasterio
+
+            #open raster and extract cell centers
+            DEM=rasterio.open(top)
+            x0, y0, x1, y1=DEM.bounds
+            rxlen=DEM.read().shape[2]
+            rylen=DEM.read().shape[1]
+            x=np.linspace(x0, x1, rxlen)
+            y=np.linspace(y1, y0, rylen)
+            rxc, ryc=np.meshgrid(x, y)
+
+            #take grid cell centers
+            xc=self.xcellcenters
+            yc=self.ycellcenters
+
+            if polygon is not None:  # resample only on the mask
+                xc = xc[polygon]
+                yc = yc[polygon]
+
+            if self.verbose:
+                print("Top is a raster - resampling activated")
+            top=resample_to_grid(xc, yc, rxc, ryc, DEM.read()[0], method=rspl_method)  # resampling
+
+            if polygon is not None:
+                real_top = np.zeros((ny, nx))
+                real_top[polygon] = top
+                top = real_top
+            # top[np.isnan(top)] = -9999
+
+        if isinstance(bot, str):
+            import rasterio
+
+            if self.verbose:
+                print("Bot is a raster - resampling activated")
+
+            rast=rasterio.open(bot)
+            x0, y0, x1, y1=rast.bounds
+            rxlen=rast.read().shape[2]
+            rylen=rast.read().shape[1]
+            x=np.linspace(x0, x1, rxlen)
+            y=np.linspace(y1, y0, rylen)
+            rxc, ryc=np.meshgrid(x, y)
+
+            #take grid cell centers
+            xc=self.xcellcenters
+            yc=self.ycellcenters
+            
+            bot=resample_to_grid(xc, yc, rxc, ryc, rast.read()[0], method=rspl_method)  # resampling
+            # bot[np.isnan(bot)] = -9999
+
+        #define top/bot
+        if (top is None) and (mask is None):
+            top=np.ones([ny, nx], dtype=np.float32)*np.max(zg)
+
+        elif (top is None) and (mask is not None):  # if mask is provided but not top
+            top =np.zeros([ny, nx], dtype=np.float32)*np.nan
+            for ix in range(nx):
+                for iy in range(ny):
+                    for iz in range(nz-1, -1, -1):
+                        if mask[iz, iy, ix]:
+                            top[iy, ix]=zgc[iz]
+                            break
+        elif isinstance(top, int) or isinstance(top, float):
+            top=np.ones([ny, nx], dtype=np.float32)*top
+
+        # cut top
+        top[top>zg[-1]]=zg[-1]
+        top[top<zg[0]]=zg[0]
+        self.top=top.astype(np.float32)
+
+        if (bot is None) and (mask is None):
+            bot=np.ones([ny, nx], dtype=np.float32)*np.min(zg)
+
+        elif (bot is None) and (mask is not None):  # if mask is provided but not top
+            bot =np.zeros([ny, nx], dtype=np.float32)*np.nan
+            for ix in range(nx):
+                for iy in range(ny):
+                    for iz in range(nz):
+                        if mask[iz, iy, ix]:
+                            bot[iy, ix]=zgc[iz]
+                            break
+        # cut bot
+        bot[bot>zg[-1]]=zg[-1]
+        bot[bot<zg[0]]=zg[0]
+        self.bot=bot.astype(np.float32)
+
+        if top is not None:
+            assert top.shape == (ny, nx), "Top shape is not adequat respectively to coordinate vectors (which are the vectors of edge cells). \n Must be have a size of -1 respectively to coordinate vectors xg and yg"
+        if bot is not None:
+            assert bot.shape == (ny, nx), "Bot shape is not adequat respectively to coordinate vectors(which are the vectors of edge cells). \n Must be have a size of -1 respectively to coordinate vectors xg and yg"
+
+        # create mask from top and bot if none
+        if mask is None:
+            mask=np.zeros([nz, ny, nx], dtype=bool)
+            # iu=zc_tree.query(top.reshape(-1, 1), return_distance=False).reshape(ny, nx)
+            # il=zc_tree.query(bot.reshape(-1, 1), return_distance=False).reshape(ny, nx)
+            # iu = ((top - zgc[0]) // sz).astype(int) + 1
+            iu = (np.round((top - zg[0])/sz)).astype(int)
+            # il = ((bot - zgc[0]) // sz).astype(int)
+            il = (np.round((bot - zg[0])/sz)).astype(int)
+            iu[iu > nz - 1] = nz - 1
+            il[il > nz - 1] = nz - 1
+            iu[iu < 0] = 0
+            il[il < 0] = 0
+
+            for ix in range(len(xgc)):
+                for iy in range(len(ygc)):
+                    mask[il[iy, ix]: iu[iy, ix], iy, ix]=1
+
+        # list of coordinates 2D and 3D
+        # X, Y=np.meshgrid(xgc, ygc)
+        # self.xu2D=np.array([X.flatten(), Y.flatten()], dtype=np.float32).T
+        
+
+        #X, Y, Z=np.meshgrid(xgc, ygc, zgc)
+        #self.xu3D=np.array([X.flatten(), Y.flatten(), Z.flatten()]).T
 
         if polygon is not None:
             polygon=polygon.astype(bool)  # ensure polygon is a boolean array
@@ -2509,7 +2521,7 @@ class Arch_table():
         else: # boreholes not in a list
             if (isinstance(bhs, borehole)) and (bhs not in self.list_bhs):
                 if check_inside:
-                    check = self.check_bh_inside(i, rotate=True)
+                    check = self.check_bh_inside(bhs, rotate=True)
                 else:
                     check = True
                 if check:

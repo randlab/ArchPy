@@ -894,13 +894,17 @@ class archpy2modflow:
                     kh = 10**kh
                 new_k = np.ones((nlay, nrow, ncol))
 
-                # initialize variable for facies upscaling
+                # initialize variables for facies upscaling
                 facies_arr = self.T1.get_facies(iu, ifa, all_data=False)
                 upscaled_facies = {}
+                if self.surface_layer:
+                    upscaled_facies_top = {}
 
                 for ifa in np.unique(facies_arr):
                     # upscaled_facies[ifa] = np.zeros((facies_arr.shape[0], facies_arr.shape[1], facies_arr.shape[2]))
                     upscaled_facies[ifa] = np.zeros((nlay, nrow, ncol))
+                    if self.surface_layer:
+                        upscaled_facies_top[ifa] = np.zeros((nrow, ncol))
 
                 if k_average_method == "anisotropic":
                     new_k33 = np.ones((nlay, nrow, ncol))
@@ -960,10 +964,19 @@ class archpy2modflow:
                                 for ifa in np.unique(arr):
                                     # upscaled_facies[ifa][:, irow, icol][mask_unit[:, irow, icol]] = prop[ifa]
                                     upscaled_facies[ifa][ilay, irow, icol] = prop[ifa]
+                                    if self.surface_layer:
+                                        if upscaled_facies_top[ifa][irow, icol] == 0:
+                                            for top in upscaled_facies_top.values():
+                                                top[irow, icol] = -1
+                                            upscaled_facies_top[ifa][irow, icol] = prop[ifa]
                             else:
                                 upscaled_facies = None
 
-                # save upscaled facies #FIXME
+                    # save upscaled facies
+                    if self.surface_layer and average_facies:
+                        for ifa in upscaled_facies.keys():
+                            upscaled_facies_top[ifa][upscaled_facies_top[ifa] == -1] = 0
+                            upscaled_facies[ifa] = np.concatenate((np.reshape(upscaled_facies_top[ifa], (1, nrow, ncol)), upscaled_facies[ifa]), axis=0)
                 self.upscaled_facies = upscaled_facies
 
                 # fill nan values with the mean of the layer

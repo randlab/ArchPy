@@ -662,8 +662,11 @@ class archpy2modflow:
 
                 if surface_layer:
                     nlay += 1
+                    # add current top as first layer of botm
                     botm = np.concatenate((np.reshape(top, (1, nrow, ncol)), botm), axis=0)
+                    # increase top by surface_thickness
                     top = top + surface_thickness
+                    # update idomain by assigning 1 to all cells in new surface layer, except those outside model domain
                     idomain_surface = (~np.all(idomain == 0, axis=0)).astype(int)
                     idomain = np.concatenate((np.reshape(idomain_surface, (1, nrow, ncol)), idomain), axis=0)
                     self.surface_layer = True
@@ -1010,16 +1013,19 @@ class archpy2modflow:
                                 for ifa in np.unique(arr):
                                     # upscaled_facies[ifa][:, irow, icol][mask_unit[:, irow, icol]] = prop[ifa]
                                     upscaled_facies[ifa][ilay, irow, icol] = prop[ifa]
+                                    # if there is a surface layer, assign the same facies proportions to its cells as the first non-empty cell top-down
                                     if self.surface_layer:
                                         if sum_top==0:
                                             upscaled_facies_top[ifa][irow, icol] = prop[ifa]
-                                sum_top+=np.sum([prop[i] for i in prop.keys()])
+                                        sum_top+=1
+                                # sum_top+=np.sum([prop[i] for i in prop.keys()])
                             else:
                                 upscaled_facies = None
 
                 # save upscaled facies
                 if self.surface_layer and average_facies:
                     for ifa in upscaled_facies.keys():
+                        # combine facies proportions in artificial surface layer with rest of upscaled_facies
                         upscaled_facies[ifa] = np.concatenate((np.reshape(upscaled_facies_top[ifa], (1, nrow, ncol)), upscaled_facies[ifa]), axis=0)
                 self.upscaled_facies = upscaled_facies
 

@@ -2886,10 +2886,12 @@ class Arch_table():
             - "uniform" for only superficial information (no contact or boundaries)
             - "boundaries" for only the contact between the units
             - "all" for both
-        step : int
-            step for sampling the geological map, small values implies
+        step_uniform : int
+            step for sampling the geological map when using uniform typ, small values implies
             that much more data are sampled from the raster but this increases
             the computational burden. Default is 5 (every 5th cell is sampled)
+        step_boundaries : int
+            step for sampling the geological map when using boundaries typ
         """
 
         xg = self.get_xg()
@@ -5628,31 +5630,35 @@ class Arch_table():
             else:
                 ud=self.Geol.units_domains.copy()
 
+            
+            units_domains=ud
+            if h_level == "all":
+                pass
+
+            elif isinstance(h_level, int) and h_level > 0:
+                lst_ID=np.unique(units_domains)
+                for idx in lst_ID:
+                    if idx != 0:
+                        s=self.get_unit(ID=idx, type="ID")
+                        h_lev=s.get_h_level()  # hierarchical level of unit
+                        if h_lev > h_level:  # compare unit level with level to plot
+                            for i in range(h_lev - h_level):
+                                s=s.mummy_unit
+                            if s is None:
+                                raise ValueError("Error: parent unit return is None, hierarchy relations are inconsistent with Pile and simulations")
+                            units_domains[units_domains == idx]=s.ID  # change ID values to Mummy ID
+
             if fill == "ID":
-                units_domains=ud
-                if h_level == "all":
-                    pass
-
-                elif isinstance(h_level, int) and h_level > 0:
-                    lst_ID=np.unique(units_domains)
-                    for idx in lst_ID:
-                        if idx != 0:
-                            s=self.get_unit(ID=idx, type="ID")
-                            h_lev=s.get_h_level()  # hierarchical level of unit
-                            if h_lev > h_level:  # compare unit level with level to plot
-                                for i in range(h_lev - h_level):
-                                    s=s.mummy_unit
-                                if s is None:
-                                    raise ValueError("Error: parent unit return is None, hierarchy relations are inconsistent with Pile and simulations")
-                                units_domains[units_domains == idx]=s.ID  # change ID values to Mummy ID
-                
+                pass
             elif fill == "color":
-                units_domains=np.zeros([nreal, nz, ny, nx, 4], dtype=np.float32)
+                units_domains_colors = np.zeros([nreal, nz, ny, nx, 4], dtype=np.float32)
+                
                 for unit in self.get_all_units():
-                    if unit.f_method != "Subpile":
-                        mask=(ud == unit.ID)
-                        units_domains[mask,: ]=matplotlib.colors.to_rgba(unit.c)
+                    # if unit.f_method != "Subpile":
+                    mask = (units_domains == unit.ID)
+                    units_domains_colors[mask, : ]=matplotlib.colors.to_rgba(unit.c)
 
+                units_domains = units_domains_colors
         else:
             if self.write_results:
                 fname=self.name+"_{}.ud".format(iu)
@@ -5662,32 +5668,34 @@ class Arch_table():
             else:
                 ud=self.Geol.units_domains[iu].copy()
 
+        
+            units_domains=ud
+            if h_level == "all":
+                pass
+            elif isinstance(h_level, int) and h_level > 0:
+                lst_ID=np.unique(units_domains)
+                for idx in lst_ID:
+                    if idx != 0:
+                        s=self.get_unit(ID=idx, type="ID")
+                        h_lev=s.get_h_level()  # hierarchical level of unit
+                        if h_lev > h_level:  # compare unit level with level to plot
+                            for i in range(h_lev - h_level):
+                                s=s.mummy_unit
+                            if s is None:
+                                raise ValueError("Error: parent unit return is None, hierarchy relations are inconsistent with Pile and simulations")
+                            units_domains[units_domains == idx]=s.ID  # change ID values to Mummy ID
+
             if fill == "ID":
-                units_domains=ud
-                if h_level == "all":
-                    pass
-                elif isinstance(h_level, int) and h_level > 0:
-                    lst_ID=np.unique(units_domains)
-                    for idx in lst_ID:
-                        if idx != 0:
-                            s=self.get_unit(ID=idx, type="ID")
-                            h_lev=s.get_h_level()  # hierarchical level of unit
-                            if h_lev > h_level:  # compare unit level with level to plot
-                                for i in range(h_lev - h_level):
-                                    s=s.mummy_unit
-                                if s is None:
-                                    raise ValueError("Error: parent unit return is None, hierarchy relations are inconsistent with Pile and simulations")
-                                units_domains[units_domains == idx]=s.ID  # change ID values to Mummy ID
-
-
+                pass
             elif fill == "color":
                 nz, ny, nx=ud.shape
-                units_domains=np.zeros([nz, ny, nx, 4])
+                units_domains_colors = np.zeros([nz, ny, nx, 4])
                 for unit in self.get_all_units():
                     if unit.f_method != "Subpile":
-                        mask=(ud == unit.ID)
-                        units_domains[mask,: ]=matplotlib.colors.to_rgba(unit.c)
+                        mask=(units_domains == unit.ID)
+                        units_domains_colors[mask,: ]=matplotlib.colors.to_rgba(unit.c)
 
+                units_domains = units_domains_colors
         return units_domains
 
 
@@ -6644,7 +6652,7 @@ class Arch_table():
                            property=None, esp=None, ax=None, colorbar=False,
                            ratio_aspect=2, i=0,
                            dist_max = 100, width=.5, bh_type="units",
-                           vmax=None, vmin=None, rotate=True):
+                           vmax=None, vmin=None, rotate=True, h_level="all"):
 
         """
         Plot a cross section along the points given in
@@ -6747,7 +6755,7 @@ class Arch_table():
                         ax.bar(ix, s - s2, bottom=s2, color=facies.c, alpha=1, edgecolor = 'black', width=width)
 
         if typ == "units":
-            arr=self.get_units_domains_realizations(iu=iu, fill="color", all_data=False)
+            arr=self.get_units_domains_realizations(iu=iu, fill="color", all_data=False, h_level=h_level)
 
         elif typ == 'proba_units':
             units=self.get_units_domains_realizations()

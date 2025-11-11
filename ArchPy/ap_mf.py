@@ -2,22 +2,19 @@
 This module propose several functions a class to interface ArchPy with MODFLOW 6
 """
 
-import numpy as np
-from matplotlib import colors
-import matplotlib.pyplot as plt
-import geone
-import geone.covModel as gcm
-import geone.imgplot3d as imgplt3
-import pyvista as pv
-import sys
 import os
+
 import flopy as fp
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
+from numba import jit
+
 import ArchPy
 import ArchPy.base
 import ArchPy.uppy
-from ArchPy.uppy import upscale_k, rotate_point
-from numba import jit
+from ArchPy.uppy import rotate_point, upscale_k
+
 
 # some functions
 def mask_below_unit(T1, unit, iu=0):
@@ -141,7 +138,7 @@ def plot_particle_facies_sequence(arch_table, df, plot_time=False, plot_distance
             df.time *= fac_time
             df.iloc[:, [1] + [i for i in range(-len(colors_fa), 0, 1)]].plot.area(color=colors_fa, legend=False, ax=axi, linewidth=0, x="time")
             axi.set_ylabel("Proportion")
-            axi.set_xlabel(f"time [days]")
+            axi.set_xlabel("time [days]")
             axi.set_ylim(-.1, 1)
 
         else:
@@ -219,9 +216,9 @@ def points2grid_index(points, grid):
         if grid is disu, return (icell)
     """
     # import packages
-    from scipy.spatial import cKDTree
-    from matplotlib.path import Path
     from flopy.utils.geometry import is_clockwise
+    from matplotlib.path import Path
+    from scipy.spatial import cKDTree
 
     # functions to intersect the points with the grid
     def intersect_point_fast_ug(self, index_cells, x, y, z=None,
@@ -301,8 +298,8 @@ def points2grid_index(points, grid):
                         xv=None, yv=None, zv=None,
                         local=False, forgive=False):
 
-        from matplotlib.path import Path
         from flopy.utils.geometry import is_clockwise
+        from matplotlib.path import Path
         """
         Get the CELL2D number of a point with coordinates x and y
 
@@ -450,13 +447,24 @@ class archpy2modflow:
         self.factor_y = None
         self.factor_z = None
         self.vb = vb  # verbosity level, 0 = no output, 1 = normal output
+        self.surface_layer = False
 
-    def create_sim(self, grid_mode="archpy", iu=0, 
-                   lay_sep=1,
-                   modflowgrid_props=None, xorigin=0, yorigin=0, angrot=0,
-                   factor_x=None, factor_y=None, factor_z=None, 
-                   unit_limit=None):
-
+    def create_sim(
+        self,
+        grid_mode="archpy",
+        iu=0,
+        lay_sep=1,
+        modflowgrid_props=None,
+        xorigin=0,
+        yorigin=0,
+        angrot=0,
+        factor_x=None,
+        factor_y=None,
+        factor_z=None,
+        unit_limit=None,
+        surface_layer=False,
+        surface_thickness=0.05,
+    ):
         """
         Create a modflow simulation from an ArchPy table
         
@@ -479,6 +487,10 @@ class archpy2modflow:
             factor to change the resolution of the grid in the z direction.
         unit_limit: unit name
             unit under which cells are considered as inactive
+        surface_layer: bool
+            if grid_mode is layers, surface_layer indicates whether to add a thin layer (of thickness surface_thickness) on top of all others within the model domain
+        surface_thickness: float
+            if grid_mode is layers and surface_layer is True, indicates the thickness of the additional surface layer
         """
 
         sim = fp.mf6.MFSimulation(sim_name=self.sim_name, version='mf6', exe_name=self.exe_name, 
@@ -647,6 +659,17 @@ class archpy2modflow:
                 
                 # ensure top has not any nan
                 top[np.isnan(top)] = botm[0][np.isnan(top)] + 1e-2
+
+                if surface_layer:
+                    nlay += 1
+                    # add current top as first layer of botm
+                    botm = np.concatenate((np.reshape(top, (1, nrow, ncol)), botm), axis=0)
+                    # increase top by surface_thickness
+                    top = top + surface_thickness
+                    # update idomain by assigning 1 to all cells in new surface layer, except those outside model domain
+                    idomain_surface = (~np.all(idomain == 0, axis=0)).astype(int)
+                    idomain = np.concatenate((np.reshape(idomain_surface, (1, nrow, ncol)), idomain), axis=0)
+                    self.surface_layer = True
 
             elif grid_mode == "new_resolution":
                 assert factor_x is not None, "factor_x must be provided"
@@ -832,13 +855,22 @@ class archpy2modflow:
         else:
             raise ValueError("Array must be all positive or all negative")
 
-    def set_k(self, k_key="K",
-              iu=0, ifa=0, ip=0,
-              log=False, k=None, k22=None, k33=None, k_average_method="anisotropic",
-              average_facies=False, 
-              upscaling_method="simplified_renormalization",
-              xt3doptions=None):
-
+    def set_k(
+        self,
+        k_key="K",
+        iu=0,
+        ifa=0,
+        ip=0,
+        log=False,
+        k=None,
+        k22=None,
+        k33=None,
+        k_average_method="anisotropic",
+        average_facies=False,
+        upscaling_method="simplified_renormalization",
+        xt3doptions=None,
+        surface_k=10 ** (-6.0),
+    ):
         """
         Set the hydraulic conductivity for a specific facies
 
@@ -868,6 +900,9 @@ class archpy2modflow:
         average_facies : bool
             if True, the facies will be upscaled and saved in the model
             if False, the facies will not be upscaled, default is False
+        surface_k : float
+            hydraulic conductivity to set for the surface layer, default is -6 #FIXME
+            only used when grid_mode is 'layers'
         """
 
         # Efficiently compute the proportion of each unique value in the array
@@ -899,6 +934,9 @@ class archpy2modflow:
                 new_k22 = None
                 nrow, ncol, nlay = gwf.modelgrid.nrow, gwf.modelgrid.ncol, gwf.modelgrid.nlay
 
+                if self.surface_layer:
+                    nlay -= 1
+
                 # initialize new_k and new_k33
                 kh = self.T1.get_prop(k_key)[iu, ifa, ip] 
                 if log:
@@ -908,10 +946,14 @@ class archpy2modflow:
                 # initialize variable for facies upscaling
                 facies_arr = self.T1.get_facies(iu, ifa, all_data=False)
                 upscaled_facies = {}
+                if self.surface_layer:
+                    upscaled_facies_top = {}
 
                 for ifa in np.unique(facies_arr):
                     # upscaled_facies[ifa] = np.zeros((facies_arr.shape[0], facies_arr.shape[1], facies_arr.shape[2]))
                     upscaled_facies[ifa] = np.zeros((nlay, nrow, ncol))
+                    if self.surface_layer:
+                        upscaled_facies_top[ifa] = np.zeros((nrow, ncol))
 
                 if k_average_method == "anisotropic":
                     new_k33 = np.ones((nlay, nrow, ncol))
@@ -946,6 +988,7 @@ class archpy2modflow:
 
                 for irow in range(nrow):
                     for icol in range(ncol):
+                        sum_top=0
                         for ilay in range(nlay):
                             mask_unit = mask_units[ilay]
 
@@ -970,10 +1013,20 @@ class archpy2modflow:
                                 for ifa in np.unique(arr):
                                     # upscaled_facies[ifa][:, irow, icol][mask_unit[:, irow, icol]] = prop[ifa]
                                     upscaled_facies[ifa][ilay, irow, icol] = prop[ifa]
+                                    # if there is a surface layer, assign the same facies proportions to its cells as the first non-empty cell top-down
+                                    if self.surface_layer:
+                                        if sum_top==0:
+                                            upscaled_facies_top[ifa][irow, icol] = prop[ifa]
+                                        sum_top+=1
+                                # sum_top+=np.sum([prop[i] for i in prop.keys()])
                             else:
                                 upscaled_facies = None
 
                 # save upscaled facies
+                if self.surface_layer and average_facies:
+                    for ifa in upscaled_facies.keys():
+                        # combine facies proportions in artificial surface layer with rest of upscaled_facies
+                        upscaled_facies[ifa] = np.concatenate((np.reshape(upscaled_facies_top[ifa], (1, nrow, ncol)), upscaled_facies[ifa]), axis=0)
                 self.upscaled_facies = upscaled_facies
 
                 # fill nan values with the mean of the layer
@@ -981,13 +1034,19 @@ class archpy2modflow:
                     mask = np.isnan(new_k[ilay])
                     new_k[ilay][mask] = np.nanmean(new_k[ilay])
 
+                if self.surface_layer:
+                    new_k = np.concatenate((surface_k * np.ones((1, nrow, ncol)), new_k), axis=0)
+
                 new_k = np.flip(new_k, axis=1)  # we have to flip in order to match modflow grid
 
                 if k_average_method == "anisotropic":
                     for ilay in range(nlay):
                         mask = np.isnan(new_k33[ilay])
                         new_k33[ilay][mask] = np.nanmean(new_k33[ilay])
-                    
+
+                    if self.surface_layer:
+                        new_k33 = np.concatenate((surface_k * np.ones((1, nrow, ncol)), new_k33), axis=0)
+
                     new_k33 = np.flip(new_k33, axis=1)
 
             elif grid_mode == "new_resolution":
@@ -1272,7 +1331,7 @@ class archpy2modflow:
         else:
             if list_p_coords is not None:
                 # write a function to find the modlfow cellids as well as localx, localy and localz from a coordinate
-                from shapely.geometry import Point, MultiPoint
+                from shapely.geometry import Point
 
                 grid = self.get_gwf().modelgrid
                 ix = fp.utils.gridintersect.GridIntersect(mfgrid=grid)
@@ -1392,7 +1451,7 @@ class archpy2modflow:
 
 
         # construct package data for the particles
-        from shapely.geometry import Point, MultiPoint
+        from shapely.geometry import Point
 
         grid = self.get_gwf().modelgrid
         ix = fp.utils.gridintersect.GridIntersect(mfgrid=grid)

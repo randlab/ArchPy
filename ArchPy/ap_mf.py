@@ -960,7 +960,10 @@ class archpy2modflow:
                 else:
                     new_k33 = None
 
-                botm = gwf.dis.botm.array.copy()
+                if self.surface_layer:  
+                    botm = gwf.dis.botm.array.copy()[1:]  # Fix --> botm has all layers while in the following code, we do not consider the first layer. We have to remove it
+                else:
+                    botm = gwf.dis.botm.array.copy()
                 botm = np.flip(botm, axis=1)
 
                 # mask units (boolean mask of each layer to compute the average)

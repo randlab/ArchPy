@@ -3824,7 +3824,7 @@ class Arch_table():
             if self.verbose:
                 print("Boreholes already processed")
 
-    def compute_surf(self, nreal=1, fl_top=True, rm_res_files=True):
+    def compute_surf(self, nreal=1, fl_top=True, rm_res_files=True, vert_discret=True):
 
         """
         Performs the computation of the surfaces
@@ -3838,11 +3838,16 @@ class Arch_table():
             assign first layer to top of the domain (True by default)
         rm_res_files : bool
             flag to remove previous existing resulting files in working directory
-
+        vert_discret: bool
+            flag to indicate if vertical discretization must be used (True by default)
+            if False, only surfaces will be computed
         """
 
         start=time.time()
         np.random.seed(self.seed)  # set seed
+
+        # assign if vertical_discretization has been made or not
+        self.vert_discret = vert_discret
 
         if nreal == 0:
             if self.verbose:
@@ -3868,11 +3873,12 @@ class Arch_table():
                     fpath=os.path.join(self.ws, file)
                     os.remove(fpath)
 
-        self.Geol.units_domains=np.zeros([nreal, self.get_nz(), self.get_ny(), self.get_nx()], dtype=np.int8)  # initialize tmp result array
-
+        if vert_discret:
+            self.Geol.units_domains=np.zeros([nreal, self.get_nz(), self.get_ny(), self.get_nx()], dtype=np.int8)  # initialize tmp result array
+        
         if self.check_units_ID() is None:  # check if units have correct IDs
             return None
-        self.get_pile_master().compute_surf(self, nreal, fl_top, vb=self.verbose)  # compute surfs of the first pile
+        self.get_pile_master().compute_surf(self, nreal, fl_top, vb=self.verbose, vert_discret=vert_discret)  # compute surfs of the first pile
 
         ## stochastic hard data
         #hierarchies
@@ -3884,7 +3890,7 @@ class Arch_table():
 
                         tops=self.Geol.surfaces_by_piles[pile.name][:, i]
                         bots=self.Geol.surfaces_bot_by_piles[pile.name][:, i]
-                        unit.SubPile.compute_surf(self, nreal, fl_top=True, subpile=True, tops=tops, bots=bots, vb=self.verbose)
+                        unit.SubPile.compute_surf(self, nreal, fl_top=True, subpile=True, tops=tops, bots=bots, vb=self.verbose, vert_discret=vert_discret)
                         fun(unit.SubPile)
 
                     elif unit.SubPile.nature == "3d_categorical":
@@ -4090,6 +4096,12 @@ class Arch_table():
             if self.verbose:
                 print("Warning: nreal set to 0")
             return
+        if self.Geol.units_domains is None:
+            if self.verbose:
+                print("Warning: either units has not been simulated or vertical discretization has not been made during the computation of the surfaces\n" \
+                     " you cannot continue with facies modeling")
+            return
+        
         #asserts
         all_ids=[]
         for fa in self.get_all_facies():
@@ -7290,7 +7302,7 @@ class Pile():
         if vb:
             print("##########################\n")
 
-    def compute_surf(self, ArchTable, nreal=1, fl_top=False, subpile=False, tops=None, bots=None, vb=1):
+    def compute_surf(self, ArchTable, nreal=1, fl_top=False, subpile=False, tops=None, bots=None, vert_discret=True, vb=1):
 
         """
         Compute the elevation of the surfaces units (1st hierarchic order)
@@ -7308,9 +7320,11 @@ class Pile():
             if the pile is a subpile
         tops, bots: sequence of 2D arrays of size (ny, nx)
             of top/bot for subpile surface
+        vert_discret: bool
+            if True, surfaces are discretized according to the vertical grid
+            of the ArchTable object. If False, only surfaces are computed
         vb: int
             level of verbosity, 0 for no print, 1 for print
-
         """
 
         def add_sto_contact(s, x, y, z, type="equality", z2=None):  # function to add a stochastic hd point to a surface
@@ -7336,8 +7350,9 @@ class Pile():
         nx=xg.shape[0]
         yg=ArchTable.get_ygc()
         ny=yg.shape[0]
-        zg=ArchTable.get_zg()
-        nz=zg.shape[0] - 1
+        if vert_discret:
+            zg=ArchTable.get_zg()
+            nz=zg.shape[0] - 1
         if not subpile:
             top=ArchTable.top
             bot=ArchTable.bot
@@ -7354,7 +7369,8 @@ class Pile():
         surfs=np.zeros([nreal, nlay, ny, nx], dtype=np.float32)
         surfs_bot=np.zeros([nreal, nlay, ny, nx], dtype=np.float32)
         org_surfs=np.zeros([nreal, nlay, ny, nx], dtype=np.float32)
-        real_domains=np.zeros([nreal, nlay, nz, ny, nx], dtype=np.int8)
+        if vert_discret:
+            real_domains=np.zeros([nreal, nlay, nz, ny, nx], dtype=np.int8)
 
         for ireal in range(nreal): # loop over real
 
@@ -7448,26 +7464,28 @@ class Pile():
                 surfs[ireal, (nlay-1)-i]=s1  #add surface
 
             #compute domains
-            start=time.time()
-            surfs_ir=surfs[ireal]
+            if vert_discret:
+                start=time.time()
+                surfs_ir=surfs[ireal]
 
-            for i in range(surfs_ir.shape[0]):
-                if i < surfs_ir.shape[0]-1:
-                    s_bot=surfs_ir[i+1] # bottom
-                else:
-                    s_bot=bot
-                s_top=surfs_ir[i] # top
-                a=ArchTable.compute_domain(s_top, s_bot)
-                real_domains[ireal, i]=a*mask*self.list_units[i].ID
-                surfs_bot[ireal, i]=s_bot
+                for i in range(surfs_ir.shape[0]):
+                    if i < surfs_ir.shape[0]-1:
+                        s_bot=surfs_ir[i+1] # bottom
+                    else:
+                        s_bot=bot
+                    s_top=surfs_ir[i] # top
+                    a=ArchTable.compute_domain(s_top, s_bot)
+                    real_domains[ireal, i]=a*mask*self.list_units[i].ID
+                    surfs_bot[ireal, i]=s_bot
 
-            end=time.time()
-            if vb:
-                print("\nTime elapsed for getting domains {} s".format((end - start)))
+                end=time.time()
+                if vb:
+                    print("\nTime elapsed for getting domains {} s".format((end - start)))
 
         #only 1 big array
-        a=np.sum(real_domains, axis=1)
-        ArchTable.Geol.units_domains[a != 0]=a[a != 0]
+        if vert_discret:
+            a=np.sum(real_domains, axis=1)
+            ArchTable.Geol.units_domains[a != 0]=a[a != 0]
         ArchTable.Geol.surfaces_by_piles[self.name]=surfs
         ArchTable.Geol.surfaces_bot_by_piles[self.name]=surfs_bot
         ArchTable.Geol.org_surfaces_by_piles[self.name]=org_surfs

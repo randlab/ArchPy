@@ -43,10 +43,10 @@ Works and tested with 3.8 <= python <= 3.11
 
 The following python packages are absolutely necessary:
    - [Geone](https://github.com/randlab/geone)
-   - matplotlib (tested with 3.10.7)
+   - matplotlib (tested with 3.10.8)
    - numpy (tested with 1.26.4)
    - scipy (tested with 1.16.3)
-   - sklearn (tested with 1.7.2)
+   - sklearn (tested with 1.8.0)
    - pandas (tested with 2.3.3)
    - shapely (tested with 2.1.2)
 

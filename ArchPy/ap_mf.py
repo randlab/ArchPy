@@ -1285,7 +1285,7 @@ class archpy2modflow:
 
     def mp_create(self, mpexe, trackdir="forward",
                   locs=None, rowcelldivisions=1, columncelldivisions=1, layercelldivisions=1,
-                  list_p_coords=None):
+                  list_p_coords=None, **kwargs):
         """
         Create a modpath simulation from an ArchPy table
 
@@ -1320,17 +1320,45 @@ class archpy2modflow:
                 return
             elif len(nodes) == 1:
                 nodes = nodes[0]
-            mp = fp.modpath.Modpath7.create_mp7(
-                                                modelname=mpnamf,
-                                                trackdir=trackdir,
-                                                flowmodel=gwf,
-                                                model_ws=workspace,
-                                                rowcelldivisions=rowcelldivisions,
-                                                columncelldivisions=columncelldivisions,
-                                                layercelldivisions=layercelldivisions,
-                                                nodes = nodes,
-                                                exe_name=mpexe,
-                                            )
+
+            sd = fp.modpath.mp7particledata.CellDataType(
+                columncelldivisions=columncelldivisions,
+                rowcelldivisions=rowcelldivisions,
+                layercelldivisions=layercelldivisions,
+            )
+            p = fp.modpath.mp7particledata.NodeParticleData(subdivisiondata=sd, nodes=nodes)
+            pg = fp.modpath.mp7particlegroup.ParticleGroupNodeTemplate(particledata=p)
+
+            mp = fp.modpath.Modpath7(
+                    modelname=mpnamf,
+                    flowmodel=gwf,
+                    exe_name=mpexe,
+                    model_ws=workspace,
+                    verbose=0,
+                )
+            fp.modpath.Modpath7Sim(
+                mp,
+                simulationtype="combined",
+                trackingdirection=trackdir,
+                # weaksinkoption="pass_through",
+                # weaksourceoption="pass_through",
+                referencetime=0.0,
+                stoptimeoption="extend",
+                particlegroups=pg,
+                **kwargs,
+                )
+            
+            # mp = fp.modpath.Modpath7.create_mp7(
+            #                                     modelname=mpnamf,
+            #                                     trackdir=trackdir,
+            #                                     flowmodel=gwf,
+            #                                     model_ws=workspace,
+            #                                     rowcelldivisions=rowcelldivisions,
+            #                                     columncelldivisions=columncelldivisions,
+            #                                     layercelldivisions=layercelldivisions,
+            #                                     nodes = nodes,
+            #                                     exe_name=mpexe,
+            #                                 )
         else:
             if list_p_coords is not None:
                 # write a function to find the modlfow cellids as well as localx, localy and localz from a coordinate
@@ -1387,18 +1415,19 @@ class archpy2modflow:
                     mp,
                     simulationtype="combined",
                     trackingdirection=trackdir,
-                    weaksinkoption="pass_through",
-                    weaksourceoption="pass_through",
+                    # weaksinkoption=weaksinkoption,
+                    # weaksourceoption=weaksourceoption,
                     referencetime=0.0,
                     stoptimeoption="extend",
                     particlegroups=l,
+                    **kwargs,
                 )
 
         self.mp = mp  # save the modpath object
         self.mpnamf = mpnamf  # save the name of the modpath file
 
 
-    def prt_create(self, prt_name="test", workspace="./", trackdir="forward", list_p_coords=None):
+    def prt_create(self, prt_name="test", workspace="./", trackdir="forward", list_p_coords=None, cellids=None, **kwargs):
         
         """
         Create a particle tracking simulation from a list of coordinates
@@ -1457,23 +1486,27 @@ class archpy2modflow:
         from shapely.geometry import Point
 
         grid = self.get_gwf().modelgrid
-        ix = fp.utils.gridintersect.GridIntersect(mfgrid=grid)
+        
 
         if grid_type == "dis":
-            list_cellids = []
-            for pi in list_p_coords:
-                p1 = Point(pi)
-                result = ix.intersect(p1)
-                if len(result) > 0:
-                    list_cellids.append(result.cellids[0])
-                else:
-                    p1 = Point((pi[0], pi[1]))
+
+            if cellids is None:
+
+                ix = fp.utils.gridintersect.GridIntersect(mfgrid=grid)
+                list_cellids = []
+                for pi in list_p_coords:
+                    p1 = Point(pi)
                     result = ix.intersect(p1)
-                    list_cellids.append((-1, result.cellids[0][0], result.cellids[0][1]))
+                    if len(result) > 0:
+                        list_cellids.append(result.cellids[0])
+                    else:
+                        p1 = Point((pi[0], pi[1]))
+                        result = ix.intersect(p1)
+                        list_cellids.append((-1, result.cellids[0][0], result.cellids[0][1]))
 
-            cellids = np.array([cids for cids in list_cellids])
+                cellids = np.array([cids for cids in list_cellids])
 
-            cellids[:, 0] += 1
+                cellids[:, 0] += 1
 
             # ensure that particles are in active cells, if not move them to the nearest vertical active cell
             idomain = dis.idomain.array
@@ -1533,8 +1566,7 @@ class archpy2modflow:
                                         packagedata=package_data,
                                         perioddata=period_data,
                                         nreleasepts=len(package_data),
-                                        drape=True,
-                                        exit_solve_tolerance=1e-5, extend_tracking=True)
+                                        drape=True, extend_tracking=True, **kwargs)
 
         # output control package
         budgetfile_prt_name = "{}.bud".format(prt_name)

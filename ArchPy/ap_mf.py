@@ -464,6 +464,7 @@ class archpy2modflow:
         unit_limit=None,
         surface_layer=False,
         surface_thickness=0.05,
+        load_existing_model=False,
     ):
         """
         Create a modflow simulation from an ArchPy table
@@ -492,259 +493,267 @@ class archpy2modflow:
         surface_thickness: float
             if grid_mode is layers and surface_layer is True, indicates the thickness of the additional surface layer
         """
-
-        sim = fp.mf6.MFSimulation(sim_name=self.sim_name, version='mf6', exe_name=self.exe_name, 
-                         sim_ws=self.model_dir)
-        gwf = fp.mf6.ModflowGwf(sim, modelname=self.model_name,
-                                model_nam_file='{}.nam'.format(self.model_name))
-
-        # upscale idomain
-        sx_grid, sy_grid, sz_grid = self.T1.get_sx(), self.T1.get_sy(), self.T1.get_sz()
-        ox_grid, oy_grid, oz_grid = self.T1.get_ox(), self.T1.get_oy(), self.T1.get_oz()
-
-        if grid_mode in ["disv", "disu"]:  
-
-            if grid_mode == "disv":
-                dis = fp.mf6.ModflowGwfdisv(gwf, **modflowgrid_props, xorigin=xorigin, yorigin=yorigin)
-            else:
-                dis = fp.mf6.ModflowGwfdisu(gwf, **modflowgrid_props, xorigin=xorigin, yorigin=yorigin)
-            
-            grid = gwf.modelgrid  # get the grid object
-            # rotate grid around the origin of archpy model
-            xorigin_rot, yorigin_rot = rotate_point((xorigin, yorigin), origin=(ox_grid, oy_grid), angle=-angrot) 
-            grid.set_coord_info(xoff=xorigin_rot, yoff=yorigin_rot, angrot=-angrot)
-
-            # idomain #
-            # inactive cells below unit limit
-            idomain = np.flip(np.flipud(self.T1.get_mask().astype(int)), axis=1)
-            if unit_limit is not None:
-                mask = mask_below_unit(self.T1, unit_limit, iu=iu)
-                mask = np.flip(np.flipud(mask), axis=1)  # flip the array to have the same orientation as the ArchPy table
-                idomain[mask == 1] = 0
-
-            new_idomain = upscale_k(idomain, method="arithmetic",
-                                    dx=sx_grid, dy=sy_grid, dz=sz_grid,
-                                    ox=ox_grid, oy=oy_grid, oz=oz_grid,
-                                    factor_x=factor_x, factor_y=factor_y, factor_z=factor_z,
-                                    grid=grid)[0]
-
-            # idomain --> superior to 0.5 set to 1
-            new_idomain[new_idomain > 0.5] = 1
-            new_idomain[new_idomain <= 0.5] = 0
-
-            # set idomain
-            # return dis, new_idomain
-            if grid_mode == "disv":
-                dis.idomain.set_layered_data(new_idomain)
-            else:
-                dis.idomain.set_data(new_idomain)
+        if load_existing_model:
+            if self.vb > 0:
+                print("## Loading existing MODFLOW 6 model from {} ###\n".format(self.model_dir))
+                print("Note: the model_dir must contain a valid MODFLOW 6 simulation and it must be compatible with the ArchPy model\n")
+            sim = fp.mf6.MFSimulation.load(sim_ws=self.model_dir)
+            gwf = sim.get_model(self.model_name)
+            self.sim = sim
             
         else:
+            sim = fp.mf6.MFSimulation(sim_name=self.sim_name, version='mf6', exe_name=self.exe_name, 
+                            sim_ws=self.model_dir)
+            gwf = fp.mf6.ModflowGwf(sim, modelname=self.model_name,
+                                    model_nam_file='{}.nam'.format(self.model_name))
+
+            # upscale idomain
+            sx_grid, sy_grid, sz_grid = self.T1.get_sx(), self.T1.get_sy(), self.T1.get_sz()
+            ox_grid, oy_grid, oz_grid = self.T1.get_ox(), self.T1.get_oy(), self.T1.get_oz()
+
+            if grid_mode in ["disv", "disu"]:  
+
+                if grid_mode == "disv":
+                    dis = fp.mf6.ModflowGwfdisv(gwf, **modflowgrid_props, xorigin=xorigin, yorigin=yorigin)
+                else:
+                    dis = fp.mf6.ModflowGwfdisu(gwf, **modflowgrid_props, xorigin=xorigin, yorigin=yorigin)
                 
-            #grid
-            nlay, nrow, ncol = self.T1.get_nz(), self.T1.get_ny(), self.T1.get_nx()
-            delr, delc = self.T1.get_sx(), self.T1.get_sy()
-            xoff, yoff = self.T1.get_ox(), self.T1.get_oy()
+                grid = gwf.modelgrid  # get the grid object
+                # rotate grid around the origin of archpy model
+                xorigin_rot, yorigin_rot = rotate_point((xorigin, yorigin), origin=(ox_grid, oy_grid), angle=-angrot) 
+                grid.set_coord_info(xoff=xorigin_rot, yoff=yorigin_rot, angrot=-angrot)
 
-            if grid_mode == "archpy":
-                top = np.ones((nrow, ncol)) * self.T1.get_zg()[-1]
-                botm = np.ones((nlay, nrow, ncol)) * self.T1.get_zg()[:-1].reshape(-1, 1, 1)
-                botm = np.flip(np.flipud(botm), axis=1)  # flip the array to have the same orientation as the ArchPy table
-                idomain = np.flip(np.flipud(self.T1.get_mask().astype(int)), axis=1)  # flip the array to have the same orientation as the ArchPy table
-
+                # idomain #
                 # inactive cells below unit limit
+                idomain = np.flip(np.flipud(self.T1.get_mask().astype(int)), axis=1)
                 if unit_limit is not None:
                     mask = mask_below_unit(self.T1, unit_limit, iu=iu)
                     mask = np.flip(np.flipud(mask), axis=1)  # flip the array to have the same orientation as the ArchPy table
                     idomain[mask == 1] = 0
 
-            elif grid_mode == "layers":
-                
-                n_units = len(self.T1.get_surface()[1])
-                if isinstance(lay_sep, int):
-                    lay_sep = [lay_sep] * n_units
-                assert len(lay_sep) == n_units, "lay_sep must have the same length as the number of units"
-                self.lay_sep = lay_sep  # save lay_sep
+                new_idomain = upscale_k(idomain, method="arithmetic",
+                                        dx=sx_grid, dy=sy_grid, dz=sz_grid,
+                                        ox=ox_grid, oy=oy_grid, oz=oz_grid,
+                                        factor_x=factor_x, factor_y=factor_y, factor_z=factor_z,
+                                        grid=grid)[0]
 
-                def list_unit_below_unit(T1, unit):
-                    u = T1.get_unit(unit)
-                    units = []
-                    for u_name in T1.get_surface()[1]:
-                        unit_to_compare = T1.get_unit(u_name)
-                        if u_name == unit:
-                            units.append(unit_to_compare)
-                            continue
-                        if unit_to_compare > u or unit_to_compare in u.get_baby_units(vb=0):  # if the unit is below the unit or is a baby unit
-                            units.append(unit_to_compare)
-                    return units
+                # idomain --> superior to 0.5 set to 1
+                new_idomain[new_idomain > 0.5] = 1
+                new_idomain[new_idomain <= 0.5] = 0
 
-                # determine which units will be inactive
-                if unit_limit is not None:
-                    units = list_unit_below_unit(self.T1, unit_limit)
-                    n_units_removed = len(units)
-                    n_units_removed = np.sum(lay_sep[-n_units_removed:])
+                # set idomain
+                # return dis, new_idomain
+                if grid_mode == "disv":
+                    dis.idomain.set_layered_data(new_idomain)
                 else:
-                    n_units_removed = None
+                    dis.idomain.set_data(new_idomain)
+                
+            else:
+                    
+                #grid
+                nlay, nrow, ncol = self.T1.get_nz(), self.T1.get_ny(), self.T1.get_nx()
+                delr, delc = self.T1.get_sx(), self.T1.get_sy()
+                xoff, yoff = self.T1.get_ox(), self.T1.get_oy()
 
-                # get surfaces of each unit
-                top = self.T1.get_surface(typ="top")[0][0, iu].copy()
-                botm = self.T1.get_surface(typ="bot")[0][:, iu].copy()
+                if grid_mode == "archpy":
+                    top = np.ones((nrow, ncol)) * self.T1.get_zg()[-1]
+                    botm = np.ones((nlay, nrow, ncol)) * self.T1.get_zg()[:-1].reshape(-1, 1, 1)
+                    botm = np.flip(np.flipud(botm), axis=1)  # flip the array to have the same orientation as the ArchPy table
+                    idomain = np.flip(np.flipud(self.T1.get_mask().astype(int)), axis=1)  # flip the array to have the same orientation as the ArchPy table
 
-                botm = np.flip(botm, axis=1)
-                top = np.flip(top, axis=0)
+                    # inactive cells below unit limit
+                    if unit_limit is not None:
+                        mask = mask_below_unit(self.T1, unit_limit, iu=iu)
+                        mask = np.flip(np.flipud(mask), axis=1)  # flip the array to have the same orientation as the ArchPy table
+                        idomain[mask == 1] = 0
 
-                botm_org = botm.copy()  # copy of botm to ensure that we only select original surfaces and not new sublayers
+                elif grid_mode == "layers":
+                    
+                    n_units = len(self.T1.get_surface()[1])
+                    if isinstance(lay_sep, int):
+                        lay_sep = [lay_sep] * n_units
+                    assert len(lay_sep) == n_units, "lay_sep must have the same length as the number of units"
+                    self.lay_sep = lay_sep  # save lay_sep
 
-                # add sublayers to botm
-                for ilay in range(n_units):
-                    if ilay == 0:
-                        s1 = top
+                    def list_unit_below_unit(T1, unit):
+                        u = T1.get_unit(unit)
+                        units = []
+                        for u_name in T1.get_surface()[1]:
+                            unit_to_compare = T1.get_unit(u_name)
+                            if u_name == unit:
+                                units.append(unit_to_compare)
+                                continue
+                            if unit_to_compare > u or unit_to_compare in u.get_baby_units(vb=0):  # if the unit is below the unit or is a baby unit
+                                units.append(unit_to_compare)
+                        return units
+
+                    # determine which units will be inactive
+                    if unit_limit is not None:
+                        units = list_unit_below_unit(self.T1, unit_limit)
+                        n_units_removed = len(units)
+                        n_units_removed = np.sum(lay_sep[-n_units_removed:])
                     else:
-                        s1 = botm_org[ilay-1]
-                    s2 = botm_org[ilay]
-                    for isublay in range(1, lay_sep[ilay]):
+                        n_units_removed = None
 
-                        smean = s1*(1-isublay/lay_sep[ilay]) + s2*(isublay/lay_sep[ilay])  # mean of the two surfaces
-                        botm = np.insert(botm, sum(lay_sep[0:ilay])+isublay-1, smean, axis=0)  # insert the surface at the right place
+                    # get surfaces of each unit
+                    top = self.T1.get_surface(typ="top")[0][0, iu].copy()
+                    botm = self.T1.get_surface(typ="bot")[0][:, iu].copy()
 
-                layers_names = self.T1.get_surface(typ="bot")[1]
-                self.layers_names = layers_names
-                nlay = botm.shape[0]
+                    botm = np.flip(botm, axis=1)
+                    top = np.flip(top, axis=0)
 
-                # define idomain (1 if thickness > 0, 0 if nan, -1 if thickness = 0)
-                idomain = np.ones((nlay, nrow, ncol))
-                thicknesses = -np.diff(np.vstack([top.reshape(-1, nrow, ncol), botm]), axis=0)
-                idomain[thicknesses == 0] = -1
-                idomain[np.isnan(thicknesses)] = 0
+                    botm_org = botm.copy()  # copy of botm to ensure that we only select original surfaces and not new sublayers
 
-                # set nan of each layer to the mean of the previous layer + 1e-2
-                prev_mean = None
-                for ilay in range(nlay-1, -1, -1):
-                    mask = np.isnan(botm[ilay])
-                    if ilay == nlay-1:
-                        prev_mean = np.nanmean(botm[ilay])
-                        botm[ilay][mask] = prev_mean
-                    else:
-                        prev_mean = max(np.nanmean(botm[ilay]), prev_mean + 1e-2)
-                        botm[ilay][mask] = prev_mean
-
-                # inactive cells below unit limit
-                if n_units_removed is not None:
-                    idomain[-n_units_removed:] = 0
-
-                rtol = 1e-7
-                # adapt botm in order that each layer has a thickness > 0 
-                for i in range(-1, nlay-1):
-                    if i == -1:
-                        s1 = top
-                    else:
-                        s1 = botm[i]
-                    s2 = botm[i+1]
-                    # mask = np.abs(s2 - s1) < rtol
-                    # s1[mask] += 1e-2    
-                    mask = (s1 <= s2) | (np.abs(s2 - s1) < rtol)
-                    s1[mask] = s2[mask] + 1e-2
-                    # mask = ((s2 < (s1 + np.ones(s1.shape)*rtol)) & (s2 > (s1 - np.ones(s1.shape)*rtol)))  # mask to identify cells where the thickness is == 0 with some tolerance
-
-                    # 2nd loop over previous layers to ensure that the thickness is > 0
-                    for o in range(i, -1, -1):
-                        s2 = botm[o]
-                        if o == 0:
+                    # add sublayers to botm
+                    for ilay in range(n_units):
+                        if ilay == 0:
                             s1 = top
                         else:
-                            s1 = botm[o-1]
+                            s1 = botm_org[ilay-1]
+                        s2 = botm_org[ilay]
+                        for isublay in range(1, lay_sep[ilay]):
+
+                            smean = s1*(1-isublay/lay_sep[ilay]) + s2*(isublay/lay_sep[ilay])  # mean of the two surfaces
+                            botm = np.insert(botm, sum(lay_sep[0:ilay])+isublay-1, smean, axis=0)  # insert the surface at the right place
+
+                    layers_names = self.T1.get_surface(typ="bot")[1]
+                    self.layers_names = layers_names
+                    nlay = botm.shape[0]
+
+                    # define idomain (1 if thickness > 0, 0 if nan, -1 if thickness = 0)
+                    idomain = np.ones((nlay, nrow, ncol))
+                    thicknesses = -np.diff(np.vstack([top.reshape(-1, nrow, ncol), botm]), axis=0)
+                    idomain[thicknesses == 0] = -1
+                    idomain[np.isnan(thicknesses)] = 0
+
+                    # set nan of each layer to the mean of the previous layer + 1e-2
+                    prev_mean = None
+                    for ilay in range(nlay-1, -1, -1):
+                        mask = np.isnan(botm[ilay])
+                        if ilay == nlay-1:
+                            prev_mean = np.nanmean(botm[ilay])
+                            botm[ilay][mask] = prev_mean
+                        else:
+                            prev_mean = max(np.nanmean(botm[ilay]), prev_mean + 1e-2)
+                            botm[ilay][mask] = prev_mean
+
+                    # inactive cells below unit limit
+                    if n_units_removed is not None:
+                        idomain[-n_units_removed:] = 0
+
+                    rtol = 1e-7
+                    # adapt botm in order that each layer has a thickness > 0 
+                    for i in range(-1, nlay-1):
+                        if i == -1:
+                            s1 = top
+                        else:
+                            s1 = botm[i]
+                        s2 = botm[i+1]
+                        # mask = np.abs(s2 - s1) < rtol
+                        # s1[mask] += 1e-2    
                         mask = (s1 <= s2) | (np.abs(s2 - s1) < rtol)
-                        # mask = (s1 <= s2) | ((s2 < (s1 + np.ones(s1.shape)*rtol)) & (s2 > (s1 - np.ones(s1.shape)*rtol)))  # mask to identify cells where the thickness is <= 0 with some tolerance
                         s1[mask] = s2[mask] + 1e-2
+                        # mask = ((s2 < (s1 + np.ones(s1.shape)*rtol)) & (s2 > (s1 - np.ones(s1.shape)*rtol)))  # mask to identify cells where the thickness is == 0 with some tolerance
+
+                        # 2nd loop over previous layers to ensure that the thickness is > 0
+                        for o in range(i, -1, -1):
+                            s2 = botm[o]
+                            if o == 0:
+                                s1 = top
+                            else:
+                                s1 = botm[o-1]
+                            mask = (s1 <= s2) | (np.abs(s2 - s1) < rtol)
+                            # mask = (s1 <= s2) | ((s2 < (s1 + np.ones(s1.shape)*rtol)) & (s2 > (s1 - np.ones(s1.shape)*rtol)))  # mask to identify cells where the thickness is <= 0 with some tolerance
+                            s1[mask] = s2[mask] + 1e-2
+                    
+                    # ensure top has not any nan
+                    top[np.isnan(top)] = botm[0][np.isnan(top)] + 1e-2
+
+                    if surface_layer:
+                        nlay += 1
+                        # add current top as first layer of botm
+                        botm = np.concatenate((np.reshape(top, (1, nrow, ncol)), botm), axis=0)
+                        # increase top by surface_thickness
+                        top = top + surface_thickness
+                        # update idomain by assigning 1 to all cells in new surface layer, except those outside model domain
+                        idomain_surface = (~np.all(idomain == 0, axis=0)).astype(int)
+                        idomain = np.concatenate((np.reshape(idomain_surface, (1, nrow, ncol)), idomain), axis=0)
+                        self.surface_layer = True
+
+                elif grid_mode == "new_resolution":
+                    assert factor_x is not None, "factor_x must be provided"
+                    assert factor_y is not None, "factor_y must be provided"
+                    assert factor_z is not None, "factor_z must be provided"
+                    assert nrow % factor_y == 0, "nrow must be divisible by factor_y"
+                    assert ncol % factor_x == 0, "ncol must be divisible by factor_x"
+                    assert nlay % factor_z == 0, "nlay must be divisible by factor_z"
+                    nrow = int(nrow / factor_y)
+                    ncol = int(ncol / factor_x)
+                    nlay = int(nlay / factor_z)
+                    delr = delr * factor_x
+                    delc = delc * factor_y
+                    top = np.ones((nrow, ncol)) * self.T1.get_zg()[-1]
+                    botm = np.ones((nlay, nrow, ncol)) * self.T1.get_zg()[::-factor_z][1:].reshape(-1, 1, 1)
+                    
+                    # how to define idomain ?
+                    idomain = np.zeros((nlay, nrow, ncol))
+                    mask_org = self.T1.get_mask().astype(int)
+
+                    # modify mask_org to remove the inactive cells
+                    if unit_limit is not None:
+                        mask = mask_below_unit(self.T1, unit_limit, iu=iu)
+                        mask_org[mask == 1] = 0
+
+                    for ilay in range(0, self.T1.get_nz(), factor_z):
+                        for irow in range(0, self.T1.get_ny(), factor_y):
+                            for icol in range(0, self.T1.get_nx(), factor_x):
+                                mask = mask_org[ilay:ilay+factor_z, irow:irow+factor_y, icol:icol+factor_x]
+                                if mask.mean() >= 0.5:
+                                    idomain[ilay//factor_z, irow//factor_y, icol//factor_x] = 1
+                    
+                    idomain = np.flip(np.flipud(idomain), axis=1)  # flip the array to have the same orientation as the ArchPy table
+
+                    self.factor_x = factor_x
+                    self.factor_y = factor_y
+                    self.factor_z = factor_z
                 
-                # ensure top has not any nan
-                top[np.isnan(top)] = botm[0][np.isnan(top)] + 1e-2
+                assert (np.array(check_thk(top, botm))).all(), "Error in the processing of the surfaces, some cells have a thickness < 0"
 
-                if surface_layer:
-                    nlay += 1
-                    # add current top as first layer of botm
-                    botm = np.concatenate((np.reshape(top, (1, nrow, ncol)), botm), axis=0)
-                    # increase top by surface_thickness
-                    top = top + surface_thickness
-                    # update idomain by assigning 1 to all cells in new surface layer, except those outside model domain
-                    idomain_surface = (~np.all(idomain == 0, axis=0)).astype(int)
-                    idomain = np.concatenate((np.reshape(idomain_surface, (1, nrow, ncol)), idomain), axis=0)
-                    self.surface_layer = True
+                rot_angle = self.T1.get_rot_angle()
+                dis = fp.mf6.ModflowGwfdis(gwf, nlay=nlay, nrow=nrow, ncol=ncol,
+                                            delr=delr, delc=delc,
+                                            top=top, botm=botm,
+                                            xorigin=xoff, yorigin=yoff, 
+                                            idomain=idomain, angrot=rot_angle)
 
-            elif grid_mode == "new_resolution":
-                assert factor_x is not None, "factor_x must be provided"
-                assert factor_y is not None, "factor_y must be provided"
-                assert factor_z is not None, "factor_z must be provided"
-                assert nrow % factor_y == 0, "nrow must be divisible by factor_y"
-                assert ncol % factor_x == 0, "ncol must be divisible by factor_x"
-                assert nlay % factor_z == 0, "nlay must be divisible by factor_z"
-                nrow = int(nrow / factor_y)
-                ncol = int(ncol / factor_x)
-                nlay = int(nlay / factor_z)
-                delr = delr * factor_x
-                delc = delc * factor_y
-                top = np.ones((nrow, ncol)) * self.T1.get_zg()[-1]
-                botm = np.ones((nlay, nrow, ncol)) * self.T1.get_zg()[::-factor_z][1:].reshape(-1, 1, 1)
-                
-                # how to define idomain ?
-                idomain = np.zeros((nlay, nrow, ncol))
-                mask_org = self.T1.get_mask().astype(int)
+            # save grid mode
+            self.grid_mode = grid_mode
 
-                # modify mask_org to remove the inactive cells
-                if unit_limit is not None:
-                    mask = mask_below_unit(self.T1, unit_limit, iu=iu)
-                    mask_org[mask == 1] = 0
+            perioddata = [(1, 1, 1.0)]
+            tdis = fp.mf6.ModflowTdis(sim, time_units='SECONDS',perioddata=perioddata)
 
-                for ilay in range(0, self.T1.get_nz(), factor_z):
-                    for irow in range(0, self.T1.get_ny(), factor_y):
-                        for icol in range(0, self.T1.get_nx(), factor_x):
-                            mask = mask_org[ilay:ilay+factor_z, irow:irow+factor_y, icol:icol+factor_x]
-                            if mask.mean() >= 0.5:
-                                idomain[ilay//factor_z, irow//factor_y, icol//factor_x] = 1
-                
-                idomain = np.flip(np.flipud(idomain), axis=1)  # flip the array to have the same orientation as the ArchPy table
+            ims = fp.mf6.ModflowIms(sim, complexity="simple")
 
-                self.factor_x = factor_x
-                self.factor_y = factor_y
-                self.factor_z = factor_z
+            #Initial condition
+            ic   = fp.mf6.ModflowGwfic(gwf, strt=1)
+
+            # output control
+            oc   = fp.mf6.ModflowGwfoc(gwf,budget_filerecord='{}.cbc'.format(self.model_name),
+                                        head_filerecord='{}.hds'.format(self.model_name),
+                                        saverecord=[('HEAD', 'LAST'),
+                                                    ('BUDGET', 'LAST')],
+                                        printrecord=[('BUDGET', 'ALL')])
             
-            assert (np.array(check_thk(top, botm))).all(), "Error in the processing of the surfaces, some cells have a thickness < 0"
+            # npf package
+            # empty package
+            npf = fp.mf6.ModflowGwfnpf(gwf, icelltype=0, k=1e-3, save_flows=True, save_saturation=True)
 
-            rot_angle = self.T1.get_rot_angle()
-            dis = fp.mf6.ModflowGwfdis(gwf, nlay=nlay, nrow=nrow, ncol=ncol,
-                                        delr=delr, delc=delc,
-                                        top=top, botm=botm,
-                                        xorigin=xoff, yorigin=yoff, 
-                                        idomain=idomain, angrot=rot_angle)
+            self.sim = sim
+            if self.vb > 0:
+                print("Simulation created with the following parameters:")
+                print(f"Grid mode: {grid_mode}")
 
-        # save grid mode
-        self.grid_mode = grid_mode
-
-        perioddata = [(1, 1, 1.0)]
-        tdis = fp.mf6.ModflowTdis(sim, time_units='SECONDS',perioddata=perioddata)
-
-        ims = fp.mf6.ModflowIms(sim, complexity="simple")
-
-        #Initial condition
-        ic   = fp.mf6.ModflowGwfic(gwf, strt=1)
-
-        # output control
-        oc   = fp.mf6.ModflowGwfoc(gwf,budget_filerecord='{}.cbc'.format(self.model_name),
-                                    head_filerecord='{}.hds'.format(self.model_name),
-                                    saverecord=[('HEAD', 'LAST'),
-                                                ('BUDGET', 'LAST')],
-                                    printrecord=[('BUDGET', 'ALL')])
-        
-        # npf package
-        # empty package
-        npf = fp.mf6.ModflowGwfnpf(gwf, icelltype=0, k=1e-3, save_flows=True, save_saturation=True)
-
-        self.sim = sim
-        if self.vb > 0:
-            print("Simulation created with the following parameters:")
-            print(f"Grid mode: {grid_mode}")
-
-            print("To retrieve the simulation, use the get_sim() method")
+                print("To retrieve the simulation, use the get_sim() method")
 
     def upscale_prop(self, prop_key, iu=0, ifa=0, ip=0, method="arithmetic", log=False):
 

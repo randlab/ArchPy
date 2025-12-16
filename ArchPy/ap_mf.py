@@ -1436,7 +1436,7 @@ class archpy2modflow:
         self.mpnamf = mpnamf  # save the name of the modpath file
 
 
-    def prt_create(self, prt_name="test", workspace="./", trackdir="forward", list_p_coords=None, cellids=None, **kwargs):
+    def prt_create(self, prt_name="test", workspace="./", trackdir="forward", list_p_coords=None, cellids=None, particle_names=None, **kwargs):
         
         """
         Create a particle tracking simulation from a list of coordinates
@@ -1451,6 +1451,10 @@ class archpy2modflow:
             tracking direction. Can be "forward" or "backward"
         list_p_coords : list of tuples
             list of particles coordinates. Each tuple must have 3 values (xp, yp, zp) corresponding to the coordinates of the particle
+        particle_names : list of str
+            list of particle names. If None, particles will be named "P1", "P2", etc.
+        kwargs : dict
+            additional arguments to pass to the ModflowPrt simulation
         """
 
         sim_prt = fp.mf6.MFSimulation(sim_name=prt_name, exe_name=self.exe_name, sim_ws=workspace, version="mf6")
@@ -1548,10 +1552,15 @@ class archpy2modflow:
             cellids = np.array(new_cellids)
 
             # package data (irptno, cellid, x, y, z)
-            package_data = []
-            for i in range(len(cellids)):
-                package_data.append((i, cellids[i], list_p_coords[i][0] -grid.xoffset, list_p_coords[i][1] - grid.yoffset, list_p_coords[i][2]))
-
+            if particle_names is None:
+                package_data = []
+                for i in range(len(cellids)):
+                    package_data.append((i, cellids[i], list_p_coords[i][0] -grid.xoffset, list_p_coords[i][1] - grid.yoffset, list_p_coords[i][2]))   
+            else:
+                package_data = []
+                for i in range(len(cellids)):
+                    package_data.append((i, cellids[i], list_p_coords[i][0] -grid.xoffset, list_p_coords[i][1] - grid.yoffset, list_p_coords[i][2], particle_names[i]))
+                    
         elif grid_type in ["disv", "disu"]:
             
             # rotate the grid
@@ -1561,9 +1570,14 @@ class archpy2modflow:
             cellids = points2grid_index(list_p_coords, grid)
 
             # package data (irptno, cellid, x, y, z)
-            package_data = []
-            for i in range(len(cellids)):
-                package_data.append((i, cellids[i], list_p_coords[i][0] - grid.xoffset, list_p_coords[i][1] - grid.yoffset, list_p_coords[i][2]))
+            if particle_names is None:
+                package_data = []
+                for i in range(len(cellids)):
+                    package_data.append((i, cellids[i], list_p_coords[i][0] - grid.xoffset, list_p_coords[i][1] - grid.yoffset, list_p_coords[i][2]))
+            else:
+                package_data = []
+                for i in range(len(cellids)):
+                    package_data.append((i, cellids[i], list_p_coords[i][0] - grid.xoffset, list_p_coords[i][1] - grid.yoffset, list_p_coords[i][2], particle_names[ip]))                
 
         else:
             raise ValueError("grid type not supported")

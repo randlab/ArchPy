@@ -187,7 +187,7 @@ def load_results(ArchTable, surfs=None, surfs_bot=None, units=None, facies=None,
         except:
             print("Surface bot results file not found")
             
-    if ~ArchTable.write_results:
+    if not ArchTable.write_results:
         if units is None:
             #units
             try:
@@ -1249,7 +1249,7 @@ def save_results(ArchTable):
         with open(os.path.join(ArchTable.ws, fn), "wb") as f:
             pickle.dump(ArchTable.Geol.surfaces_bot_by_piles, f)
     
-    if ~ArchTable.write_results:
+    if not ArchTable.write_results:
         #units
         fn=ArchTable.name + ".unt"
         d["units"]=fn
@@ -1298,6 +1298,7 @@ def Cm2YamlCm (cm):
         cm_tr.append((el[0],new_d))
     
     cm.elem=cm_tr
+
     if isinstance(cm, geone.covModel.CovModel2D):
         if isinstance(cm.alpha, (int, np.float32, np.float64)):
             cm.alpha=float(cm.alpha)

@@ -1293,7 +1293,7 @@ class archpy2modflow:
         self.T1.plot_arr(np.flipud(np.flip(head, axis=1)), "head", 2)
 
     def mp_create(self, mpexe, trackdir="forward",
-                  locs=None, rowcelldivisions=1, columncelldivisions=1, layercelldivisions=1,
+                  locs=None, rowcelldivisions=1, columncelldivisions=1, layercelldivisions=1, one_group_per_cells=False,
                   list_p_coords=None, **kwargs):
         """
         Create a modpath simulation from an ArchPy table
@@ -1322,21 +1322,31 @@ class archpy2modflow:
         model_name = gwf.name
         mpnamf = f"{model_name}_mp_forward"
         
-        if locs is not None:
-            nodes = get_nodes(locs, gwf.modelgrid.ncol, gwf.modelgrid.nrow)
-            if len(nodes) == 0:
-                print("No particles to track")
-                return
-            elif len(nodes) == 1:
-                nodes = nodes[0]
+        nodes = get_nodes(locs, gwf.modelgrid.ncol, gwf.modelgrid.nrow)
+        if len(nodes) == 0:
+            print("No particles to track")
+            return
+        elif len(nodes) == 1:
+            nodes = nodes[0]
 
-            sd = fp.modpath.mp7particledata.CellDataType(
+        sd = fp.modpath.mp7particledata.CellDataType(
                 columncelldivisions=columncelldivisions,
                 rowcelldivisions=rowcelldivisions,
                 layercelldivisions=layercelldivisions,
-            )
-            p = fp.modpath.mp7particledata.NodeParticleData(subdivisiondata=sd, nodes=nodes)
-            pg = fp.modpath.mp7particlegroup.ParticleGroupNodeTemplate(particledata=p)
+                )
+        if locs is not None:
+            if one_group_per_cells:
+                pg = []
+                for node in nodes:
+                    p = fp.modpath.mp7particledata.NodeParticleData(subdivisiondata=sd, nodes=node)
+                    pg_i = fp.modpath.mp7particlegroup.ParticleGroupNodeTemplate(particlegroupname=f"particles_node:{str(node)}", particledata=p)
+                    pg.append(pg_i)
+
+            else:
+                # nodes = get_nodes(locs, gwf.modelgrid.ncol, gwf.modelgrid.nrow)
+
+                p = fp.modpath.mp7particledata.NodeParticleData(subdivisiondata=sd, nodes=nodes)
+                pg = fp.modpath.mp7particlegroup.ParticleGroupNodeTemplate(particledata=p)
 
             mp = fp.modpath.Modpath7(
                     modelname=mpnamf,
@@ -1345,6 +1355,10 @@ class archpy2modflow:
                     model_ws=workspace,
                     verbose=0,
                 )
+            
+            # basic package
+            fp.modpath.Modpath7Bas(mp)            
+
             fp.modpath.Modpath7Sim(
                 mp,
                 simulationtype="combined",
@@ -1356,18 +1370,8 @@ class archpy2modflow:
                 particlegroups=pg,
                 **kwargs,
                 )
+                
             
-            # mp = fp.modpath.Modpath7.create_mp7(
-            #                                     modelname=mpnamf,
-            #                                     trackdir=trackdir,
-            #                                     flowmodel=gwf,
-            #                                     model_ws=workspace,
-            #                                     rowcelldivisions=rowcelldivisions,
-            #                                     columncelldivisions=columncelldivisions,
-            #                                     layercelldivisions=layercelldivisions,
-            #                                     nodes = nodes,
-            #                                     exe_name=mpexe,
-            #                                 )
         else:
             if list_p_coords is not None:
                 # write a function to find the modlfow cellids as well as localx, localy and localz from a coordinate

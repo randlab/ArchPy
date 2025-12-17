@@ -8643,6 +8643,8 @@ class Surface():
         """
 
         if isinstance(covmodel, geone.covModel.CovModel2D) or isinstance(covmodel, geone.covModel.CovModel1D):
+            if isinstance(covmodel, geone.covModel.CovModel1D):
+                covmodel = geone.covModel.covModel1D_to_covModel2D(covmodel)
             self.covmodel=covmodel
             self.dic_surf["covmodel"]=covmodel
             if vb:

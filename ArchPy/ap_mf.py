@@ -1313,8 +1313,11 @@ class archpy2modflow:
             number of column divisions
         layercelldivisions : int
             number of layer divisions
+        one_group_per_cells : bool
+            if True, create one particle group per cell
         list_p_coords : list of tuples
             list of particles coordinates. Each tuple must have 3 values (xp, yp, zp) corresponding to the coordinates of the particle
+
         """
 
         gwf = self.get_gwf()

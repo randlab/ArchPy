@@ -3880,6 +3880,8 @@ class Arch_table():
             return None
         self.get_pile_master().compute_surf(self, nreal, fl_top, vb=self.verbose, vert_discret=vert_discret)  # compute surfs of the first pile
 
+
+
         ## stochastic hard data
         #hierarchies
         def fun(pile):  # compute surf hierarchically
@@ -4154,7 +4156,7 @@ class Arch_table():
 
         self.facies_computed=1
 
-    def compute_domain(self, s1, s2):
+    def compute_domain_old(self, s1, s2):
 
         """
         Return a bool 2D array that define the domain where the units
@@ -4208,6 +4210,49 @@ class Arch_table():
                 a[idx_s2[iy, ix]: idx_s1[iy, ix], iy, ix]=1
 
         return a
+
+    def compute_domain(self, s1, s2):
+
+        """
+        Return a bool 2D array that define the domain where the units
+        exist (between two surfaces, s1 and s2)
+
+        Parameters
+        ----------
+        s1, s2: 2D ndarrays
+            two surfaces over the simulation domain size: (ny, nx)
+
+        Returns
+        -------
+        domain
+            3D ndarray of bools
+        """
+
+        zg = self.get_zg()
+        zgc = self.get_zgc()
+        sz = self.get_sz()
+        nx = self.get_nx()
+        ny = self.get_ny()
+        nz = self.get_nz()
+
+        z0 = zg[0]
+        z1 = zg[-1]
+
+        # clamp surfaces to domain bounds and handle non-finite values
+        s1c = np.where(np.isfinite(s1), s1, z0)
+        s2c = np.where(np.isfinite(s2), s2, z0)
+        s1c = np.clip(s1c, z0, z1)
+        s2c = np.clip(s2c, z0, z1)
+
+        # convert elevations to layer indices (idx_s2 inclusive, idx_s1 exclusive)
+        idx_s1 = np.clip(np.rint((s1c - z0) / sz).astype(int), 0, nz)
+        idx_s2 = np.clip(np.rint((s2c - z0) / sz).astype(int), 0, nz)
+
+        # vectorized construction: for each z index check if it's within [idx_s2, idx_s1)
+        z_idx = np.arange(nz, dtype=int)[:, None, None]
+        domain = (z_idx >= idx_s2[None, :, :]) & (z_idx < idx_s1[None, :, :])
+
+        return domain
 
     def compute_prop(self, nreal=1):
         #TO DO --> add an option to resimulate only certain properties (e.g. *args)

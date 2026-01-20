@@ -61,8 +61,8 @@ These are not required but highly recommanded. They are installed with ArchPy by
  ## Examples
  There is some example notebooks :
  - 01_basic : a folder where simple and basics ArchPy functionnalities are described 
- - 02_3D_ArchPy : a complete 3D ArchPy model example
- - 03_Article_example : a synthetical example shown in ArchPy article
+ - 02_3D_ArchPy : a complete 3D ArchPy model example as well as diverse archpy capabilities regarding the simulation of the units
+ - 03_Article_example : a synthetical example shown in original ArchPy article
  - 04_hierarchies : an exemple with many hierarchical units to test ArchPy capabilities
  - 05_mps_surfaces : an example how to use MPS to simulate the units surfaces
  - 06_cross_validation : a notebook that present how to perform a cross-validation directly with ArchPy
@@ -71,6 +71,9 @@ These are not required but highly recommanded. They are installed with ArchPy by
  - 09_interface : little exemple of an interface to call an preexisting archpy model as well as drawing a new model extension.
  - 10_rotation : an example of how to create a rotated model
  - 11_modflow_coupling : an example of how to couple ArchPy with Modflow
+ - 12_modflow_energy : How to couple ArchPy to model energy models with MODFOLOW 6
+ - 13_modflow_energy : How to couple ArchPy to model transport models with MODFOLOW 6
+ - 14_archpy2modflow : example shown in the archpy2modflow paper
  
  ## Paper
  A paper was published on the ArchPy concept and its different capabilities.
@@ -78,11 +81,17 @@ These are not required but highly recommanded. They are installed with ArchPy by
  It is available with the following [link](https://www.frontiersin.org/articles/10.3389/feart.2022.884075/).
 
  ## list of references using ArchPy
+
+ Schorpp, L., Egli, N., Straubhaar, J., & Renard, P. (2025). ArchPy and MODFLOW: Toward a General Integration of Heterogeneity into Groundwater Models. Groundwater, 63(6), 902-916. [link](https://doi.org/10.1111/gwat.70028)
+
  Schorpp, L., Straubhaar, J., & Renard, P. (2024). From lithological descriptions to geological models: an example from the Upper Aare Valley. Frontiers in Applied Mathematics and Statistics, 10, 1441596 [link](https://doi.org/10.3389/fams.2024.1441596).
 
  Neven, A., & Renard, P. (2023). A novel methodology for the stochastic integration of geophysical and hydrogeological data in geologically consistent models. Water Resources Research, 59(7). [link](https://doi.org/10.1029/2023WR034992)
  
  Neven, A., Schorpp, L., & Renard, P. (2022). Stochastic multi-fidelity joint hydrogeophysical inversion of consistent geological models. Frontiers in Water, 4, 989440. [link](https://doi.org/10.3389/frwa.2022.989440)
- 
+
+Schorpp, L., Straubhaar, J., & Renard, P. (2022). Automated hierarchical 3D modeling of quaternary aquifers: the ArchPy approach. Frontiers in Earth Science, 10, 884075. [link](https://doi.org/10.3389/feart.2022.884075)
+
+
  ## Contact
  For any questions regarding ArchPy, please contact me at <ludovic.schorpp@unine.ch>

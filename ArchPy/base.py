@@ -7412,13 +7412,24 @@ class Pile():
                         print("{}: determinist interpolation method, reuse the first surface".format(litho.name))
                 else:
 
-                    # change mean if thickness mode is activated
+                    # change mean if thickness mode is activated --> to fix (compute kriging to get mean)
                     if "thickness" in litho.surface.dic_surf.keys():
                         if litho.surface.dic_surf["thickness"] is not None:
                             if i == 0:
                                 litho.surface.dic_surf["mean"] = bot + litho.surface.dic_surf["thickness"]
                             else:
-                                litho.surface.dic_surf["mean"] = s1 + litho.surface.dic_surf["thickness"]
+                                litho_prev = self.list_units[:: -1][i-1]
+                                if "mean" in litho_prev.surface.dic_surf:
+                                    if litho_prev.surface.dic_surf["mean"] is not None:
+                                        lith_prev_mean = litho_prev.dic_surf["mean"]
+                                    else:
+                                        # if nothing just take mean value of hd --> we should compute kriging beforehand if thickness mode is activated
+                                        lith_prev_mean = np.mean(litho_prev.surface.z)
+                                else:
+                                    lith_prev_mean = np.mean(litho_prev.surface.z)
+
+                                # update mean elevation of new surface according to mean of previous unit
+                                litho.surface.dic_surf["mean"] = lith_prev_mean + litho.surface.dic_surf["thickness"]
 
                     s1=interp2D(litho.surface, ArchTable.get_xg(), ArchTable.get_yg(), ArchTable.xu2D,
                                  seed=ArchTable.seed + litho.ID * 1e3 + ireal, verbose=ArchTable.verbose, ncpu=ArchTable.ncpu, mask2D=mask2D,

@@ -41,13 +41,16 @@ Notebooks
    :caption: ArchPy capabilities
     
    Hierarchy <notebooks/1_many_hierarchical_units>
-   notebooks/3D_ArchPy_example
+   An example <notebooks/3D_ArchPy_example>
    notebooks/mps_surfaces
    notebooks/3D_ArchPy_geological_map
    notebooks/Article_example
    notebooks/x_valid_exemple1
    notebooks/inference_surfaces
    notebooks/example
+   Control unit thickness <notebooks/3D_ArchPy_thickness_controlled>
+   Existing Surfaces <notebooks/3D_ArchPy_use_existing_surfaces>
+   Non-stationary <notebooks/3D_ArchPy_non_stationary>
 
 .. nbgallery::
    :caption: Coupling

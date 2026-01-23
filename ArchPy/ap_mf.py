@@ -407,7 +407,7 @@ def mean_speed(a):
 
 @jit()
 def hmean_speed(a):
-    return 1 / (1/a).sum()
+    return len(a) / np.sum(1/a)
 
 ## archpy to modflow class ##
 class archpy2modflow:
@@ -464,6 +464,9 @@ class archpy2modflow:
         unit_limit=None,
         surface_layer=False,
         surface_thickness=0.05,
+        top=None,
+        botm=None,
+        idomain=None,
         load_existing_model=False,
     ):
         """
@@ -476,6 +479,9 @@ class archpy2modflow:
             "layers" : use the surfaces of each unit to define the grid
             "new_resolution" : use factors to change the resolution of the grid
             In this case, factor_x, factor_y and factor_z must be provided
+            "disv" : use a disv grid, modflowgrid_props must contain the properties of the disv grid
+            "disu" : use a disu grid, modflowgrid_props must contain the properties of the disu grid
+            "given_layers" : use given top, botm and idomain arrays to define the grid
         iu : int
             index of the unit to use when grid_mode is "layers"
         lay_sep : int or list of int of size nlay
@@ -679,6 +685,16 @@ class archpy2modflow:
                         idomain_surface = (~np.all(idomain == 0, axis=0)).astype(int)
                         idomain = np.concatenate((np.reshape(idomain_surface, (1, nrow, ncol)), idomain), axis=0)
                         self.surface_layer = True
+
+                elif grid_mode == "given_layers":
+
+                    top = top
+                    botm = botm
+                    idomain = idomain
+
+                    nlay = botm.shape[0]
+                    nrow = botm.shape[1]
+                    ncol = botm.shape[2]
 
                 elif grid_mode == "new_resolution":
                     assert factor_x is not None, "factor_x must be provided"
@@ -938,7 +954,7 @@ class archpy2modflow:
                 else:
                     new_k = k
 
-            elif grid_mode == "layers":
+            elif grid_mode in ["layers", "given_layers"]:
 
                 new_k22 = None
                 nrow, ncol, nlay = gwf.modelgrid.nrow, gwf.modelgrid.ncol, gwf.modelgrid.nlay
@@ -950,7 +966,7 @@ class archpy2modflow:
                 kh = self.T1.get_prop(k_key)[iu, ifa, ip] 
                 if log:
                     kh = 10**kh
-                new_k = np.ones((nlay, nrow, ncol))
+                new_k = np.ones((nlay, nrow, ncol))*np.nan
 
                 # initialize variable for facies upscaling
                 facies_arr = self.T1.get_facies(iu, ifa, all_data=False)
@@ -965,7 +981,7 @@ class archpy2modflow:
                         upscaled_facies_top[ifa] = np.zeros((nrow, ncol))
 
                 if k_average_method == "anisotropic":
-                    new_k33 = np.ones((nlay, nrow, ncol))
+                    new_k33 = np.ones((nlay, nrow, ncol))*np.nan
                 else:
                     new_k33 = None
 
@@ -975,27 +991,43 @@ class archpy2modflow:
                     botm = gwf.dis.botm.array.copy()
                 botm = np.flip(botm, axis=1)
 
-                # mask units (boolean mask of each layer to compute the average)
-                # if lay sep is not 1, we need to compute new mask units for each sublayers
-                layers = self.layers_names
-                mask_units = []
-                ilay = 0
-                for l in layers:
-                    if self.lay_sep[ilay] == 1:
-                        mask_units.append(self.T1.unit_mask(l, iu=iu).astype(bool))
-                    else:
-                        for isublay in range(self.lay_sep[ilay]):
-                            if ilay == 0 and isublay == 0:
-                                s1 = np.flip(gwf.dis.top.array, axis=1)
-                                s2 = botm[isublay]
-                            else:
-                                s1 = botm[sum(self.lay_sep[0:ilay])+isublay-1]
-                                s2 = botm[sum(self.lay_sep[0:ilay])+isublay]
-                            mask = self.T1.compute_domain(s1, s2)
-                            mask *= self.T1.unit_mask(l, iu=iu).astype(bool)  # apply mask of the whole unit to ensure that we only consider the cells of the unit
-                            mask_units.append(mask.astype(bool))
-                    
-                    ilay += 1
+                if grid_mode == "layers":
+                    # mask units (boolean mask of each layer to compute the average)
+                    # if lay sep is not 1, we need to compute new mask units for each sublayers
+                    layers = self.layers_names
+                    mask_units = []
+                    ilay = 0
+                    for l in layers:
+                        if self.lay_sep[ilay] == 1:
+                            mask_units.append(self.T1.unit_mask(l, iu=iu).astype(bool))
+                        else:
+                            for isublay in range(self.lay_sep[ilay]):
+                                if ilay == 0 and isublay == 0:
+                                    s1 = np.flip(gwf.dis.top.array, axis=1)
+                                    s2 = botm[isublay]
+                                else:
+                                    s1 = botm[sum(self.lay_sep[0:ilay])+isublay-1]
+                                    s2 = botm[sum(self.lay_sep[0:ilay])+isublay]
+                                mask = self.T1.compute_domain(s1, s2)
+                                mask *= self.T1.unit_mask(l, iu=iu).astype(bool)  # apply mask of the whole unit to ensure that we only consider the cells of the unit
+                                mask_units.append(mask.astype(bool))
+                        
+                        ilay += 1
+                elif grid_mode == "given_layers":
+
+                    mask_units = []
+                    ilay = 0
+                    for ilay in range(nlay):
+                        if ilay == 0:
+                            s1 = np.flip(gwf.dis.top.array, axis=1)
+                            s2 = botm[ilay]
+                        else:
+                            s1 = botm[ilay-1]
+                            s2 = botm[ilay]
+                        mask = self.T1.compute_domain(s1, s2)
+                        mask *= self.T1.mask
+                        mask_units.append(mask.astype(bool))
+
                 self.mask_units = mask_units
 
                 for irow in range(nrow):

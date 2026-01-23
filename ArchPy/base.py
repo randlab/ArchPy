@@ -947,6 +947,43 @@ def running_mean_2D(x, N):
 
     return s
 
+ 
+def get_most_probable_value(array):
+    """
+    Return the most probable facies per cell from realizations.
+
+    Parameters
+    ----------
+    array : ndarray, shape (nreal, nz, ny, nx)
+        Categorical values (integer codes). If a value is < 0, it is considered as "no data"
+
+    Returns
+    -------
+    most_prob : ndarray, shape (nz, ny, nx)
+        Most frequent code per cell
+    """
+    nreal, nz, ny, nx = array.shape
+
+    # flatten spatial dims -> (nreal, ncell)
+    flat = array.reshape(nreal, -1)
+    ncell = flat.shape[1]
+
+    # unique labels across realizations (usually small)
+    labels = np.unique(flat)
+
+    # count occurrences of each label for every cell
+    counts = np.empty((labels.size, ncell), dtype=np.int32)
+    for i, lab in enumerate(labels):
+        counts[i] = np.count_nonzero(flat == lab, axis=0)
+
+    # pick label with max counts per cell
+    idx_max = counts.argmax(axis=0)
+    most_flat = labels[idx_max]
+
+    most = most_flat.reshape(nz, ny, nx).astype(array.dtype)
+
+    return most
+
 
 ####### CLASSES ########
 class Arch_table():
@@ -1807,6 +1844,68 @@ class Arch_table():
         self.erase_hd()
         self.process_bhs()
         self.seed= int(self.seed + 1e6)
+
+    def discretize_polygon(self, polygon, epsg=None):
+        
+        """
+        This function discretizes a polygon shapefile into a grid that matches the simulation domain.
+
+        Parameters
+        ----------
+        polygon : str
+            path to the polygon shapefile
+        epsg : int
+            EPSG code for the coordinate reference system
+
+        Returns
+        -------
+        2D array of size (ny, nx)
+        """
+
+        sx = self.get_sx()
+        sy = self.get_sy()
+        nx = self.get_nx()
+        ny = self.get_ny()
+
+        if isinstance(polygon, str):  # if polygon is a shapefile
+            import shapely
+            from shapely.geometry import Polygon, MultiPolygon
+
+            if polygon.split(".")[-1] == "shp":
+                import geopandas as gp 
+                poly = gp.read_file(polygon)
+                if epsg is not None:
+                    poly = poly.to_crs(f"EPSG:{epsg}")  # reproject shapefile 
+                if poly.shape[0] == 1:
+                    polygon = Polygon(poly.geometry.iloc[0])
+                elif poly.shape[0] > 1:
+                    polygon = MultiPolygon(poly.geometry.values)
+
+            # if polygon is shapely Polygon
+            if isinstance(polygon, (shapely.geometry.Polygon, shapely.geometry.MultiPolygon)):
+
+
+                polygon_array=np.zeros([ny*nx], dtype=bool)  # 2D array simulation domain
+                cell_l = []
+                cell_name = []
+                for i,cell in enumerate(self.xu2D):
+
+                    xy = ((cell[0]-sx/2, cell[1]-sy/2),(cell[0]-sx/2, cell[1]+sy/2),
+                            (cell[0]+sx/2, cell[1]+sy/2),(cell[0]+sx/2, cell[1]-sy/2))
+                    p = shapely.geometry.Polygon(xy)
+                    cell_name.append(i)
+                    cell_l.append(p)
+
+                l=[]  # list of intersected cells
+                for icell, cell in enumerate(cell_l):
+                    if cell.intersects(polygon):
+                        l.append(cell_name[icell])
+                if len(l) == 0:
+                    raise ValueError("Polygon does not intersect the simulation domain \n Please check the projection of the polygon and the simulation domain \n or check epsg code of the project")
+                polygon_array[np.array(l)]=1
+                polygon=polygon_array.reshape(ny, nx)
+
+        return polygon
 
     def resample2grid(self, raster_path, band=None, rspl_method="nearest"):
 
@@ -4784,10 +4883,10 @@ class Arch_table():
         thk = np.sum(mask_unit, axis=0) * self.get_sz()  # count the number of non-NaN values in each column and multiply by cell thickness
         return thk  # return the mean transmissivity for the unit
 
-    def realizations_aggregation(self, method="basic",
-                             depth=100, ignore_units=None,
-                             units_to_fill=[],
-                             n_iter = 50):
+    def realizations_aggregation(self, typ="units", method="basic",
+                                depth=100, ignore_units=None,
+                                units_to_fill=[],
+                                n_iter = 50):
     
         """
         Method to aggregate multiple ArchPy realizations into one for units and facies (TO DO)
@@ -4812,6 +4911,8 @@ class Arch_table():
         units_to_fill: list
             mean_surfs parameter, units name to fill with NN at the end.
             Should not be used except to fill the top unit.
+        n_iter: int
+            number of times MDS is run.
 
         Returns
         -------
@@ -4831,24 +4932,33 @@ class Arch_table():
 
         if method == "basic":
             
-            units = self.get_units_domains_realizations()
+            if typ == "units":
+                arr = self.get_units_domains_realizations()
+            elif typ == "facies":
+                arr = self.get_facies()
 
-            most_prob = np.zeros((nz, ny, nx), dtype=np.int8)
+                # reshape facies arr to be 4D and not 5D
+                nreal_tot = self.nreal_units * self.nreal_fa
+                arr = arr.reshape(nreal_tot, nz, ny, nx)
 
-            for iz in range(self.get_nz()):
-                for iy in range(self.get_ny()):
-                    for ix in range(self.get_nx()):
-                        if self.mask[iz, iy, ix]:
-                            occ = np.bincount(units[:, iz, iy, ix])
-                            idx = np.where(occ==max(occ))
-                            most_prob[iz, iy, ix] = idx[0][0]
+            most_prob = get_most_probable_value(arr)
+
+            # most_prob = np.zeros((nz, ny, nx), dtype=np.int8)
+
+            # for iz in range(self.get_nz()):
+            #     for iy in range(self.get_ny()):
+            #         for ix in range(self.get_nx()):
+            #             if self.mask[iz, iy, ix]:
+            #                 occ = np.bincount(units[:, iz, iy, ix])
+            #                 idx = np.where(occ==max(occ))
+            #                 most_prob[iz, iy, ix] = idx[0][0]
 
             return most_prob
         
         elif method == "probas_prop":
 
             ## tirer les proportions de chaque units
-            d_prop_units = self.get_proportions(depth_min = 0, depth_max = depth, ignore_units = ign_un)
+            d_prop_units = self.get_proportions(type=typ, depth_min = 0, depth_max = depth, ignore_units = ign_un)
 
             # create mask
             inter = int(depth/self.get_sz())
@@ -4866,7 +4976,16 @@ class Arch_table():
 
             # compute probas
             d_sorted = {k: v for k, v in sorted(d_prop_units.items(), key=lambda item: item[1])}
-            units=self.get_units_domains_realizations(all_data=True)
+            if typ == "units":
+                units=self.get_units_domains_realizations(all_data=True)
+
+            elif typ == "facies":
+                units = self.get_facies()
+
+                # reshape facies arr to be 4D and not 5D
+                nreal_tot = self.nreal_units * self.nreal_fa
+                units = units.reshape(nreal_tot, nz, ny, nx)
+
             tot_cells = mask_depth.sum()
 
             best_model = np.zeros([nz, ny, nx], dtype=np.int8)
@@ -4882,7 +5001,11 @@ class Arch_table():
                 arr=np.zeros([self.nz, self.ny, self.nx])
 
                 # compute probabilities
-                arr += (units == self.get_unit(k).ID).sum(0)
+                if typ == "units":
+                    obj_id = self.get_unit(k).ID
+                elif typ == "facies":
+                    obj_id = self.get_facies_obj(k).ID
+                arr += (units == obj_id).sum(0)
                 arr /= units.shape[0]
                 
                 # loop probas
@@ -4894,7 +5017,7 @@ class Arch_table():
 
         #         print(np.round(iv, 3))
                 mask_sim = (best_model==0) & (arr >= iv)
-                best_model[mask_sim] = mask_sim[mask_sim].astype(int) * self.get_unit(k).ID
+                best_model[mask_sim] = mask_sim[mask_sim].astype(int) * obj_id
                 
                 #tot_cells -= mask_sim[mask_depth].sum()  # remove attributed cells from total
                 # units[:, mask_sim] = 0  # remove simulated units 
@@ -4987,14 +5110,24 @@ class Arch_table():
         
         elif method == "MDS_errors":  # a discuter avec Philippe
             
+            # get data
+            if typ == "units":
+                arr = self.get_units_domains_realizations()
+                nreal = arr.shape[0]
+
+            elif typ == "facies":
+                arr = self.get_facies()
+                nreal = arr.shape[0] + arr.shape[1]
+                arr = arr.reshape(nreal, nz, ny, nx)
+
             from sklearn.manifold import MDS
             
             # matrix of distances between simulations
-            M = np.zeros([self.nreal_units, self.nreal_units])
-            for ireal in range(len(self.Geol.units_domains)):
+            M = np.zeros([nreal, nreal])
+            for ireal in range(nreal):
                 for oreal in range(ireal):
-                    s1 = self.Geol.units_domains[ireal]
-                    s2 = self.Geol.units_domains[oreal]
+                    s1 = arr[ireal]
+                    s2 = arr[oreal]
 
                     M[ireal, oreal] = np.sum(s1 != s2)
                     M[oreal, ireal] = M[ireal, oreal]
@@ -5030,7 +5163,7 @@ class Arch_table():
             l = np.array(l)
             res = np.bincount(l)
             idx = np.where(np.bincount(l) == max(np.bincount(l)))[0][0]
-            best_model = self.Geol.units_domains[idx]
+            best_model = arr[idx]
             
             return best_model
 

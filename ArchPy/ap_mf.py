@@ -1003,7 +1003,7 @@ class archpy2modflow:
                         else:
                             for isublay in range(self.lay_sep[ilay]):
                                 if ilay == 0 and isublay == 0:
-                                    s1 = np.flip(gwf.dis.top.array, axis=1)
+                                    s1 = np.flipud(gwf.dis.top.array)
                                     s2 = botm[isublay]
                                 else:
                                     s1 = botm[sum(self.lay_sep[0:ilay])+isublay-1]
@@ -1019,7 +1019,7 @@ class archpy2modflow:
                     ilay = 0
                     for ilay in range(nlay):
                         if ilay == 0:
-                            s1 = np.flip(gwf.dis.top.array, axis=1)
+                            s1 = np.flipud(gwf.dis.top.array)
                             s2 = botm[ilay]
                         else:
                             s1 = botm[ilay-1]

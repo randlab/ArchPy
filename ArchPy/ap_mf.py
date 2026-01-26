@@ -696,6 +696,17 @@ class archpy2modflow:
                     nrow = botm.shape[1]
                     ncol = botm.shape[2]
 
+                    if surface_layer:
+                        nlay += 1
+                        # add current top as first layer of botm
+                        botm = np.concatenate((np.reshape(top, (1, nrow, ncol)), botm), axis=0)
+                        # increase top by surface_thickness
+                        top = top + surface_thickness
+                        # update idomain by assigning 1 to all cells in new surface layer, except those outside model domain
+                        idomain_surface = (~np.all(idomain == 0, axis=0)).astype(int)
+                        idomain = np.concatenate((np.reshape(idomain_surface, (1, nrow, ncol)), idomain), axis=0)
+                        self.surface_layer = True
+
                 elif grid_mode == "new_resolution":
                     assert factor_x is not None, "factor_x must be provided"
                     assert factor_y is not None, "factor_y must be provided"

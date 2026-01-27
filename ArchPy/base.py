@@ -1194,7 +1194,7 @@ class Arch_table():
             assert 0, ('Error: Grid was not added')
         return self.mask
 
-    def get_facies(self, iu=0, ifa=0, all_data=True):
+    def get_facies(self, iu=0, ifa=0, all_data=True, fill="ID"):
 
         """
         Return a numpy array of 1 or all facies realization(s).
@@ -1207,6 +1207,9 @@ class Arch_table():
             facies index
         all_data: bool
             return all the units simulations
+        fill: string,
+            Can be either "ID" or "colors"
+            how to fill the facies domain array. With facies IDs or color
 
         Returns
         -------
@@ -1243,6 +1246,17 @@ class Arch_table():
                     fd=pickle.load(f)
             else:
                 fd=self.Geol.facies_domains[iu, ifa].copy()
+
+        if fill == "colors":
+            arr_plot = np.ones([*fd.shape, 4])
+            for iv in np.unique(fd):
+                
+                if iv != 0:
+                    arr_plot[fd == iv, :] = matplotlib.colors.to_rgba(self.get_facies_obj(ID = iv, type="ID").c)
+                else:
+                    arr_plot[fd == iv, :] = (1, 1, 1, 1)
+
+            fd = arr_plot
 
         return fd
 
@@ -8503,8 +8517,7 @@ class Unit():
 
                                 self.list_f_covmodel=[] #reset list
 
-                                ifa=0
-                                for fa in list_obj: #loop over facies
+                                for ifa, fa in enumerate(list_obj): #loop over facies
                                     
                                     cm_copy=copy.deepcopy(cm) #make a copy
 
@@ -8529,7 +8542,6 @@ class Unit():
                                                 e[1]["w"] *= 1
 
                                     self.list_f_covmodel.append(cm_copy)
-                                    ifa += 1
 
                             if len(hd) > 0:
                                 hd=np.array(hd)

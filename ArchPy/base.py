@@ -2124,14 +2124,32 @@ class Arch_table():
             #import rasterio
             import rasterio
 
+            #======================
+            DEM = rasterio.open(top)
+            transform = DEM.transform
+
+            width = DEM.width
+            height = DEM.height
+
+            # grid cell centers before transformation (+0.5 for center of cell)
+            x_indices = np.arange(width) + 0.5
+            y_indices = np.arange(height) + 0.5
+
+            #create mesh before transform
+            xmesh, ymesh=np.meshgrid(x_indices, y_indices)
+
+            #transform mesh
+            rxc, ryc = transform*(xmesh, ymesh)
+            #======================
+
             #open raster and extract cell centers
-            DEM=rasterio.open(top)
-            x0, y0, x1, y1=DEM.bounds
-            rxlen=DEM.read().shape[2]
-            rylen=DEM.read().shape[1]
-            x=np.linspace(x0, x1, rxlen)
-            y=np.linspace(y1, y0, rylen)
-            rxc, ryc=np.meshgrid(x, y)
+            # DEM=rasterio.open(top)
+            # x0, y0, x1, y1=DEM.bounds
+            # rxlen=DEM.read().shape[2]
+            # rylen=DEM.read().shape[1]
+            # x=np.linspace(x0, x1, rxlen)
+            # y=np.linspace(y1, y0, rylen)
+            # rxc, ryc=np.meshgrid(x, y)
 
             #take grid cell centers
             xc=self.xcellcenters
@@ -2157,20 +2175,39 @@ class Arch_table():
             if self.verbose:
                 print("Bot is a raster - resampling activated")
 
-            rast=rasterio.open(bot)
-            x0, y0, x1, y1=rast.bounds
-            rxlen=rast.read().shape[2]
-            rylen=rast.read().shape[1]
-            x=np.linspace(x0, x1, rxlen)
-            y=np.linspace(y1, y0, rylen)
-            rxc, ryc=np.meshgrid(x, y)
+            #======================
+            rast = rasterio.open(bot)
+            transform = rast.transform
+
+            width = rast.width
+            height = rast.height
+
+            # grid cell centers before transformation (+0.5 for center of cell)
+            x_indices = np.arange(width) + 0.5
+            y_indices = np.arange(height) + 0.5
+
+            #create mesh before transform
+            xmesh, ymesh=np.meshgrid(x_indices, y_indices)
+
+            #transform mesh
+            rxc, ryc = transform*(xmesh, ymesh)
+            #======================
+
+            # rast=rasterio.open(bot)
+            # x0, y0, x1, y1=rast.bounds
+            # rxlen=rast.read().shape[2]
+            # rylen=rast.read().shape[1]
+            # x=np.linspace(x0, x1, rxlen)
+            # y=np.linspace(y1, y0, rylen)
+            # rxc, ryc=np.meshgrid(x, y)
 
             #take grid cell centers
             xc=self.xcellcenters
             yc=self.ycellcenters
-            
+           
             bot=resample_to_grid(xc, yc, rxc, ryc, rast.read()[0], method=rspl_method)  # resampling
             # bot[np.isnan(bot)] = -9999
+
 
         #define top/bot
         if (top is None) and (mask is None):

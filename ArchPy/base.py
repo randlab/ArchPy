@@ -245,7 +245,7 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, mask2D=None, seed=123456789, 
 
     ##kwargs
     kwargs_def_grf={"nit": 50, "nmax": 20, "krig_type": "simple_kriging",  # number of gibbs sampler iterations, number of neigbors, krig type
-                      "grf_method": "sgs", "mean": None,"unco": False}  # and grf method, mean and unconditional flag
+                      "grf_method": "sgs","unco": False}  # and grf method, mean and unconditional flag
 
     kwargs_def_MPS={"unco": False,
                       "xr": 1, "yr": 1, "zr": 1, "maxscan": 0.25, "neig": 24, "thresh": 0.05, "xloc": False, "yloc": False, "zloc": False,
@@ -323,7 +323,7 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, mask2D=None, seed=123456789, 
         data=np.concatenate([xp.reshape(-1, 1), yp.reshape(-1, 1)], axis=1)
 
     ## dealt with inequality data in the right format
-    elif method.lower() in ["grf_ineq", "mps"]:
+    elif method.lower() in ["mps"]:
 
         # equality data
         x_eq=np.array([xp, yp]).T
@@ -346,6 +346,27 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, mask2D=None, seed=123456789, 
             xIneq_max=ineq_data[:,: 2][mask]
             vIneq_max=ineq_data[:, 4][mask]
 
+    elif method.lower() == "grf_ineq":
+
+        # equality data
+        x_eq=np.array([xp, yp]).T
+        v_eq=zp
+
+        if len(litho.ineq) == 0:
+            xIneq = None
+            vIneq_min = None
+            vIneq_max = None
+
+        elif len(litho.ineq) > 0:
+            #ineq
+            ineq_data = np.array(litho.ineq)
+            mask_min = (ineq_data[:, 3] == ineq_data[:, 3])
+            mask_max = (ineq_data[:, 4] == ineq_data[:, 4])
+            mask = mask_min | mask_max # inf boundary
+            xIneq = ineq_data[:,: 2][mask]
+            
+            vIneq_min = ineq_data[:, 3][mask]
+            vIneq_max = ineq_data[:, 4][mask]
 
     ### interpolations methods ###
     if method.lower() in ["linear", "cubic", "nearest"]: # spline methods
@@ -390,7 +411,7 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, mask2D=None, seed=123456789, 
                         s = di.func_inv(sim[0].flatten())
                         s=s.reshape(ny, nx)
                     elif kwargs["grf_method"] == "sgs":
-                        sim=gci.simulate2D(covmodel, [nx, ny], [sx, sy], [ox, oy], x=data, v=norm_zp, nreal=1, mean=0, var=1, verbose=verbose, nthreads=ncpu, seed=seed, mask=mask2D)
+                        sim=gci.simulate(covmodel, [nx, ny], [sx, sy], [ox, oy], x=data, v=norm_zp, nreal=1, mean=0, var=1, verbose=verbose, nproc=ncpu, seed=seed, mask=mask2D)
                         # s=NScore_Btrsf(sim["image"].val[0,0].flatten(), di)# back transform
                         s = di.func_inv(sim["image"].val[0,0].flatten())
                         s=s.reshape(ny, nx)
@@ -406,7 +427,7 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, mask2D=None, seed=123456789, 
                         sim=geone.grf.grf2D(covmodel, [nx, ny], [sx, sy], [ox, oy], x=data, v=zp, nreal=1, mean=mean, printInfo=False)
                         s=sim[0]
                     elif kwargs["grf_method"] == "sgs":
-                        sim=gci.simulate2D(covmodel, [nx, ny], [sx, sy], [ox, oy], x=data, v=zp, nreal=1, mean=mean, verbose=verbose, nthreads=ncpu, seed=seed, mask=mask2D)
+                        sim=gci.simulate(covmodel, [nx, ny], [sx, sy], [ox, oy], x=data, v=zp, nreal=1, mean=mean, verbose=verbose, nproc=ncpu, seed=seed, mask=mask2D)
                         s=sim["image"].val[0,0]
 
             else:  # unconditional
@@ -415,7 +436,7 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, mask2D=None, seed=123456789, 
                     sim=geone.grf.grf2D(covmodel, [nx, ny], [sx, sy], [ox, oy], nreal=1, mean=kwargs["mean"], printInfo=False)
                     s=sim[0]
                 elif kwargs["grf_method"] == "sgs":
-                        sim=gci.simulate2D(covmodel, [nx, ny], [sx, sy], [ox, oy], nreal=1, mean=kwargs["mean"], verbose=verbose, nthreads=ncpu, seed=seed, mask=mask2D)
+                        sim=gci.simulate(covmodel, [nx, ny], [sx, sy], [ox, oy], nreal=1, mean=kwargs["mean"], verbose=verbose, nproc=ncpu, seed=seed, mask=mask2D)
                         s=sim["image"].val[0,0]
 
         elif method.lower() == "grf_ineq":
@@ -456,19 +477,18 @@ def interp2D(litho, xg, yg, xu, verbose=0, ncpu=1, mask2D=None, seed=123456789, 
             if len(v_eq) == 0:
                 v_eq=None
                 x_eq=None
-            if len(vIneq_min) == 0:
-                vIneq_min=None
-                xIneq_min=None
-            if len(vIneq_max) == 0:
-                vIneq_max=None
-                xIneq_max=None
-            sim=gci.simulate2D(covmodel, (nx, ny), (sx, sy), (ox, oy), method=kwargs["krig_type"], mean=mean,
+            # if len(vIneq_min) == 0:
+            #     vIneq_min=None
+            #     xIneq_min=None
+            # if len(vIneq_max) == 0:
+            #     vIneq_max=None
+            #     xIneq_max=None
+            sim=gci.simulate(covmodel, (nx, ny), (sx, sy), (ox, oy), method=kwargs["krig_type"], mean=mean,
                                 x=x_eq, v=v_eq,
-                                xIneqMin=xIneq_min, vIneqMin=vIneq_min,
-                                xIneqMax=xIneq_max, vIneqMax=vIneq_max,
+                                x_ineq=xIneq, v_ineq_min=vIneq_min, v_ineq_max=vIneq_max,
                                 searchRadiusRelative=1, verbose=verbose,
-                                nGibbsSamplerPathMin=kwargs["nit"],nGibbsSamplerPathMax=2*kwargs["nit"],
-                                 seed=seed, nneighborMax=kwargs["nmax"], nthreads=ncpu, mask=mask2D)["image"].val[0, 0]
+                                nGibbsSamplerPath=kwargs["nit"],
+                                 seed=seed, nneighborMax=kwargs["nmax"], nproc=ncpu, mask=mask2D)["image"].val[0, 0]
 
             if litho.N_transfo:
                 # s=NScore_Btrsf(sim.flatten(), di)
@@ -4494,8 +4514,8 @@ class Arch_table():
 
                                     elif method == "sgs":
                                         covmodel=prop.covmodels[i] # covariance model used
-                                        sims = gci.simulate3D(covmodel, [nx,  ny,  nz],  [sx,  sy,  sz],  [x0,  y0,  z0],
-                                                             nreal=nreal, mean=m, mask=mask_facies, x=x, v=v, verbose=0, nthreads=self.ncpu, seed=self.seed + iu*10000 + ite*100 + ifa)["image"].val
+                                        sims = gci.simulate(covmodel, [nx,  ny,  nz],  [sx,  sy,  sz],  [x0,  y0,  z0],
+                                                             nreal=nreal, mean=m, mask=mask_facies, x=x, v=v, verbose=0, nproc=self.ncpu, seed=self.seed + iu*10000 + ite*100 + ifa)["image"].val
 
                                         sims=np.nan_to_num(sims) #remove nan
 
@@ -8588,10 +8608,10 @@ class Unit():
                                 facies=None
                                 
                             ## Simulation
-                            simus = gci.simulateIndicator3D(cat_values, self.list_f_covmodel, dimensions, spacing, origin,
+                            simus = gci.simulateIndicator(cat_values, self.list_f_covmodel, dimensions, spacing, origin,
                                                             nreal=nreal, method="simple_kriging", x=hd, v=facies, mask=mask,
                                                             searchRadiusRelative=kwargs["r"], nneighborMax=kwargs["neig"],
-                                                            probability=kwargs["probability"], verbose=verbose, nthreads = ArchTable.ncpu, seed=seed+iu)["image"].val
+                                                            probability=kwargs["probability"], verbose=verbose, nproc = ArchTable.ncpu, seed=seed+iu)["image"].val
 
                             ### rearrange data into a 2D array of the simulation grid size ###
                             for ireal in range(nreal):

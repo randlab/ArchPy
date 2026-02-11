@@ -18,7 +18,7 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     url = "https://github.com/randlab/ArchPy",
     install_requires=['matplotlib',
-                      'numpy>=1,<2',
+                      'numpy',
                       'scipy',
                       'scikit-learn',
                       'scikit-image',

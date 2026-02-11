@@ -1412,11 +1412,10 @@ class archpy2modflow:
                 # weaksinkoption="pass_through",
                 # weaksourceoption="pass_through",
                 referencetime=0.0,
-                stoptimeoption="extend",
+                # stoptimeoption="extend",
                 particlegroups=pg,
                 **kwargs,
                 )
-                
             
         else:
             if list_p_coords is not None:
@@ -1477,7 +1476,7 @@ class archpy2modflow:
                     # weaksinkoption=weaksinkoption,
                     # weaksourceoption=weaksourceoption,
                     referencetime=0.0,
-                    stoptimeoption="extend",
+                    # stoptimeoption="extend",
                     particlegroups=l,
                     **kwargs,
                 )

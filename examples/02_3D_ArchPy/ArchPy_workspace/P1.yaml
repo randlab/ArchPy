@@ -418,10 +418,10 @@ grid:
   - 0.15
   top: P1.top
 name: P1
-ncpu: -1
+ncpu: 8
 nreal_fa: 1
 nreal_prop: 2
-nreal_units: 10
+nreal_units: 1
 prop_computed: 1
 properties:
   K:
@@ -1047,5 +1047,5 @@ properties:
       - -10.0
 seed: 1000000
 surfaces_computed: 1
-verbose: 1
+verbose: 2
 ws: ArchPy_workspace

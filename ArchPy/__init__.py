@@ -11,5 +11,10 @@ from . import ap_mf
 from . import uppy
 from . import automatic_pile
 from . import parallel
+try:
+    from . import C_modules
+except:
+    pass
+
 
 __version__ = _version.__version__

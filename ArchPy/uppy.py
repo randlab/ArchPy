@@ -996,10 +996,11 @@ def upscale_cell_disv(grid_ref_xver, grid_ref_yver, grid_ref_layers, grid_ref_to
                 Kxx = simplified_renormalization_2D(field_cell, dx, dy, direction="x")
                 Kyy = simplified_renormalization_2D(field_cell, dx, dy, direction="y")
 
-            elif method == "simplified_renormalization":
-
-                Kxx = simplified_renorm2D(field_cell, dx[:, 0], dy[0], True)
-                Kyy = simplified_renorm2D(field_cell, dx[:, 0], dy[0], False)   
+            elif method == "simplified_renormalization_C":
+                dx = np.ones(field_cell.shape[1]) * sx_grid
+                dy = np.ones(field_cell.shape[0]) * sy_grid
+                Kxx = simplified_renorm2D(field_cell, dx, dy, True)
+                Kyy = simplified_renorm2D(field_cell, dx, dy, False)
 
             elif method == "arithmetic":
                 area = dx*dy
@@ -1080,11 +1081,16 @@ def upscale_cell_disv(grid_ref_xver, grid_ref_yver, grid_ref_layers, grid_ref_to
                 Kzz = simplified_renormalization(field_cell, dx, dy, dz, direction="z")
 
             elif method == "simplified_renormalization_C":
-
-                Kxx = simplified_renorm3D(field_cell, dx[:, :, 0], dy[:, 0], dz[0], axis="x")
-                Kyy = simplified_renorm3D(field_cell, dx[:, :, 0], dy[:, 0], dz[0], axis="y")
-                Kzz = simplified_renorm3D(field_cell, dx[:, :, 0], dy[:, 0], dz[0], axis="z")
-
+                dx = np.ones(field_cell.shape[2]) * sx_grid
+                dy = np.ones(field_cell.shape[1]) * sy_grid
+                dz = np.ones(field_cell.shape[0]) * sz_grid
+                # print(dx, dy, dz)
+                Kxx = simplified_renorm3D(field_cell, dx, dy, dz, axis=0)
+                Kyy = simplified_renorm3D(field_cell, dx, dy, dz, axis=1)
+                Kzz = simplified_renorm3D(field_cell, dx, dy, dz, axis=2)
+                if Kxx != Kxx:
+                    print(1)
+                    print(field_cell.shape, dz, dy, dx)
             elif method == "arithmetic":
                 volume = dx*dy*dz
                 Kxx = np.sum(field_cell*volume)/np.sum(volume)
@@ -1139,7 +1145,7 @@ def upscale_k_2D(field, dx=1, dy=1, ox=0, oy=0, method="simplified_renormalizati
         Not implemented yet.
     """
 
-    assert method in ["simplified_renormalization", "arithmetic", "harmonic", "geometric"], "method must be simplified_renormalization, arithmetic, harmonic or geometric"
+    assert method in ["simplified_renormalization", "simplified_renormalization_C", "arithmetic", "harmonic", "geometric"], "method must be simplified_renormalization, arithmetic, harmonic or geometric"
 
     if grid is None:
         assert field.shape[1] % factor_y == 0, "factor_x must be a divisor of the field size"
@@ -1171,16 +1177,16 @@ def upscale_k_2D(field, dx=1, dy=1, ox=0, oy=0, method="simplified_renormalizati
             new_field_kyy = np.zeros((field.shape[0]//factor_y, field.shape[1]//factor_x))
 
             # ensure that dx and dy are array of size (field.shape[1] and field.shape[0])
-            # if isinstance(dx, (int, float)):
-            #     dx = np.ones(field.shape[1]) * dx
+            if isinstance(dx, (int, float)):
+                dx = np.ones(field.shape[1]) * dx
             # elif isinstance(dx, np.ndarray):
             #     if len(dx.shape) > 1:
             #         raise ValueError("dx must be a 1D array")
             #     if dx.shape[0] != field.shape[1]:
             #         raise ValueError("dx must be of shape (field.shape[1])")
 
-            # if isinstance(dy, (int, float)):
-            #     dy = np.ones(field.shape[0]) * dy
+            if isinstance(dy, (int, float)):
+                dy = np.ones(field.shape[0]) * dy
             # elif isinstance(dy, np.ndarray):
             #     if len(dy.shape) > 1:
             #         raise ValueError("dy must be a 1D array")
@@ -1282,11 +1288,11 @@ def upscale_k(field, dx=1, dy=1, dz=1,
     field : np.ndarray
         3D isotropic hydraulic conductivity field
     dx : float or np.ndarray
-        Cell size of original field in the x direction. If you choose simplified_renormalization_C, dx must a 1D vector of size field.shape[2]
+        Cell size of original field in the x direction
     dy : float or np.ndarray
-        Cell size of original field in the y direction. If you choose simplified_renormalization_C, dy must a 1D vector of size field.shape[1]
+        Cell size of original field in the y direction
     dz : float or np.ndarray
-        Cell size of original field in the z direction. If you choose simplified_renormalization_C, dz must a 1D vector of size field.shape[0]
+        Cell size of original field in the z direction
     ox : float
         Origin of the field (lower left corner) in the x direction
     oy : float
@@ -1311,6 +1317,8 @@ def upscale_k(field, dx=1, dy=1, dz=1,
         Scheme for standard renormalization. Options are direct and center. Center is generally more accurate and faster. Default is center
     """
     import time 
+
+
     if grid is None:
         assert method in ["simplified_renormalization", "simplified_renormalization_C", "tensorial_renormalization", "standard_renormalization",
                            "arithmetic", "harmonic", "geometric"], "method must be simplified_renormalization, tensorial_renormalization, standard_renormalization, arithmetic, harmonic or geometric"
@@ -1321,38 +1329,19 @@ def upscale_k(field, dx=1, dy=1, dz=1,
 
         if method == "simplified_renormalization_C":
             
-            # try to import C module
-            # import ArchPy.C_modules
-            # from ArchPy.C_modules.simplified_renorm_C import simplified_renorm3D
+            # ensure dx, dy and dz are arrays
+            if isinstance(dx, (int, float)):
+                dx = np.ones(field.shape[2])*dx
+                
+            if isinstance(dy, (int, float)):
+                dy = np.ones(field.shape[1])*dy
+
+            if isinstance(dz, (int, float)):
+                dz = np.ones(field.shape[0])*dz
 
             new_field_kxx = np.zeros((field.shape[0]//factor_z, field.shape[1]//factor_y, field.shape[2]//factor_x))
             new_field_kyy = np.zeros((field.shape[0]//factor_z, field.shape[1]//factor_y, field.shape[2]//factor_x))
             new_field_kzz = np.zeros((field.shape[0]//factor_z, field.shape[1]//factor_y, field.shape[2]//factor_x))
-
-            # ensure dx, dy and dz are arrays
-            # if isinstance(dx, (int, float)):
-            #     dx = np.ones(field.shape[2])*dx
-            # elif isinstance(dx, np.ndarray):
-            #     if len(dx.shape) > 2:
-            #         raise ValueError("dx must be a 1D vector")
-                
-            #     assert dx.shape[0] == field.shape[2], "dx must be a 1D vector of size field.shape[2]"
-                
-            # if isinstance(dy, (int, float)):
-            #     dy = np.ones(field.shape[1])*dy
-            # elif isinstance(dy, np.ndarray):
-            #     if len(dy.shape) > 2:
-            #         raise ValueError("dy must be a 1D vector")
-
-            #     assert dy.shape[0] == field.shape[1], "dy must be a 1D vector of size field.shape[1]"
-    
-            # if isinstance(dz, (int, float)):
-            #     dz = np.ones(field.shape[0])*dz
-            # elif isinstance(dz, np.ndarray):
-            #     if len(dz.shape) > 2:
-            #         raise ValueError("dz must be a 1D vector")
-
-            # assert dz.shape[0] == field.shape[0], "dz must be a 1D vector of size field.shape[0]"
 
             for i in range(0, field.shape[0], factor_z):
                 for j in range(0, field.shape[1], factor_y):
@@ -1363,9 +1352,9 @@ def upscale_k(field, dx=1, dy=1, dz=1,
                         selected_area = fill_nan_values_with_gmean(selected_area)
 
                         # C functions
-                        Kxx = simplified_renorm3D(selected_area, dx[:, :, 0], dy[:, 0], dz[:, 0], axis=0)
-                        Kyy = simplified_renorm3D(selected_area, dx[:, :, 0], dy[:, 0], dz[:, 0], axis=1)
-                        Kzz = simplified_renorm3D(selected_area, dx[:, :, 0], dy[:, 0], dz[:, 0], axis=2)
+                        Kxx = simplified_renorm3D(selected_area, dx, dy, dz, axis=0)
+                        Kyy = simplified_renorm3D(selected_area, dx, dy, dz, axis=1)
+                        Kzz = simplified_renorm3D(selected_area, dx, dy, dz, axis=2)
 
                         new_field_kxx[i//factor_z, j//factor_y, k//factor_x] = Kxx
                         new_field_kyy[i//factor_z, j//factor_y, k//factor_x] = Kyy
@@ -1438,7 +1427,7 @@ def upscale_k(field, dx=1, dy=1, dz=1,
             return new_field, None, None
 
     else:  # disv grid #
-        assert method in ["simplified_renormalization", "arithmetic", "harmonic", "geometric"], "method must be simplified_renormalization, arithmetic, harmonic or geometric"
+        assert method in ["simplified_renormalization", "simplified_renormalization_C", "arithmetic", "harmonic", "geometric"], "method must be simplified_renormalization, arithmetic, harmonic or geometric"
 
         import flopy
         # grid_ref

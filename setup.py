@@ -25,6 +25,9 @@ setuptools.setup(
                       'geone',
                       'pandas',
                       'shapely',
+                      'ipywidgets',
+                      'numba',
+                      'flopy',
                       ],  
     extras_require={
         "all": ['pyvista',
@@ -32,13 +35,10 @@ setuptools.setup(
                 'trame-vuetify',
                 'trame-vtk',
                 'notebook',
-                'ipywidgets',
                 'ipympl',
                 'pyyaml',
                 'rasterio',
                 'geopandas',
-                'flopy',
-                'numba',
                 'pyshp',
                 'seaborn']
     },

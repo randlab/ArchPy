@@ -683,26 +683,26 @@ License:                     GNU GENERAL PUBLIC LICENSE
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: matplotlib
-Requires-Dist: numpy
+Requires-Dist: numpy<2
 Requires-Dist: scipy
 Requires-Dist: scikit-learn
 Requires-Dist: scikit-image
 Requires-Dist: geone
 Requires-Dist: pandas
 Requires-Dist: shapely
+Requires-Dist: ipywidgets
+Requires-Dist: numba
+Requires-Dist: flopy
 Provides-Extra: all
-Requires-Dist: pyvista; extra == "all"
+Requires-Dist: pyvista<0.47; extra == "all"
 Requires-Dist: trame; extra == "all"
 Requires-Dist: trame-vuetify; extra == "all"
 Requires-Dist: trame-vtk; extra == "all"
 Requires-Dist: notebook; extra == "all"
-Requires-Dist: ipywidgets; extra == "all"
 Requires-Dist: ipympl; extra == "all"
 Requires-Dist: pyyaml; extra == "all"
 Requires-Dist: rasterio; extra == "all"
 Requires-Dist: geopandas; extra == "all"
-Requires-Dist: flopy; extra == "all"
-Requires-Dist: numba; extra == "all"
 Requires-Dist: pyshp; extra == "all"
 Requires-Dist: seaborn; extra == "all"
 Dynamic: author

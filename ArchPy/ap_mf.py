@@ -1368,12 +1368,13 @@ class archpy2modflow:
         model_name = gwf.name
         mpnamf = f"{model_name}_mp_forward"
         
-        nodes = get_nodes(locs, gwf.modelgrid.ncol, gwf.modelgrid.nrow)
-        if len(nodes) == 0:
-            print("No particles to track")
-            return
-        elif len(nodes) == 1:
-            nodes = nodes[0]
+        if locs is not None:
+            nodes = get_nodes(locs, gwf.modelgrid.ncol, gwf.modelgrid.nrow)
+            if len(nodes) == 0:
+                print("No particles to track")
+                return
+            elif len(nodes) == 1:
+                nodes = nodes[0]
 
         sd = fp.modpath.mp7particledata.CellDataType(
                 columncelldivisions=columncelldivisions,
@@ -1429,7 +1430,12 @@ class archpy2modflow:
                 list_cellids = []
                 for pi in list_p_coords:
                     p1 = Point(pi)
-                    list_cellids.append(ix.intersect(p1).cellids[0])
+                    res = ix.intersect(p1, handle_z=True)
+                    cid = (res.data.layer[0], res.data.row[0], res.data.col[0])
+                    if -1 in cid:
+                        print(f"Warning: particle at location {pi} not in the grid")
+                        continue
+                    list_cellids.append(cid)
 
                 cellids = np.array([cids for cids in list_cellids])
 
@@ -1437,7 +1443,7 @@ class archpy2modflow:
 
                 # cellids = ix.intersect(multp).cellids
                 # cellids = np.array([np.array(cids) for cids in cellids])
-                cellids[:, 0] += 1
+                # cellids[:, 0] += 1
 
                 l = []
                 for i in range(len(cellids)):
@@ -1558,17 +1564,23 @@ class archpy2modflow:
                 list_cellids = []
                 for pi in list_p_coords:
                     p1 = Point(pi)
-                    result = ix.intersect(p1)
-                    if len(result) > 0:
-                        list_cellids.append(result.cellids[0])
-                    else:
-                        p1 = Point((pi[0], pi[1]))
-                        result = ix.intersect(p1)
-                        list_cellids.append((-1, result.cellids[0][0], result.cellids[0][1]))
+                    # result = ix.intersect(p1)
+                    res = ix.intersect(p1, handle_z=True)
+                    cid = (res.data.layer[0], res.data.row[0], res.data.col[0])
+                    if -1 in cid:
+                        print(f"Warning: particle at location {pi} not in the grid")
+                        continue
+                    list_cellids.append(cid)
+                    # if len(result) > 0:
+                    #     list_cellids.append(result.cellids[0])
+                    # else:
+                    #     p1 = Point((pi[0], pi[1]))
+                    #     result = ix.intersect(p1)
+                    #     list_cellids.append((-1, result.cellids[0][0], result.cellids[0][1]))
 
                 cellids = np.array([cids for cids in list_cellids])
 
-                cellids[:, 0] += 1
+                # cellids[:, 0] += 1
 
             # ensure that particles are in active cells, if not move them to the nearest vertical active cell
             idomain = dis.idomain.array
@@ -1732,9 +1744,11 @@ class archpy2modflow:
         return e
 
     def mp_get_facies_path_particle(self, i_particle, fac_time = 1/86400, iu = 0, ifa = 0):
+
         """
         Function to retrieve the facies sequence along a pathline
         """
+
         grid_mode = self.grid_mode
         p = self.mp_get_pathlines_object()
         pathline = p.get_data(i_particle)
@@ -1754,7 +1768,8 @@ class archpy2modflow:
         # store everything in a new dataframe
         df_all = pd.DataFrame(columns=["dt", "time", "distance", "cum_distance", "x", "y", "z"])
         df_all["dt"] = dt
-        df_all["time"] = time_ordered[1:]
+        df_all["time"] = time_ordered[:-1]
+        # df_all["time"] = pd.concat((pd.Series(0), df["time"].iloc[:-1])).reset_index(drop="index")  # issue with time in modpath
         df_all["distance"] = distances
         df_all["cum_distance"] = df_all["distance"].cumsum()
         df_all["x"] = (df["x"].values[1:] + df["x"].values[:-1]) / 2

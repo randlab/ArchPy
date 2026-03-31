@@ -326,7 +326,7 @@ grid:
   - 0.15
   top: Example_rotation.top
 name: Example_rotation
-ncpu: -1
+ncpu: 7
 nreal_fa: 0
 nreal_prop: 0
 nreal_units: 2

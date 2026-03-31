@@ -323,7 +323,7 @@ grid:
   - 0.15
   top: Exemple_3.top
 name: Exemple_3
-ncpu: -1
+ncpu: 7
 nreal_fa: 1
 nreal_prop: 5
 nreal_units: 2

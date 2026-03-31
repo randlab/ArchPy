@@ -18,7 +18,7 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     url = "https://github.com/randlab/ArchPy",
     install_requires=['matplotlib',
-                      'numpy',
+                      'numpy<2',
                       'scipy',
                       'scikit-learn',
                       'scikit-image',
@@ -30,7 +30,7 @@ setuptools.setup(
                       'flopy',
                       ],  
     extras_require={
-        "all": ['pyvista',
+        "all": ['pyvista < 0.47',
                 'trame',
                 'trame-vuetify',
                 'trame-vtk',
@@ -45,5 +45,11 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     include_package_data=True,
     #data_files=[("lib\\site-packages\\ArchPy\\libraries", ["ArchPy\\libraries\\cov_facies.dll"])],
+    data_files=[("lib\\site-packages\\ArchPy\\C_modules", ["ArchPy\\C_modules\\simplified_renorm_C.cp39-win_amd64.pyd",
+                                                           "ArchPy\\C_modules\\simplified_renorm_C.cp310-win_amd64.pyd",
+                                                           "ArchPy\\C_modules\\simplified_renorm_C.cp311-win_amd64.pyd",
+                                                           "ArchPy\\C_modules\\simplified_renorm_C.cp312-win_amd64.pyd",
+                                                           "ArchPy\\C_modules\\simplified_renorm_C.cp313-win_amd64.pyd",
+                                                           ])],
     license=open('LICENSE', encoding='utf-8').read()
 )

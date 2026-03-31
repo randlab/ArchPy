@@ -51,6 +51,7 @@ Notebooks
    Control unit thickness <notebooks/3D_ArchPy_thickness_controlled>
    Existing Surfaces <notebooks/3D_ArchPy_use_existing_surfaces>
    Non-stationary <notebooks/3D_ArchPy_non_stationary>
+   Draw your own area ! <notebooks/simple_selection>
 
 .. nbgallery::
    :caption: Coupling

@@ -35,7 +35,6 @@ flopy==3.10.0
 fonttools==4.62.1
 fqdn==1.5.1
 frozenlist==1.8.0
-Geoarchpy @ file:///M:/GitHub/ArchPy
 geone==1.2.18
 geopandas==1.1.3
 h11==0.16.0

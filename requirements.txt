@@ -120,7 +120,6 @@ python-json-logger==4.1.0
 pytz==2026.1.post1
 pyvista==0.46.5
 pywin32-ctypes==0.2.3
-pywinpty==3.0.3
 PyYAML==6.0.3
 pyzmq==27.1.0
 rasterio==1.4.4

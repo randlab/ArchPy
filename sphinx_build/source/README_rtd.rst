@@ -51,7 +51,7 @@ ArchPy has been tested with python 3.11
 
 ArchPy requires the following packages:
 
-   - `Geone <https://github.com/randlab/geone>`_
+   - `Geone <https://github.com/randlab/geone>`_  (tested with 1.2.18)
    - matplotlib (tested with 3.10.8)
    - numpy (tested with 1.26.4)
    - scipy (tested with 1.17.1)

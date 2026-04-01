@@ -1,26 +1,23 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Introduction &#8212; ArchPy 1.0.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=0.7.0-1" />
-    <link rel="stylesheet" type="text/css" href="_static/twemoji.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
+    <title>Introduction &#8212; ArchPy 1.2.12 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="_static/twemoji.css?v=2199c511" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
-    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
-    <script src="_static/twemoji.js"></script>
+    <script src="_static/documentation_options.js?v=817200f7"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="https://unpkg.com/twemoji@latest/dist/twemoji.min.js"></script>
+    <script src="_static/twemoji.js?v=a4381b3f"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <script src="_static/js/theme.js"></script>
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -40,7 +37,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">ArchPy 1.0.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">ArchPy 1.2.12 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -112,7 +109,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -120,14 +117,14 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a></li>
@@ -145,7 +142,7 @@
           <div class="body" role="main">
             
   <section id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h1>
+<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h1>
 <p><cite>ArchPy</cite> package is a tool to create, manipulate and vizualize 3D geological and petro-physical models of the subsurface.
 It relies on a hierarchical approach to generate these models at different spatial scales.
 The input data consists of a set of borehole data and a stratigraphic pile.
@@ -156,21 +153,22 @@ such as the relations between the geological features or the modelling parameter
 <div><ul class="simple">
 <li><p>Various interpolation methods (GRF, Kriging, Spline, etc.)</p></li>
 <li><p>Various simulation methods (MPS, SIS, TPGs, etc.)</p></li>
+<li><p>Coupling with groundwater flow (MODFLOW) using the module archpy2modflow</p></li>
 <li><p>Integration of hierarchy in the modelling process at different spatial scales</p></li>
 <li><p>Input/Output capabilities to read and write borehole data, stratigraphic pile and models</p></li>
 <li><p>Automatic inference of conditioning point</p></li>
-<li><p>Automatic inference of surface parameters</p></li>
+<li><p>Automatic and manual interface for inference of surface parameters</p></li>
 <li><p>Can handle raster and shapefile data</p></li>
-<li><p>Can handle 3D geological map</p></li>
+<li><p>Can handle geological maps</p></li>
 <li><p>Cross-validation capabilities</p></li>
 <li><p>and many more…</p></li>
 </ul>
 </div></blockquote>
 <p><cite>ArchPy</cite> is a pure  Swiss product (🫕), produced by the <a class="reference external" href="https://www.unine.ch/philippe.renard/de/home.html">Randlab</a> at University of Neuchâtel.</p>
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h2>
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
 <p><cite>ArchPy</cite> is available on <a class="reference external" href="https://pypi.org/project/geoarchpy">Pypi</a> and can be installed with pip:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">geoarchpy</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">geoarchpy</span><span class="p">[</span><span class="nb">all</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>OR</p>
@@ -186,55 +184,39 @@ such as the relations between the geological features or the modelling parameter
 <p>and then import <cite>ArchPy</cite>.</p>
 </section>
 <section id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">¶</a></h2>
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">¶</a></h2>
+<p>ArchPy has been tested with python 3.11</p>
 <p>ArchPy requires the following packages:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p><a class="reference external" href="https://github.com/randlab/geone">Geone</a></p></li>
-<li><p>matplotlib</p></li>
-<li><p>numpy</p></li>
-<li><p>SciPy</p></li>
-<li><p>sklearn</p></li>
-<li><p>pandas</p></li>
-<li><p>shapely &lt; 2.0</p></li>
-<li><p>scikit-learn</p></li>
+<li><p><a class="reference external" href="https://github.com/randlab/geone">Geone</a>  (tested with 1.2.18)</p></li>
+<li><p>matplotlib (tested with 3.10.8)</p></li>
+<li><p>numpy (tested with 1.26.4)</p></li>
+<li><p>scipy (tested with 1.17.1)</p></li>
+<li><p>sklearn (tested with 1.8.0)</p></li>
+<li><p>pandas (tested with 2.3.3)</p></li>
+<li><p>shapely (tested with 2.1.2)</p></li>
 </ul>
 </div></blockquote>
 <p>The following packages are optional but are required for some functionalities:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>PyVista (for 3D vizualisation)</p></li>
-<li><p>pyyaml (for export uses)</p></li>
-<li><p>Rasterio (to use rasters)</p></li>
-<li><p>Geopandas (to use shapefile)</p></li>
+<li><p>pyvista (tested with 0.46.5)</p></li>
+<li><p>yaml (tested with 6.0.3)</p></li>
+<li><p>rasterio (tested with 1.4.4)</p></li>
+<li><p>geopandas (tested with 1.1.3)</p></li>
+<li><p>ipywidgets (tested with 8.1.8)</p></li>
+<li><p>flopy (tested with 3.10.0)</p></li>
 </ul>
-</div></blockquote>
-</section>
-<section id="notebook-examples">
-<h2>Notebook examples<a class="headerlink" href="#notebook-examples" title="Permalink to this heading">¶</a></h2>
-<blockquote>
-<div><p>There is some example notebooks :</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>01_basic : a folder where simple and basics ArchPy functionnalities are described</p></li>
-<li><p>02_3D_ArchPy : a complete 3D ArchPy model example</p></li>
-<li><p>03_Article_example : a synthetical example shown in ArchPy article</p></li>
-<li><p>04_hierarchies : an example with many hierarchical units to test ArchPy capabilities</p></li>
-<li><p>05_mps_surfaces : an example how to use MPS to simulate the units surfaces</p></li>
-<li><p>06_cross_validation : a notebook that present how to perform a cross-validation directly with ArchPy</p></li>
-<li><p>07_geological_map : this notebook presents how to integrate and use a geological in an ArchPy model</p></li>
-<li><p>08_inference : little guide how to use archpy inference tools to estimate surface parameters (no facies parameters for now)</p></li>
-<li><p>09_interface : little example of an interface to call an preexisting archpy model.</p></li>
-</ul>
-</div></blockquote>
 </div></blockquote>
 </section>
 <section id="members-of-the-project">
-<h2>Members of the project<a class="headerlink" href="#members-of-the-project" title="Permalink to this heading">¶</a></h2>
+<h2>Members of the project<a class="headerlink" href="#members-of-the-project" title="Link to this heading">¶</a></h2>
 <p>ArchPy is developped, tested and supported by a group of people from the Randlab. These include:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Ludovic Schorpp</p></li>
+<li><p>Nina Egli</p></li>
 <li><p>Alexis Neven</p></li>
 <li><p>Julien Straubhaar</p></li>
 <li><p>Philippe Renard</p></li>
@@ -242,15 +224,21 @@ such as the relations between the geological features or the modelling parameter
 </div></blockquote>
 </section>
 <section id="how-to-cite">
-<h2>How to cite<a class="headerlink" href="#how-to-cite" title="Permalink to this heading">¶</a></h2>
-<blockquote>
-<div><p>A paper was published on the <cite>ArchPy</cite> concept and its different capabilities.
+<h2>How to cite<a class="headerlink" href="#how-to-cite" title="Link to this heading">¶</a></h2>
+<p>A paper was published on the <cite>ArchPy</cite> concept and its different capabilities.
 The paper was written with the version 0.1 of <cite>ArchPy</cite>.
 It is available with the following <a class="reference external" href="https://www.frontiersin.org/articles/10.3389/feart.2022.884075/">Link</a>.</p>
-</div></blockquote>
+</section>
+<section id="list-of-references-using-archpy">
+<h2>List of references using ArchPy<a class="headerlink" href="#list-of-references-using-archpy" title="Link to this heading">¶</a></h2>
+<p>Schorpp, L., Egli, N., Straubhaar, J., &amp; Renard, P. (2025). ArchPy and MODFLOW: Toward a General Integration of Heterogeneity into Groundwater Models. Groundwater, 63(6), 902-916. [link](<a class="reference external" href="https://doi.org/10.1111/gwat.70028">https://doi.org/10.1111/gwat.70028</a>)</p>
+<p>Schorpp, L., Straubhaar, J., &amp; Renard, P. (2024). From lithological descriptions to geological models: an example from the Upper Aare Valley. Frontiers in Applied Mathematics and Statistics, 10, 1441596 [link](<a class="reference external" href="https://doi.org/10.3389/fams.2024.1441596">https://doi.org/10.3389/fams.2024.1441596</a>).</p>
+<p>Neven, A., &amp; Renard, P. (2023). A novel methodology for the stochastic integration of geophysical and hydrogeological data in geologically consistent models. Water Resources Research, 59(7). [link](<a class="reference external" href="https://doi.org/10.1029/2023WR034992">https://doi.org/10.1029/2023WR034992</a>)</p>
+<p>Neven, A., Schorpp, L., &amp; Renard, P. (2022). Stochastic multi-fidelity joint hydrogeophysical inversion of consistent geological models. Frontiers in Water, 4, 989440. [link](<a class="reference external" href="https://doi.org/10.3389/frwa.2022.989440">https://doi.org/10.3389/frwa.2022.989440</a>)</p>
+<p>Schorpp, L., Straubhaar, J., &amp; Renard, P. (2022). Automated hierarchical 3D modeling of quaternary aquifers: the ArchPy approach. Frontiers in Earth Science, 10, 884075. [link](<a class="reference external" href="https://doi.org/10.3389/feart.2022.884075">https://doi.org/10.3389/feart.2022.884075</a>)</p>
 </section>
 <section id="contact">
-<h2>Contact<a class="headerlink" href="#contact" title="Permalink to this heading">¶</a></h2>
+<h2>Contact<a class="headerlink" href="#contact" title="Link to this heading">¶</a></h2>
 <blockquote>
 <div><p>For any questions regarding <cite>ArchPy</cite>, please feel free to contact me at &lt;<a class="reference external" href="mailto:ludovic&#46;schorpp&#37;&#52;&#48;unine&#46;ch">ludovic<span>&#46;</span>schorpp<span>&#64;</span>unine<span>&#46;</span>ch</a>&gt;</p>
 </div></blockquote>
@@ -264,19 +252,19 @@ It is available with the following <a class="reference external" href="https://w
       </div>
     
         <div id="show_right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents<span></a></p>
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
         </div>
 
         <div id="right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:<span></a></p>
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Introduction</a><ul>
 <li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#requirements">Requirements</a></li>
-<li><a class="reference internal" href="#notebook-examples">Notebook examples</a></li>
 <li><a class="reference internal" href="#members-of-the-project">Members of the project</a></li>
 <li><a class="reference internal" href="#how-to-cite">How to cite</a></li>
+<li><a class="reference internal" href="#list-of-references-using-archpy">List of references using ArchPy</a></li>
 <li><a class="reference internal" href="#contact">Contact</a></li>
 </ul>
 </li>
@@ -307,8 +295,8 @@ It is available with the following <a class="reference external" href="https://w
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, University of Neuchâtel.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    &#169; Copyright 2026, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

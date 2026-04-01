@@ -1,27 +1,24 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorials &#8212; ArchPy 1.0.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=0.7.0-1" />
-    <link rel="stylesheet" type="text/css" href="_static/twemoji.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="_static/nbsphinx-gallery.css" />
+    <title>Tutorials &#8212; ArchPy 1.2.12 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="_static/twemoji.css?v=2199c511" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="_static/nbsphinx-gallery.css?v=26227f6e" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
-    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
-    <script src="_static/twemoji.js"></script>
+    <script src="_static/documentation_options.js?v=817200f7"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="https://unpkg.com/twemoji@latest/dist/twemoji.min.js"></script>
+    <script src="_static/twemoji.js?v=a4381b3f"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <script src="_static/js/theme.js"></script>
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -41,7 +38,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">ArchPy 1.0.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">ArchPy 1.2.12 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -113,7 +110,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -121,14 +118,14 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="README_rtd.html">Introduction</a></li>
@@ -138,12 +135,24 @@
 <li class="toctree-l2"><a class="reference internal" href="notebooks/3_filling_and_saving.html">Tutorial 3: filling methods and saving a project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebooks/4_load_project.html">Tutorial 4: load ArchPy project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebooks/1_many_hierarchical_units.html">Hierarchy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="notebooks/3D_ArchPy_example.html">3D model example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/3D_ArchPy_example.html">An example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebooks/mps_surfaces.html">Surfaces with MPS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebooks/3D_ArchPy_geological_map.html">Geological map</a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebooks/Article_example.html">Article ArchPy exemple</a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebooks/x_valid_exemple1.html">Cross-validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="notebooks/inference_surfaces.html">Surface parameters inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/example.html">Rotation of a grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/3D_ArchPy_thickness_controlled.html">Control unit thickness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/3D_ArchPy_use_existing_surfaces.html">Existing Surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/3D_ArchPy_non_stationary.html">Non-stationary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/simple_selection.html">Draw your own area !</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/modflow_coupling.html">Modflow/Modpath basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/modflow_coupling_unstructured_grid.html">ArchPy2Modflow: Energy model with unstructured grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/modflow_energy_model.html">ArchPy2Modflow: Energy Transport with Modflow 6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/transport_simple_example.html">modflow_transport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/upscaling_3D_fields.html">Upscaling using Renormalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/unstructured_grids.html">Upscaling unstructured grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/ap2_mf_paper.html">ArchPy2Modflow: paper examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">List of modules</a></li>
@@ -159,9 +168,9 @@
           <div class="body" role="main">
             
   <section id="tutorials">
-<h1>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this heading">¶</a></h1>
+<h1>Tutorials<a class="headerlink" href="#tutorials" title="Link to this heading">¶</a></h1>
 <section id="theoretical-background">
-<h2>Theoretical background<a class="headerlink" href="#theoretical-background" title="Permalink to this heading">¶</a></h2>
+<h2>Theoretical background<a class="headerlink" href="#theoretical-background" title="Link to this heading">¶</a></h2>
 <p>The simulations in ArchPy are performed hierarchically, from the largest geological features to the smallest.
 Three main levels can be distinguished:</p>
 <blockquote>
@@ -186,7 +195,7 @@ or this <a class="reference external" href="notebooks/3D_ArchPy_example.html">on
 <p>To explore the capabilities of <cite>ArchPy</cite>, we will now present a series of tutorials that will guide you through the different steps of the simulation process.</p>
 </section>
 <section id="notebooks">
-<h2>Notebooks<a class="headerlink" href="#notebooks" title="Permalink to this heading">¶</a></h2>
+<h2>Notebooks<a class="headerlink" href="#notebooks" title="Link to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Basics</span></p>
 <div class="nbsphinx-gallery">
@@ -195,15 +204,15 @@ or this <a class="reference external" href="notebooks/3D_ArchPy_example.html">on
   <div>Tutorial 1: the basics</div>
 </a>
 <a class="reference internal" href="notebooks/2_Hard_data.html">
-  <div><img alt="" src="./_images\notebooks_2_Hard_data_27_1.png"></div>
+  <div><img alt="" src="./_images\notebooks_2_Hard_data_29_0.png"></div>
   <div>Tutorial 2: hard data files</div>
 </a>
 <a class="reference internal" href="notebooks/3_filling_and_saving.html">
-  <div><img alt="" src="./_images\notebooks_3_filling_and_saving_41_0.png"></div>
+  <div><img alt="" src="./_images\notebooks_3_filling_and_saving_47_0.png"></div>
   <div>Tutorial 3: filling methods and saving a project</div>
 </a>
 <a class="reference internal" href="notebooks/4_load_project.html">
-  <div><img alt="" src="./_images\notebooks_4_load_project_7_1.png"></div>
+  <div><img alt="" src="./_static\nbsphinx-no-thumbnail.svg"></div>
   <div>Tutorial 4: load ArchPy project</div>
 </a>
 </div>
@@ -212,23 +221,23 @@ or this <a class="reference external" href="notebooks/3D_ArchPy_example.html">on
 <p class="caption" role="heading"><span class="caption-text">ArchPy capabilities</span></p>
 <div class="nbsphinx-gallery">
 <a class="reference internal" href="notebooks/1_many_hierarchical_units.html">
-  <div><img alt="" src="./_images\notebooks_1_many_hierarchical_units_16_1.png"></div>
+  <div><img alt="" src="./_images\notebooks_1_many_hierarchical_units_19_0.png"></div>
   <div>Hierarchy</div>
 </a>
 <a class="reference internal" href="notebooks/3D_ArchPy_example.html">
-  <div><img alt="" src="./_images\notebooks_3D_ArchPy_example_28_0.png"></div>
-  <div>3D model example</div>
+  <div><img alt="" src="./_images\notebooks_3D_ArchPy_example_37_0.png"></div>
+  <div>An example</div>
 </a>
 <a class="reference internal" href="notebooks/mps_surfaces.html">
   <div><img alt="" src="./_images\notebooks_mps_surfaces_22_0.png"></div>
   <div>Surfaces with MPS</div>
 </a>
 <a class="reference internal" href="notebooks/3D_ArchPy_geological_map.html">
-  <div><img alt="" src="./_images\notebooks_3D_ArchPy_geological_map_26_0.png"></div>
+  <div><img alt="" src="./_static\nbsphinx-broken-thumbnail.svg"></div>
   <div>Geological map</div>
 </a>
 <a class="reference internal" href="notebooks/Article_example.html">
-  <div><img alt="" src="./_images\notebooks_Article_example_22_1.png"></div>
+  <div><img alt="" src="./_images\notebooks_Article_example_23_1.png"></div>
   <div>Article ArchPy exemple</div>
 </a>
 <a class="reference internal" href="notebooks/x_valid_exemple1.html">
@@ -236,8 +245,71 @@ or this <a class="reference external" href="notebooks/3D_ArchPy_example.html">on
   <div>Cross-validation</div>
 </a>
 <a class="reference internal" href="notebooks/inference_surfaces.html">
-  <div><img alt="" src="./_images\notebooks_inference_surfaces_45_9.png"></div>
+  <div><img alt="" src="./_images\notebooks_inference_surfaces_55_7.png"></div>
   <div>Surface parameters inference</div>
+</a>
+<a class="reference internal" href="notebooks/example.html">
+  <div><img alt="" src="./_images\notebooks_example_32_1.png"></div>
+  <div>Rotation of a grid</div>
+</a>
+<a class="reference internal" href="notebooks/3D_ArchPy_thickness_controlled.html">
+  <div><img alt="" src="./_images\notebooks_3D_ArchPy_thickness_controlled_27_0.png"></div>
+  <div>Control unit thickness</div>
+</a>
+<a class="reference internal" href="notebooks/3D_ArchPy_use_existing_surfaces.html">
+  <div><img alt="" src="./_images\notebooks_3D_ArchPy_use_existing_surfaces_13_0.png"></div>
+  <div>Existing Surfaces</div>
+</a>
+<a class="reference internal" href="notebooks/3D_ArchPy_non_stationary.html">
+  <div><img alt="" src="./_images\notebooks_3D_ArchPy_non_stationary_26_0.png"></div>
+  <div>Non-stationary</div>
+</a>
+<a class="reference internal" href="notebooks/simple_selection.html">
+  <div><img alt="" src="./_images\notebooks_simple_selection_21_0.png"></div>
+  <div>Draw your own area !</div>
+</a>
+</div>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Coupling</span></p>
+<div class="nbsphinx-gallery">
+<a class="reference internal" href="notebooks/modflow_coupling.html">
+  <div><img alt="" src="./_images\notebooks_modflow_coupling_90_0.png"></div>
+  <div>Modflow/Modpath basics</div>
+</a>
+<a class="reference internal" href="notebooks/modflow_coupling_unstructured_grid.html">
+  <div><img alt="" src="./_images\notebooks_modflow_coupling_unstructured_grid_60_1.png"></div>
+  <div>ArchPy2Modflow: Energy model with unstructured grids</div>
+</a>
+<a class="reference internal" href="notebooks/modflow_energy_model.html">
+  <div><img alt="" src="./_images\notebooks_modflow_energy_model_50_0.png"></div>
+  <div>ArchPy2Modflow: Energy Transport with Modflow 6</div>
+</a>
+<a class="reference internal" href="notebooks/transport_simple_example.html">
+  <div><img alt="" src="./_images\notebooks_transport_simple_example_49_0.png"></div>
+  <div>modflow_transport</div>
+</a>
+</div>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Upscaling</span></p>
+<div class="nbsphinx-gallery">
+<a class="reference internal" href="notebooks/upscaling_3D_fields.html">
+  <div><img alt="" src="./_images\notebooks_upscaling_3D_fields_31_0.png"></div>
+  <div>Upscaling using Renormalization</div>
+</a>
+<a class="reference internal" href="notebooks/unstructured_grids.html">
+  <div><img alt="" src="./_images\notebooks_unstructured_grids_70_0.png"></div>
+  <div>Upscaling unstructured grids</div>
+</a>
+</div>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">paper notebooks</span></p>
+<div class="nbsphinx-gallery">
+<a class="reference internal" href="notebooks/ap2_mf_paper.html">
+  <div><img alt="" src="./_images\notebooks_ap2_mf_paper_179_1.png"></div>
+  <div>ArchPy2Modflow: paper examples</div>
 </a>
 </div>
 </div>
@@ -251,11 +323,11 @@ or this <a class="reference external" href="notebooks/3D_ArchPy_example.html">on
       </div>
     
         <div id="show_right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents<span></a></p>
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
         </div>
 
         <div id="right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:<span></a></p>
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Tutorials</a><ul>
@@ -292,8 +364,8 @@ or this <a class="reference external" href="notebooks/3D_ArchPy_example.html">on
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, University of Neuchâtel.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    &#169; Copyright 2026, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

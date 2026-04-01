@@ -1,29 +1,26 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>&lt;no title&gt; &#8212; ArchPy 1.0.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=0.7.0-1" />
-    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <title>&lt;no title&gt; &#8212; ArchPy 1.2.12 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css?v=2199c511" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
-    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
-    <script src="../_static/twemoji.js"></script>
+    <script src="../_static/documentation_options.js?v=817200f7"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="https://unpkg.com/twemoji@latest/dist/twemoji.min.js"></script>
+    <script src="../_static/twemoji.js?v=a4381b3f"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <script src="../_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -41,7 +38,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.0.0 documentation</a></h1>
+        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.2.12 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -113,7 +110,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -121,14 +118,14 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../README_rtd.html">Introduction</a></li>
@@ -149,28 +146,29 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">colors</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">scipy</span>
-<span class="kn">import</span> <span class="nn">geone</span>
-<span class="kn">import</span> <span class="nn">geone.covModel</span> <span class="k">as</span> <span class="nn">gcm</span>
-<span class="kn">import</span> <span class="nn">geone.geosclassicinterface</span> <span class="k">as</span> <span class="nn">gci</span>
-<span class="kn">import</span> <span class="nn">geone.imgplot3d</span> <span class="k">as</span> <span class="nn">imgplt3</span>
-<span class="kn">import</span> <span class="nn">pyvista</span> <span class="k">as</span> <span class="nn">pv</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
-<span class="kn">import</span> <span class="nn">shapely</span>
-<span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gp</span>
-<span class="kn">import</span> <span class="nn">rasterio</span>
-<span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">Polygon</span><span class="p">,</span> <span class="n">MultiPolygon</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">colors</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone.covModel</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gcm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone.geosclassicinterface</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gci</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone.imgplot3d</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">imgplt3</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvista</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shapely</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rasterio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Polygon</span><span class="p">,</span> <span class="n">MultiPolygon</span>
 
 <span class="c1">#my modules</span>
-<span class="kn">import</span> <span class="nn">ArchPy</span>
-<span class="kn">from</span> <span class="nn">ArchPy.base</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../../&quot;</span><span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ArchPy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ArchPy.base</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
 </div>
@@ -178,7 +176,7 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ArchPy_call_function</span><span class="p">(</span><span class="n">select_location</span> <span class="o">=</span> <span class="s2">&quot;polygon&quot;</span><span class="p">,</span> <span class="n">nreal_units</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">nreal_facies</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">nreal_prop</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">ArchPy_call_function</span><span class="p">(</span><span class="n">select_location</span> <span class="o">=</span> <span class="s2">&quot;polygon&quot;</span><span class="p">,</span> <span class="n">nreal_units</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">nreal_facies</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">nreal_prop</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
                          <span class="n">workspace</span> <span class="o">=</span> <span class="s2">&quot;ArchPy_workspace&quot;</span><span class="p">,</span> <span class="n">modelname</span> <span class="o">=</span> <span class="s2">&quot;model1&quot;</span><span class="p">,</span>
                          <span class="n">bh_file</span> <span class="o">=</span> <span class="s2">&quot;model1.lbh&quot;</span><span class="p">,</span> <span class="n">unit_file</span> <span class="o">=</span> <span class="s2">&quot;model1.ud&quot;</span><span class="p">,</span> <span class="n">facies_file</span><span class="o">=</span> <span class="s2">&quot;model1.fd&quot;</span><span class="p">):</span>
 
@@ -275,17 +273,18 @@
         <span class="c1"># set cell id as names to grid cells and create shapely point object from borehole locations</span>
         <span class="n">bhs_points</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">i</span><span class="o">=</span><span class="mi">0</span>
+        <span class="n">l_names</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">ix</span><span class="p">,</span><span class="n">iy</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bhs</span><span class="o">.</span><span class="n">bh_x</span><span class="p">,</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_y</span><span class="p">):</span>
             <span class="n">po</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span> <span class="n">iy</span><span class="p">)</span>
-            <span class="n">po</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">l_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
             <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
             <span class="n">bhs_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">po</span><span class="p">)</span>
 
         <span class="c1">#check position, only keep points inside polygon</span>
         <span class="n">l</span><span class="o">=</span><span class="p">[]</span>
-        <span class="k">for</span> <span class="n">po</span> <span class="ow">in</span> <span class="n">bhs_points</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ip</span><span class="p">,</span> <span class="n">po</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">bhs_points</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">po</span><span class="o">.</span><span class="n">intersects</span><span class="p">(</span><span class="n">p1</span><span class="p">):</span>
-                <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">po</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l_names</span><span class="p">[</span><span class="n">ip</span><span class="p">])</span>
 
 
         <span class="c1"># operate selection</span>
@@ -301,8 +300,9 @@
         <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">bhs_sel</span><span class="o">.</span><span class="n">bh_x</span><span class="p">,</span> <span class="n">bhs_sel</span><span class="o">.</span><span class="n">bh_y</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
 
         <span class="c1">#plot extent</span>
-        <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">xy</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">pol</span> <span class="ow">in</span> <span class="n">p1</span><span class="o">.</span><span class="n">geoms</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">pol</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">xy</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
 
         <span class="n">Lx</span> <span class="o">=</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
         <span class="n">Ly</span> <span class="o">=</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_y</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">bhs</span><span class="o">.</span><span class="n">bh_y</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
@@ -397,7 +397,7 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span> <span class="o">=</span> <span class="n">ArchPy_call_function</span><span class="p">(</span><span class="n">select_location</span><span class="o">=</span><span class="s2">&quot;polygon&quot;</span><span class="p">,</span> <span class="n">nreal_units</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nreal_facies</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nreal_prop</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span> <span class="o">=</span> <span class="n">ArchPy_call_function</span><span class="p">(</span><span class="n">select_location</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="n">nreal_units</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nreal_facies</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nreal_prop</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -405,17 +405,7 @@
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<div class="highlight"><pre>
-Select your region
-Use left button to select you area(s)
-Polygon added - please press esc if you want to draw another or close the window when you have finished
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_interface_2_1.png" src="../_images/notebooks_interface_2_1.png" />
+<img alt="../_images/notebooks_interface_2_0.png" src="../_images/notebooks_interface_2_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -425,13 +415,8 @@ Polygon added - please press esc if you want to draw another or close the window
 <div class="highlight"><pre>
 
  Grid settings (Please enter desired numbers)
-Lx = 160.08 / Ly = 84.29
-sx = 1
-sy = 1
-sz = 1
-max/min altitudes in boreholes -14.01/-6.01
-oz = -16
-zmax = -6
+Lx = 198.0 / Ly = 88.0
+max/min altitudes in boreholes -14.925/-6.01
 ### IMPORTING PROJECT model1 IN ArchPy_workspace DIRECTORY ###
 
 Unit A: Surface added for interpolation
@@ -487,16 +472,18 @@ Facies Clay added to unit C
 Facies Silt added to unit C
 No unit with that name/ID B3
 No unit with that name/ID B2
+No unit with that name/ID B1
 Facies basement added to unit A
 Facies Sand added to unit D
 Facies Gravel added to unit D
 Facies GM added to unit D
 Facies SM added to unit D
-No unit with that name/ID B1
+Borehole 1 added
 Borehole 2 added
 Borehole 3 added
 Borehole 4 added
 Borehole 5 added
+Borehole 6 added
 Hard data reset
 ##### ORDERING UNITS #####
 Pile P1: ordering units
@@ -513,23 +500,23 @@ Pile P1: ordering units
 Stratigraphic units have been sorted according to order
 
 #### COMPUTING SURFACE OF UNIT A
-A: time elapsed for computing surface 0.010515213012695312 s
+A: time elapsed for computing surface 0.0040149688720703125 s
 
 #### COMPUTING SURFACE OF UNIT C
-C: time elapsed for computing surface 0.07934856414794922 s
+C: time elapsed for computing surface 0.018924236297607422 s
 
 #### COMPUTING SURFACE OF UNIT D
-D: time elapsed for computing surface 7.152557373046875e-07 s
+D: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.024376630783081055 s
+Time elapsed for getting domains 0.004986286163330078 s
 ##########################
 
 
-### 0.11546659469604492: Total time elapsed for computing surfaces ###
+### 0.04677319526672363: Total time elapsed for computing surfaces ###
 
 ### Unit D: facies simulation with TPGs method ####
 ### Unit D - realization 0 ###
-Time elapsed 0.38 s
+Time elapsed 0.16 s
 
 ### Unit C: facies simulation with SIS method ####
 ### Unit C - realization 0 ###
@@ -537,55 +524,62 @@ Some errors have been found
 Some facies were found inside units where they shouldn&#39;t be
 
 ### List of errors ####
-Facies Gravel: 1 points
-Facies GM: 1 points
+Facies Sand: 1 points
+Facies Gravel: 2 points
 
 
 Only one facies covmodels for multiples facies, adapt sill to right proportions
-Time elapsed 0.03 s
+Time elapsed 0.0 s
 
 ### Unit A: facies simulation with homogenous method ####
 ### Unit A - realization 0 ###
 Time elapsed 0.0 s
 
-### 0.4: Total time elapsed for computing facies ###
+### 0.17: Total time elapsed for computing facies ###
 ### 1 K property models will be modeled ###
 homogenous method chosen ! Warning: Some HD can be not respected
 homogenous method chosen ! Warning: Some HD can be not respected
 ### 1 K models done
 </pre></div></div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_bhs</span><span class="p">(</span><span class="s2">&quot;facies&quot;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pv</span><span class="o">.</span><span class="n">set_jupyter_backend</span><span class="p">(</span><span class="s1">&#39;trame&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_bhs</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-ERROR:root:Cannot create GLX context.  Aborting.
-libGL error: MESA-LOADER: failed to open iris: /usr/lib/dri/iris_dri.so: cannot open shared object file: No such file or directory (search paths /usr/lib/x86_64-linux-gnu/dri:\$${ORIGIN}/dri:/usr/lib/dri, suffix _dri)
-libGL error: failed to load driver: iris
-libGL error: MESA-LOADER: failed to open swrast: /usr/lib/dri/swrast_dri.so: cannot open shared object file: No such file or directory (search paths /usr/lib/x86_64-linux-gnu/dri:\$${ORIGIN}/dri:/usr/lib/dri, suffix _dri)
-libGL error: failed to load driver: swrast
-<span class="ansi-red-fg">2023-03-13 11:09:12.895 ( 254.601s) [        5CEF4440]vtkXOpenGLRenderWindow.:651    ERR| vtkXOpenGLRenderWindow (0x41cb220): Cannot create GLX context.  Aborting.</span>
-</pre></div></div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "b004281f7a2a42cdacc805846cdc3f93", "version_major": 2, "version_minor": 0}</script></div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_units</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "b1f8179c18ea4825af9e9692c8ed4a7f", "version_major": 2, "version_minor": 0}</script></div>
+</div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_facies</span><span class="p">()</span>
@@ -596,10 +590,10 @@ libGL error: failed to load driver: swrast
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "38a8fc026f964423bfdc09bd802ef058", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "9c4747efbffd43e88d60830e55f34e74", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_prop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">)</span>
@@ -610,7 +604,7 @@ libGL error: failed to load driver: swrast
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "bb5010f2b37b4b0a8084a9077813b696", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "81fb3d30a23446d193af9c4339cbcea8", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
@@ -644,8 +638,8 @@ libGL error: failed to load driver: swrast
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, University of Neuchâtel.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    &#169; Copyright 2026, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

@@ -1,29 +1,26 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Surfaces with MPS &#8212; ArchPy 1.0.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=0.7.0-1" />
-    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <title>Surfaces with MPS &#8212; ArchPy 1.2.12 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css?v=2199c511" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
-    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
-    <script src="../_static/twemoji.js"></script>
+    <script src="../_static/documentation_options.js?v=817200f7"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="https://unpkg.com/twemoji@latest/dist/twemoji.min.js"></script>
+    <script src="../_static/twemoji.js?v=a4381b3f"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <script src="../_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -43,7 +40,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.0.0 documentation</a></h1>
+        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.2.12 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -115,7 +112,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -123,14 +120,14 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../README_rtd.html">Introduction</a></li>
@@ -140,12 +137,24 @@
 <li class="toctree-l2"><a class="reference internal" href="3_filling_and_saving.html">Tutorial 3: filling methods and saving a project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="4_load_project.html">Tutorial 4: load ArchPy project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="1_many_hierarchical_units.html">Hierarchy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_example.html">3D model example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_example.html">An example</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Surfaces with MPS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_geological_map.html">Geological map</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Article_example.html">Article ArchPy exemple</a></li>
 <li class="toctree-l2"><a class="reference internal" href="x_valid_exemple1.html">Cross-validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inference_surfaces.html">Surface parameters inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.html">Rotation of a grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_thickness_controlled.html">Control unit thickness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_use_existing_surfaces.html">Existing Surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_non_stationary.html">Non-stationary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_selection.html">Draw your own area !</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_coupling.html">Modflow/Modpath basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_coupling_unstructured_grid.html">ArchPy2Modflow: Energy model with unstructured grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_energy_model.html">ArchPy2Modflow: Energy Transport with Modflow 6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transport_simple_example.html">modflow_transport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upscaling_3D_fields.html">Upscaling using Renormalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unstructured_grids.html">Upscaling unstructured grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ap2_mf_paper.html">ArchPy2Modflow: paper examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">List of modules</a></li>
@@ -161,26 +170,31 @@
           <div class="body" role="main">
             
   <section id="Surfaces-with-MPS">
-<h1>Surfaces with MPS<a class="headerlink" href="#Surfaces-with-MPS" title="Permalink to this heading">¶</a></h1>
+<h1>Surfaces with MPS<a class="headerlink" href="#Surfaces-with-MPS" title="Link to this heading">¶</a></h1>
 <p>This notebooks shows how to use MPS to interpolate the surface of the units.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">colors</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">geone</span>
-<span class="kn">import</span> <span class="nn">geone.covModel</span> <span class="k">as</span> <span class="nn">gcm</span>
-<span class="kn">import</span> <span class="nn">geone.imgplot3d</span> <span class="k">as</span> <span class="nn">imgplt3</span>
-<span class="kn">import</span> <span class="nn">pyvista</span> <span class="k">as</span> <span class="nn">pv</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">colors</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone.covModel</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gcm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone.imgplot3d</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">imgplt3</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvista</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="n">pv</span><span class="o">.</span><span class="n">set_jupyter_backend</span><span class="p">(</span><span class="s1">&#39;static&#39;</span><span class="p">)</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../../&quot;</span><span class="p">)</span>
-<span class="kn">import</span> <span class="nn">ArchPy</span>
-<span class="kn">from</span> <span class="nn">ArchPy.base</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">ArchPy</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../../&quot;</span><span class="p">)</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">ArchPy</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ArchPy not installed, using local version.&quot;</span><span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">ArchPy.base</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
 </div>
@@ -224,12 +238,12 @@
 </div>
 </div>
 <section id="define-a-TI-for-simulations">
-<h2>define a TI for simulations<a class="headerlink" href="#define-a-TI-for-simulations" title="Permalink to this heading">¶</a></h2>
+<h2>define a TI for simulations<a class="headerlink" href="#define-a-TI-for-simulations" title="Link to this heading">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">topo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">topo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
     <span class="n">x</span> <span class="o">/=</span> <span class="mi">400</span>
     <span class="n">y</span> <span class="o">/=</span> <span class="mi">400</span>
     <span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">/</span><span class="mi">7</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">+</span> \
@@ -254,7 +268,7 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&lt;matplotlib.image.AxesImage at 0x25089603c08&gt;]
+[&lt;matplotlib.image.AxesImage at 0x1f13a7ee690&gt;]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -266,8 +280,13 @@
 </div>
 </section>
 <section id="Define-the-units">
-<h2>Define the units<a class="headerlink" href="#Define-the-units" title="Permalink to this heading">¶</a></h2>
-<p>C top will be simulate using the TI just above. Some parameters can be defined to control the simulation. The TI hasn’t the same range as target (C top), it is necessary to rescale the TI and this is done by setting the following parameters : - <code class="docutils literal notranslate"><span class="pre">rescalingMode</span></code> : method to use for the rescaling –&gt; min_max or length - <code class="docutils literal notranslate"><span class="pre">TargetMax</span></code> : max value that will be simulated (the TI max value will be set to this value) - <code class="docutils literal notranslate"><span class="pre">TargetMin</span></code> : identical to TargetMin except it is for a minimum value</p>
+<h2>Define the units<a class="headerlink" href="#Define-the-units" title="Link to this heading">¶</a></h2>
+<p>C top will be simulate using the TI just above. Some parameters can be defined to control the simulation. The TI hasn’t the same range as target (C top), it is necessary to rescale the TI and this is done by setting the following parameters :</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">rescalingMode</span></code> : method to use for the rescaling –&gt; min_max or length</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TargetMax</span></code> : max value that will be simulated (the TI max value will be set to this value)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TargetMin</span></code> : identical to TargetMin except it is for a minimum value</p></li>
+</ul>
 <p>others are available such as TargetMean and TargetLength, see DeeSse documentation on continous simulations</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
@@ -305,10 +324,10 @@ Unit D: Surface added for interpolation
 Unit C: Surface added for interpolation
 Unit B: Surface added for interpolation
 Unit A: Surface added for interpolation
-Stratigraphic unit D added
-Stratigraphic unit C added
-Stratigraphic unit B added
-Stratigraphic unit A added
+Stratigraphic unit D added ✅
+Stratigraphic unit C added ✅
+Stratigraphic unit B added ✅
+Stratigraphic unit A added ✅
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -371,24 +390,24 @@ Pile P1: ordering units
 Stratigraphic units have been sorted according to order
 
 #### COMPUTING SURFACE OF UNIT A
-A: time elapsed for computing surface 0.02001786231994629 s
+A: time elapsed for computing surface 0.03867816925048828 s
 
 #### COMPUTING SURFACE OF UNIT B
-B: time elapsed for computing surface 0.010008811950683594 s
+B: time elapsed for computing surface 0.02952432632446289 s
 
 #### COMPUTING SURFACE OF UNIT C
-DeeSse running... [VERSION 3.2 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-DeeSse run complete
-C: time elapsed for computing surface 0.22320246696472168 s
+deesseRun: DeeSse running... [VERSION 3.2 / BUILD NUMBER 20230914 / OpenMP 7 thread(s)]
+deesseRun: DeeSse run complete
+C: time elapsed for computing surface 0.23147225379943848 s
 
 #### COMPUTING SURFACE OF UNIT D
 D: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.11810970306396484 s
+Time elapsed for getting domains 0.014036178588867188 s
 ##########################
 
 
-### 0.38735127449035645: Total time elapsed for computing surfaces ###
+### 0.341977596282959: Total time elapsed for computing surfaces ###
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -414,7 +433,7 @@ Time elapsed for getting domains 0.11810970306396484 s
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.colorbar.Colorbar at 0x2508d6cec88&gt;
+&lt;matplotlib.colorbar.Colorbar at 0x1f13a973990&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -432,28 +451,19 @@ Time elapsed for getting domains 0.11810970306396484 s
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\grid.py:511: PyVistaDeprecationWarning: `dims` argument is deprecated. Please use `dimensions`.
-  &#39;`dims` argument is deprecated. Please use `dimensions`.&#39;, PyVistaDeprecationWarning
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_mps_surfaces_13_1.png" src="../_images/notebooks_mps_surfaces_13_1.png" />
+<img alt="../_images/notebooks_mps_surfaces_13_0.png" src="../_images/notebooks_mps_surfaces_13_0.png" />
 </div>
 </div>
 </section>
 <section id="Sample-some-boreholes-to-conditionate-simulations">
-<h2>Sample some boreholes to conditionate simulations<a class="headerlink" href="#Sample-some-boreholes-to-conditionate-simulations" title="Permalink to this heading">¶</a></h2>
+<h2>Sample some boreholes to conditionate simulations<a class="headerlink" href="#Sample-some-boreholes-to-conditionate-simulations" title="Link to this heading">¶</a></h2>
 <p>This is done with <code class="docutils literal notranslate"><span class="pre">create_fake_bh(x,</span> <span class="pre">y)</span></code></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#sample boreholes</span>
@@ -467,7 +477,7 @@ C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\grid.py:511: PyV
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">add_bh</span><span class="p">(</span><span class="n">l_bhs</span><span class="p">)</span>
@@ -542,7 +552,7 @@ Borehole fake added
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">reprocess</span><span class="p">()</span>
@@ -567,9 +577,9 @@ Processing ended successfully
 </div>
 </section>
 <section id="Check-HD">
-<h2>Check HD<a class="headerlink" href="#Check-HD" title="Permalink to this heading">¶</a></h2>
+<h2>Check HD<a class="headerlink" href="#Check-HD" title="Link to this heading">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">ineq</span>
@@ -577,17 +587,21 @@ Processing ended successfully
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[[1434.47982918613, 602.3568926800849, 0, nan, 124.62],
- [1255.8804972907424, 755.183021863659, 0, nan, 124.62]]
+[[1969.7647222721205, 1342.0542578647608, 0, nan, 112.56],
+ [203.82360255894883, 1458.2362031607638, 0, nan, 96.48],
+ [303.22986901208736, 815.7875244980959, 0, nan, 108.54],
+ [189.69242336184422, 1436.324918371435, 0, nan, 100.5],
+ [1977.71939449936, 133.33837108652014, 0, nan, 112.56],
+ [518.5419297440741, 2484.64096378352, 0, nan, 116.58]]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_surf</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
@@ -604,201 +618,192 @@ Pile P1: ordering units
 Stratigraphic units have been sorted according to order
 
 #### COMPUTING SURFACE OF UNIT A
-A: time elapsed for computing surface 0.0790715217590332 s
+A: time elapsed for computing surface 0.046039581298828125 s
 
 #### COMPUTING SURFACE OF UNIT B
-B: time elapsed for computing surface 0.02101898193359375 s
+B: time elapsed for computing surface 0.03659677505493164 s
 
 #### COMPUTING SURFACE OF UNIT C
-DeeSse running... [VERSION 3.2 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-DeeSse run complete
-C: time elapsed for computing surface 0.20718860626220703 s
+deesseRun: DeeSse running... [VERSION 3.2 / BUILD NUMBER 20230914 / OpenMP 7 thread(s)]
+deesseRun: DeeSse run complete
+C: time elapsed for computing surface 0.18067407608032227 s
 
 #### COMPUTING SURFACE OF UNIT D
 D: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.11710786819458008 s
+Time elapsed for getting domains 0.01563096046447754 s
 
 #### COMPUTING SURFACE OF UNIT A
-A: time elapsed for computing surface 0.0790719985961914 s
+A: time elapsed for computing surface 0.04264020919799805 s
 
 #### COMPUTING SURFACE OF UNIT B
-B: time elapsed for computing surface 0.02202010154724121 s
+B: time elapsed for computing surface 0.04106545448303223 s
 
 #### COMPUTING SURFACE OF UNIT C
-DeeSse running... [VERSION 3.2 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-DeeSse run complete
-C: time elapsed for computing surface 0.20718860626220703 s
+deesseRun: DeeSse running... [VERSION 3.2 / BUILD NUMBER 20230914 / OpenMP 7 thread(s)]
+deesseRun: DeeSse run complete
+C: time elapsed for computing surface 0.2075026035308838 s
 
 #### COMPUTING SURFACE OF UNIT D
 D: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.11610674858093262 s
+Time elapsed for getting domains 0.013523101806640625 s
 
 #### COMPUTING SURFACE OF UNIT A
-A: time elapsed for computing surface 0.08007192611694336 s
+A: time elapsed for computing surface 0.05402040481567383 s
 
 #### COMPUTING SURFACE OF UNIT B
-B: time elapsed for computing surface 0.023020505905151367 s
+B: time elapsed for computing surface 0.038556814193725586 s
 
 #### COMPUTING SURFACE OF UNIT C
-DeeSse running... [VERSION 3.2 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-DeeSse run complete
-C: time elapsed for computing surface 0.2101912498474121 s
+deesseRun: DeeSse running... [VERSION 3.2 / BUILD NUMBER 20230914 / OpenMP 7 thread(s)]
+deesseRun: DeeSse run complete
+C: time elapsed for computing surface 0.18742036819458008 s
 
 #### COMPUTING SURFACE OF UNIT D
 D: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.11842536926269531 s
+Time elapsed for getting domains 0.015139341354370117 s
 
 #### COMPUTING SURFACE OF UNIT A
-A: time elapsed for computing surface 0.08107376098632812 s
+A: time elapsed for computing surface 0.04251503944396973 s
 
 #### COMPUTING SURFACE OF UNIT B
-B: time elapsed for computing surface 0.022019386291503906 s
+B: time elapsed for computing surface 0.03738141059875488 s
 
 #### COMPUTING SURFACE OF UNIT C
-DeeSse running... [VERSION 3.2 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-DeeSse run complete
-C: time elapsed for computing surface 0.20818877220153809 s
+deesseRun: DeeSse running... [VERSION 3.2 / BUILD NUMBER 20230914 / OpenMP 7 thread(s)]
+deesseRun: DeeSse run complete
+C: time elapsed for computing surface 0.20015263557434082 s
 
 #### COMPUTING SURFACE OF UNIT D
 D: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.11910820007324219 s
+Time elapsed for getting domains 0.015018939971923828 s
 
 #### COMPUTING SURFACE OF UNIT A
-A: time elapsed for computing surface 0.0790719985961914 s
+A: time elapsed for computing surface 0.04048633575439453 s
 
 #### COMPUTING SURFACE OF UNIT B
-B: time elapsed for computing surface 0.022019624710083008 s
+B: time elapsed for computing surface 0.04107213020324707 s
 
 #### COMPUTING SURFACE OF UNIT C
-DeeSse running... [VERSION 3.2 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-DeeSse run complete
-C: time elapsed for computing surface 0.2081894874572754 s
+deesseRun: DeeSse running... [VERSION 3.2 / BUILD NUMBER 20230914 / OpenMP 7 thread(s)]
+deesseRun: DeeSse run complete
+C: time elapsed for computing surface 0.21105504035949707 s
 
 #### COMPUTING SURFACE OF UNIT D
 D: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.11710691452026367 s
+Time elapsed for getting domains 0.014507770538330078 s
 
 #### COMPUTING SURFACE OF UNIT A
-A: time elapsed for computing surface 0.0790715217590332 s
+A: time elapsed for computing surface 0.04467368125915527 s
 
 #### COMPUTING SURFACE OF UNIT B
-B: time elapsed for computing surface 0.02201986312866211 s
+B: time elapsed for computing surface 0.03982090950012207 s
 
 #### COMPUTING SURFACE OF UNIT C
-DeeSse running... [VERSION 3.2 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-DeeSse run complete
-C: time elapsed for computing surface 0.21119213104248047 s
+deesseRun: DeeSse running... [VERSION 3.2 / BUILD NUMBER 20230914 / OpenMP 7 thread(s)]
+deesseRun: DeeSse run complete
+C: time elapsed for computing surface 0.20473265647888184 s
 
 #### COMPUTING SURFACE OF UNIT D
 D: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.11710667610168457 s
+Time elapsed for getting domains 0.014205217361450195 s
 
 #### COMPUTING SURFACE OF UNIT A
-A: time elapsed for computing surface 0.08107328414916992 s
+A: time elapsed for computing surface 0.046158552169799805 s
 
 #### COMPUTING SURFACE OF UNIT B
-B: time elapsed for computing surface 0.02202010154724121 s
+B: time elapsed for computing surface 0.03574371337890625 s
 
 #### COMPUTING SURFACE OF UNIT C
-DeeSse running... [VERSION 3.2 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-DeeSse run complete
-C: time elapsed for computing surface 0.2101912498474121 s
+deesseRun: DeeSse running... [VERSION 3.2 / BUILD NUMBER 20230914 / OpenMP 7 thread(s)]
+deesseRun: DeeSse run complete
+C: time elapsed for computing surface 0.20432162284851074 s
 
 #### COMPUTING SURFACE OF UNIT D
 D: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.11710667610168457 s
+Time elapsed for getting domains 0.015519857406616211 s
 
 #### COMPUTING SURFACE OF UNIT A
-A: time elapsed for computing surface 0.0790719985961914 s
+A: time elapsed for computing surface 0.04454994201660156 s
 
 #### COMPUTING SURFACE OF UNIT B
-B: time elapsed for computing surface 0.02202010154724121 s
+B: time elapsed for computing surface 0.03953886032104492 s
 
 #### COMPUTING SURFACE OF UNIT C
-DeeSse running... [VERSION 3.2 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-DeeSse run complete
-C: time elapsed for computing surface 0.20718836784362793 s
+deesseRun: DeeSse running... [VERSION 3.2 / BUILD NUMBER 20230914 / OpenMP 7 thread(s)]
+deesseRun: DeeSse run complete
+C: time elapsed for computing surface 0.20521807670593262 s
 
 #### COMPUTING SURFACE OF UNIT D
 D: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.12211132049560547 s
+Time elapsed for getting domains 0.014017820358276367 s
 
 #### COMPUTING SURFACE OF UNIT A
-A: time elapsed for computing surface 0.08107304573059082 s
+A: time elapsed for computing surface 0.04503512382507324 s
 
 #### COMPUTING SURFACE OF UNIT B
-B: time elapsed for computing surface 0.023021221160888672 s
+B: time elapsed for computing surface 0.03813910484313965 s
 
 #### COMPUTING SURFACE OF UNIT C
-DeeSse running... [VERSION 3.2 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-DeeSse run complete
-C: time elapsed for computing surface 0.2151951789855957 s
+deesseRun: DeeSse running... [VERSION 3.2 / BUILD NUMBER 20230914 / OpenMP 7 thread(s)]
+deesseRun: DeeSse run complete
+C: time elapsed for computing surface 0.20645761489868164 s
 
 #### COMPUTING SURFACE OF UNIT D
 D: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.1191096305847168 s
+Time elapsed for getting domains 0.014508485794067383 s
 
 #### COMPUTING SURFACE OF UNIT A
-A: time elapsed for computing surface 0.08007264137268066 s
+A: time elapsed for computing surface 0.04556465148925781 s
 
 #### COMPUTING SURFACE OF UNIT B
-B: time elapsed for computing surface 0.022019624710083008 s
+B: time elapsed for computing surface 0.03515124320983887 s
 
 #### COMPUTING SURFACE OF UNIT C
-DeeSse running... [VERSION 3.2 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-DeeSse run complete
-C: time elapsed for computing surface 0.2101914882659912 s
+deesseRun: DeeSse running... [VERSION 3.2 / BUILD NUMBER 20230914 / OpenMP 7 thread(s)]
+deesseRun: DeeSse run complete
+C: time elapsed for computing surface 0.19246172904968262 s
 
 #### COMPUTING SURFACE OF UNIT D
 D: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.11810731887817383 s
+Time elapsed for getting domains 0.015515804290771484 s
 ##########################
 
 
-### 4.4523656368255615: Total time elapsed for computing surfaces ###
+### 3.082916259765625: Total time elapsed for computing surfaces ###
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">()</span>
 
 <span class="c1">#T1.plot_units(2,plotter=p, slicey=(0.1, 0.31, 0.6, 0.9),slicex=(0.1, 0.8, 0.3, 0.6, 0.9))</span>
-<span class="n">T1</span><span class="o">.</span><span class="n">plot_proba</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">),</span><span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">))</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">plot_proba</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">),</span><span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">))</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_bhs</span><span class="p">(</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
 <span class="n">p</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\grid.py:511: PyVistaDeprecationWarning: `dims` argument is deprecated. Please use `dimensions`.
-  &#39;`dims` argument is deprecated. Please use `dimensions`.&#39;, PyVistaDeprecationWarning
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_mps_surfaces_21_1.png" src="../_images/notebooks_mps_surfaces_21_1.png" />
+<img alt="../_images/notebooks_mps_surfaces_21_0.png" src="../_images/notebooks_mps_surfaces_21_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">()</span>
@@ -816,7 +821,9 @@ C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\grid.py:511: PyV
 <img alt="../_images/notebooks_mps_surfaces_22_0.png" src="../_images/notebooks_mps_surfaces_22_0.png" />
 </div>
 </div>
-</section>
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {"2770d19123a1473e89bf0f2544da6abc": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"layout": "IPY_MODEL_d4b19e86c457409e98022dc343275011", "style": "IPY_MODEL_edf7bdc7aafe410997c923545bb25117", "value": "<iframe src='http://localhost:59196/index.html?ui=P_0x20e2f29ae10_2&reconnect=auto' style='width: 99%; height: 600px;'></iframe>"}}, "28613ddfa4524c2882b2944537951a09": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"layout": "IPY_MODEL_a9c8818537dd41c4a400a04e6b763a05", "style": "IPY_MODEL_cadfc8d2295844459428893d06623cb0", "value": "<iframe src='http://localhost:59370/index.html?ui=P_0x207de9f3650_1&reconnect=auto' style='width: 99%; height: 600px;'></iframe>"}}, "299220e3f4b943af8fc54b0227d3f15a": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {}}, "307e65982cf243ecab4ad31ce69d41e4": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"layout": "IPY_MODEL_299220e3f4b943af8fc54b0227d3f15a", "style": "IPY_MODEL_f974bc6f086644168afc63a10faaa68c", "value": "<iframe src='http://localhost:59196/index.html?ui=P_0x20e2f29aed0_3&reconnect=auto' style='width: 99%; height: 600px;'></iframe>"}}, "5baa99df7dda4acc9fa3c280b7518cbb": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"layout": "IPY_MODEL_fb2aadc8733a4e769f3a9107ef98f97f", "style": "IPY_MODEL_b818cbe5f9cd43eeb286c24c6b2fa9ce", "value": "<iframe src='http://localhost:59370/index.html?ui=P_0x207de29a550_1&reconnect=auto' style='width: 99%; height: 600px;'></iframe>"}}, "a9c8818537dd41c4a400a04e6b763a05": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {}}, "ae60b55514e444a6b35087dfefb2ce0e": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"layout": "IPY_MODEL_e73d8b48eed841a39da9e5cffeecc33c", "style": "IPY_MODEL_db819ad35f034ca7a72e72149cb396ab", "value": "<iframe src='http://localhost:59196/index.html?ui=P_0x20e2f1b3050_1&reconnect=auto' style='width: 99%; height: 600px;'></iframe>"}}, "b818cbe5f9cd43eeb286c24c6b2fa9ce": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"description_width": "", "font_size": null, "text_color": null}}, "cadfc8d2295844459428893d06623cb0": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"description_width": "", "font_size": null, "text_color": null}}, "d4b19e86c457409e98022dc343275011": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {}}, "db819ad35f034ca7a72e72149cb396ab": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"description_width": "", "font_size": null, "text_color": null}}, "e73d8b48eed841a39da9e5cffeecc33c": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {}}, "edf7bdc7aafe410997c923545bb25117": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"description_width": "", "font_size": null, "text_color": null}}, "f974bc6f086644168afc63a10faaa68c": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"description_width": "", "font_size": null, "text_color": null}}, "fb2aadc8733a4e769f3a9107ef98f97f": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {}}}, "version_major": 2, "version_minor": 0}
+</script></section>
 </section>
 
 
@@ -826,11 +833,11 @@ C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\grid.py:511: PyV
       </div>
     
         <div id="show_right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents<span></a></p>
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
         </div>
 
         <div id="right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:<span></a></p>
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Surfaces with MPS</a><ul>
@@ -867,8 +874,8 @@ C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\grid.py:511: PyV
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, University of Neuchâtel.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    &#169; Copyright 2026, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

@@ -11,12 +11,13 @@ ArchPy offers a variety of capabilities such as:
 
    - Various interpolation methods (GRF, Kriging, Spline, etc.)
    - Various simulation methods (MPS, SIS, TPGs, etc.)
+   - Coupling with groundwater flow (MODFLOW) using the module archpy2modflow
    - Integration of hierarchy in the modelling process at different spatial scales
    - Input/Output capabilities to read and write borehole data, stratigraphic pile and models
    - Automatic inference of conditioning point 
-   - Automatic inference of surface parameters
+   - Automatic and manual interface for inference of surface parameters
    - Can handle raster and shapefile data
-   - Can handle 3D geological map
+   - Can handle geological maps
    - Cross-validation capabilities
    - and many more...
 
@@ -27,7 +28,7 @@ Installation
 
 `ArchPy` is available on `Pypi <https://pypi.org/project/geoarchpy>`_ and can be installed with pip::
 
-   pip install geoarchpy
+   pip install geoarchpy[all]
 
 OR 
 
@@ -46,41 +47,26 @@ and then import `ArchPy`.
 
 Requirements
 ------------
+ArchPy has been tested with python 3.11
 
 ArchPy requires the following packages:
 
-   - `Geone <https://github.com/randlab/geone>`_
-   - matplotlib
-   - numpy
-   - SciPy
-   - sklearn
-   - pandas
-   - shapely < 2.0
-   - scikit-learn
+   - `Geone <https://github.com/randlab/geone>`_  (tested with 1.2.18)
+   - matplotlib (tested with 3.10.8)
+   - numpy (tested with 1.26.4)
+   - scipy (tested with 1.17.1)
+   - sklearn (tested with 1.8.0)
+   - pandas (tested with 2.3.3)
+   - shapely (tested with 2.1.2)
 
 The following packages are optional but are required for some functionalities:
 
-   - PyVista (for 3D vizualisation)
-   - pyyaml (for export uses)
-   - Rasterio (to use rasters)
-   - Geopandas (to use shapefile)
-   
-
-Notebook examples
------------------ 
-
- There is some example notebooks :
-   
-   - 01_basic : a folder where simple and basics ArchPy functionnalities are described 
-   - 02_3D_ArchPy : a complete 3D ArchPy model example
-   - 03_Article_example : a synthetical example shown in ArchPy article
-   - 04_hierarchies : an example with many hierarchical units to test ArchPy capabilities
-   - 05_mps_surfaces : an example how to use MPS to simulate the units surfaces
-   - 06_cross_validation : a notebook that present how to perform a cross-validation directly with ArchPy
-   - 07_geological_map : this notebook presents how to integrate and use a geological in an ArchPy model
-   - 08_inference : little guide how to use archpy inference tools to estimate surface parameters (no facies parameters for now)
-   - 09_interface : little example of an interface to call an preexisting archpy model.
- 
+   - pyvista (tested with 0.46.5)
+   - yaml (tested with 6.0.3)
+   - rasterio (tested with 1.4.4)
+   - geopandas (tested with 1.1.3)
+   - ipywidgets (tested with 8.1.8)
+   - flopy (tested with 3.10.0)
 
 Members of the project
 ----------------------
@@ -88,6 +74,7 @@ Members of the project
 ArchPy is developped, tested and supported by a group of people from the Randlab. These include:
 
    - Ludovic Schorpp 
+   - Nina Egli
    - Alexis Neven
    - Julien Straubhaar
    - Philippe Renard
@@ -96,10 +83,23 @@ ArchPy is developped, tested and supported by a group of people from the Randlab
 How to cite
 -----------
 
- A paper was published on the `ArchPy` concept and its different capabilities.
- The paper was written with the version 0.1 of `ArchPy`.
- It is available with the following `Link <https://www.frontiersin.org/articles/10.3389/feart.2022.884075/>`_.
+A paper was published on the `ArchPy` concept and its different capabilities.
+The paper was written with the version 0.1 of `ArchPy`.
+It is available with the following `Link <https://www.frontiersin.org/articles/10.3389/feart.2022.884075/>`_.
 
+
+List of references using ArchPy
+-------------------------------
+
+Schorpp, L., Egli, N., Straubhaar, J., & Renard, P. (2025). ArchPy and MODFLOW: Toward a General Integration of Heterogeneity into Groundwater Models. Groundwater, 63(6), 902-916. [link](https://doi.org/10.1111/gwat.70028)
+
+Schorpp, L., Straubhaar, J., & Renard, P. (2024). From lithological descriptions to geological models: an example from the Upper Aare Valley. Frontiers in Applied Mathematics and Statistics, 10, 1441596 [link](https://doi.org/10.3389/fams.2024.1441596).
+
+Neven, A., & Renard, P. (2023). A novel methodology for the stochastic integration of geophysical and hydrogeological data in geologically consistent models. Water Resources Research, 59(7). [link](https://doi.org/10.1029/2023WR034992)
+ 
+Neven, A., Schorpp, L., & Renard, P. (2022). Stochastic multi-fidelity joint hydrogeophysical inversion of consistent geological models. Frontiers in Water, 4, 989440. [link](https://doi.org/10.3389/frwa.2022.989440)
+
+Schorpp, L., Straubhaar, J., & Renard, P. (2022). Automated hierarchical 3D modeling of quaternary aquifers: the ArchPy approach. Frontiers in Earth Science, 10, 884075. [link](https://doi.org/10.3389/feart.2022.884075)
 
 Contact
 -------

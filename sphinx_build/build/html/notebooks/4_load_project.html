@@ -1,29 +1,26 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorial 4: load ArchPy project &#8212; ArchPy 1.0.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=0.7.0-1" />
-    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <title>Tutorial 4: load ArchPy project &#8212; ArchPy 1.2.12 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css?v=2199c511" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
-    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
-    <script src="../_static/twemoji.js"></script>
+    <script src="../_static/documentation_options.js?v=817200f7"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="https://unpkg.com/twemoji@latest/dist/twemoji.min.js"></script>
+    <script src="../_static/twemoji.js?v=a4381b3f"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <script src="../_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -43,7 +40,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.0.0 documentation</a></h1>
+        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.2.12 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -115,7 +112,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -123,14 +120,14 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../README_rtd.html">Introduction</a></li>
@@ -140,12 +137,24 @@
 <li class="toctree-l2"><a class="reference internal" href="3_filling_and_saving.html">Tutorial 3: filling methods and saving a project</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Tutorial 4: load ArchPy project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="1_many_hierarchical_units.html">Hierarchy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_example.html">3D model example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_example.html">An example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mps_surfaces.html">Surfaces with MPS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_geological_map.html">Geological map</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Article_example.html">Article ArchPy exemple</a></li>
 <li class="toctree-l2"><a class="reference internal" href="x_valid_exemple1.html">Cross-validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inference_surfaces.html">Surface parameters inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.html">Rotation of a grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_thickness_controlled.html">Control unit thickness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_use_existing_surfaces.html">Existing Surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_non_stationary.html">Non-stationary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_selection.html">Draw your own area !</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_coupling.html">Modflow/Modpath basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_coupling_unstructured_grid.html">ArchPy2Modflow: Energy model with unstructured grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_energy_model.html">ArchPy2Modflow: Energy Transport with Modflow 6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transport_simple_example.html">modflow_transport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upscaling_3D_fields.html">Upscaling using Renormalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unstructured_grids.html">Upscaling unstructured grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ap2_mf_paper.html">ArchPy2Modflow: paper examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">List of modules</a></li>
@@ -161,31 +170,31 @@
           <div class="body" role="main">
             
   <section id="Tutorial-4:-load-ArchPy-project">
-<h1>Tutorial 4: load ArchPy project<a class="headerlink" href="#Tutorial-4:-load-ArchPy-project" title="Permalink to this heading">¶</a></h1>
+<h1>Tutorial 4: load ArchPy project<a class="headerlink" href="#Tutorial-4:-load-ArchPy-project" title="Link to this heading">¶</a></h1>
 <p>This notebook demonstrates how to import an ArchPy using a yaml file as input</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">colors</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">geone</span>
-<span class="kn">import</span> <span class="nn">geone.covModel</span> <span class="k">as</span> <span class="nn">gcm</span>
-<span class="kn">import</span> <span class="nn">geone.imgplot3d</span> <span class="k">as</span> <span class="nn">imgplt3</span>
-<span class="kn">import</span> <span class="nn">pyvista</span> <span class="k">as</span> <span class="nn">pv</span>
-<span class="n">pv</span><span class="o">.</span><span class="n">set_jupyter_backend</span><span class="p">(</span><span class="s1">&#39;static&#39;</span><span class="p">)</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">yaml</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">colors</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone.covModel</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gcm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone.imgplot3d</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">imgplt3</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvista</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="c1"># pv.set_jupyter_backend(&#39;static&#39;)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 <span class="c1">#For loading ArchPy, the path where ArchPy is must be added with sys</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../../&quot;</span><span class="p">)</span>
 <span class="c1">#my modules</span>
-<span class="kn">from</span> <span class="nn">ArchPy.base</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#ArchPy main functions</span>
-<span class="kn">from</span> <span class="nn">ArchPy.tpgs</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#Truncated plurigaussians</span>
-<span class="kn">from</span> <span class="nn">ArchPy.inputs</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#Truncated plurigaussians</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ArchPy.base</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span> <span class="c1">#ArchPy main functions</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ArchPy.tpgs</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span> <span class="c1">#Truncated plurigaussians</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ArchPy.inputs</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span> <span class="c1">#Truncated plurigaussians</span>
 </pre></div>
 </div>
 </div>
@@ -256,12 +265,15 @@
     &#39;ax&#39;: 1,
     &#39;ay&#39;: 1,
     &#39;az&#39;: 1,
+    &#39;azi_bot&#39;: &#39;gradient&#39;,
+    &#39;azi_top&#39;: &#39;gradient&#39;,
     &#39;constantThreshold&#39;: 0.001,
     &#39;dataImage&#39;: None,
     &#39;deactivationDistance&#39;: 4.0,
+    &#39;dip_bot&#39;: &#39;gradient&#39;,
+    &#39;dip_top&#39;: &#39;gradient&#39;,
     &#39;distanceType&#39;: [&#39;categorical&#39;],
     &#39;f_method&#39;: &#39;MPS&#39;,
-    &#39;globalPdf&#39;: [0.33, 0.37, 0.2, 0.1],
     &#39;homo_usage&#39;: 1,
     &#39;localPdf&#39;: None,
     &#39;localPdfRadius&#39;: 12.0,
@@ -271,6 +283,7 @@
     &#39;nv&#39;: 1,
     &#39;outputVarFlag&#39;: None,
     &#39;probaUsage&#39;: 1,
+    &#39;probability&#39;: [0.33, 0.37, 0.2, 0.1],
     &#39;radiusMode&#39;: &#39;large_default&#39;,
     &#39;rotAzi&#39;: 90,
     &#39;rotAziLoc&#39;: False,
@@ -315,6 +328,7 @@
       &#39;elem&#39;: [(&#39;exponential&#39;, {&#39;r&#39;: [20.0, 20.0, 5.0], &#39;w&#39;: 0.21})],
       &#39;gamma&#39;: 0.0}],
     &#39;f_method&#39;: &#39;SIS&#39;,
+    &#39;follow_surfaces_smooth&#39;: 5,
     &#39;neig&#39;: 10,
     &#39;plunge&#39;: 0,
     &#39;probability&#39;: None,
@@ -362,17 +376,24 @@
      &#39;tau&#39;: 0},
     &#39;name&#39;: &#39;Surface_1&#39;}}},
  &#39;boreholes&#39;: {&#39;facies_data&#39;: &#39;Exemple_3.fd&#39;,
+  &#39;facies_fake_data&#39;: &#39;fake_Exemple_3.fd&#39;,
   &#39;list_bhs&#39;: &#39;Exemple_3.lbh&#39;,
-  &#39;units_data&#39;: &#39;Exemple_3.ud&#39;},
+  &#39;list_fake_bhs&#39;: &#39;fake_Exemple_3.lbh&#39;,
+  &#39;units_data&#39;: &#39;Exemple_3.ud&#39;,
+  &#39;units_fake_data&#39;: &#39;fake_Exemple_3.ud&#39;},
  &#39;facies_computed&#39;: 1,
  &#39;grid&#39;: {&#39;bot&#39;: &#39;Exemple_3.bot&#39;,
   &#39;dimensions&#39;: (133, 67, 62),
   &#39;mask&#39;: &#39;Exemple_3.msk&#39;,
   &#39;origin&#39;: (0.0, 0.0, -15.0),
+  &#39;rotation_angle&#39;: 0,
   &#39;spacing&#39;: (0.15, 0.15, 0.15),
   &#39;top&#39;: &#39;Exemple_3.top&#39;},
  &#39;name&#39;: &#39;Exemple_3&#39;,
- &#39;ncpu&#39;: -1,
+ &#39;ncpu&#39;: 7,
+ &#39;nreal_fa&#39;: 1,
+ &#39;nreal_prop&#39;: 5,
+ &#39;nreal_units&#39;: 2,
  &#39;prop_computed&#39;: 1,
  &#39;properties&#39;: {&#39;K&#39;: {&#39;covmodels&#39;: [{&#39;alpha&#39;: 0,
      &#39;beta&#39;: 0.0,
@@ -451,47 +472,30 @@
 ### IMPORTING PROJECT Exemple_3 IN 3_fillAndSave DIRECTORY ###
 
 Unit A: Surface added for interpolation
-Facies basement added to unit A
+Facies basement added to unit A ✅
 Unit B: TI added
 Unit B: Surface added for interpolation
-Facies Sand added to unit B
-Facies Gravel added to unit B
-Facies GM added to unit B
-Facies SM added to unit B
+Facies Sand added to unit B ✅
+Facies Gravel added to unit B ✅
+Facies GM added to unit B ✅
+Facies SM added to unit B ✅
 Unit C: Surface added for interpolation
-Facies Clay added to unit C
-Facies Silt added to unit C
+Facies Clay added to unit C ✅
+Facies Silt added to unit C ✅
 Unit D: Surface added for interpolation
-Facies Sand added to unit D
-Facies Gravel added to unit D
-Facies GM added to unit D
-Facies SM added to unit D
-Stratigraphic unit D added
-Stratigraphic unit C added
-Stratigraphic unit B added
-Stratigraphic unit A added
+Facies Sand added to unit D ✅
+Facies Gravel added to unit D ✅
+Facies GM added to unit D ✅
+Facies SM added to unit D ✅
+Stratigraphic unit D added ✅
+Stratigraphic unit C added ✅
+Stratigraphic unit B added ✅
+Stratigraphic unit A added ✅
 Pile sets as Pile master
 Property K added
 Property Porosity added
 ## Adding Grid ##
 ## Grid added and is now simulation grid ##
-None facies name not found in ArchTable
-None facies name not found in ArchTable
-None facies name not found in ArchTable
-None facies name not found in ArchTable
-None facies name not found in ArchTable
-None facies name not found in ArchTable
-None facies name not found in ArchTable
-None facies name not found in ArchTable
-None facies name not found in ArchTable
-None facies name not found in ArchTable
-None facies name not found in ArchTable
-None facies name not found in ArchTable
-None facies name not found in ArchTable
-None facies name not found in ArchTable
-None facies name not found in ArchTable
-None facies name not found in ArchTable
-None facies name not found in ArchTable
 Borehole 1 added
 Borehole 2 added
 Borehole 3 added
@@ -508,78 +512,15 @@ Borehole 6 added
 #### Properties loaded ####
 #### Surfaces loaded ####
 #### Bottom surfaces loaded ####
+hierarchical relations set
 
 
  ### SUCCESSFUL IMPORT ###
 
 </pre></div></div>
 </div>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">list_bhs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">log_facies</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#T1.plot_bhs()</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_units</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\grid.py:511: PyVistaDeprecationWarning: `dims` argument is deprecated. Please use `dimensions`.
-  &#39;`dims` argument is deprecated. Please use `dimensions`.&#39;, PyVistaDeprecationWarning
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_4_load_project_7_1.png" src="../_images/notebooks_4_load_project_7_1.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_mean_prop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-../..\ArchPy\base.py:4637: RuntimeWarning: Mean of empty slice
-  arr=np.nanmean(prop.reshape(-1,self.get_nz(),self.get_ny(),self.get_nx()),axis=0)
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="../_images/notebooks_4_load_project_8_1.png" src="../_images/notebooks_4_load_project_8_1.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_facies</span><span class="p">()</span>
@@ -590,10 +531,11 @@ C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\grid.py:511: PyV
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_4_load_project_9_0.png" src="../_images/notebooks_4_load_project_9_0.png" />
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "95b48f38bb4b45c8834daf1079a5bef4", "version_major": 2, "version_minor": 0}</script></div>
 </div>
-</div>
-</section>
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {"12bffbb7038f44a6b75667340cc951a3": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "6916871967444241b070aeada5535b9c": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "95b48f38bb4b45c8834daf1079a5bef4": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_6916871967444241b070aeada5535b9c", "placeholder": "\u200b", "style": "IPY_MODEL_12bffbb7038f44a6b75667340cc951a3", "tabbable": null, "tooltip": null, "value": "<iframe src=\"http://localhost:57874/index.html?ui=P_0x20d47f75090_0&reconnect=auto\" class=\"pyvista\" style=\"width: 99%; height: 600px; border: 1px solid rgb(221,221,221);\"></iframe>"}}}, "version_major": 2, "version_minor": 0}
+</script></section>
 
 
             <div class="clearer"></div>
@@ -623,8 +565,8 @@ C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\grid.py:511: PyV
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, University of Neuchâtel.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    &#169; Copyright 2026, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

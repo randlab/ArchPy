@@ -1,29 +1,26 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Article ArchPy exemple &#8212; ArchPy 1.0.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=0.7.0-1" />
-    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <title>Article ArchPy exemple &#8212; ArchPy 1.2.12 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css?v=2199c511" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
-    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
-    <script src="../_static/twemoji.js"></script>
+    <script src="../_static/documentation_options.js?v=817200f7"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="https://unpkg.com/twemoji@latest/dist/twemoji.min.js"></script>
+    <script src="../_static/twemoji.js?v=a4381b3f"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <script src="../_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -43,7 +40,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.0.0 documentation</a></h1>
+        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.2.12 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -115,7 +112,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -123,14 +120,14 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../README_rtd.html">Introduction</a></li>
@@ -140,12 +137,24 @@
 <li class="toctree-l2"><a class="reference internal" href="3_filling_and_saving.html">Tutorial 3: filling methods and saving a project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="4_load_project.html">Tutorial 4: load ArchPy project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="1_many_hierarchical_units.html">Hierarchy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_example.html">3D model example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_example.html">An example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mps_surfaces.html">Surfaces with MPS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_geological_map.html">Geological map</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Article ArchPy exemple</a></li>
 <li class="toctree-l2"><a class="reference internal" href="x_valid_exemple1.html">Cross-validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inference_surfaces.html">Surface parameters inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.html">Rotation of a grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_thickness_controlled.html">Control unit thickness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_use_existing_surfaces.html">Existing Surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_non_stationary.html">Non-stationary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_selection.html">Draw your own area !</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_coupling.html">Modflow/Modpath basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_coupling_unstructured_grid.html">ArchPy2Modflow: Energy model with unstructured grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_energy_model.html">ArchPy2Modflow: Energy Transport with Modflow 6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transport_simple_example.html">modflow_transport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upscaling_3D_fields.html">Upscaling using Renormalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unstructured_grids.html">Upscaling unstructured grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ap2_mf_paper.html">ArchPy2Modflow: paper examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">List of modules</a></li>
@@ -161,26 +170,26 @@
           <div class="body" role="main">
             
   <section id="Article-ArchPy-exemple">
-<h1>Article ArchPy exemple<a class="headerlink" href="#Article-ArchPy-exemple" title="Permalink to this heading">¶</a></h1>
+<h1>Article ArchPy exemple<a class="headerlink" href="#Article-ArchPy-exemple" title="Link to this heading">¶</a></h1>
 <p>This notebook presents the syntetical case of the ArchPy article</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">colors</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">geone</span>
-<span class="kn">import</span> <span class="nn">geone.covModel</span> <span class="k">as</span> <span class="nn">gcm</span>
-<span class="kn">import</span> <span class="nn">geone.imgplot3d</span> <span class="k">as</span> <span class="nn">imgplt3</span>
-<span class="kn">import</span> <span class="nn">pyvista</span> <span class="k">as</span> <span class="nn">pv</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">colors</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone.covModel</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gcm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone.imgplot3d</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">imgplt3</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvista</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../../&quot;</span><span class="p">)</span>
 <span class="c1">#my modules</span>
-<span class="kn">from</span> <span class="nn">ArchPy.base</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">ArchPy.tpgs</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ArchPy.base</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ArchPy.tpgs</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
 </div>
@@ -243,36 +252,19 @@
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-GRF2D: Preliminary computation...
-GRF2D: Computing circulant embedding...
-GRF2D: Embedding dimension: 256 x 256
-GRF2D: Computing FFT of circulant matrix...
-GRF2D: Unconditional simulation    1 of    1...
-GRF2D: Preliminary computation...
-GRF2D: Computing circulant embedding...
-GRF2D: Embedding dimension: 256 x 256
-GRF2D: Computing FFT of circulant matrix...
-GRF2D: Unconditional simulation    1 of    1...
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.colorbar.Colorbar at 0x20c66b84948&gt;
+&lt;matplotlib.colorbar.Colorbar at 0x26685d9c0d0&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_Article_example_3_2.png" src="../_images/notebooks_Article_example_3_2.png" />
+<img alt="../_images/notebooks_Article_example_3_1.png" src="../_images/notebooks_Article_example_3_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -290,7 +282,7 @@ GRF2D: Unconditional simulation    1 of    1...
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.colorbar.Colorbar at 0x20c66d09f88&gt;
+&lt;matplotlib.colorbar.Colorbar at 0x26685e474d0&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -314,7 +306,7 @@ GRF2D: Unconditional simulation    1 of    1...
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&lt;matplotlib.lines.Line2D at 0x20c66db0648&gt;]
+[&lt;matplotlib.lines.Line2D at 0x26685ea1a50&gt;]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -367,39 +359,30 @@ GRF2D: Unconditional simulation    1 of    1...
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#TIs setup, modify values to match with facies</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TIs setup, modify values to match with facies</span>
+
 <span class="n">TI_D</span> <span class="o">=</span> <span class="s2">&quot;../../data/TIs/channels3D/ti_channels3D_4f_200x100x22.vtk&quot;</span>
 <span class="n">TI_D</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">readImageVtk</span><span class="p">(</span><span class="n">TI_D</span><span class="p">)</span>
 <span class="n">TI_D</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">Arr_replace</span><span class="p">(</span><span class="n">TI_D</span><span class="o">.</span><span class="n">val</span><span class="p">,{</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">:</span><span class="mi">2</span><span class="p">})</span>
-<span class="n">imgplt3</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">TI_D</span><span class="p">,</span><span class="n">filtering_value</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
-
+<span class="n">imgplt3</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">TI_D</span><span class="p">,</span> <span class="n">excludedVal</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
 <span class="n">TI_B3</span> <span class="o">=</span> <span class="s2">&quot;../../data/TIs/channels3D_strebelle/ti_channels_strebelle3D_125x125x21.vtk&quot;</span>
 <span class="n">TI_B3</span> <span class="o">=</span> <span class="n">gcm</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">readImageVtk</span><span class="p">(</span><span class="n">TI_B3</span><span class="p">)</span>
 <span class="n">TI_B3</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">Arr_replace</span><span class="p">(</span><span class="n">TI_B3</span><span class="o">.</span><span class="n">val</span><span class="p">,{</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">:</span><span class="mi">2</span><span class="p">})</span>
-<span class="n">imgplt3</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">TI_B3</span><span class="p">,</span><span class="n">filtering_value</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">imgplt3</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">TI_B3</span><span class="p">,</span> <span class="n">excludedVal</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\dataset.py:1335: PyvistaDeprecationWarning: Use of `cell_arrays` is deprecated. Use `cell_data` instead.
-  PyvistaDeprecationWarning
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "422f75bce0bf406b9ba0cf27657c0666", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "2b5a75befeaa4127af97f217dcb23970", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "08cd6fcf3884405192c03bfdedc62f49", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "bda4a1d5b0b44adabd3fe6e6811de6ac", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
@@ -456,10 +439,10 @@ C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\dataset.py:1335:
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "ef8b4e349ca44fd1a3f93a999fc6bb75", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d5152130c07c4f3dae3528d3b6ca0d2c", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <section id="Define-and-setup-units">
-<h2>Define and setup units<a class="headerlink" href="#Define-and-setup-units" title="Permalink to this heading">¶</a></h2>
+<h2>Define and setup units<a class="headerlink" href="#Define-and-setup-units" title="Link to this heading">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
@@ -480,7 +463,7 @@ C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\dataset.py:1335:
 <span class="c1">#create Lithologies</span>
 <span class="n">dic_s_D</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;int_method&quot;</span> <span class="p">:</span> <span class="s2">&quot;kriging&quot;</span><span class="p">,</span><span class="s2">&quot;covmodel&quot;</span> <span class="p">:</span> <span class="n">covmodelD</span><span class="p">}</span>
 <span class="n">dic_f_D</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f_method&quot;</span> <span class="p">:</span> <span class="s2">&quot;MPS&quot;</span><span class="p">,</span><span class="s2">&quot;TI&quot;</span><span class="p">:</span><span class="n">TI_D</span><span class="p">,</span><span class="s2">&quot;xr&quot;</span><span class="p">:</span><span class="mf">0.5</span><span class="p">,</span><span class="s2">&quot;yr&quot;</span><span class="p">:</span><span class="mf">0.5</span><span class="p">,</span><span class="s2">&quot;zr&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;maxscan&quot;</span><span class="p">:</span><span class="mf">0.1</span><span class="p">,</span><span class="s2">&quot;thresh&quot;</span><span class="p">:</span><span class="mf">0.1</span><span class="p">,</span>
-           <span class="s2">&quot;rot_usage&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;rotAzi&quot;</span><span class="p">:</span><span class="mi">90</span><span class="p">,</span><span class="s2">&quot;neig&quot;</span><span class="p">:</span><span class="mi">15</span><span class="p">,</span><span class="s2">&quot;globalPdf&quot;</span><span class="p">:(</span><span class="mf">0.28</span><span class="p">,</span><span class="mf">0.27</span><span class="p">,</span><span class="mf">0.35</span><span class="p">,</span><span class="mf">0.1</span><span class="p">),</span><span class="s2">&quot;localPdf&quot;</span><span class="p">:</span><span class="n">local_pdf</span><span class="p">,</span><span class="s2">&quot;probaUsage&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">}</span>
+           <span class="s2">&quot;rot_usage&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;rotAzi&quot;</span><span class="p">:</span><span class="mi">90</span><span class="p">,</span><span class="s2">&quot;neig&quot;</span><span class="p">:</span><span class="mi">15</span><span class="p">,</span><span class="s2">&quot;probability&quot;</span><span class="p">:(</span><span class="mf">0.28</span><span class="p">,</span><span class="mf">0.27</span><span class="p">,</span><span class="mf">0.35</span><span class="p">,</span><span class="mf">0.1</span><span class="p">),</span><span class="s2">&quot;localPdf&quot;</span><span class="p">:</span><span class="n">local_pdf</span><span class="p">,</span><span class="s2">&quot;probaUsage&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">}</span>
 <span class="n">D</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;D&quot;</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;gold&quot;</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">,</span><span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">,</span><span class="n">dic_surf</span><span class="o">=</span><span class="n">dic_s_D</span><span class="p">)</span>
          <span class="p">,</span><span class="n">dic_facies</span><span class="o">=</span><span class="n">dic_f_D</span><span class="p">)</span>
 
@@ -504,7 +487,7 @@ C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\dataset.py:1335:
 <span class="n">ds_B3</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;int_method&quot;</span><span class="p">:</span><span class="s2">&quot;grf_ineq&quot;</span><span class="p">,</span><span class="s2">&quot;covmodel&quot;</span><span class="p">:</span><span class="n">covmodelB</span><span class="p">}</span>
 <span class="n">df_B3</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f_method&quot;</span><span class="p">:</span><span class="s2">&quot;MPS&quot;</span><span class="p">,</span><span class="s2">&quot;TI&quot;</span><span class="p">:</span><span class="n">TI_B3</span><span class="p">,</span><span class="s2">&quot;xr&quot;</span><span class="p">:</span><span class="mf">0.5</span><span class="p">,</span><span class="s2">&quot;yr&quot;</span><span class="p">:</span><span class="mf">0.5</span><span class="p">,</span><span class="s2">&quot;zr&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;rotAzi&quot;</span><span class="p">:</span><span class="mi">90</span><span class="p">,</span>
          <span class="s2">&quot;rot_usage&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;neig&quot;</span><span class="p">:</span><span class="mi">20</span><span class="p">,</span><span class="s2">&quot;maxscan&quot;</span><span class="p">:</span><span class="mf">0.15</span><span class="p">,</span><span class="s2">&quot;thresh&quot;</span><span class="p">:</span><span class="mf">0.02</span><span class="p">,</span>
-         <span class="s2">&quot;anisotropyRatioMode&quot;</span><span class="p">:</span><span class="s2">&quot;manual&quot;</span><span class="p">,</span><span class="s2">&quot;ax&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;ay&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;az&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;globalPdf&quot;</span><span class="p">:(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span><span class="s2">&quot;probaUsage&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span>
+         <span class="s2">&quot;anisotropyRatioMode&quot;</span><span class="p">:</span><span class="s2">&quot;manual&quot;</span><span class="p">,</span><span class="s2">&quot;ax&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;ay&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;az&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;probability&quot;</span><span class="p">:(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span><span class="s2">&quot;probaUsage&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span>
 <span class="n">B3</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;B3&quot;</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;forestgreen&quot;</span><span class="p">,</span><span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">dic_surf</span><span class="o">=</span><span class="n">ds_B3</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">),</span><span class="n">dic_facies</span><span class="o">=</span><span class="n">df_B3</span><span class="p">)</span>
 
 <span class="n">ds_B2</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;int_method&quot;</span><span class="p">:</span><span class="s2">&quot;grf_ineq&quot;</span><span class="p">,</span><span class="s2">&quot;covmodel&quot;</span><span class="p">:</span><span class="n">covmodel_er</span><span class="p">}</span>
@@ -526,31 +509,48 @@ C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\dataset.py:1335:
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Unit D: TI added
-Unit D : Surface added for interpolation
-Unit C : Surface added for interpolation
-Unit B : Surface added for interpolation
+Unit D: Surface added for interpolation
+Unit C: Surface added for interpolation
+Unit B: Surface added for interpolation
 Unit A: covmodel for SIS added
-Unit A : Surface added for interpolation
+Unit A: Surface added for interpolation
 Stratigraphic unit D added
 Stratigraphic unit C added
 Stratigraphic unit B added
 Stratigraphic unit A added
 Unit B3: TI added
-Unit B3 : Surface added for interpolation
+Unit B3: Surface added for interpolation
 Unit B2: covmodel for SIS added
-Unit B2 : Surface added for interpolation
+Unit B2: Surface added for interpolation
 Unit B1: covmodel for SIS added
-Unit B1 : Surface added for interpolation
+Unit B1: Surface added for interpolation
 Stratigraphic unit B3 added
 Stratigraphic unit B2 added
 Stratigraphic unit B1 added
 </pre></div></div>
 </div>
-</section>
-<section id="Facies-and-properties">
-<h2>Facies and properties<a class="headerlink" href="#Facies-and-properties" title="Permalink to this heading">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">B</span><span class="o">.</span><span class="n">get_baby_units</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[]
+</pre></div></div>
+</div>
+</section>
+<section id="Facies-and-properties">
+<h2>Facies and properties<a class="headerlink" href="#Facies-and-properties" title="Link to this heading">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># covmodels for the property model</span>
@@ -606,7 +606,7 @@ Facies Silt added to unit C
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#We must create an ArchTable object and set a Pile master (first pile)</span>
@@ -632,7 +632,7 @@ Property Porosity added
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#load boreholes data</span>
@@ -651,7 +651,9 @@ Property Porosity added
 <div class="highlight"><pre>
 Borehole 1 added
 Borehole 2 added
+Borehole 3 goes below model limits, borehole 3 depth cut
 Borehole 3 added
+Borehole 4 goes below model limits, borehole 4 depth cut
 Borehole 4 added
 Borehole 5 added
 Borehole 6 added
@@ -659,20 +661,26 @@ Borehole 7 added
 Borehole 8 added
 Borehole 9 added
 Borehole 10 added
+Borehole 11 goes below model limits, borehole 11 depth cut
 Borehole 11 added
 Borehole 12 added
 Borehole 13 added
 Borehole 14 added
+Borehole 15 goes below model limits, borehole 15 depth cut
 Borehole 15 added
 Borehole 16 added
+Borehole 17 goes below model limits, borehole 17 depth cut
 Borehole 17 added
+Borehole 18 goes below model limits, borehole 18 depth cut
 Borehole 18 added
+Borehole 19 goes below model limits, borehole 19 depth cut
 Borehole 19 added
+Borehole 20 goes below model limits, borehole 20 depth cut
 Borehole 20 added
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_bhs</span><span class="p">(</span><span class="n">plot_bot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">plot_top</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -683,10 +691,10 @@ Borehole 20 added
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "4ca1ed3edc5c42ffaa0369182b8fe817", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "8013837e9e914de9871533bf6b1985f5", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#extract hard data from boreholes</span>
@@ -700,175 +708,121 @@ Borehole 20 added
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 ##### ORDERING UNITS #####
-Pile P1 : ordering units
+Pile P1: ordering units
 Stratigraphic units have been sorted according to order
 Discrepency in the orders for units A and B
 Changing orders for that they range from 1 to n
-Pile PB : ordering units
+Pile PB: ordering units
 Stratigraphic units have been sorted according to order
 hierarchical relations set
+
+ ## Computing distributions for Normal Score Transform ##
+
 Processing ended successfully
 </pre></div></div>
 </div>
 </section>
 <section id="Ready-for-the-simulations">
-<h2>Ready for the simulations<a class="headerlink" href="#Ready-for-the-simulations" title="Permalink to this heading">¶</a></h2>
+<h2>Ready for the simulations<a class="headerlink" href="#Ready-for-the-simulations" title="Link to this heading">¶</a></h2>
 <section id="Surfaces-and-units-first">
-<h3>Surfaces and units first<a class="headerlink" href="#Surfaces-and-units-first" title="Permalink to this heading">¶</a></h3>
+<h3>Surfaces and units first<a class="headerlink" href="#Surfaces-and-units-first" title="Link to this heading">¶</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_surf</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">fl_top</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_surf</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">fl_top</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+########## PILE P1 ##########
+Pile P1: ordering units
+Stratigraphic units have been sorted according to order
+
+#### COMPUTING SURFACE OF UNIT A
+A: time elapsed for computing surface 0.3341064453125 s
+
+#### COMPUTING SURFACE OF UNIT B
+B: time elapsed for computing surface 0.14261817932128906 s
+
+#### COMPUTING SURFACE OF UNIT C
+C: time elapsed for computing surface 0.14760541915893555 s
+
+#### COMPUTING SURFACE OF UNIT D
+D: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.15358853340148926 s
+
+#### COMPUTING SURFACE OF UNIT A
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+\\home\schorppl$\GitHub\ArchPy\examples\03_Article_example\../..\ArchPy\base.py:3602: RuntimeWarning: invalid value encountered in cast
+  idx_s2=(np.round((s2-z0)/sz)).astype(int)
+\\home\schorppl$\GitHub\ArchPy\examples\03_Article_example\../..\ArchPy\base.py:3601: RuntimeWarning: invalid value encountered in cast
+  idx_s1=(np.round((s1-z0)/sz)).astype(int)
+</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-########## PILE P1 ##########
-Pile P1 : ordering units
-Stratigraphic units have been sorted according to order
-
-#### COMPUTING SURFACE OF UNIT A
-A : time elapsed for computing surface 0.05805182456970215 s
+A: time elapsed for computing surface 0.3001997470855713 s
 
 #### COMPUTING SURFACE OF UNIT B
-B : time elapsed for computing surface 0.0420377254486084 s
+B: time elapsed for computing surface 0.22041058540344238 s
 
 #### COMPUTING SURFACE OF UNIT C
-C : time elapsed for computing surface 0.08307576179504395 s
+C: time elapsed for computing surface 0.1545870304107666 s
 
 #### COMPUTING SURFACE OF UNIT D
-D : time elapsed for computing surface 0.0 s
+D: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.13812541961669922 s
-
-#### COMPUTING SURFACE OF UNIT A
-A : time elapsed for computing surface 0.05905413627624512 s
-
-#### COMPUTING SURFACE OF UNIT B
-B : time elapsed for computing surface 0.0420382022857666 s
-
-#### COMPUTING SURFACE OF UNIT C
-C : time elapsed for computing surface 0.08407711982727051 s
-
-#### COMPUTING SURFACE OF UNIT D
-D : time elapsed for computing surface 0.0 s
-
-Time elapsed for getting domains 0.14413118362426758 s
-
-#### COMPUTING SURFACE OF UNIT A
-A : time elapsed for computing surface 0.05905294418334961 s
-
-#### COMPUTING SURFACE OF UNIT B
-B : time elapsed for computing surface 0.043039560317993164 s
-
-#### COMPUTING SURFACE OF UNIT C
-C : time elapsed for computing surface 0.08507776260375977 s
-
-#### COMPUTING SURFACE OF UNIT D
-D : time elapsed for computing surface 0.0 s
-
-Time elapsed for getting domains 0.13512253761291504 s
-
-#### COMPUTING SURFACE OF UNIT A
-A : time elapsed for computing surface 0.0570521354675293 s
-
-#### COMPUTING SURFACE OF UNIT B
-B : time elapsed for computing surface 0.04103684425354004 s
-
-#### COMPUTING SURFACE OF UNIT C
-C : time elapsed for computing surface 0.08207392692565918 s
-
-#### COMPUTING SURFACE OF UNIT D
-D : time elapsed for computing surface 0.0 s
-
-Time elapsed for getting domains 0.1481342315673828 s
-
-#### COMPUTING SURFACE OF UNIT A
-A : time elapsed for computing surface 0.060054779052734375 s
-
-#### COMPUTING SURFACE OF UNIT B
-B : time elapsed for computing surface 0.0420374870300293 s
-
-#### COMPUTING SURFACE OF UNIT C
-C : time elapsed for computing surface 0.08307719230651855 s
-
-#### COMPUTING SURFACE OF UNIT D
-D : time elapsed for computing surface 0.0 s
-
-Time elapsed for getting domains 0.14313006401062012 s
+Time elapsed for getting domains 0.17553091049194336 s
 ##########################
 
 ########## PILE PB ##########
-Pile PB : ordering units
+Pile PB: ordering units
 Stratigraphic units have been sorted according to order
 
 #### COMPUTING SURFACE OF UNIT B1
-B1 : time elapsed for computing surface 0.08107352256774902 s
+B1: time elapsed for computing surface 0.18051695823669434 s
 
 #### COMPUTING SURFACE OF UNIT B2
-B2 : time elapsed for computing surface 0.08007216453552246 s
+B2: time elapsed for computing surface 0.17054462432861328 s
 
 #### COMPUTING SURFACE OF UNIT B3
-B3 : time elapsed for computing surface 0.0 s
+B3: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.09808945655822754 s
+Time elapsed for getting domains 0.15558815002441406 s
 
 #### COMPUTING SURFACE OF UNIT B1
-B1 : time elapsed for computing surface 0.08307552337646484 s
+B1: time elapsed for computing surface 0.1770312786102295 s
 
 #### COMPUTING SURFACE OF UNIT B2
-B2 : time elapsed for computing surface 0.07706999778747559 s
+B2: time elapsed for computing surface 0.14561080932617188 s
 
 #### COMPUTING SURFACE OF UNIT B3
-B3 : time elapsed for computing surface 0.0 s
+B3: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.09708809852600098 s
-
-#### COMPUTING SURFACE OF UNIT B1
-B1 : time elapsed for computing surface 0.08307456970214844 s
-
-#### COMPUTING SURFACE OF UNIT B2
-B2 : time elapsed for computing surface 0.07806992530822754 s
-
-#### COMPUTING SURFACE OF UNIT B3
-B3 : time elapsed for computing surface 0.0 s
-
-Time elapsed for getting domains 0.11310362815856934 s
-
-#### COMPUTING SURFACE OF UNIT B1
-B1 : time elapsed for computing surface 0.0840764045715332 s
-
-#### COMPUTING SURFACE OF UNIT B2
-B2 : time elapsed for computing surface 0.07807183265686035 s
-
-#### COMPUTING SURFACE OF UNIT B3
-B3 : time elapsed for computing surface 0.0 s
-
-Time elapsed for getting domains 0.10809874534606934 s
-
-#### COMPUTING SURFACE OF UNIT B1
-B1 : time elapsed for computing surface 0.08307480812072754 s
-
-#### COMPUTING SURFACE OF UNIT B2
-B2 : time elapsed for computing surface 0.08307552337646484 s
-
-#### COMPUTING SURFACE OF UNIT B3
-B3 : time elapsed for computing surface 0.0 s
-
-Time elapsed for getting domains 0.10309267044067383 s
+Time elapsed for getting domains 0.1346290111541748 s
 ##########################
 
 
-### 3.167881488800049 : Total time elapsed for computing surfaces ###
+### 2.6599247455596924: Total time elapsed for computing surfaces ###
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
@@ -877,39 +831,36 @@ Time elapsed for getting domains 0.10309267044067383 s
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.image.AxesImage at 0x20c054f9b48&gt;
+&lt;matplotlib.image.AxesImage at 0x17bfcd3a790&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_Article_example_22_1.png" src="../_images/notebooks_Article_example_22_1.png" />
+<img alt="../_images/notebooks_Article_example_23_1.png" src="../_images/notebooks_Article_example_23_1.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#set default params for Pyvista</span>
 <span class="n">ntbk</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="n">pv</span><span class="o">.</span><span class="n">global_theme</span><span class="o">.</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">pv</span><span class="o">.</span><span class="n">global_theme</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">pv</span><span class="o">.</span><span class="n">global_theme</span><span class="o">.</span><span class="n">background</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">off_screen</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span><span class="n">notebook</span><span class="o">=</span><span class="n">ntbk</span><span class="p">)</span>
-<span class="n">iu</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">iu</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_units</span><span class="p">(</span><span class="n">iu</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span><span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.94</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.13</span><span class="p">),</span><span class="n">slicez</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span><span class="n">h_level</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_bhs</span><span class="p">(</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
@@ -920,7 +871,7 @@ Time elapsed for getting domains 0.10309267044067383 s
 <span class="n">p</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 <span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">off_screen</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span><span class="n">notebook</span><span class="o">=</span><span class="n">ntbk</span><span class="p">)</span>
-<span class="n">iu</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">iu</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_units</span><span class="p">(</span><span class="n">iu</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span><span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.94</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.13</span><span class="p">),</span><span class="n">slicez</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span><span class="n">h_level</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_bhs</span><span class="p">(</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
@@ -935,30 +886,21 @@ Time elapsed for getting domains 0.10309267044067383 s
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\dataset.py:1335: PyvistaDeprecationWarning: Use of `cell_arrays` is deprecated. Use `cell_data` instead.
-  PyvistaDeprecationWarning
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "29ad1a24c31642edb42b77d6647eddb8", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "f9727d80d5974fae9dcf3c5ece561c77", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "ec3acf76000646909ebd86bf5d840e82", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "c7454eb559f740aa861c7f97468b81ff", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">off_screen</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span><span class="n">notebook</span><span class="o">=</span><span class="n">ntbk</span><span class="p">)</span>
-<span class="n">iu</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">iu</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_units</span><span class="p">(</span><span class="n">iu</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span><span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.94</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.13</span><span class="p">),</span><span class="n">slicez</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span><span class="n">h_level</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_bhs</span><span class="p">(</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
@@ -969,7 +911,7 @@ C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\dataset.py:1335:
 <span class="n">p</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 <span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">off_screen</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span><span class="n">notebook</span><span class="o">=</span><span class="n">ntbk</span><span class="p">)</span>
-<span class="n">iu</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">iu</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_units</span><span class="p">(</span><span class="n">iu</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span><span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.94</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.13</span><span class="p">),</span><span class="n">slicez</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span><span class="n">h_level</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_bhs</span><span class="p">(</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 
@@ -985,16 +927,16 @@ C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\dataset.py:1335:
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "653d1de5a6c64854b84d29c5beb3f03e", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "0da3ed642aac4ec89a38329d1f0968cf", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d5dfbeeef66241909f2d9fec51de8bd0", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "19872448a9fd490489138b19e5bccc00", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#plot volume</span>
@@ -1006,10 +948,10 @@ C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\dataset.py:1335:
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "3a97c87aba4840e49b32c55172e04394", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "0e6eac5f5618470fbf77437efbb9feb7", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_proba</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">filtering_interval</span><span class="o">=</span><span class="p">[</span><span class="mf">0.01</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">slicex</span><span class="o">=</span><span class="p">(),</span><span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.4</span><span class="p">,</span><span class="mf">0.7</span><span class="p">))</span>
@@ -1020,10 +962,10 @@ C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\dataset.py:1335:
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "1fc8d2ce08924aa59b5875587386e309", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "e3df07ab96d444c1a5759faf762b6284", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_facies</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -1036,110 +978,84 @@ C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\dataset.py:1335:
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 
-### Unit D : facies simulation with MPS method ####
+### Unit D: facies simulation with MPS method ####
+[Clay, Gravel, Sand, Silt] MPS
 ### Unit D - realization 0 ###
 ### Unit D - realization 1 ###
-### Unit D - realization 2 ###
-### Unit D - realization 3 ###
-### Unit D - realization 4 ###
-Time elapsed 67.19 s
+Time elapsed 66.24 s
 
-### Unit C : facies simulation with TPGs method ####
+### Unit C: facies simulation with TPGs method ####
+[Clay, Silt] TPGs
 ### Unit C - realization 0 ###
 ### Unit C - realization 1 ###
-### Unit C - realization 2 ###
-### Unit C - realization 3 ###
-### Unit C - realization 4 ###
-Time elapsed 17.44 s
+Time elapsed 8.16 s
 
-### Unit B : facies simulation with SubPile method ####
-SubPile filling method,  nothing happened
+### Unit B: facies simulation with SubPile method ####
+[Clay, Gravel, Silt, Sand] SubPile
+SubPile filling method, nothing happened
 Time elapsed 0.0 s
 
-### Unit A : facies simulation with SIS method ####
+### Unit A: facies simulation with SIS method ####
+[Gravel, Silt] SIS
 ### Unit A - realization 0 ###
-Only one facies covmodels for multiples facies, adapt sill to right proportions
 ### Unit A - realization 1 ###
-### Unit A - realization 2 ###
-### Unit A - realization 3 ###
-### Unit A - realization 4 ###
-Time elapsed 2.72 s
+Time elapsed 1.8 s
 
-### Unit B3 : facies simulation with MPS method ####
+### Unit B3: facies simulation with MPS method ####
+[Clay, Gravel] MPS
 ### Unit B3 - realization 0 ###
 ### Unit B3 - realization 1 ###
-### Unit B3 - realization 2 ###
-### Unit B3 - realization 3 ###
-### Unit B3 - realization 4 ###
-Time elapsed 132.87 s
+Time elapsed 136.16 s
 
-### Unit B2 : facies simulation with SIS method ####
+### Unit B2: facies simulation with SIS method ####
+[Silt, Sand] SIS
 ### Unit B2 - realization 0 ###
 Some errors have been found
 Some facies were found inside units where they shouldn&#39;t be
 
 ### List of errors ####
-Facies Clay : 6 points
-Facies Gravel : 10 points
+Facies Gravel: 2 points
 
 
-Only one facies covmodels for multiples facies, adapt sill to right proportions
 ### Unit B2 - realization 1 ###
 Some errors have been found
 Some facies were found inside units where they shouldn&#39;t be
 
 ### List of errors ####
-Facies Clay : 6 points
-Facies Gravel : 10 points
+Facies Gravel: 2 points
 
 
-### Unit B2 - realization 2 ###
-Some errors have been found
-Some facies were found inside units where they shouldn&#39;t be
+Time elapsed 0.6 s
 
-### List of errors ####
-Facies Clay : 6 points
-Facies Gravel : 10 points
-
-
-### Unit B2 - realization 3 ###
-Some errors have been found
-Some facies were found inside units where they shouldn&#39;t be
-
-### List of errors ####
-Facies Clay : 6 points
-Facies Gravel : 10 points
-
-
-### Unit B2 - realization 4 ###
-Some errors have been found
-Some facies were found inside units where they shouldn&#39;t be
-
-### List of errors ####
-Facies Clay : 6 points
-Facies Gravel : 10 points
-
-
-Time elapsed 1.05 s
-
-### Unit B1 : facies simulation with SIS method ####
+### Unit B1: facies simulation with SIS method ####
+[Gravel, Sand] SIS
 ### Unit B1 - realization 0 ###
-Only one facies covmodels for multiples facies, adapt sill to right proportions
-### Unit B1 - realization 1 ###
-### Unit B1 - realization 2 ###
-### Unit B1 - realization 3 ###
-### Unit B1 - realization 4 ###
-Time elapsed 1.21 s
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
 
-### 222.47 : Total time elapsed for computing facies ###
+### List of errors ####
+Facies Silt: 3 points
+
+
+### Unit B1 - realization 1 ###
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
+
+### List of errors ####
+Facies Silt: 1 points
+
+
+Time elapsed 0.68 s
+
+### 213.65: Total time elapsed for computing facies ###
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[53]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">off_screen</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span><span class="n">notebook</span><span class="o">=</span><span class="n">ntbk</span><span class="p">)</span>
-<span class="n">iu</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">iu</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">v_ex</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_facies</span><span class="p">(</span><span class="n">iu</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">,</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span><span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.935</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.13</span><span class="p">),</span><span class="n">slicez</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_bhs</span><span class="p">(</span><span class="s2">&quot;facies&quot;</span><span class="p">,</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">)</span>
@@ -1150,7 +1066,7 @@ Time elapsed 1.21 s
 <span class="n">p</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 <span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">off_screen</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span><span class="n">notebook</span><span class="o">=</span><span class="n">ntbk</span><span class="p">)</span>
-<span class="n">iu</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">iu</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_facies</span><span class="p">(</span><span class="n">iu</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">,</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span><span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.935</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.13</span><span class="p">),</span><span class="n">slicez</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_bhs</span><span class="p">(</span><span class="s2">&quot;facies&quot;</span><span class="p">,</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">)</span>
 <span class="n">p</span><span class="o">.</span><span class="n">camera_position</span> <span class="o">=</span> <span class="s1">&#39;yz&#39;</span>
@@ -1165,20 +1081,20 @@ Time elapsed 1.21 s
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "217f1030b1ea44b1b6244485cfd3b616", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "07a31e2cb02540599f71a3eae5ed43e7", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "c1506b688347421ab4e59d200cbd5be6", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "94738ff3b8ac492cad9c292a02af103e", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[54]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">off_screen</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span><span class="n">notebook</span><span class="o">=</span><span class="n">ntbk</span><span class="p">)</span>
-<span class="n">iu</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">iu</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_facies</span><span class="p">(</span><span class="n">iu</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">,</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_bhs</span><span class="p">(</span><span class="s2">&quot;facies&quot;</span><span class="p">,</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">)</span>
 <span class="n">p</span><span class="o">.</span><span class="n">camera_position</span> <span class="o">=</span> <span class="s1">&#39;yz&#39;</span>
@@ -1187,7 +1103,7 @@ Time elapsed 1.21 s
 <span class="n">p</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="mf">1.2</span><span class="p">)</span>
 <span class="n">p</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 <span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">off_screen</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span><span class="n">notebook</span><span class="o">=</span><span class="n">ntbk</span><span class="p">)</span>
-<span class="n">iu</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">iu</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_facies</span><span class="p">(</span><span class="n">iu</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">,</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_bhs</span><span class="p">(</span><span class="s2">&quot;facies&quot;</span><span class="p">,</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">)</span>
 <span class="n">p</span><span class="o">.</span><span class="n">camera_position</span> <span class="o">=</span> <span class="s1">&#39;yz&#39;</span>
@@ -1202,16 +1118,16 @@ Time elapsed 1.21 s
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "18465b342d7a427fb2811a8d3ab67f6a", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "72195b3f04e44e949db7e484f27d392b", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "ba6ff00d2c01456093503f0d2099c323", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "9a1b593b914849c3b9e92a6f041aae74", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[55]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">off_screen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1231,20 +1147,20 @@ Time elapsed 1.21 s
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "1017609db29d4712b84a0c5b972918c3", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d3a3357d9f83460485a1f0d0e9f60461", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "e1ab0b6ee4284a86a6580a0b9cf5d945", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "de80587cea5b4045a3c494248e2a3dff", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#We can also plot inside specific units</span>
-<span class="n">T1</span><span class="o">.</span><span class="n">plot_facies</span><span class="p">(</span><span class="n">inside_units</span><span class="o">=</span><span class="p">[</span><span class="n">B3</span><span class="p">],</span><span class="n">filtering_value</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">plot_facies</span><span class="p">(</span><span class="n">inside_units</span><span class="o">=</span><span class="p">[</span><span class="n">B3</span><span class="p">],</span><span class="n">excludedVal</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -1252,10 +1168,10 @@ Time elapsed 1.21 s
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "0c01ad307f2e42319535a821e236ca21", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "89293b65bb864e07a1b4f6bd3c29fed5", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_prop</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -1267,22 +1183,16 @@ Time elapsed 1.21 s
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-### 5 K property models will be modeled ###
+### 2 K property models will be modeled ###
 ### 1 K models done
 ### 2 K models done
-### 3 K models done
-### 4 K models done
-### 5 K models done
-### 5 Porosity property models will be modeled ###
+### 2 Porosity property models will be modeled ###
 ### 1 Porosity models done
 ### 2 Porosity models done
-### 3 Porosity models done
-### 4 Porosity models done
-### 5 Porosity models done
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># for saving the project</span>
@@ -1299,7 +1209,7 @@ Project saved successfully
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1308,11 +1218,11 @@ True
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">off_screen</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span><span class="n">notebook</span><span class="o">=</span><span class="n">ntbk</span><span class="p">)</span>
-<span class="n">iu</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">iu</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">v_ex</span> <span class="o">=</span> <span class="mi">3</span>
 
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_prop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">,</span><span class="n">iu</span><span class="o">=</span><span class="n">iu</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">,</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span><span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.935</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.13</span><span class="p">),</span><span class="n">slicez</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
@@ -1323,7 +1233,7 @@ True
 <span class="n">p</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
 <span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">off_screen</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span><span class="n">notebook</span><span class="o">=</span><span class="n">ntbk</span><span class="p">)</span>
-<span class="n">iu</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">iu</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_prop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">,</span><span class="n">iu</span><span class="o">=</span><span class="n">iu</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">,</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span><span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.935</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.13</span><span class="p">),</span><span class="n">slicez</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
 <span class="n">p</span><span class="o">.</span><span class="n">camera_position</span> <span class="o">=</span> <span class="s1">&#39;yz&#39;</span>
 <span class="n">p</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">azimuth</span> <span class="o">=</span> <span class="mi">45</span>
@@ -1337,21 +1247,21 @@ True
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "32440d7f8d2b4472b349930734b2e80d", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "00061530547d4b8d881c08768b919427", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d12b627142574f38a82df587c74801aa", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "24fb24930f154b599ff9e4023981f4f3", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#poro</span>
 <span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">off_screen</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span><span class="n">notebook</span><span class="o">=</span><span class="n">ntbk</span><span class="p">)</span>
-<span class="n">iu</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">iu</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">v_ex</span> <span class="o">=</span> <span class="mi">3</span>
 
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_prop</span><span class="p">(</span><span class="s2">&quot;Porosity&quot;</span><span class="p">,</span><span class="n">iu</span><span class="o">=</span><span class="n">iu</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">,</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span><span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.935</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.13</span><span class="p">),</span><span class="n">slicez</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span><span class="n">cmin</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
@@ -1361,7 +1271,7 @@ True
 <span class="n">p</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="mf">1.2</span><span class="p">)</span>
 <span class="n">p</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 <span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">off_screen</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span><span class="n">notebook</span><span class="o">=</span><span class="n">ntbk</span><span class="p">)</span>
-<span class="n">iu</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">iu</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_prop</span><span class="p">(</span><span class="s2">&quot;Porosity&quot;</span><span class="p">,</span><span class="n">iu</span><span class="o">=</span><span class="n">iu</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">,</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="n">slicex</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">),</span><span class="n">slicey</span><span class="o">=</span><span class="p">(</span><span class="mf">0.935</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.13</span><span class="p">),</span><span class="n">slicez</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span><span class="n">cmin</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 <span class="n">p</span><span class="o">.</span><span class="n">camera_position</span> <span class="o">=</span> <span class="s1">&#39;yz&#39;</span>
 <span class="n">p</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">azimuth</span> <span class="o">=</span> <span class="mi">45</span>
@@ -1375,19 +1285,19 @@ True
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d7b729f43e0a4034b1ed9d916966298b", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "6b2fe3f7a6c74d96a4bf42ca379c1f09", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "99315c3cbd99440aa2ac8fcf6281dbf1", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "38577baee2024b4684fc7dedf05bfc07", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[57]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iu</span> <span class="o">=</span> <span class="mi">2</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iu</span> <span class="o">=</span> <span class="mi">0</span>
 
 <span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">off_screen</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span><span class="n">notebook</span><span class="o">=</span><span class="n">ntbk</span><span class="p">)</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_prop</span><span class="p">(</span><span class="s2">&quot;Porosity&quot;</span><span class="p">,</span><span class="n">iu</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="n">cmin</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
@@ -1397,7 +1307,7 @@ True
 <span class="n">p</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="mf">1.2</span><span class="p">)</span>
 <span class="n">p</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-<span class="n">iu</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">iu</span> <span class="o">=</span> <span class="mi">1</span>
 
 <span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">off_screen</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span><span class="n">notebook</span><span class="o">=</span><span class="n">ntbk</span><span class="p">)</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_prop</span><span class="p">(</span><span class="s2">&quot;Porosity&quot;</span><span class="p">,</span><span class="n">iu</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span><span class="n">cmin</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
@@ -1413,19 +1323,19 @@ True
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d5e8ae1dc15341609565e0ccc3db4557", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "a0bb60c8488b48118aaffb48260acc72", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "96f9e1e4a5f042c6885c4806b72a24f3", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "31b3cbd0a8524426b7dbf7e9c33358b6", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[58]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iu</span> <span class="o">=</span> <span class="mi">2</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iu</span> <span class="o">=</span> <span class="mi">0</span>
 
 <span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">off_screen</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span><span class="n">notebook</span><span class="o">=</span><span class="n">ntbk</span><span class="p">)</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_prop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">,</span><span class="n">iu</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
@@ -1435,7 +1345,7 @@ True
 <span class="n">p</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="mf">1.2</span><span class="p">)</span>
 <span class="n">p</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-<span class="n">iu</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">iu</span> <span class="o">=</span> <span class="mi">1</span>
 
 <span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">off_screen</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span><span class="n">notebook</span><span class="o">=</span><span class="n">ntbk</span><span class="p">)</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_prop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">,</span><span class="n">iu</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
@@ -1451,13 +1361,13 @@ True
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "0e5b224dab864583af97804cf960ca55", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "7bdae2dab5984e3387598a72c3fbdfdb", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "c7c9b2b0e53d4dd5b19ec534c4b88d25", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "424f38ab61be471dbb48afc44d3bc080", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
@@ -1478,11 +1388,11 @@ True
       </div>
     
         <div id="show_right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents<span></a></p>
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
         </div>
 
         <div id="right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:<span></a></p>
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Article ArchPy exemple</a><ul>
@@ -1521,8 +1431,8 @@ True
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, University of Neuchâtel.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    &#169; Copyright 2026, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

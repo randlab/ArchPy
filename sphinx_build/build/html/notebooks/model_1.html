@@ -1,29 +1,26 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Plotting units &#8212; ArchPy 1.0.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=0.7.0-1" />
-    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <title>Plotting units &#8212; ArchPy 1.2.12 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css?v=2199c511" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
-    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
-    <script src="../_static/twemoji.js"></script>
+    <script src="../_static/documentation_options.js?v=817200f7"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="https://unpkg.com/twemoji@latest/dist/twemoji.min.js"></script>
+    <script src="../_static/twemoji.js?v=a4381b3f"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <script src="../_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -41,7 +38,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.0.0 documentation</a></h1>
+        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.2.12 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -113,7 +110,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -121,14 +118,14 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../README_rtd.html">Introduction</a></li>
@@ -146,30 +143,30 @@
           <div class="body" role="main">
             
   <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">colors</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">geone</span>
-<span class="kn">import</span> <span class="nn">geone.covModel</span> <span class="k">as</span> <span class="nn">gcm</span>
-<span class="kn">import</span> <span class="nn">geone.imgplot3d</span> <span class="k">as</span> <span class="nn">imgplt3</span>
-<span class="kn">import</span> <span class="nn">pyvista</span> <span class="k">as</span> <span class="nn">pv</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">colors</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone.covModel</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gcm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone.imgplot3d</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">imgplt3</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvista</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="n">pv</span><span class="o">.</span><span class="n">set_jupyter_backend</span><span class="p">(</span><span class="s1">&#39;static&#39;</span><span class="p">)</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
 <span class="c1">#For loading ArchPy, the path where ArchPy is must be added with sys</span>
-<span class="c1">#sys.path.append(&quot;../../../&quot;)</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../../&quot;</span><span class="p">)</span>
 <span class="c1">#my modules</span>
-<span class="kn">from</span> <span class="nn">ArchPy.base</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#ArchPy main functions</span>
-<span class="kn">from</span> <span class="nn">ArchPy.tpgs</span> <span class="kn">import</span> <span class="o">*</span> <span class="c1">#Truncated plurigaussians</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ArchPy.base</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span> <span class="c1">#ArchPy main functions</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ArchPy.tpgs</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span> <span class="c1">#Truncated plurigaussians</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">PB</span> <span class="o">=</span> <span class="n">Pile</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;PB&quot;</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -178,7 +175,7 @@
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#grid</span>
@@ -203,7 +200,7 @@
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## setup TPGs for B units</span>
@@ -262,7 +259,7 @@
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#units covmodel</span>
@@ -348,7 +345,7 @@ Stratigraphic unit B1 added
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># covmodels for the property model</span>
@@ -418,7 +415,7 @@ Facies SM added to unit B1
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">top</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">ny</span><span class="p">,</span><span class="n">nx</span><span class="p">])</span><span class="o">*-</span><span class="mi">6</span>
@@ -427,7 +424,7 @@ Facies SM added to unit B1
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#logs strati</span>
@@ -468,7 +465,7 @@ Facies SM added to unit B1
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">domain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">ny</span><span class="p">,</span><span class="n">nx</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
@@ -479,12 +476,12 @@ Facies SM added to unit B1
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.image.AxesImage at 0x1d3a48b45e0&gt;
+&lt;matplotlib.image.AxesImage at 0x23da3ee6e90&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -495,7 +492,7 @@ Facies SM added to unit B1
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span> <span class="o">=</span> <span class="n">Arch_table</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;model1&quot;</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
@@ -515,7 +512,9 @@ Facies SM added to unit B1
 Pile sets as Pile master
 ## Adding Grid ##
 ## Grid added and is now simulation grid ##
-boreholes removed
+Standard boreholes removed
+Fake boreholes removed
+Geological map boreholes removed
 Borehole 1 goes below model limits, borehole 1 depth cut
 Borehole 1 added
 Borehole 2 added
@@ -527,7 +526,7 @@ Property K added
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">process_bhs</span><span class="p">()</span>
@@ -555,7 +554,7 @@ Processing ended successfully
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_surf</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -572,18 +571,18 @@ Pile P1: ordering units
 Stratigraphic units have been sorted according to order
 
 #### COMPUTING SURFACE OF UNIT A
-A: time elapsed for computing surface 0.008008241653442383 s
+A: time elapsed for computing surface 0.011986732482910156 s
 
 #### COMPUTING SURFACE OF UNIT B
-B: time elapsed for computing surface 0.028024673461914062 s
+B: time elapsed for computing surface 0.048946380615234375 s
 
 #### COMPUTING SURFACE OF UNIT C
-C: time elapsed for computing surface 0.04103708267211914 s
+C: time elapsed for computing surface 0.08411097526550293 s
 
 #### COMPUTING SURFACE OF UNIT D
 D: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.04504108428955078 s
+Time elapsed for getting domains 0.08199596405029297 s
 ##########################
 
 ########## PILE PB ##########
@@ -591,26 +590,26 @@ Pile PB: ordering units
 Stratigraphic units have been sorted according to order
 
 #### COMPUTING SURFACE OF UNIT B1
-B1: time elapsed for computing surface 0.02602386474609375 s
+B1: time elapsed for computing surface 0.049968719482421875 s
 
 #### COMPUTING SURFACE OF UNIT B2
-B2: time elapsed for computing surface 0.008007287979125977 s
+B2: time elapsed for computing surface 0.022227048873901367 s
 
 #### COMPUTING SURFACE OF UNIT B3
 B3: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.03403043746948242 s
+Time elapsed for getting domains 0.04980063438415527 s
 ##########################
 
 
-### 0.20218396186828613: Total time elapsed for computing surfaces ###
+### 0.37758731842041016: Total time elapsed for computing surfaces ###
 </pre></div></div>
 </div>
 <section id="Plotting-units">
-<h1>Plotting units<a class="headerlink" href="#Plotting-units" title="Permalink to this heading">¶</a></h1>
+<h1>Plotting units<a class="headerlink" href="#Plotting-units" title="Link to this heading">¶</a></h1>
 <p>ArchPy integrates multiple plotting utilities that mostly rely on Pyvista and Geone. Below are some examples</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">()</span>
@@ -631,10 +630,10 @@ Time elapsed for getting domains 0.03403043746948242 s
 </div>
 </section>
 <section id="Cross-sections">
-<h1>Cross-sections<a class="headerlink" href="#Cross-sections" title="Permalink to this heading">¶</a></h1>
+<h1>Cross-sections<a class="headerlink" href="#Cross-sections" title="Link to this heading">¶</a></h1>
 <p>ArchPy integrates the possibility to make cross-section, interactively or not. You can pass a list of point where to draw the cross-section. Boreholes are projected on the cross-section if they are at a distance less than <code class="docutils literal notranslate"><span class="pre">dist_max</span></code>. You can choose which realization to plot with <code class="docutils literal notranslate"><span class="pre">iu</span></code> parameter. The width of the boreholes can be set with <code class="docutils literal notranslate"><span class="pre">width</span></code> parameter.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#cross section</span>
@@ -655,7 +654,7 @@ Time elapsed for getting domains 0.03403043746948242 s
 </div>
 <p>ArchPy also integrates probability plotting functions which allow to plot any ArchPy object such as units or facies</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_proba</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
@@ -670,7 +669,7 @@ Time elapsed for getting domains 0.03403043746948242 s
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_facies</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose_methods</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -685,12 +684,19 @@ Time elapsed for getting domains 0.03403043746948242 s
 
 ### Unit D: facies simulation with TPGs method ####
 ### Unit D - realization 0 ###
-Time elapsed 2.22 s
+Time elapsed 2.58 s
 
 ### Unit C: facies simulation with SIS method ####
 ### Unit C - realization 0 ###
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
+
+### List of errors ####
+Facies basement: 1 points
+
+
 Only one facies covmodels for multiples facies, adapt sill to right proportions
-Time elapsed 0.08 s
+Time elapsed 0.15 s
 
 ### Unit B: facies simulation with SubPile method ####
 SubPile filling method, nothing happened
@@ -703,30 +709,23 @@ Time elapsed 0.01 s
 ### Unit B3: facies simulation with SIS method ####
 ### Unit B3 - realization 0 ###
 Only one facies covmodels for multiples facies, adapt sill to right proportions
-Time elapsed 1.07 s
+Time elapsed 1.58 s
 
 ### Unit B2: facies simulation with SIS method ####
 ### Unit B2 - realization 0 ###
 Only one facies covmodels for multiples facies, adapt sill to right proportions
-Time elapsed 1.06 s
+Time elapsed 1.5 s
 
 ### Unit B1: facies simulation with SIS method ####
 ### Unit B1 - realization 0 ###
-Some errors have been found
-Some facies were found inside units where they shouldn&#39;t be
-
-### List of errors ####
-Facies basement: 2 points
-
-
 Only one facies covmodels for multiples facies, adapt sill to right proportions
-Time elapsed 1.19 s
+Time elapsed 1.71 s
 
-### 5.62: Total time elapsed for computing facies ###
+### 7.54: Total time elapsed for computing facies ###
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_facies</span><span class="p">(</span><span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">)</span>
@@ -741,7 +740,7 @@ Time elapsed 1.19 s
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_facies</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">inside_units</span><span class="o">=</span><span class="p">[</span><span class="n">B1</span><span class="p">],</span> <span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">)</span>
@@ -756,7 +755,7 @@ Time elapsed 1.19 s
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_proba</span><span class="p">(</span><span class="n">facies_1</span><span class="p">,</span><span class="n">filtering_interval</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">slicex</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">slicey</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">slicez</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">)</span> <span class="c1"># sand</span>
@@ -772,7 +771,7 @@ Time elapsed 1.19 s
 </div>
 <p>Property hard data can be passed by a list of coordinates and values</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#prop hd</span>
@@ -785,7 +784,7 @@ Time elapsed 1.19 s
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">permea</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="kc">None</span>
@@ -794,7 +793,7 @@ Time elapsed 1.19 s
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">permea</span><span class="o">.</span><span class="n">add_hd</span><span class="p">(</span><span class="n">x_hd</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
@@ -802,7 +801,7 @@ Time elapsed 1.19 s
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_prop</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
@@ -821,7 +820,7 @@ homogenous method chosen ! Warning: Some HD can be not respected
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_prop</span><span class="p">(</span><span class="n">permea</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">slicex</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">slicey</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">slicez</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">v_ex</span><span class="o">=</span><span class="n">v_ex</span><span class="p">)</span>
@@ -836,16 +835,16 @@ homogenous method chosen ! Warning: Some HD can be not respected
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#property values can be retrieve with getprop method</span>
-<span class="n">K</span> <span class="o">=</span> <span class="n">T1</span><span class="o">.</span><span class="n">getprop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">)</span>
+<span class="n">K</span> <span class="o">=</span> <span class="n">T1</span><span class="o">.</span><span class="n">get_prop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#check HD</span>
@@ -867,7 +866,7 @@ point outside of the grid in x
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_mean_prop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="n">slicey</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span>
@@ -879,7 +878,7 @@ point outside of the grid in x
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-C:\Users\emmal\Anaconda3\envs\archpy\lib\site-packages\ArchPy\base.py:4686: RuntimeWarning: Mean of empty slice
+M:\GitHub\ArchPy\examples\09_interface\../..\ArchPy\base.py:5301: RuntimeWarning: Mean of empty slice
   arr=np.nanmean(prop.reshape(-1,self.get_nz(),self.get_ny(),self.get_nx()),axis=0)
 </pre></div></div>
 </div>
@@ -891,7 +890,7 @@ C:\Users\emmal\Anaconda3\envs\archpy\lib\site-packages\ArchPy\base.py:4686: Runt
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ArchPy</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">save_project</span><span class="p">(</span><span class="n">T1</span><span class="p">)</span>
@@ -903,11 +902,12 @@ C:\Users\emmal\Anaconda3\envs\archpy\lib\site-packages\ArchPy\base.py:4686: Runt
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
+Warning: Flag argument of unit D is possibly not compatible with the export
 Project saved successfully
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -924,11 +924,11 @@ True
       </div>
     
         <div id="show_right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents<span></a></p>
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
         </div>
 
         <div id="right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:<span></a></p>
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Plotting units</a></li>
@@ -955,8 +955,8 @@ True
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, University of Neuchâtel.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    &#169; Copyright 2026, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

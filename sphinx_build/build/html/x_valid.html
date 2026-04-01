@@ -1,30 +1,28 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>x_valid module &#8212; ArchPy 1.0.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=0.7.0-1" />
-    <link rel="stylesheet" type="text/css" href="_static/twemoji.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
+    <title>x_valid module &#8212; ArchPy 1.2.12 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="_static/twemoji.css?v=2199c511" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
-    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
-    <script src="_static/twemoji.js"></script>
+    <script src="_static/documentation_options.js?v=817200f7"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="https://unpkg.com/twemoji@latest/dist/twemoji.min.js"></script>
+    <script src="_static/twemoji.js?v=a4381b3f"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <script src="_static/js/theme.js"></script>
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ArchPy2Modflow module" href="ap_mf.html" />
     <link rel="prev" title="inputs module" href="inputs.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
@@ -39,7 +37,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">ArchPy 1.0.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">ArchPy 1.2.12 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -111,7 +109,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -119,14 +117,14 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="README_rtd.html">Introduction</a></li>
@@ -136,6 +134,9 @@
 <li class="toctree-l2"><a class="reference internal" href="infer.html">infer module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inputs.html">inputs module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">x_valid module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ap_mf.html">ArchPy2Modflow module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html">Upscaling module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="automatic_pile.html">Automatic pile module</a></li>
 </ul>
 </li>
 </ul>
@@ -150,12 +151,12 @@
           <div class="body" role="main">
             
   <section id="module-x_valid">
-<span id="x-valid-module"></span><h1>x_valid module<a class="headerlink" href="#module-x_valid" title="Permalink to this heading">¶</a></h1>
+<span id="x-valid-module"></span><h1>x_valid module<a class="headerlink" href="#module-x_valid" title="Link to this heading">¶</a></h1>
 <p>This module contains functions used for the validation of ArchPy models
 For now it the validation mainly relies on cross-validation through the k-fold method</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="x_valid.X_valid">
-<span class="sig-prename descclassname"><span class="pre">x_valid.</span></span><span class="sig-name descname"><span class="pre">X_valid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nreal_un</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nreal_fa</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proba_correct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggregate_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weighting_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'same_weights'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folding_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'random'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aspect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#x_valid.X_valid" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">x_valid.</span></span><span class="sig-name descname"><span class="pre">X_valid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nreal_un</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nreal_fa</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proba_correct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggregate_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_figs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weighting_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'same_weights'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folding_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'random'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aspect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#x_valid.X_valid" title="Link to this definition">¶</a></dt>
 <dd><p>Perform a Cross-validation on the given ArchTable</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -184,8 +185,7 @@ score_folds is a list of size k containing the scores for each fold.</p>
 <p>Each entry of the score_folds list is a tuple containing various scores:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>final score units</p></li>
-<li><p>final score facies</p></li>
+<li><p>dictionsnary of final scores (units/facies and brier/probability of correct classification)</p></li>
 <li><p>distinct brier scores for each borehole (units and facies)</p></li>
 <li><p>proportion of correct cells for each borehole (units and facies)</p></li>
 <li><p>list of test boreholes</p></li>
@@ -204,14 +204,14 @@ df_conf_norm_fa is a dataframe containing the normalized confusion matrix for ea
 
 <dl class="py function">
 <dt class="sig sig-object py" id="x_valid.bh2array">
-<span class="sig-prename descclassname"><span class="pre">x_valid.</span></span><span class="sig-name descname"><span class="pre">bh2array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typ</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'units'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#x_valid.bh2array" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">x_valid.</span></span><span class="sig-name descname"><span class="pre">bh2array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typ</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'units'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#x_valid.bh2array" title="Link to this definition">¶</a></dt>
 <dd><p>Function to convert an ArchPy borehole to an array of IDs, either units or facies
 IDs are given by the facies/units ID</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ArchTable</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ArchPy.base.Arch_table</span></code>) – ArchPy table</p></li>
-<li><p><strong>bh</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ArchPy.base.borehole</span></code>) – ArchPy borehole</p></li>
+<li><p><strong>ArchTable</strong> (<a class="reference internal" href="base.html#base.Arch_table" title="base.Arch_table"><code class="xref py py-class docutils literal notranslate"><span class="pre">base.Arch_table</span></code></a>) – ArchPy table</p></li>
+<li><p><strong>bh</strong> (<a class="reference internal" href="base.html#base.borehole" title="base.borehole"><code class="xref py py-class docutils literal notranslate"><span class="pre">base.borehole</span></code></a>) – ArchPy borehole</p></li>
 <li><p><strong>typ</strong> (<em>str</em>) – type of data to extract, either “units” or “facies”</p></li>
 </ul>
 </dd>
@@ -226,7 +226,7 @@ IDs are given by the facies/units ID</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="x_valid.brier_func">
-<span class="sig-prename descclassname"><span class="pre">x_valid.</span></span><span class="sig-name descname"><span class="pre">brier_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#x_valid.brier_func" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">x_valid.</span></span><span class="sig-name descname"><span class="pre">brier_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#x_valid.brier_func" title="Link to this definition">¶</a></dt>
 <dd><p>Compute the Brier score given a vector of probabilities</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -246,7 +246,7 @@ IDs are given by the facies/units ID</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="x_valid.img_to_3D_colors">
-<span class="sig-prename descclassname"><span class="pre">x_valid.</span></span><span class="sig-name descname"><span class="pre">img_to_3D_colors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#x_valid.img_to_3D_colors" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">x_valid.</span></span><span class="sig-name descname"><span class="pre">img_to_3D_colors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#x_valid.img_to_3D_colors" title="Link to this definition">¶</a></dt>
 <dd><p>Replace value in an array using a dictionnary
 linking actual values to new values</p>
 <dl class="field-list simple">
@@ -267,22 +267,24 @@ linking actual values to new values</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="x_valid.plot_confusion_matrix">
-<span class="sig-prename descclassname"><span class="pre">x_valid.</span></span><span class="sig-name descname"><span class="pre">plot_confusion_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Confusion</span> <span class="pre">matrix'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'plasma'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#x_valid.plot_confusion_matrix" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">x_valid.</span></span><span class="sig-name descname"><span class="pre">plot_confusion_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Confusion</span> <span class="pre">matrix'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'plasma'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#x_valid.plot_confusion_matrix" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="x_valid.test_bh_1fold">
-<span class="sig-prename descclassname"><span class="pre">x_valid.</span></span><span class="sig-name descname"><span class="pre">test_bh_1fold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bhs_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bhs_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weighting_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'same_weight'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proba_correct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aspect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#x_valid.test_bh_1fold" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">x_valid.</span></span><span class="sig-name descname"><span class="pre">test_bh_1fold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bhs_real</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bhs_test</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weighting_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'same_weight'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_figs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proba_correct</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aspect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#x_valid.test_bh_1fold" title="Link to this definition">¶</a></dt>
 <dd><p>Perform a test on a single fold of a cross-validation</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ArchTable</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ArchPy.base.Arch_table</span></code>) – ArchPy table to test</p></li>
-<li><p><strong>bhs_real</strong> (sequence of <code class="xref py py-class docutils literal notranslate"><span class="pre">ArchPy.base.borehole</span></code>) – “fake” boreholes sampled in the realizations of the ArchTable</p></li>
-<li><p><strong>bhs_test</strong> (sequence of <code class="xref py py-class docutils literal notranslate"><span class="pre">ArchPy.base.borehole</span></code>) – “real” boreholes to test</p></li>
+<li><p><strong>ArchTable</strong> (<a class="reference internal" href="base.html#base.Arch_table" title="base.Arch_table"><code class="xref py py-class docutils literal notranslate"><span class="pre">base.Arch_table</span></code></a>) – ArchPy table to test</p></li>
+<li><p><strong>bhs_real</strong> (ndarray of size (nreal_units, nreal_fa, n_boreholes) of <a class="reference internal" href="base.html#base.borehole" title="base.borehole"><code class="xref py py-class docutils literal notranslate"><span class="pre">base.borehole</span></code></a>) – “fake” boreholes sampled in the realizations of the ArchTable</p></li>
+<li><p><strong>bhs_test</strong> (sequence of <a class="reference internal" href="base.html#base.borehole" title="base.borehole"><code class="xref py py-class docutils literal notranslate"><span class="pre">base.borehole</span></code></a>) – “real” boreholes to test</p></li>
 <li><p><strong>weighting_method</strong> (<em>str</em>) – method to weight the realizations, either “same_weight” or “weights”</p></li>
 <li><p><strong>dic_weights</strong> (<em>dict</em>) – dictionnary linking realization index to weight</p></li>
 <li><p><strong>plot</strong> (<em>bool</em>) – plot or not</p></li>
+<li><p><strong>save_figs</strong> (<em>bool</em>) – save figures or not</p></li>
+<li><p><strong>fig_dir</strong> (<em>str</em>) – directory to save figures</p></li>
 <li><p><strong>brier</strong> (<em>bool</em>) – compute Brier score or not</p></li>
 <li><p><strong>proba_correct</strong> (<em>bool</em>) – compute probability of correct classification or not</p></li>
 <li><p><strong>aspect</strong> (<em>str</em>) – aspect ratio of the plot</p></li>
@@ -306,11 +308,11 @@ linking actual values to new values</p>
       </div>
     
         <div id="show_right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents<span></a></p>
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
         </div>
 
         <div id="right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:<span></a></p>
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">x_valid module</a><ul>
@@ -341,14 +343,16 @@ linking actual values to new values</p>
 
             <div class="right">
                 
+                    <a href="ap_mf.html"><span>ArchPy2Modflow module</span><span class="icon">&gt;</span></a>
+                
             </div>
         </div>
     </div>
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, University of Neuchâtel.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    &#169; Copyright 2026, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

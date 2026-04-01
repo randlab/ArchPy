@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Upscaling using Renormalization &#8212; ArchPy 1.2.12 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css?v=2199c511" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <script src="../_static/documentation_options.js?v=817200f7"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="https://unpkg.com/twemoji@latest/dist/twemoji.min.js"></script>
+    <script src="../_static/twemoji.js?v=a4381b3f"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <script src="../_static/js/petite-vue.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Upscaling unstructured grids" href="unstructured_grids.html" />
+    <link rel="prev" title="ArchPy2Modflow: Energy Transport with Modflow 6" href="transport_simple_example.html" /> 
+  </head><body data-dark_mode_code_blocks="true">
+
+<div id="top_nav">
+    
+
+    <nav>
+        
+            
+        
+
+        <p id="toggle_sidebar">
+            <a href="#" title="Toggle sidebar">|||</a>
+        </p>
+        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.2.12 documentation</a></h1>
+
+        <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
+    <template v-if="mode == 'light'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_light"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M67.48,18.073c1.913,-1.912 1.913,-5.018 0,-6.931c-1.912,-1.912 -5.018,-1.912 -6.931,0l-6.798,6.799c-1.912,1.912 -1.912,5.018 0,6.931c1.913,1.912 5.018,1.912 6.931,-0l6.798,-6.799Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.728,61.108c1.912,-1.913 1.912,-5.018 -0,-6.931c-1.913,-1.913 -5.019,-1.913 -6.931,-0l-6.799,6.798c-1.912,1.913 -1.912,5.019 0,6.931c1.913,1.913 5.019,1.913 6.931,0l6.799,-6.798Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.682,54.177c-1.913,-1.913 -5.018,-1.913 -6.931,-0c-1.912,1.913 -1.912,5.018 0,6.931l6.798,6.798c1.913,1.913 5.019,1.913 6.931,0c1.913,-1.912 1.913,-5.018 0,-6.931l-6.798,-6.798Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M4.901,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,-0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M18.929,11.142c-1.912,-1.912 -5.018,-1.912 -6.931,0c-1.912,1.913 -1.912,5.019 0,6.931l6.799,6.799c1.912,1.912 5.018,1.912 6.931,-0c1.912,-1.913 1.912,-5.019 -0,-6.931l-6.799,-6.799Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.108,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c-0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c-0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'dark'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_dark"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.901,2.196 -4.901,4.901c0,2.705 2.197,4.901 4.901,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.662,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.989,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.732,61.103c1.91,-1.91 1.91,-5.011 0,-6.921l-0.009,-0.01c-1.91,-1.91 -5.012,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.909,1.91 5.011,1.91 6.92,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.672,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.52,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l-0,-0.01c-0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.901,2.196 -4.901,4.901c0,2.704 2.197,4.9 4.901,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.73,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 -0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.098,34.623c-2.699,0 -4.891,2.192 -4.891,4.892l-0,0.019c-0,2.699 2.192,4.891 4.891,4.891c2.7,0 4.892,-2.192 4.892,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.892,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'darkest'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_darkest"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><path d="M39.315,23.791c8.684,-0 15.734,7.05 15.734,15.733c0,8.684 -7.05,15.734 -15.734,15.734c-8.683,0 -15.733,-7.05 -15.733,-15.734c-0,-8.683 7.05,-15.733 15.733,-15.733Zm0,4.737c6.069,0 10.997,4.927 10.997,10.996c-0,6.069 -4.928,10.996 -10.997,10.996c-6.068,0 -10.996,-4.927 -10.996,-10.996c0,-6.069 4.928,-10.996 10.996,-10.996Z" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.216,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.9,2.196 -4.9,4.901c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.666,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.99,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.737,61.103c1.909,-1.91 1.909,-5.011 -0,-6.921l-0.01,-0.01c-1.91,-1.91 -5.011,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.91,1.91 5.011,1.91 6.921,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.676,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.524,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l0,-0.01c0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.216,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901c-0,2.704 2.196,4.9 4.9,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.734,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.103,34.623c-2.7,0 -4.892,2.192 -4.892,4.892l-0,0.019c-0,2.699 2.192,4.891 4.892,4.891c2.699,0 4.891,-2.192 4.891,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.891,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+</a>
+
+<script>
+(function() {
+    const LOCAL_STORAGE_KEY = 'piccoloThemeMode'
+
+    var initialMode = localStorage.getItem(LOCAL_STORAGE_KEY)
+
+    if (initialMode) {
+        // Make sure the value in local storage is valid
+        if (['light', 'dark', 'darkest'].indexOf(initialMode) == -1) {
+            initialMode = 'light'
+            localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+        }
+    } else {
+        // Check if the client prefers dark mode
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            initialMode = 'dark'
+        } else {
+            initialMode = 'light'
+        }
+        localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+    }
+
+    document.documentElement.dataset.mode = initialMode
+
+    PetiteVue.createApp({
+        'mode': initialMode,
+        handleClick() {
+            let currentMode = this.mode
+
+            if (currentMode == 'light') {
+                this.mode = 'dark'
+            } else if (currentMode == 'dark') {
+                this.mode = 'darkest'
+            } else if (currentMode == 'darkest') {
+                this.mode = 'light'
+            }
+
+            document.documentElement.dataset.mode = this.mode
+            localStorage.setItem(LOCAL_STORAGE_KEY, this.mode)
+
+            console.log(this.mode)
+        }
+    }).mount('#mode_toggle')
+})()
+</script>
+            <p class="mobile_search_link">
+                <a href="../search.html" title="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65 64" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+                        <path d="M14.873 40.009c-2.315-3.943-3.642-8.532-3.642-13.429C11.231 11.91 23.141 0 37.811 0s26.58 11.91 26.58 26.58-11.91 26.58-26.58 26.58a26.44 26.44 0 0 1-14.277-4.161L9.739 62.794a3.12 3.12 0 0 1-4.413 0L.913 58.382c-1.217-1.218-1.217-3.196 0-4.413l13.96-13.96zM37.811 8.054c10.225 0 18.526 8.301 18.526 18.526s-8.301 18.526-18.526 18.526-18.526-8.301-18.526-18.526S27.586 8.054 37.811 8.054z" fill="#fff" />
+                    </svg>
+                </a>
+            </p>
+        
+
+        <div class="searchbox_wrapper">
+            
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+    </nav>
+</div>
+
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../README_rtd.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="1_the_very_basics.html">Tutorial 1: the basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2_Hard_data.html">Tutorial 2: hard data files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3_filling_and_saving.html">Tutorial 3: filling methods and saving a project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="4_load_project.html">Tutorial 4: load ArchPy project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1_many_hierarchical_units.html">Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_example.html">An example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mps_surfaces.html">Surfaces with MPS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_geological_map.html">Geological map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Article_example.html">Article ArchPy exemple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="x_valid_exemple1.html">Cross-validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inference_surfaces.html">Surface parameters inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.html">Rotation of a grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_thickness_controlled.html">Control unit thickness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_use_existing_surfaces.html">Existing Surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_non_stationary.html">Non-stationary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_selection.html">Draw your own area !</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_coupling.html">Modflow/Modpath basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_coupling_unstructured_grid.html">ArchPy2Modflow: Energy model with unstructured grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_energy_model.html">ArchPy2Modflow: Energy Transport with Modflow 6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transport_simple_example.html">modflow_transport</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Upscaling using Renormalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unstructured_grids.html">Upscaling unstructured grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ap2_mf_paper.html">ArchPy2Modflow: paper examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">List of modules</a></li>
+</ul>
+
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="Upscaling-using-Renormalization">
+<h1>Upscaling using Renormalization<a class="headerlink" href="#Upscaling-using-Renormalization" title="Link to this heading">¶</a></h1>
+<p>This notebook presents how to use renromalization to upscale a 3D field of hydraulic conductivity Three methods are used:</p>
+<ul class="simple">
+<li><p>Simplified renormalization</p></li>
+<li><p>Standard renormalization</p></li>
+<li><p>Tensorial renormalization</p></li>
+</ul>
+<p>In addition, upscaling can also be performed using the standard arithmetic, harmonic or geometric means.</p>
+<p>The renormalization method performs upscaling by iteratively upscaling small blocks of the field until the desired resolution is achieved. The upscaling of the small blocks is done using different algorithms. The simplified renormalization uses a combination of successive harmonic and arithmetic means of rows and columns of the domain. The standard renormalization solve the flow equation in small blocks of 2x2x2 cells using an electrical analog. The tensorial renormalization also solve the flow
+equation but with a different formulation which is generally faster than the standard renormalization.</p>
+<p>Fore more information about renormalization and these different algorithms, please check the following paper:</p>
+<p>Renard, P., Le Loc’h, G., Ledoux, E., De Marsily, G., &amp; Mackay, R. (2000). A fast algorithm for the estimation of the equivalent hydraulic conductivity of heterogeneous media. Water Resources Research, 36(12), 3567-3580.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;../../&#39;</span><span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ArchPy.uppy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ArchPy.uppy</span><span class="w"> </span><span class="kn">import</span> <span class="n">upscale_k</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvista</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone</span>
+
+<span class="c1"># autoreload</span>
+<span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pv</span><span class="o">.</span><span class="n">set_jupyter_backend</span><span class="p">(</span><span class="s2">&quot;client&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nx</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">ny</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">nz</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">dx</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">dy</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">dz</span> <span class="o">=</span> <span class="mf">.4</span>
+</pre></div>
+</div>
+</div>
+<section id="Generate-a-3D-field-of-hydraulic-conductivity">
+<h2>Generate a 3D field of hydraulic conductivity<a class="headerlink" href="#Generate-a-3D-field-of-hydraulic-conductivity" title="Link to this heading">¶</a></h2>
+<p>Random fields are generated using the geone library. The geone library is a free python package for geostatistical simulations. It is available at <a class="reference external" href="https://github.com/randlab/geone">https://github.com/randlab/geone</a></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># generate a random field</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">cm</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">covModel</span><span class="o">.</span><span class="n">CovModel3D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;cubic&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mf">.2</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">:[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">]})])</span>  <span class="c1"># covariance model (or variogram model)</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">multiGaussian</span><span class="o">.</span><span class="n">multiGaussianRun</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">),</span> <span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">dz</span><span class="p">),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">mean</span><span class="o">=-</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+grf3D: Preliminary computation...
+grf3D: Computing circulant embedding...
+grf3D: embedding dimension: 256 x 256 x 128
+grf3D: Computing FFT of circulant matrix...
+</pre></div></div>
+</div>
+<p>Let’s also generate a topography surface for our model</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># simulate a topograhpy</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">cm_topo</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">covModel</span><span class="o">.</span><span class="n">CovModel1D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;cubic&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mi">20</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">:</span><span class="mi">300</span><span class="p">})])</span>
+<span class="n">topo</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">multiGaussian</span><span class="o">.</span><span class="n">multiGaussianRun</span><span class="p">(</span><span class="n">cm_topo</span><span class="p">,</span> <span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">),</span> <span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">mean</span><span class="o">=</span><span class="mi">46</span><span class="p">)</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot</span><span class="o">.</span><span class="n">drawImage2D</span><span class="p">(</span><span class="n">topo</span><span class="p">)</span>
+
+<span class="c1"># values above the topography are set to nan</span>
+<span class="n">zg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">sim</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">dz</span> <span class="o">+</span> <span class="n">dz</span> <span class="o">/</span> <span class="mi">2</span>
+<span class="n">zg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">*</span> <span class="n">zg</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">zg</span> <span class="o">&gt;</span> <span class="n">topo</span><span class="o">.</span><span class="n">val</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">sim</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+grf2D: Preliminary computation...
+grf2D: Computing circulant embedding...
+grf2D: embedding dimension: 512 x 512
+grf2D: Computing FFT of circulant matrix...
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_upscaling_3D_fields_8_1.png" src="../_images/notebooks_upscaling_3D_fields_8_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pv</span><span class="o">.</span><span class="n">set_jupyter_backend</span><span class="p">(</span><span class="s2">&quot;static&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Plot the reference 3D field</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_upscaling_3D_fields_11_0.png" src="../_images/notebooks_upscaling_3D_fields_11_0.png" />
+</div>
+</div>
+<p>Let us define factors for upscaling. This means that grid will be divided by these factors. For example, if we have a 3D field of size 100x100x100 and we want to upscale it by a factor of 2, the new field will be 50x50x50.</p>
+<p>There are three factors: one for the x direction, one for the y direction and one for the z direction.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">factor_x</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">factor_y</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">factor_z</span> <span class="o">=</span> <span class="mi">16</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Standard-renormalization">
+<h2>Standard renormalization<a class="headerlink" href="#Standard-renormalization" title="Link to this heading">¶</a></h2>
+<p>The standard renormalization is a method that solves the flow equation in small blocks of 2x2x2 cells using an electrical analog. The equivalent hydraulic conductivity of the block is then computed and used to replace the 8 cells of the block. Two grid schemes can be used: the direct scheme and the center scheme. Center scheme is around 2x faster than the direct scheme.</p>
+<section id="Direct-scheme">
+<h3>Direct scheme<a class="headerlink" href="#Direct-scheme" title="Link to this heading">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">field_kxx</span><span class="p">,</span> <span class="n">field_kyy</span><span class="p">,</span> <span class="n">field_kzz</span> <span class="o">=</span> <span class="n">upscale_k</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;standard_renormalization&quot;</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">dy</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="n">dz</span><span class="p">,</span> <span class="n">factor_x</span><span class="o">=</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">factor_y</span><span class="o">=</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">factor_z</span><span class="o">=</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;direct&quot;</span><span class="p">)</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">t_standard_direct</span> <span class="o">=</span> <span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pl</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">window_size</span><span class="o">=</span><span class="p">[</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">800</span><span class="p">])</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_kxx</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kxx  / SR - direct&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_kyy</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kyy / SR - direct&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_kzz</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kzz / SR - direct&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="c1"># pl.add_title(&quot;Standard renormalization - direct&quot;, font=&#39;times&#39;, color=&#39;k&#39;, font_size=40)</span>
+<span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_upscaling_3D_fields_17_0.png" src="../_images/notebooks_upscaling_3D_fields_17_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pl</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span> <span class="n">window_size</span><span class="o">=</span><span class="p">[</span><span class="mi">700</span><span class="p">,</span> <span class="mi">800</span><span class="p">])</span>
+
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_kxx</span><span class="o">/</span><span class="n">field_kzz</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kzz / SR - direct&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="c1"># pl.add_title(&quot;Standard renormalization - direct&quot;, font=&#39;times&#39;, color=&#39;k&#39;, font_size=40)</span>
+<span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_upscaling_3D_fields_18_0.png" src="../_images/notebooks_upscaling_3D_fields_18_0.png" />
+</div>
+</div>
+</section>
+<section id="Centered-scheme">
+<h3>Centered scheme<a class="headerlink" href="#Centered-scheme" title="Link to this heading">¶</a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">field_kxx</span><span class="p">,</span> <span class="n">field_kyy</span><span class="p">,</span> <span class="n">field_kzz</span> <span class="o">=</span> <span class="n">upscale_k</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;standard_renormalization&quot;</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">dy</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="n">dz</span><span class="p">,</span> <span class="n">factor_x</span><span class="o">=</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">factor_y</span><span class="o">=</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">factor_z</span><span class="o">=</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">t_standard_center</span> <span class="o">=</span> <span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pl</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">window_size</span><span class="o">=</span><span class="p">[</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">800</span><span class="p">])</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_kxx</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kxx / SR - center&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_kyy</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kyy / SR - center&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_kzz</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kzz / SR - center&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_upscaling_3D_fields_21_0.png" src="../_images/notebooks_upscaling_3D_fields_21_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pl</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span> <span class="n">window_size</span><span class="o">=</span><span class="p">[</span><span class="mi">700</span><span class="p">,</span> <span class="mi">800</span><span class="p">])</span>
+
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_kxx</span><span class="o">/</span><span class="n">field_kzz</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kzz / SR - direct&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="c1"># pl.add_title(&quot;Standard renormalization - direct&quot;, font=&#39;times&#39;, color=&#39;k&#39;, font_size=40)</span>
+<span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_upscaling_3D_fields_22_0.png" src="../_images/notebooks_upscaling_3D_fields_22_0.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="Tensorial-renormalization">
+<h2>Tensorial renormalization<a class="headerlink" href="#Tensorial-renormalization" title="Link to this heading">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">field_kxx</span><span class="p">,</span> <span class="n">field_kyy</span><span class="p">,</span> <span class="n">field_kzz</span> <span class="o">=</span> <span class="n">upscale_k</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;tensorial_renormalization&quot;</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">dy</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="n">dz</span><span class="p">,</span> <span class="n">factor_x</span><span class="o">=</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">factor_y</span><span class="o">=</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">factor_z</span><span class="o">=</span><span class="n">factor_z</span><span class="p">)</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">t_tensorial</span> <span class="o">=</span> <span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pl</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">window_size</span><span class="o">=</span><span class="p">[</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">800</span><span class="p">])</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_kxx</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kxx / TR&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_kyy</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kyy / TR&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_kzz</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kzz / TR&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_upscaling_3D_fields_25_0.png" src="../_images/notebooks_upscaling_3D_fields_25_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pl</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span> <span class="n">window_size</span><span class="o">=</span><span class="p">[</span><span class="mi">700</span><span class="p">,</span> <span class="mi">800</span><span class="p">])</span>
+
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_kxx</span><span class="o">/</span><span class="n">field_kzz</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kxx / Kzz SR - direct&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="c1"># pl.add_title(&quot;Standard renormalization - direct&quot;, font=&#39;times&#39;, color=&#39;k&#39;, font_size=40)</span>
+<span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_upscaling_3D_fields_26_0.png" src="../_images/notebooks_upscaling_3D_fields_26_0.png" />
+</div>
+</div>
+</section>
+<section id="Simplified-renormalization">
+<h2>Simplified renormalization<a class="headerlink" href="#Simplified-renormalization" title="Link to this heading">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">field_kxx</span><span class="p">,</span> <span class="n">field_kyy</span><span class="p">,</span> <span class="n">field_kzz</span> <span class="o">=</span> <span class="n">upscale_k</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;simplified_renormalization_C&quot;</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">dy</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="n">dz</span><span class="p">,</span> <span class="n">factor_x</span><span class="o">=</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">factor_y</span><span class="o">=</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">factor_z</span><span class="o">=</span><span class="n">factor_z</span><span class="p">)</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">t_simplified_C</span> <span class="o">=</span> <span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pl</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">window_size</span><span class="o">=</span><span class="p">[</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">800</span><span class="p">])</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_kxx</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kxx / Simplified Ren.&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_kyy</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kyy / Simplified Ren.&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_kzz</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kzz / Simplified Ren.&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_upscaling_3D_fields_29_0.png" src="../_images/notebooks_upscaling_3D_fields_29_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">field_kxx</span><span class="p">,</span> <span class="n">field_kyy</span><span class="p">,</span> <span class="n">field_kzz</span> <span class="o">=</span> <span class="n">upscale_k</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;simplified_renormalization&quot;</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">dy</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="n">dz</span><span class="p">,</span> <span class="n">factor_x</span><span class="o">=</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">factor_y</span><span class="o">=</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">factor_z</span><span class="o">=</span><span class="n">factor_z</span><span class="p">)</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">t_simplified</span> <span class="o">=</span> <span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pl</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">window_size</span><span class="o">=</span><span class="p">[</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">800</span><span class="p">])</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_kxx</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kxx / Simplified Ren.&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_kyy</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kyy / Simplified Ren.&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_kzz</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kzz / Simplified Ren.&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_upscaling_3D_fields_31_0.png" src="../_images/notebooks_upscaling_3D_fields_31_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pl</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span> <span class="n">window_size</span><span class="o">=</span><span class="p">[</span><span class="mi">700</span><span class="p">,</span> <span class="mi">800</span><span class="p">])</span>
+
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_kxx</span><span class="o">/</span><span class="n">field_kzz</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Kxx / Kzz Simp. Ren. - direct&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="c1"># pl.add_title(&quot;Standard renormalization - direct&quot;, font=&#39;times&#39;, color=&#39;k&#39;, font_size=40)</span>
+<span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_upscaling_3D_fields_32_0.png" src="../_images/notebooks_upscaling_3D_fields_32_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">field_ari</span><span class="p">,</span><span class="n">_</span> <span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">upscale_k</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;arithmetic&quot;</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">dy</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="n">dz</span><span class="p">,</span> <span class="n">factor_x</span><span class="o">=</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">factor_y</span><span class="o">=</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">factor_z</span><span class="o">=</span><span class="n">factor_z</span><span class="p">)</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">t_arithmetic</span> <span class="o">=</span> <span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span>
+<span class="n">field_har</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">upscale_k</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;harmonic&quot;</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">dy</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="n">dz</span><span class="p">,</span> <span class="n">factor_x</span><span class="o">=</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">factor_y</span><span class="o">=</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">factor_z</span><span class="o">=</span><span class="n">factor_z</span><span class="p">)</span>
+<span class="n">t3</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">t_harmonic</span> <span class="o">=</span> <span class="n">t3</span> <span class="o">-</span> <span class="n">t2</span>
+<span class="n">field_geo</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">upscale_k</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;geometric&quot;</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">dy</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="n">dz</span><span class="p">,</span> <span class="n">factor_x</span><span class="o">=</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">factor_y</span><span class="o">=</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">factor_z</span><span class="o">=</span><span class="n">factor_z</span><span class="p">)</span>
+<span class="n">t4</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">t_geometric</span> <span class="o">=</span> <span class="n">t4</span> <span class="o">-</span> <span class="n">t3</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pl</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">window_size</span><span class="o">=</span><span class="p">[</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">800</span><span class="p">])</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_ari</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Arithmetic mean&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_har</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Harmonic mean&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_geo</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">dx</span><span class="o">*</span><span class="n">factor_x</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">dy</span><span class="o">*</span><span class="n">factor_y</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">dz</span><span class="o">*</span><span class="n">factor_z</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">varname</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Geometric mean&quot;</span><span class="p">])</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_upscaling_3D_fields_34_0.png" src="../_images/notebooks_upscaling_3D_fields_34_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Standard - direct&quot;</span><span class="p">,</span> <span class="s2">&quot;Standard - center&quot;</span><span class="p">,</span> <span class="s2">&quot;Tensorial&quot;</span><span class="p">,</span> <span class="s2">&quot;Simplified&quot;</span><span class="p">,</span> <span class="s2">&quot;Simplified_C&quot;</span><span class="p">,</span> <span class="s2">&quot;Arithmetic&quot;</span><span class="p">,</span> <span class="s2">&quot;Harmonic&quot;</span><span class="p">,</span> <span class="s2">&quot;Geometric&quot;</span><span class="p">],</span> <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">t_standard_direct</span><span class="p">,</span> <span class="n">t_standard_center</span><span class="p">,</span> <span class="n">t_tensorial</span><span class="p">,</span> <span class="n">t_simplified</span><span class="p">,</span> <span class="n">t_simplified_C</span><span class="p">,</span> <span class="n">t_arithmetic</span><span class="p">,</span> <span class="n">t_harmonic</span><span class="p">,</span> <span class="n">t_geometric</span><span class="p">]})</span>
+
+<span class="c1"># plot times</span>
+<span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s2">&quot;method&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Time (s)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Execution time for different upscaling methods on a </span><span class="si">{}</span><span class="s2">x</span><span class="si">{}</span><span class="s2">x</span><span class="si">{}</span><span class="s2"> grid </span><span class="se">\n</span><span class="s2"> with a factor of </span><span class="si">{}</span><span class="s2">x</span><span class="si">{}</span><span class="s2">x</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">factor_x</span><span class="p">,</span> <span class="n">factor_y</span><span class="p">,</span> <span class="n">factor_z</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_upscaling_3D_fields_35_0.png" src="../_images/notebooks_upscaling_3D_fields_35_0.png" />
+</div>
+</div>
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {"0a7028303bf4430791e3f398461a8f22": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "43aeb384f8ee4cad95c2c04961414f3a": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "fd98277005d8471cafb630c482130e06": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_43aeb384f8ee4cad95c2c04961414f3a", "placeholder": "\u200b", "style": "IPY_MODEL_0a7028303bf4430791e3f398461a8f22", "tabbable": null, "tooltip": null, "value": "<iframe src=\"http://localhost:52469/index.html?ui=P_0x126394aba10_0&reconnect=auto\" class=\"pyvista\" style=\"width: 99%; height: 600px; border: 1px solid rgb(221,221,221);\"></iframe>"}}}, "version_major": 2, "version_minor": 0}
+</script></section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Upscaling using Renormalization</a><ul>
+<li><a class="reference internal" href="#Generate-a-3D-field-of-hydraulic-conductivity">Generate a 3D field of hydraulic conductivity</a></li>
+<li><a class="reference internal" href="#Standard-renormalization">Standard renormalization</a><ul>
+<li><a class="reference internal" href="#Direct-scheme">Direct scheme</a></li>
+<li><a class="reference internal" href="#Centered-scheme">Centered scheme</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#Tensorial-renormalization">Tensorial renormalization</a></li>
+<li><a class="reference internal" href="#Simplified-renormalization">Simplified renormalization</a></li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
+    
+
+      <div class="clearer"></div>
+    </div>
+    <div class="button_nav_wrapper">
+        <div class="button_nav">
+            <div class="left">
+                
+                <a href="transport_simple_example.html">
+                    <span class="icon">&lt;</span><span>ArchPy2Modflow: Energy Transport with Modflow 6</span></a>
+                
+            </div>
+
+            <div class="right">
+                
+                    <a href="unstructured_grids.html"><span>Upscaling unstructured grids</span><span class="icon">&gt;</span></a>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2026, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    </div>
+
+<p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>
+  </body>
+</html>

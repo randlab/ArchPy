@@ -1,29 +1,26 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Tutorial 2: hard data files &#8212; ArchPy 1.0.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=0.7.0-1" />
-    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <title>Tutorial 2: hard data files &#8212; ArchPy 1.2.12 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css?v=2199c511" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
-    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
-    <script src="../_static/twemoji.js"></script>
+    <script src="../_static/documentation_options.js?v=817200f7"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="https://unpkg.com/twemoji@latest/dist/twemoji.min.js"></script>
+    <script src="../_static/twemoji.js?v=a4381b3f"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <script src="../_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -43,7 +40,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.0.0 documentation</a></h1>
+        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.2.12 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -115,7 +112,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -123,14 +120,14 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../README_rtd.html">Introduction</a></li>
@@ -140,12 +137,24 @@
 <li class="toctree-l2"><a class="reference internal" href="3_filling_and_saving.html">Tutorial 3: filling methods and saving a project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="4_load_project.html">Tutorial 4: load ArchPy project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="1_many_hierarchical_units.html">Hierarchy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_example.html">3D model example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_example.html">An example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mps_surfaces.html">Surfaces with MPS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_geological_map.html">Geological map</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Article_example.html">Article ArchPy exemple</a></li>
 <li class="toctree-l2"><a class="reference internal" href="x_valid_exemple1.html">Cross-validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inference_surfaces.html">Surface parameters inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.html">Rotation of a grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_thickness_controlled.html">Control unit thickness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_use_existing_surfaces.html">Existing Surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_non_stationary.html">Non-stationary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_selection.html">Draw your own area !</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_coupling.html">Modflow/Modpath basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_coupling_unstructured_grid.html">ArchPy2Modflow: Energy model with unstructured grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_energy_model.html">ArchPy2Modflow: Energy Transport with Modflow 6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transport_simple_example.html">modflow_transport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upscaling_3D_fields.html">Upscaling using Renormalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unstructured_grids.html">Upscaling unstructured grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ap2_mf_paper.html">ArchPy2Modflow: paper examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">List of modules</a></li>
@@ -161,40 +170,32 @@
           <div class="body" role="main">
             
   <section id="Tutorial-2:-hard-data-files">
-<h1>Tutorial 2: hard data files<a class="headerlink" href="#Tutorial-2:-hard-data-files" title="Permalink to this heading">¶</a></h1>
-<div class="nbinput docutils container">
+<h1>Tutorial 2: hard data files<a class="headerlink" href="#Tutorial-2:-hard-data-files" title="Link to this heading">¶</a></h1>
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">geone</span>
-<span class="kn">import</span> <span class="nn">geone.covModel</span> <span class="k">as</span> <span class="nn">gcm</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">pyvista</span> <span class="k">as</span> <span class="nn">pv</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone.covModel</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gcm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvista</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="n">pv</span><span class="o">.</span><span class="n">set_jupyter_backend</span><span class="p">(</span><span class="s1">&#39;static&#39;</span><span class="p">)</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">ArchPy</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">ArchPy</span>
 <span class="k">except</span><span class="p">:</span> <span class="c1"># if ArchPy is not installed</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ArchPy not installed&quot;</span><span class="p">)</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../..&quot;</span><span class="p">)</span>
-    <span class="kn">import</span> <span class="nn">ArchPy</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">ArchPy</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-ArchPy not installed
-</pre></div></div>
-</div>
 <section id="Introduction">
-<h2>Introduction<a class="headerlink" href="#Introduction" title="Permalink to this heading">¶</a></h2>
+<h2>Introduction<a class="headerlink" href="#Introduction" title="Link to this heading">¶</a></h2>
 <p>This notebook present how to load and import hard data files (boreholes) with ArchPy.</p>
 <p>For this ArchPy requires three different data files which are text files. A list of borholes, a list of unit data and a list of facies data.</p>
 <p>They can have any extensions but the recommended are :</p>
@@ -202,8 +203,17 @@ ArchPy not installed
 <p>list of unit data -&gt; <code class="docutils literal notranslate"><span class="pre">.ud</span></code></p>
 <p>list of facies data -&gt; <code class="docutils literal notranslate"><span class="pre">.fd</span></code></p>
 <p>For this example, the files are in the 2_data_folder.</p>
-<p>We can detail these files : - <code class="docutils literal notranslate"><span class="pre">.lbh</span></code> : text file with five columns listing all the boreholes in the data. It has five columns and default headers are : - bh_ID : borehole identifier to know at which borehole a unit/facies data belongs - bh_x : x borehole coordinate - bh_y : y borehole coordinate - bh_z : z borehole coordinate - bh_depth : borehole depth</p>
+<p>We can detail these files :</p>
 <ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">.lbh</span></code> : text file with five columns listing all the boreholes in the data. It has five columns and default headers are :</p>
+<ul>
+<li><p>bh_ID : borehole identifier to know at which borehole a unit/facies data belongs</p></li>
+<li><p>bh_x : x borehole coordinate</p></li>
+<li><p>bh_y : y borehole coordinate</p></li>
+<li><p>bh_z : z borehole coordinate</p></li>
+<li><p>bh_depth : borehole depth</p></li>
+</ul>
+</li>
 <li><p><code class="docutils literal notranslate"><span class="pre">.ud</span></code> : text file with four columns listing all the stratigraphical unit interval data. Default headers are :</p>
 <ul>
 <li><p>bh_ID : borehole identifier to know at whcih borehole the unit data belongs</p></li>
@@ -237,9 +247,9 @@ ArchPy not installed
 </div>
 </section>
 <section id="First-step-:-import">
-<h2>First step : import<a class="headerlink" href="#First-step-:-import" title="Permalink to this heading">¶</a></h2>
+<h2>First step : import<a class="headerlink" href="#First-step-:-import" title="Link to this heading">¶</a></h2>
 <section id="We-can-now-import-the-geological-database-with-the-function-:-ArchPy.inputs.load_bh_files">
-<h3>We can now import the geological database with the function : <code class="docutils literal notranslate"><span class="pre">ArchPy.inputs.load_bh_files</span></code><a class="headerlink" href="#We-can-now-import-the-geological-database-with-the-function-:-ArchPy.inputs.load_bh_files" title="Permalink to this heading">¶</a></h3>
+<h3>We can now import the geological database with the function : <code class="docutils literal notranslate"><span class="pre">ArchPy.inputs.load_bh_files</span></code><a class="headerlink" href="#We-can-now-import-the-geological-database-with-the-function-:-ArchPy.inputs.load_bh_files" title="Link to this heading">¶</a></h3>
 <p>This function takes the dataframe of the 3 inputs files as arguments but also column names if they are differents (e.g. bh_id_col which is by default “bh_ID” or u_top_col which is the name of the column indicating top elevation in .ud file).</p>
 <p>Dictionnaries can also be passed (<code class="docutils literal notranslate"><span class="pre">dic_units_names</span></code> and <code class="docutils literal notranslate"><span class="pre">dic_facies_names</span></code>) which will change units/facies names in database with associated values in dictionnary. For example, if a <code class="docutils literal notranslate"><span class="pre">dic_units_names</span> <span class="pre">=</span> <span class="pre">{&quot;Lias&quot;</span> <span class="pre">:</span> <span class="pre">&quot;Jura&quot;,</span>&#160; <span class="pre">&quot;Dogger&quot;</span> <span class="pre">:</span> <span class="pre">&quot;Jura&quot;,</span> <span class="pre">&quot;Malm&quot;</span> <span class="pre">:</span> <span class="pre">&quot;Jurassic&quot;}</span></code> is passed, all unit names in keys will be replaced by “Jurassic”. This can be useful to merge some facies or units if they are similar.</p>
 <p>Last parameter is <code class="docutils literal notranslate"><span class="pre">altitude</span></code> flag which indicates to ArchPy if elevation values in database are in altitude or not (depth if False).</p>
@@ -441,7 +451,7 @@ ArchPy not installed
 </section>
 </section>
 <section id="Second-step">
-<h2>Second step<a class="headerlink" href="#Second-step" title="Permalink to this heading">¶</a></h2>
+<h2>Second step<a class="headerlink" href="#Second-step" title="Link to this heading">¶</a></h2>
 <p>Creating the Project with appropriated units/facies.</p>
 <p>For simplicity SIS will be used to fill these units.</p>
 <div class="nbinput nblast docutils container">
@@ -501,7 +511,7 @@ Pile sets as Pile master
 </div>
 </section>
 <section id="Units">
-<h2>Units<a class="headerlink" href="#Units" title="Permalink to this heading">¶</a></h2>
+<h2>Units<a class="headerlink" href="#Units" title="Link to this heading">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
@@ -573,14 +583,14 @@ Unit B: covmodel for SIS added
 Unit B: Surface added for interpolation
 Unit A: covmodel for SIS added
 Unit A: Surface added for interpolation
-Stratigraphic unit C added
-Stratigraphic unit B added
-Stratigraphic unit A added
+Stratigraphic unit C added ✅
+Stratigraphic unit B added ✅
+Stratigraphic unit A added ✅
 </pre></div></div>
 </div>
 </section>
 <section id="Facies">
-<h2>Facies<a class="headerlink" href="#Facies" title="Permalink to this heading">¶</a></h2>
+<h2>Facies<a class="headerlink" href="#Facies" title="Link to this heading">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
@@ -602,17 +612,17 @@ Stratigraphic unit A added
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Facies Gravel added to unit C
-Facies Clay added to unit B
-Facies Sand added to unit B
-Facies Sand added to unit A
-Facies Gravel added to unit A
-Facies Silt added to unit A
+Facies Gravel added to unit C ✅
+Facies Clay added to unit B ✅
+Facies Sand added to unit B ✅
+Facies Sand added to unit A ✅
+Facies Gravel added to unit A ✅
+Facies Silt added to unit A ✅
 </pre></div></div>
 </div>
 </section>
 <section id="Extract-boreholes-from-database">
-<h2>Extract boreholes from database<a class="headerlink" href="#Extract-boreholes-from-database" title="Permalink to this heading">¶</a></h2>
+<h2>Extract boreholes from database<a class="headerlink" href="#Extract-boreholes-from-database" title="Link to this heading">¶</a></h2>
 <p>We can now extract boreholes objects with <code class="docutils literal notranslate"><span class="pre">ArchPy.inputs.extract_bhs</span></code>. Note : This function requires the list of boreholes path</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
@@ -624,9 +634,17 @@ Facies Silt added to unit A
 </div>
 </section>
 <section id="Borehole-class">
-<h2>Borehole class<a class="headerlink" href="#Borehole-class" title="Permalink to this heading">¶</a></h2>
+<h2>Borehole class<a class="headerlink" href="#Borehole-class" title="Link to this heading">¶</a></h2>
 <p>In ArchPy, the geological data are in “borehole” format. Here we have created boreholes directly from a database but they can also be create manually in python with <code class="docutils literal notranslate"><span class="pre">ArchPy.base.borehole</span></code>.</p>
-<p>A borehole takes multiple arguments : - name - ID - x,y,z : top borehole coordinates - depth : depth of the borehole - log_strati : unit data which is a list of tuple, each tuple containing a unit object and an elevation (e.g. <code class="docutils literal notranslate"><span class="pre">log_strati</span> <span class="pre">=</span> <span class="pre">[(D,</span> <span class="pre">10),</span> <span class="pre">(C,</span> <span class="pre">6),</span> <span class="pre">...]</span></code>). - log_facies : facies data, identical to log_strati except unit object are facies object</p>
+<p>A borehole takes multiple arguments :</p>
+<ul class="simple">
+<li><p>name</p></li>
+<li><p>ID</p></li>
+<li><p>x,y,z : top borehole coordinates</p></li>
+<li><p>depth : depth of the borehole</p></li>
+<li><p>log_strati : unit data which is a list of tuple, each tuple containing a unit object and an elevation (e.g. <code class="docutils literal notranslate"><span class="pre">log_strati</span> <span class="pre">=</span> <span class="pre">[(D,</span> <span class="pre">10),</span> <span class="pre">(C,</span> <span class="pre">6),</span> <span class="pre">...]</span></code>).</p></li>
+<li><p>log_facies : facies data, identical to log_strati except unit object are facies object</p></li>
+</ul>
 <p>They are added to the project with <code class="docutils literal notranslate"><span class="pre">add_bh</span></code>.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
@@ -713,14 +731,34 @@ Processing ended successfully
 <div class="highlight"><pre>
 equality point : 15 x, 25 y, 10.0 z
 equality point : 20 x, 5 y, 12.0 z
-inequality point : 1 x, 15 y, 15.0 vmin, nan vmax
+inequality point : 1 x, 15 y, 14.0 vmin, nan vmax
 </pre></div></div>
+</div>
+<p>We can also plot on a top-view the hard data</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">plot_unit_data_point</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">T1</span><span class="o">.</span><span class="n">plot_unit_data_point</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">typ</span><span class="o">=</span><span class="s2">&quot;thk&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_2_Hard_data_25_0.png" src="../_images/notebooks_2_Hard_data_25_0.png" />
+</div>
 </div>
 </section>
 <section id="Simulations">
-<h2>Simulations<a class="headerlink" href="#Simulations" title="Permalink to this heading">¶</a></h2>
+<h2>Simulations<a class="headerlink" href="#Simulations" title="Link to this heading">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_surf</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -737,23 +775,23 @@ Pile Pile_1: ordering units
 Stratigraphic units have been sorted according to order
 
 #### COMPUTING SURFACE OF UNIT A
-A: time elapsed for computing surface 0.024022340774536133 s
+A: time elapsed for computing surface 0.03850197792053223 s
 
 #### COMPUTING SURFACE OF UNIT B
-B: time elapsed for computing surface 0.3463144302368164 s
+B: time elapsed for computing surface 0.03570961952209473 s
 
 #### COMPUTING SURFACE OF UNIT C
 C: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.07807040214538574 s
+Time elapsed for getting domains 0.009617328643798828 s
 ##########################
 
 
-### 0.46442174911499023: Total time elapsed for computing surfaces ###
+### 0.10334396362304688: Total time elapsed for computing surfaces ###
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_facies</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -768,23 +806,23 @@ Time elapsed for getting domains 0.07807040214538574 s
 
 ### Unit C: facies simulation with homogenous method ####
 ### Unit C - realization 0 ###
-Time elapsed 0.01 s
+Time elapsed 0.0 s
 
 ### Unit B: facies simulation with SIS method ####
 ### Unit B - realization 0 ###
 Only one facies covmodels for multiples facies, adapt sill to right proportions
-Time elapsed 3.68 s
+Time elapsed 1.59 s
 
 ### Unit A: facies simulation with SIS method ####
 ### Unit A - realization 0 ###
 Only one facies covmodels for multiples facies, adapt sill to right proportions
-Time elapsed 6.5 s
+Time elapsed 3.12 s
 
-### 10.19: Total time elapsed for computing facies ###
+### 4.72: Total time elapsed for computing facies ###
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">()</span>
@@ -796,24 +834,15 @@ Time elapsed 6.5 s
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\grid.py:511: PyVistaDeprecationWarning: `dims` argument is deprecated. Please use `dimensions`.
-  &#39;`dims` argument is deprecated. Please use `dimensions`.&#39;, PyVistaDeprecationWarning
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_2_Hard_data_27_1.png" src="../_images/notebooks_2_Hard_data_27_1.png" />
+<img alt="../_images/notebooks_2_Hard_data_29_0.png" src="../_images/notebooks_2_Hard_data_29_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">()</span>
@@ -827,7 +856,7 @@ C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\grid.py:511: PyV
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_2_Hard_data_28_0.png" src="../_images/notebooks_2_Hard_data_28_0.png" />
+<img alt="../_images/notebooks_2_Hard_data_30_0.png" src="../_images/notebooks_2_Hard_data_30_0.png" />
 </div>
 </div>
 <p>This concludes this little tutorial on ArchPy inputs capabilities</p>
@@ -841,11 +870,11 @@ C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\grid.py:511: PyV
       </div>
     
         <div id="show_right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents<span></a></p>
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
         </div>
 
         <div id="right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:<span></a></p>
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Tutorial 2: hard data files</a><ul>
@@ -889,8 +918,8 @@ C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\grid.py:511: PyV
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, University of Neuchâtel.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    &#169; Copyright 2026, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

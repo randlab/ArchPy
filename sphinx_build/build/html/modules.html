@@ -1,32 +1,29 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>ArchPy &#8212; ArchPy 1.0.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=0.7.0-1" />
-    <link rel="stylesheet" type="text/css" href="_static/twemoji.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
+    <title>ArchPy &#8212; ArchPy 1.2.12 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="_static/twemoji.css?v=2199c511" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
-    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
-    <script src="_static/twemoji.js"></script>
+    <script src="_static/documentation_options.js?v=817200f7"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="https://unpkg.com/twemoji@latest/dist/twemoji.min.js"></script>
+    <script src="_static/twemoji.js?v=a4381b3f"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <script src="_static/js/theme.js"></script>
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="base module" href="base.html" />
-    <link rel="prev" title="Surface parameters inference" href="notebooks/inference_surfaces.html" /> 
+    <link rel="prev" title="ArchPy2Modflow: paper examples" href="notebooks/ap2_mf_paper.html" /> 
   </head><body data-dark_mode_code_blocks="true">
 
 <div id="top_nav">
@@ -40,7 +37,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">ArchPy 1.0.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">ArchPy 1.2.12 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -112,7 +109,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -120,14 +117,14 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="README_rtd.html">Introduction</a></li>
@@ -137,6 +134,9 @@
 <li class="toctree-l2"><a class="reference internal" href="infer.html">infer module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inputs.html">inputs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="x_valid.html">x_valid module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ap_mf.html">ArchPy2Modflow module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html">Upscaling module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="automatic_pile.html">Automatic pile module</a></li>
 </ul>
 </li>
 </ul>
@@ -151,7 +151,7 @@
           <div class="body" role="main">
             
   <section id="archpy">
-<h1>ArchPy<a class="headerlink" href="#archpy" title="Permalink to this heading">¶</a></h1>
+<h1>ArchPy<a class="headerlink" href="#archpy" title="Link to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="base.html">base module</a><ul>
@@ -168,13 +168,16 @@
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.check_units_ID"><code class="docutils literal notranslate"><span class="pre">Arch_table.check_units_ID()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.compute_distribution"><code class="docutils literal notranslate"><span class="pre">Arch_table.compute_distribution()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.compute_domain"><code class="docutils literal notranslate"><span class="pre">Arch_table.compute_domain()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.compute_domain_old"><code class="docutils literal notranslate"><span class="pre">Arch_table.compute_domain_old()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.compute_facies"><code class="docutils literal notranslate"><span class="pre">Arch_table.compute_facies()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.compute_geol_map"><code class="docutils literal notranslate"><span class="pre">Arch_table.compute_geol_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.compute_mean_prop"><code class="docutils literal notranslate"><span class="pre">Arch_table.compute_mean_prop()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.compute_prop"><code class="docutils literal notranslate"><span class="pre">Arch_table.compute_prop()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.compute_surf"><code class="docutils literal notranslate"><span class="pre">Arch_table.compute_surf()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.coord2cell"><code class="docutils literal notranslate"><span class="pre">Arch_table.coord2cell()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.cross_section"><code class="docutils literal notranslate"><span class="pre">Arch_table.cross_section()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.define_domains"><code class="docutils literal notranslate"><span class="pre">Arch_table.define_domains()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.discretize_polygon"><code class="docutils literal notranslate"><span class="pre">Arch_table.discretize_polygon()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.draw_cross_section"><code class="docutils literal notranslate"><span class="pre">Arch_table.draw_cross_section()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.erase_hd"><code class="docutils literal notranslate"><span class="pre">Arch_table.erase_hd()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.estimate_surf_params"><code class="docutils literal notranslate"><span class="pre">Arch_table.estimate_surf_params()</span></code></a></li>
@@ -184,10 +187,12 @@
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.geol_contours"><code class="docutils literal notranslate"><span class="pre">Arch_table.geol_contours()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_all_facies"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_all_facies()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_all_units"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_all_units()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_bh"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_bh()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_bounds"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_bounds()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_entropy"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_entropy()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_facies"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_facies()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_facies_obj"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_facies_obj()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_mask"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_mask()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_nx"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_nx()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_ny"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_ny()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_nz"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_nz()</span></code></a></li>
@@ -196,28 +201,37 @@
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_oz"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_oz()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_pile_master"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_pile_master()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_piles"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_piles()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_points_box"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_points_box()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_prop"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_prop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_prop_names"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_prop_names()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_proportions"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_proportions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_rot_angle"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_rot_angle()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_rot_matrix"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_rot_matrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_sp"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_sp()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_surface"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_surface()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_surfaces_unit"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_surfaces_unit()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_sx"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_sx()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_sy"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_sy()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_sz"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_sz()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_thickness_in_unit"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_thickness_in_unit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_top"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_top()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_transmissivity_in_unit"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_transmissivity_in_unit()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_unit"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_unit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_unit_data_point"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_unit_data_point()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_units_domains_realizations"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_units_domains_realizations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_xcellcenters"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_xcellcenters()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_xg"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_xg()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_xgc"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_xgc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_ycellcenters"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_ycellcenters()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_yg"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_yg()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_ygc"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_ygc()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_zg"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_zg()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.get_zgc"><code class="docutils literal notranslate"><span class="pre">Arch_table.get_zgc()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.getbh"><code class="docutils literal notranslate"><span class="pre">Arch_table.getbh()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.getbhindex"><code class="docutils literal notranslate"><span class="pre">Arch_table.getbhindex()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.getprop"><code class="docutils literal notranslate"><span class="pre">Arch_table.getprop()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.getpropindex"><code class="docutils literal notranslate"><span class="pre">Arch_table.getpropindex()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.hd_fa_in_unit"><code class="docutils literal notranslate"><span class="pre">Arch_table.hd_fa_in_unit()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.hd_un_in_unit"><code class="docutils literal notranslate"><span class="pre">Arch_table.hd_un_in_unit()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.hierarchy_relations"><code class="docutils literal notranslate"><span class="pre">Arch_table.hierarchy_relations()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.indextocell"><code class="docutils literal notranslate"><span class="pre">Arch_table.indextocell()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.make_fake_bh"><code class="docutils literal notranslate"><span class="pre">Arch_table.make_fake_bh()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.order_Piles"><code class="docutils literal notranslate"><span class="pre">Arch_table.order_Piles()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.orientation_map"><code class="docutils literal notranslate"><span class="pre">Arch_table.orientation_map()</span></code></a></li>
@@ -227,10 +241,13 @@
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.plot_cross_section"><code class="docutils literal notranslate"><span class="pre">Arch_table.plot_cross_section()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.plot_facies"><code class="docutils literal notranslate"><span class="pre">Arch_table.plot_facies()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.plot_geol_map"><code class="docutils literal notranslate"><span class="pre">Arch_table.plot_geol_map()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.plot_grid"><code class="docutils literal notranslate"><span class="pre">Arch_table.plot_grid()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.plot_lines"><code class="docutils literal notranslate"><span class="pre">Arch_table.plot_lines()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.plot_mean_prop"><code class="docutils literal notranslate"><span class="pre">Arch_table.plot_mean_prop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.plot_pile"><code class="docutils literal notranslate"><span class="pre">Arch_table.plot_pile()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.plot_proba"><code class="docutils literal notranslate"><span class="pre">Arch_table.plot_proba()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.plot_prop"><code class="docutils literal notranslate"><span class="pre">Arch_table.plot_prop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.plot_unit_data_point"><code class="docutils literal notranslate"><span class="pre">Arch_table.plot_unit_data_point()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.plot_units"><code class="docutils literal notranslate"><span class="pre">Arch_table.plot_units()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.pointToIndex"><code class="docutils literal notranslate"><span class="pre">Arch_table.pointToIndex()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.process_bhs"><code class="docutils literal notranslate"><span class="pre">Arch_table.process_bhs()</span></code></a></li>
@@ -240,9 +257,12 @@
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.rem_all_facies_from_units"><code class="docutils literal notranslate"><span class="pre">Arch_table.rem_all_facies_from_units()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.rem_bh"><code class="docutils literal notranslate"><span class="pre">Arch_table.rem_bh()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.rem_fake_bh"><code class="docutils literal notranslate"><span class="pre">Arch_table.rem_fake_bh()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.rem_prop"><code class="docutils literal notranslate"><span class="pre">Arch_table.rem_prop()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.reprocess"><code class="docutils literal notranslate"><span class="pre">Arch_table.reprocess()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.resample2grid"><code class="docutils literal notranslate"><span class="pre">Arch_table.resample2grid()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.rotate"><code class="docutils literal notranslate"><span class="pre">Arch_table.rotate()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.set_Pile_master"><code class="docutils literal notranslate"><span class="pre">Arch_table.set_Pile_master()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.set_results_from_another_table"><code class="docutils literal notranslate"><span class="pre">Arch_table.set_results_from_another_table()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Arch_table.unit_mask"><code class="docutils literal notranslate"><span class="pre">Arch_table.unit_mask()</span></code></a></li>
 </ul>
 </li>
@@ -252,7 +272,9 @@
 <li class="toctree-l2"><a class="reference internal" href="base.html#base.Pile"><code class="docutils literal notranslate"><span class="pre">Pile</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Pile.add_unit"><code class="docutils literal notranslate"><span class="pre">Pile.add_unit()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Pile.compute_surf"><code class="docutils literal notranslate"><span class="pre">Pile.compute_surf()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Pile.compute_surf_1D"><code class="docutils literal notranslate"><span class="pre">Pile.compute_surf_1D()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Pile.define_domains"><code class="docutils literal notranslate"><span class="pre">Pile.define_domains()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Pile.get_pile_ref"><code class="docutils literal notranslate"><span class="pre">Pile.get_pile_ref()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Pile.order_units"><code class="docutils literal notranslate"><span class="pre">Pile.order_units()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Pile.remove_unit"><code class="docutils literal notranslate"><span class="pre">Pile.remove_unit()</span></code></a></li>
 </ul>
@@ -264,7 +286,10 @@
 <li class="toctree-l2"><a class="reference internal" href="base.html#base.Surface"><code class="docutils literal notranslate"><span class="pre">Surface</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Surface.copy"><code class="docutils literal notranslate"><span class="pre">Surface.copy()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Surface.get_surface_covmodel"><code class="docutils literal notranslate"><span class="pre">Surface.get_surface_covmodel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Surface.set_N_transfo"><code class="docutils literal notranslate"><span class="pre">Surface.set_N_transfo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Surface.set_contact"><code class="docutils literal notranslate"><span class="pre">Surface.set_contact()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Surface.set_covmodel"><code class="docutils literal notranslate"><span class="pre">Surface.set_covmodel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Surface.set_dic_surf"><code class="docutils literal notranslate"><span class="pre">Surface.set_dic_surf()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="base.html#base.Unit"><code class="docutils literal notranslate"><span class="pre">Unit</span></code></a><ul>
@@ -273,6 +298,7 @@
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Unit.copy"><code class="docutils literal notranslate"><span class="pre">Unit.copy()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Unit.get_baby_units"><code class="docutils literal notranslate"><span class="pre">Unit.get_baby_units()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Unit.get_big_mummy_unit"><code class="docutils literal notranslate"><span class="pre">Unit.get_big_mummy_unit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.Unit.get_facies"><code class="docutils literal notranslate"><span class="pre">Unit.get_facies()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Unit.get_h_level"><code class="docutils literal notranslate"><span class="pre">Unit.get_h_level()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Unit.goes_up_until"><code class="docutils literal notranslate"><span class="pre">Unit.goes_up_until()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.Unit.rem_facies"><code class="docutils literal notranslate"><span class="pre">Unit.rem_facies()</span></code></a></li>
@@ -284,13 +310,22 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="base.html#base.borehole"><code class="docutils literal notranslate"><span class="pre">borehole</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.borehole.create_thickness_log"><code class="docutils literal notranslate"><span class="pre">borehole.create_thickness_log()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.borehole.extract"><code class="docutils literal notranslate"><span class="pre">borehole.extract()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.borehole.get_list_facies"><code class="docutils literal notranslate"><span class="pre">borehole.get_list_facies()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.borehole.get_list_stratis"><code class="docutils literal notranslate"><span class="pre">borehole.get_list_stratis()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="base.html#base.borehole.prop_units"><code class="docutils literal notranslate"><span class="pre">borehole.prop_units()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.borehole.set_ID"><code class="docutils literal notranslate"><span class="pre">borehole.set_ID()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.borehole.set_coordinates"><code class="docutils literal notranslate"><span class="pre">borehole.set_coordinates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.borehole.set_depth"><code class="docutils literal notranslate"><span class="pre">borehole.set_depth()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.borehole.set_log_facies"><code class="docutils literal notranslate"><span class="pre">borehole.set_log_facies()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.borehole.set_log_strati"><code class="docutils literal notranslate"><span class="pre">borehole.set_log_strati()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="base.html#base.borehole.set_thickness_log"><code class="docutils literal notranslate"><span class="pre">borehole.set_thickness_log()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="base.html#base.get_most_probable_value"><code class="docutils literal notranslate"><span class="pre">get_most_probable_value()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="base.html#base.get_size"><code class="docutils literal notranslate"><span class="pre">get_size()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="base.html#base.interp1D"><code class="docutils literal notranslate"><span class="pre">interp1D()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="base.html#base.interp2D"><code class="docutils literal notranslate"><span class="pre">interp2D()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="base.html#base.resample_to_grid"><code class="docutils literal notranslate"><span class="pre">resample_to_grid()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="base.html#base.running_mean_2D"><code class="docutils literal notranslate"><span class="pre">running_mean_2D()</span></code></a></li>
@@ -315,6 +350,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="inputs.html">inputs module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html#inputs.GeolInconsistencyError"><code class="docutils literal notranslate"><span class="pre">GeolInconsistencyError</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="inputs.html#inputs.bhs_analysis"><code class="docutils literal notranslate"><span class="pre">bhs_analysis()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="inputs.html#inputs.create_d_f_covmodels"><code class="docutils literal notranslate"><span class="pre">create_d_f_covmodels()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="inputs.html#inputs.create_d_facies"><code class="docutils literal notranslate"><span class="pre">create_d_facies()</span></code></a></li>
@@ -353,6 +389,100 @@
 <li class="toctree-l2"><a class="reference internal" href="x_valid.html#x_valid.test_bh_1fold"><code class="docutils literal notranslate"><span class="pre">test_bh_1fold()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="ap_mf.html">ArchPy2Modflow module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow"><code class="docutils literal notranslate"><span class="pre">archpy2modflow</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.create_reduced_child_object"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.create_reduced_child_object()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.create_sim"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.create_sim()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.create_sim_energy"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.create_sim_energy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.create_sim_transport"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.create_sim_transport()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.create_ssm_e"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.create_ssm_e()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.create_ssm_t"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.create_ssm_t()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.get_gw_energy"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.get_gw_energy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.get_gw_transport"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.get_gw_transport()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.get_gwf"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.get_gwf()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.get_heads"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.get_heads()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.get_list_active_cells"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.get_list_active_cells()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.get_mp"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.get_mp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.get_sim"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.get_sim()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.get_sim_energy"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.get_sim_energy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.get_sim_prt"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.get_sim_prt()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.get_sim_transport"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.get_sim_transport()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.gmean"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.gmean()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.mp_create"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.mp_create()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.mp_get_endpoints_object"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.mp_get_endpoints_object()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.mp_get_facies_path_particle"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.mp_get_facies_path_particle()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.mp_get_pathlines_object"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.mp_get_pathlines_object()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.mp_run"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.mp_run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.plot_3D_heads"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.plot_3D_heads()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.prt_create"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.prt_create()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.prt_get_facies_path_particle"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.prt_get_facies_path_particle()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.prt_get_pathlines"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.prt_get_pathlines()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.prt_run"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.prt_run()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.set_cnd"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.set_cnd()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.set_dsp"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.set_dsp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.set_est"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.set_est()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.set_grid_layers_mode"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.set_grid_layers_mode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.set_imsgwe"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.set_imsgwe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.set_imsgwt"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.set_imsgwt()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.set_k"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.set_k()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.set_model_dir"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.set_model_dir()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.set_mst"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.set_mst()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.set_oc_t"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.set_oc_t()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.set_porosity"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.set_porosity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.set_strt"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.set_strt()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.set_strt_conc"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.set_strt_conc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.set_strt_temp"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.set_strt_temp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.set_tdisgwe"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.set_tdisgwe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.set_tdisgwt"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.set_tdisgwt()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="ap_mf.html#ap_mf.archpy2modflow.upscale_prop"><code class="docutils literal notranslate"><span class="pre">archpy2modflow.upscale_prop()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ap_mf.html#ap_mf.array2cellids"><code class="docutils literal notranslate"><span class="pre">array2cellids()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ap_mf.html#ap_mf.cellidBD"><code class="docutils literal notranslate"><span class="pre">cellidBD()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ap_mf.html#ap_mf.check_thk"><code class="docutils literal notranslate"><span class="pre">check_thk()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ap_mf.html#ap_mf.get_locs"><code class="docutils literal notranslate"><span class="pre">get_locs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ap_mf.html#ap_mf.get_nodes"><code class="docutils literal notranslate"><span class="pre">get_nodes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ap_mf.html#ap_mf.hmean_speed"><code class="docutils literal notranslate"><span class="pre">hmean_speed()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ap_mf.html#ap_mf.mask_below_unit"><code class="docutils literal notranslate"><span class="pre">mask_below_unit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ap_mf.html#ap_mf.mean_speed"><code class="docutils literal notranslate"><span class="pre">mean_speed()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ap_mf.html#ap_mf.plot_particle_facies_sequence"><code class="docutils literal notranslate"><span class="pre">plot_particle_facies_sequence()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="ap_mf.html#ap_mf.points2grid_index"><code class="docutils literal notranslate"><span class="pre">points2grid_index()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="uppy.html">Upscaling module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.f_2D"><code class="docutils literal notranslate"><span class="pre">f_2D()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.f_3D"><code class="docutils literal notranslate"><span class="pre">f_3D()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.f_rt_simple"><code class="docutils literal notranslate"><span class="pre">f_rt_simple()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.f_sr"><code class="docutils literal notranslate"><span class="pre">f_sr()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.f_sr_center"><code class="docutils literal notranslate"><span class="pre">f_sr_center()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.fill_nan_values_with_gmean"><code class="docutils literal notranslate"><span class="pre">fill_nan_values_with_gmean()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.find_c_2D"><code class="docutils literal notranslate"><span class="pre">find_c_2D()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.find_c_3D"><code class="docutils literal notranslate"><span class="pre">find_c_3D()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.get_alpha"><code class="docutils literal notranslate"><span class="pre">get_alpha()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.get_idx"><code class="docutils literal notranslate"><span class="pre">get_idx()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.gmean"><code class="docutils literal notranslate"><span class="pre">gmean()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.hmean"><code class="docutils literal notranslate"><span class="pre">hmean()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.keq"><code class="docutils literal notranslate"><span class="pre">keq()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.mean"><code class="docutils literal notranslate"><span class="pre">mean()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.merge"><code class="docutils literal notranslate"><span class="pre">merge()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.rotate_point"><code class="docutils literal notranslate"><span class="pre">rotate_point()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.simplified_renormalization"><code class="docutils literal notranslate"><span class="pre">simplified_renormalization()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.simplified_renormalization_2D"><code class="docutils literal notranslate"><span class="pre">simplified_renormalization_2D()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.standard_renormalization"><code class="docutils literal notranslate"><span class="pre">standard_renormalization()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.tensorial_renormalization"><code class="docutils literal notranslate"><span class="pre">tensorial_renormalization()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.test_f"><code class="docutils literal notranslate"><span class="pre">test_f()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.test_f_2D"><code class="docutils literal notranslate"><span class="pre">test_f_2D()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.test_find_c"><code class="docutils literal notranslate"><span class="pre">test_find_c()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.upscale_cell_disv"><code class="docutils literal notranslate"><span class="pre">upscale_cell_disv()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.upscale_k"><code class="docutils literal notranslate"><span class="pre">upscale_k()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html#uppy.upscale_k_2D"><code class="docutils literal notranslate"><span class="pre">upscale_k_2D()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="automatic_pile.html">Automatic pile module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="automatic_pile.html#automatic_pile.get_errors_M"><code class="docutils literal notranslate"><span class="pre">get_errors_M()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="automatic_pile.html#automatic_pile.infer_pile"><code class="docutils literal notranslate"><span class="pre">infer_pile()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>
@@ -370,8 +500,8 @@
         <div class="button_nav">
             <div class="left">
                 
-                <a href="notebooks/inference_surfaces.html">
-                    <span class="icon">&lt;</span><span>Surface parameters inference</span></a>
+                <a href="notebooks/ap2_mf_paper.html">
+                    <span class="icon">&lt;</span><span>ArchPy2Modflow: paper examples</span></a>
                 
             </div>
 
@@ -385,8 +515,8 @@
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, University of Neuchâtel.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    &#169; Copyright 2026, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

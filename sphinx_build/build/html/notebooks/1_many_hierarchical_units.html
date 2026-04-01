@@ -1,29 +1,26 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Hierarchical modeling with ArchPy &#8212; ArchPy 1.0.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=0.7.0-1" />
-    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <title>Hierarchical modeling with ArchPy &#8212; ArchPy 1.2.12 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css?v=2199c511" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
-    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
-    <script src="../_static/twemoji.js"></script>
+    <script src="../_static/documentation_options.js?v=817200f7"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="https://unpkg.com/twemoji@latest/dist/twemoji.min.js"></script>
+    <script src="../_static/twemoji.js?v=a4381b3f"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <script src="../_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -43,7 +40,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.0.0 documentation</a></h1>
+        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.2.12 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -115,7 +112,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -123,14 +120,14 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../README_rtd.html">Introduction</a></li>
@@ -140,12 +137,24 @@
 <li class="toctree-l2"><a class="reference internal" href="3_filling_and_saving.html">Tutorial 3: filling methods and saving a project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="4_load_project.html">Tutorial 4: load ArchPy project</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Hierarchy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_example.html">3D model example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_example.html">An example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mps_surfaces.html">Surfaces with MPS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_geological_map.html">Geological map</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Article_example.html">Article ArchPy exemple</a></li>
 <li class="toctree-l2"><a class="reference internal" href="x_valid_exemple1.html">Cross-validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inference_surfaces.html">Surface parameters inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.html">Rotation of a grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_thickness_controlled.html">Control unit thickness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_use_existing_surfaces.html">Existing Surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_non_stationary.html">Non-stationary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_selection.html">Draw your own area !</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_coupling.html">Modflow/Modpath basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_coupling_unstructured_grid.html">ArchPy2Modflow: Energy model with unstructured grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_energy_model.html">ArchPy2Modflow: Energy Transport with Modflow 6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transport_simple_example.html">modflow_transport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upscaling_3D_fields.html">Upscaling using Renormalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unstructured_grids.html">Upscaling unstructured grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ap2_mf_paper.html">ArchPy2Modflow: paper examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">List of modules</a></li>
@@ -161,42 +170,34 @@
           <div class="body" role="main">
             
   <section id="Hierarchical-modeling-with-ArchPy">
-<h1>Hierarchical modeling with ArchPy<a class="headerlink" href="#Hierarchical-modeling-with-ArchPy" title="Permalink to this heading">¶</a></h1>
+<h1>Hierarchical modeling with ArchPy<a class="headerlink" href="#Hierarchical-modeling-with-ArchPy" title="Link to this heading">¶</a></h1>
 <p>This notebook demonstrates the capabilities of ArchPy to simulate any level of hierarchy.</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">geone</span>
-<span class="kn">import</span> <span class="nn">geone.covModel</span> <span class="k">as</span> <span class="nn">gcm</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">pyvista</span> <span class="k">as</span> <span class="nn">pv</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone.covModel</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gcm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvista</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="n">pv</span><span class="o">.</span><span class="n">set_jupyter_backend</span><span class="p">(</span><span class="s1">&#39;static&#39;</span><span class="p">)</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">ArchPy</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">ArchPy</span>
 <span class="k">except</span><span class="p">:</span> <span class="c1"># if ArchPy is not installed</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ArchPy not installed&quot;</span><span class="p">)</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../..&quot;</span><span class="p">)</span>
-    <span class="kn">import</span> <span class="nn">ArchPy</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">ArchPy</span>
 
 
-<span class="kn">from</span> <span class="nn">ArchPy.base</span> <span class="kn">import</span> <span class="n">Unit</span><span class="p">,</span> <span class="n">Facies</span><span class="p">,</span> <span class="n">Prop</span><span class="p">,</span> <span class="n">Pile</span><span class="p">,</span> <span class="n">Arch_table</span><span class="p">,</span> <span class="n">Surface</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ArchPy.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Unit</span><span class="p">,</span> <span class="n">Facies</span><span class="p">,</span> <span class="n">Prop</span><span class="p">,</span> <span class="n">Pile</span><span class="p">,</span> <span class="n">Arch_table</span><span class="p">,</span> <span class="n">Surface</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-ArchPy not installed
-</pre></div></div>
-</div>
 <section id="Project-and-grid">
-<h2>Project and grid<a class="headerlink" href="#Project-and-grid" title="Permalink to this heading">¶</a></h2>
+<h2>Project and grid<a class="headerlink" href="#Project-and-grid" title="Link to this heading">¶</a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
@@ -233,9 +234,9 @@ ArchPy not installed
 <p>ArchPy can then simulate sub-units inside other bigger units by setting the <code class="docutils literal notranslate"><span class="pre">f_method</span></code> (in unit <code class="docutils literal notranslate"><span class="pre">dic_facies</span></code>) to <code class="docutils literal notranslate"><span class="pre">SubPile</span></code>. <strong>It is then necessary to provide an ArchPy ``Pile`` object in the ``dic_facies``</strong>. Below are many different examples with various hierarchical level.</p>
 </section>
 <section id="Let's-create-a-lot-of-units,-sub-units,-...">
-<h2>Let’s create a lot of units, sub-units, …<a class="headerlink" href="#Let's-create-a-lot-of-units,-sub-units,-..." title="Permalink to this heading">¶</a></h2>
+<h2>Let’s create a lot of units, sub-units, …<a class="headerlink" href="#Let's-create-a-lot-of-units,-sub-units,-..." title="Link to this heading">¶</a></h2>
 <section id="C-unit">
-<h3>C unit<a class="headerlink" href="#C-unit" title="Permalink to this heading">¶</a></h3>
+<h3>C unit<a class="headerlink" href="#C-unit" title="Link to this heading">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
@@ -305,28 +306,28 @@ ArchPy not installed
 <div class="highlight"><pre>
 Unit C322: Surface added for interpolation
 Unit C321: Surface added for interpolation
-Stratigraphic unit C322 added
-Stratigraphic unit C321 added
+Stratigraphic unit C322 added ✅
+Stratigraphic unit C321 added ✅
 Unit C32: Surface added for interpolation
 Unit C31: Surface added for interpolation
-Stratigraphic unit C32 added
-Stratigraphic unit C31 added
+Stratigraphic unit C32 added ✅
+Stratigraphic unit C31 added ✅
 Unit C12: Surface added for interpolation
 Unit C11: Surface added for interpolation
-Stratigraphic unit C12 added
-Stratigraphic unit C11 added
+Stratigraphic unit C12 added ✅
+Stratigraphic unit C11 added ✅
 Unit C3: Surface added for interpolation
 Unit C2: Surface added for interpolation
 Unit C1: Surface added for interpolation
-Stratigraphic unit C3 added
-Stratigraphic unit C2 added
-Stratigraphic unit C1 added
+Stratigraphic unit C3 added ✅
+Stratigraphic unit C2 added ✅
+Stratigraphic unit C1 added ✅
 Unit C: Surface added for interpolation
 </pre></div></div>
 </div>
 </section>
 <section id="B-unit">
-<h3>B unit<a class="headerlink" href="#B-unit" title="Permalink to this heading">¶</a></h3>
+<h3>B unit<a class="headerlink" href="#B-unit" title="Link to this heading">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
@@ -367,16 +368,16 @@ Unit B4: Surface added for interpolation
 Unit B3: Surface added for interpolation
 Unit B2: Surface added for interpolation
 Unit B1: Surface added for interpolation
-Stratigraphic unit B4 added
-Stratigraphic unit B3 added
-Stratigraphic unit B2 added
-Stratigraphic unit B1 added
+Stratigraphic unit B4 added ✅
+Stratigraphic unit B3 added ✅
+Stratigraphic unit B2 added ✅
+Stratigraphic unit B1 added ✅
 Unit B: Surface added for interpolation
 </pre></div></div>
 </div>
 </section>
 <section id="A-unit">
-<h3>A unit<a class="headerlink" href="#A-unit" title="Permalink to this heading">¶</a></h3>
+<h3>A unit<a class="headerlink" href="#A-unit" title="Link to this heading">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
@@ -422,13 +423,13 @@ Unit B: Surface added for interpolation
 Unit A13: Surface added for interpolation
 Unit A12: Surface added for interpolation
 Unit A11: Surface added for interpolation
-Stratigraphic unit A13 added
-Stratigraphic unit A12 added
-Stratigraphic unit A11 added
+Stratigraphic unit A13 added ✅
+Stratigraphic unit A12 added ✅
+Stratigraphic unit A11 added ✅
 Unit A2: Surface added for interpolation
 Unit A1: Surface added for interpolation
-Stratigraphic unit A2 added
-Stratigraphic unit A1 added
+Stratigraphic unit A2 added ✅
+Stratigraphic unit A1 added ✅
 Unit A: Surface added for interpolation
 </pre></div></div>
 </div>
@@ -448,9 +449,9 @@ Unit A: Surface added for interpolation
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Stratigraphic unit C added
-Stratigraphic unit B added
-Stratigraphic unit A added
+Stratigraphic unit C added ✅
+Stratigraphic unit B added ✅
+Stratigraphic unit A added ✅
 Pile sets as Pile master
 </pre></div></div>
 </div>
@@ -494,6 +495,291 @@ No borehole found - no hd extracted
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_pile</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_1_many_hierarchical_units_14_0.png" src="../_images/notebooks_1_many_hierarchical_units_14_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">get_sp</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<style type="text/css">
+#T_08a55_row0_col0, #T_08a55_row0_col1, #T_08a55_row0_col2, #T_08a55_row0_col3, #T_08a55_row0_col4 {
+  background-color: #00004c;
+  color: white;
+}
+#T_08a55_row1_col0, #T_08a55_row1_col1, #T_08a55_row1_col2, #T_08a55_row1_col3, #T_08a55_row1_col4 {
+  background-color: #004c00;
+  color: white;
+}
+#T_08a55_row2_col0, #T_08a55_row2_col1, #T_08a55_row2_col2, #T_08a55_row2_col3, #T_08a55_row2_col4 {
+  background-color: #000000;
+  color: white;
+}
+#T_08a55_row3_col0, #T_08a55_row3_col1, #T_08a55_row3_col2, #T_08a55_row3_col3, #T_08a55_row3_col4, #T_08a55_row7_col0, #T_08a55_row7_col1, #T_08a55_row7_col2, #T_08a55_row7_col3, #T_08a55_row7_col4 {
+  background-color: #004c4c;
+  color: white;
+}
+#T_08a55_row4_col0, #T_08a55_row4_col1, #T_08a55_row4_col2, #T_08a55_row4_col3, #T_08a55_row4_col4 {
+  background-color: #004c80;
+  color: white;
+}
+#T_08a55_row5_col0, #T_08a55_row5_col1, #T_08a55_row5_col2, #T_08a55_row5_col3, #T_08a55_row5_col4, #T_08a55_row11_col0, #T_08a55_row11_col1, #T_08a55_row11_col2, #T_08a55_row11_col3, #T_08a55_row11_col4 {
+  background-color: #00804c;
+  color: white;
+}
+#T_08a55_row6_col0, #T_08a55_row6_col1, #T_08a55_row6_col2, #T_08a55_row6_col3, #T_08a55_row6_col4, #T_08a55_row8_col0, #T_08a55_row8_col1, #T_08a55_row8_col2, #T_08a55_row8_col3, #T_08a55_row8_col4 {
+  background-color: #004c66;
+  color: white;
+}
+#T_08a55_row9_col0, #T_08a55_row9_col1, #T_08a55_row9_col2, #T_08a55_row9_col3, #T_08a55_row9_col4 {
+  background-color: #00334c;
+  color: white;
+}
+#T_08a55_row10_col0, #T_08a55_row10_col1, #T_08a55_row10_col2, #T_08a55_row10_col3, #T_08a55_row10_col4 {
+  background-color: #006680;
+  color: white;
+}
+#T_08a55_row12_col0, #T_08a55_row12_col1, #T_08a55_row12_col2, #T_08a55_row12_col3, #T_08a55_row12_col4 {
+  background-color: #80cc00;
+  color: black;
+}
+#T_08a55_row13_col0, #T_08a55_row13_col1, #T_08a55_row13_col2, #T_08a55_row13_col3, #T_08a55_row13_col4 {
+  background-color: #33cc00;
+  color: black;
+}
+#T_08a55_row14_col0, #T_08a55_row14_col1, #T_08a55_row14_col2, #T_08a55_row14_col3, #T_08a55_row14_col4 {
+  background-color: #008000;
+  color: white;
+}
+#T_08a55_row15_col0, #T_08a55_row15_col1, #T_08a55_row15_col2, #T_08a55_row15_col3, #T_08a55_row15_col4 {
+  background-color: #00cc00;
+  color: white;
+}
+#T_08a55_row16_col0, #T_08a55_row16_col1, #T_08a55_row16_col2, #T_08a55_row16_col3, #T_08a55_row16_col4 {
+  background-color: #cccccc;
+  color: black;
+}
+#T_08a55_row17_col0, #T_08a55_row17_col1, #T_08a55_row17_col2, #T_08a55_row17_col3, #T_08a55_row17_col4 {
+  background-color: #999999;
+  color: black;
+}
+#T_08a55_row18_col0, #T_08a55_row18_col1, #T_08a55_row18_col2, #T_08a55_row18_col3, #T_08a55_row18_col4 {
+  background-color: #666666;
+  color: white;
+}
+#T_08a55_row19_col0, #T_08a55_row19_col1, #T_08a55_row19_col2, #T_08a55_row19_col3, #T_08a55_row19_col4 {
+  background-color: #404040;
+  color: white;
+}
+#T_08a55_row20_col0, #T_08a55_row20_col1, #T_08a55_row20_col2, #T_08a55_row20_col3, #T_08a55_row20_col4 {
+  background-color: #0d0d0d;
+  color: white;
+}
+</style>
+<table id="T_08a55">
+  <thead>
+    <tr>
+      <th class="blank level0" >&nbsp;</th>
+      <th id="T_08a55_level0_col0" class="col_heading level0 col0" >name</th>
+      <th id="T_08a55_level0_col1" class="col_heading level0 col1" >contact</th>
+      <th id="T_08a55_level0_col2" class="col_heading level0 col2" >int_method</th>
+      <th id="T_08a55_level0_col3" class="col_heading level0 col3" >filling_method</th>
+      <th id="T_08a55_level0_col4" class="col_heading level0 col4" >list_facies</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th id="T_08a55_level0_row0" class="row_heading level0 row0" >0</th>
+      <td id="T_08a55_row0_col0" class="data row0 col0" >C</td>
+      <td id="T_08a55_row0_col1" class="data row0 col1" >onlap</td>
+      <td id="T_08a55_row0_col2" class="data row0 col2" >nearest</td>
+      <td id="T_08a55_row0_col3" class="data row0 col3" >SubPile</td>
+      <td id="T_08a55_row0_col4" class="data row0 col4" >[]</td>
+    </tr>
+    <tr>
+      <th id="T_08a55_level0_row1" class="row_heading level0 row1" >1</th>
+      <td id="T_08a55_row1_col0" class="data row1 col0" >B</td>
+      <td id="T_08a55_row1_col1" class="data row1 col1" >erode</td>
+      <td id="T_08a55_row1_col2" class="data row1 col2" >grf_ineq</td>
+      <td id="T_08a55_row1_col3" class="data row1 col3" >SubPile</td>
+      <td id="T_08a55_row1_col4" class="data row1 col4" >[]</td>
+    </tr>
+    <tr>
+      <th id="T_08a55_level0_row2" class="row_heading level0 row2" >2</th>
+      <td id="T_08a55_row2_col0" class="data row2 col0" >A</td>
+      <td id="T_08a55_row2_col1" class="data row2 col1" >erode</td>
+      <td id="T_08a55_row2_col2" class="data row2 col2" >grf_ineq</td>
+      <td id="T_08a55_row2_col3" class="data row2 col3" >SubPile</td>
+      <td id="T_08a55_row2_col4" class="data row2 col4" >[]</td>
+    </tr>
+    <tr>
+      <th id="T_08a55_level0_row3" class="row_heading level0 row3" >3</th>
+      <td id="T_08a55_row3_col0" class="data row3 col0" >C3</td>
+      <td id="T_08a55_row3_col1" class="data row3 col1" >onlap</td>
+      <td id="T_08a55_row3_col2" class="data row3 col2" >nearest</td>
+      <td id="T_08a55_row3_col3" class="data row3 col3" >SubPile</td>
+      <td id="T_08a55_row3_col4" class="data row3 col4" >[]</td>
+    </tr>
+    <tr>
+      <th id="T_08a55_level0_row4" class="row_heading level0 row4" >4</th>
+      <td id="T_08a55_row4_col0" class="data row4 col0" >C2</td>
+      <td id="T_08a55_row4_col1" class="data row4 col1" >erode</td>
+      <td id="T_08a55_row4_col2" class="data row4 col2" >grf_ineq</td>
+      <td id="T_08a55_row4_col3" class="data row4 col3" >homogenous</td>
+      <td id="T_08a55_row4_col4" class="data row4 col4" >[]</td>
+    </tr>
+    <tr>
+      <th id="T_08a55_level0_row5" class="row_heading level0 row5" >5</th>
+      <td id="T_08a55_row5_col0" class="data row5 col0" >C1</td>
+      <td id="T_08a55_row5_col1" class="data row5 col1" >erode</td>
+      <td id="T_08a55_row5_col2" class="data row5 col2" >grf_ineq</td>
+      <td id="T_08a55_row5_col3" class="data row5 col3" >SubPile</td>
+      <td id="T_08a55_row5_col4" class="data row5 col4" >[]</td>
+    </tr>
+    <tr>
+      <th id="T_08a55_level0_row6" class="row_heading level0 row6" >6</th>
+      <td id="T_08a55_row6_col0" class="data row6 col0" >C32</td>
+      <td id="T_08a55_row6_col1" class="data row6 col1" >onlap</td>
+      <td id="T_08a55_row6_col2" class="data row6 col2" >nearest</td>
+      <td id="T_08a55_row6_col3" class="data row6 col3" >SubPile</td>
+      <td id="T_08a55_row6_col4" class="data row6 col4" >[]</td>
+    </tr>
+    <tr>
+      <th id="T_08a55_level0_row7" class="row_heading level0 row7" >7</th>
+      <td id="T_08a55_row7_col0" class="data row7 col0" >C31</td>
+      <td id="T_08a55_row7_col1" class="data row7 col1" >erode</td>
+      <td id="T_08a55_row7_col2" class="data row7 col2" >grf_ineq</td>
+      <td id="T_08a55_row7_col3" class="data row7 col3" >homogenous</td>
+      <td id="T_08a55_row7_col4" class="data row7 col4" >[]</td>
+    </tr>
+    <tr>
+      <th id="T_08a55_level0_row8" class="row_heading level0 row8" >8</th>
+      <td id="T_08a55_row8_col0" class="data row8 col0" >C322</td>
+      <td id="T_08a55_row8_col1" class="data row8 col1" >onlap</td>
+      <td id="T_08a55_row8_col2" class="data row8 col2" >nearest</td>
+      <td id="T_08a55_row8_col3" class="data row8 col3" >homogenous</td>
+      <td id="T_08a55_row8_col4" class="data row8 col4" >[]</td>
+    </tr>
+    <tr>
+      <th id="T_08a55_level0_row9" class="row_heading level0 row9" >9</th>
+      <td id="T_08a55_row9_col0" class="data row9 col0" >C321</td>
+      <td id="T_08a55_row9_col1" class="data row9 col1" >erode</td>
+      <td id="T_08a55_row9_col2" class="data row9 col2" >grf_ineq</td>
+      <td id="T_08a55_row9_col3" class="data row9 col3" >homogenous</td>
+      <td id="T_08a55_row9_col4" class="data row9 col4" >[]</td>
+    </tr>
+    <tr>
+      <th id="T_08a55_level0_row10" class="row_heading level0 row10" >10</th>
+      <td id="T_08a55_row10_col0" class="data row10 col0" >C12</td>
+      <td id="T_08a55_row10_col1" class="data row10 col1" >onlap</td>
+      <td id="T_08a55_row10_col2" class="data row10 col2" >nearest</td>
+      <td id="T_08a55_row10_col3" class="data row10 col3" >homogenous</td>
+      <td id="T_08a55_row10_col4" class="data row10 col4" >[]</td>
+    </tr>
+    <tr>
+      <th id="T_08a55_level0_row11" class="row_heading level0 row11" >11</th>
+      <td id="T_08a55_row11_col0" class="data row11 col0" >C11</td>
+      <td id="T_08a55_row11_col1" class="data row11 col1" >erode</td>
+      <td id="T_08a55_row11_col2" class="data row11 col2" >grf_ineq</td>
+      <td id="T_08a55_row11_col3" class="data row11 col3" >homogenous</td>
+      <td id="T_08a55_row11_col4" class="data row11 col4" >[]</td>
+    </tr>
+    <tr>
+      <th id="T_08a55_level0_row12" class="row_heading level0 row12" >12</th>
+      <td id="T_08a55_row12_col0" class="data row12 col0" >B4</td>
+      <td id="T_08a55_row12_col1" class="data row12 col1" >onlap</td>
+      <td id="T_08a55_row12_col2" class="data row12 col2" >nearest</td>
+      <td id="T_08a55_row12_col3" class="data row12 col3" >homogenous</td>
+      <td id="T_08a55_row12_col4" class="data row12 col4" >[]</td>
+    </tr>
+    <tr>
+      <th id="T_08a55_level0_row13" class="row_heading level0 row13" >13</th>
+      <td id="T_08a55_row13_col0" class="data row13 col0" >B3</td>
+      <td id="T_08a55_row13_col1" class="data row13 col1" >erode</td>
+      <td id="T_08a55_row13_col2" class="data row13 col2" >grf_ineq</td>
+      <td id="T_08a55_row13_col3" class="data row13 col3" >homogenous</td>
+      <td id="T_08a55_row13_col4" class="data row13 col4" >[]</td>
+    </tr>
+    <tr>
+      <th id="T_08a55_level0_row14" class="row_heading level0 row14" >14</th>
+      <td id="T_08a55_row14_col0" class="data row14 col0" >B2</td>
+      <td id="T_08a55_row14_col1" class="data row14 col1" >erode</td>
+      <td id="T_08a55_row14_col2" class="data row14 col2" >grf_ineq</td>
+      <td id="T_08a55_row14_col3" class="data row14 col3" >homogenous</td>
+      <td id="T_08a55_row14_col4" class="data row14 col4" >[]</td>
+    </tr>
+    <tr>
+      <th id="T_08a55_level0_row15" class="row_heading level0 row15" >15</th>
+      <td id="T_08a55_row15_col0" class="data row15 col0" >B1</td>
+      <td id="T_08a55_row15_col1" class="data row15 col1" >erode</td>
+      <td id="T_08a55_row15_col2" class="data row15 col2" >grf_ineq</td>
+      <td id="T_08a55_row15_col3" class="data row15 col3" >homogenous</td>
+      <td id="T_08a55_row15_col4" class="data row15 col4" >[]</td>
+    </tr>
+    <tr>
+      <th id="T_08a55_level0_row16" class="row_heading level0 row16" >16</th>
+      <td id="T_08a55_row16_col0" class="data row16 col0" >A2</td>
+      <td id="T_08a55_row16_col1" class="data row16 col1" >onlap</td>
+      <td id="T_08a55_row16_col2" class="data row16 col2" >nearest</td>
+      <td id="T_08a55_row16_col3" class="data row16 col3" >homogenous</td>
+      <td id="T_08a55_row16_col4" class="data row16 col4" >[]</td>
+    </tr>
+    <tr>
+      <th id="T_08a55_level0_row17" class="row_heading level0 row17" >17</th>
+      <td id="T_08a55_row17_col0" class="data row17 col0" >A1</td>
+      <td id="T_08a55_row17_col1" class="data row17 col1" >erode</td>
+      <td id="T_08a55_row17_col2" class="data row17 col2" >grf_ineq</td>
+      <td id="T_08a55_row17_col3" class="data row17 col3" >SubPile</td>
+      <td id="T_08a55_row17_col4" class="data row17 col4" >[]</td>
+    </tr>
+    <tr>
+      <th id="T_08a55_level0_row18" class="row_heading level0 row18" >18</th>
+      <td id="T_08a55_row18_col0" class="data row18 col0" >A13</td>
+      <td id="T_08a55_row18_col1" class="data row18 col1" >onlap</td>
+      <td id="T_08a55_row18_col2" class="data row18 col2" >nearest</td>
+      <td id="T_08a55_row18_col3" class="data row18 col3" >homogenous</td>
+      <td id="T_08a55_row18_col4" class="data row18 col4" >[]</td>
+    </tr>
+    <tr>
+      <th id="T_08a55_level0_row19" class="row_heading level0 row19" >19</th>
+      <td id="T_08a55_row19_col0" class="data row19 col0" >A12</td>
+      <td id="T_08a55_row19_col1" class="data row19 col1" >erode</td>
+      <td id="T_08a55_row19_col2" class="data row19 col2" >grf_ineq</td>
+      <td id="T_08a55_row19_col3" class="data row19 col3" >homogenous</td>
+      <td id="T_08a55_row19_col4" class="data row19 col4" >[]</td>
+    </tr>
+    <tr>
+      <th id="T_08a55_level0_row20" class="row_heading level0 row20" >20</th>
+      <td id="T_08a55_row20_col0" class="data row20 col0" >A11</td>
+      <td id="T_08a55_row20_col1" class="data row20 col1" >erode</td>
+      <td id="T_08a55_row20_col2" class="data row20 col2" >grf_ineq</td>
+      <td id="T_08a55_row20_col3" class="data row20 col3" >homogenous</td>
+      <td id="T_08a55_row20_col4" class="data row20 col4" >[]</td>
+    </tr>
+  </tbody>
+</table></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_surf</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -509,15 +795,15 @@ Pile Master_pile: ordering units
 Stratigraphic units have been sorted according to order
 
 #### COMPUTING SURFACE OF UNIT A
-A: time elapsed for computing surface 0.06405782699584961 s
+A: time elapsed for computing surface 0.08824610710144043 s
 
 #### COMPUTING SURFACE OF UNIT B
-B: time elapsed for computing surface 0.06505918502807617 s
+B: time elapsed for computing surface 0.09571123123168945 s
 
 #### COMPUTING SURFACE OF UNIT C
 C: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.23421239852905273 s
+Time elapsed for getting domains 0.023726940155029297 s
 ##########################
 
 ########## PILE PC ##########
@@ -525,15 +811,15 @@ Pile PC: ordering units
 Stratigraphic units have been sorted according to order
 
 #### COMPUTING SURFACE OF UNIT C1
-C1: time elapsed for computing surface 0.057051897048950195 s
+C1: time elapsed for computing surface 0.1120138168334961 s
 
 #### COMPUTING SURFACE OF UNIT C2
-C2: time elapsed for computing surface 0.06005525588989258 s
+C2: time elapsed for computing surface 0.10789299011230469 s
 
 #### COMPUTING SURFACE OF UNIT C3
 C3: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.22720646858215332 s
+Time elapsed for getting domains 0.025709152221679688 s
 ##########################
 
 ########## PILE PC3 ##########
@@ -541,12 +827,12 @@ Pile PC3: ordering units
 Stratigraphic units have been sorted according to order
 
 #### COMPUTING SURFACE OF UNIT C31
-C31: time elapsed for computing surface 0.05905342102050781 s
+C31: time elapsed for computing surface 0.12119626998901367 s
 
 #### COMPUTING SURFACE OF UNIT C32
 C32: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.15414047241210938 s
+Time elapsed for getting domains 0.018012523651123047 s
 ##########################
 
 ########## PILE C32 ##########
@@ -554,12 +840,12 @@ Pile C32: ordering units
 Stratigraphic units have been sorted according to order
 
 #### COMPUTING SURFACE OF UNIT C321
-C321: time elapsed for computing surface 0.06305694580078125 s
+C321: time elapsed for computing surface 0.11110401153564453 s
 
 #### COMPUTING SURFACE OF UNIT C322
 C322: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.1531391143798828 s
+Time elapsed for getting domains 0.017042160034179688 s
 ##########################
 
 ########## PILE PC1 ##########
@@ -567,12 +853,12 @@ Pile PC1: ordering units
 Stratigraphic units have been sorted according to order
 
 #### COMPUTING SURFACE OF UNIT C11
-C11: time elapsed for computing surface 0.059053897857666016 s
+C11: time elapsed for computing surface 0.11055254936218262 s
 
 #### COMPUTING SURFACE OF UNIT C12
 C12: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.15013647079467773 s
+Time elapsed for getting domains 0.0180361270904541 s
 ##########################
 
 ########## PILE PB ##########
@@ -580,18 +866,18 @@ Pile PB: ordering units
 Stratigraphic units have been sorted according to order
 
 #### COMPUTING SURFACE OF UNIT B1
-B1: time elapsed for computing surface 0.058052778244018555 s
+B1: time elapsed for computing surface 0.11712121963500977 s
 
 #### COMPUTING SURFACE OF UNIT B2
-B2: time elapsed for computing surface 0.05805253982543945 s
+B2: time elapsed for computing surface 0.09751653671264648 s
 
 #### COMPUTING SURFACE OF UNIT B3
-B3: time elapsed for computing surface 0.05905342102050781 s
+B3: time elapsed for computing surface 0.10650992393493652 s
 
 #### COMPUTING SURFACE OF UNIT B4
 B4: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.3092811107635498 s
+Time elapsed for getting domains 0.038060903549194336 s
 ##########################
 
 ########## PILE PA ##########
@@ -599,12 +885,12 @@ Pile PA: ordering units
 Stratigraphic units have been sorted according to order
 
 #### COMPUTING SURFACE OF UNIT A1
-A1: time elapsed for computing surface 0.06005430221557617 s
+A1: time elapsed for computing surface 0.10498952865600586 s
 
 #### COMPUTING SURFACE OF UNIT A2
 A2: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.1561422348022461 s
+Time elapsed for getting domains 0.017531633377075195 s
 ##########################
 
 ########## PILE PA1 ##########
@@ -612,48 +898,54 @@ Pile PA1: ordering units
 Stratigraphic units have been sorted according to order
 
 #### COMPUTING SURFACE OF UNIT A11
-A11: time elapsed for computing surface 0.06405830383300781 s
+A11: time elapsed for computing surface 0.09670448303222656 s
 
 #### COMPUTING SURFACE OF UNIT A12
-A12: time elapsed for computing surface 0.05505013465881348 s
+A12: time elapsed for computing surface 0.11310720443725586 s
 
 #### COMPUTING SURFACE OF UNIT A13
 A13: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.2202000617980957 s
+Time elapsed for getting domains 0.02452397346496582 s
 ##########################
 
 
-### 2.6303908824920654: Total time elapsed for computing surfaces ###
+### 1.7012128829956055: Total time elapsed for computing surfaces ###
 </pre></div></div>
 </div>
 <p>Note : Pyvista does not support rgba code, this explains the difference between the colors of the pyvsita plot and mtplotlib</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_pile</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_1_many_hierarchical_units_18_0.png" src="../_images/notebooks_1_many_hierarchical_units_18_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_units</span><span class="p">(</span><span class="n">h_level</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\grid.py:511: PyVistaDeprecationWarning: `dims` argument is deprecated. Please use `dimensions`.
-  &#39;`dims` argument is deprecated. Please use `dimensions`.&#39;, PyVistaDeprecationWarning
-</pre></div></div>
-</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_1_many_hierarchical_units_16_1.png" src="../_images/notebooks_1_many_hierarchical_units_16_1.png" />
+<img alt="../_images/notebooks_1_many_hierarchical_units_19_0.png" src="../_images/notebooks_1_many_hierarchical_units_19_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_cross_section</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),(</span><span class="mi">100</span><span class="p">,</span><span class="mi">200</span><span class="p">)],</span><span class="n">ratio_aspect</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
@@ -664,7 +956,7 @@ C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\grid.py:511: PyV
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_1_many_hierarchical_units_17_0.png" src="../_images/notebooks_1_many_hierarchical_units_17_0.png" />
+<img alt="../_images/notebooks_1_many_hierarchical_units_20_0.png" src="../_images/notebooks_1_many_hierarchical_units_20_0.png" />
 </div>
 </div>
 </section>
@@ -678,11 +970,11 @@ C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\grid.py:511: PyV
       </div>
     
         <div id="show_right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents<span></a></p>
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
         </div>
 
         <div id="right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:<span></a></p>
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">Hierarchical modeling with ArchPy</a><ul>
@@ -722,8 +1014,8 @@ C:\Users\emmal\Anaconda3\envs\LS\lib\site-packages\pyvista\core\grid.py:511: PyV
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, University of Neuchâtel.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    &#169; Copyright 2026, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

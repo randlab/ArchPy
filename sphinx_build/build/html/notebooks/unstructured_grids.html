@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Upscaling unstructured grids &#8212; ArchPy 1.2.12 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css?v=2199c511" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    <script src="../_static/documentation_options.js?v=817200f7"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="https://unpkg.com/twemoji@latest/dist/twemoji.min.js"></script>
+    <script src="../_static/twemoji.js?v=a4381b3f"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <script src="../_static/js/petite-vue.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ArchPy2Modflow: paper examples" href="ap2_mf_paper.html" />
+    <link rel="prev" title="Upscaling using Renormalization" href="upscaling_3D_fields.html" /> 
+  </head><body data-dark_mode_code_blocks="true">
+
+<div id="top_nav">
+    
+
+    <nav>
+        
+            
+        
+
+        <p id="toggle_sidebar">
+            <a href="#" title="Toggle sidebar">|||</a>
+        </p>
+        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.2.12 documentation</a></h1>
+
+        <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
+    <template v-if="mode == 'light'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_light"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M67.48,18.073c1.913,-1.912 1.913,-5.018 0,-6.931c-1.912,-1.912 -5.018,-1.912 -6.931,0l-6.798,6.799c-1.912,1.912 -1.912,5.018 0,6.931c1.913,1.912 5.018,1.912 6.931,-0l6.798,-6.799Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.728,61.108c1.912,-1.913 1.912,-5.018 -0,-6.931c-1.913,-1.913 -5.019,-1.913 -6.931,-0l-6.799,6.798c-1.912,1.913 -1.912,5.019 0,6.931c1.913,1.913 5.019,1.913 6.931,0l6.799,-6.798Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.682,54.177c-1.913,-1.913 -5.018,-1.913 -6.931,-0c-1.912,1.913 -1.912,5.018 0,6.931l6.798,6.798c1.913,1.913 5.019,1.913 6.931,0c1.913,-1.912 1.913,-5.018 0,-6.931l-6.798,-6.798Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M4.901,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901l-0,9.614c-0,2.705 2.196,4.901 4.9,4.901c2.705,-0 4.901,-2.196 4.901,-4.901l0,-9.614Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M18.929,11.142c-1.912,-1.912 -5.018,-1.912 -6.931,0c-1.912,1.913 -1.912,5.019 0,6.931l6.799,6.799c1.912,1.912 5.018,1.912 6.931,-0c1.912,-1.913 1.912,-5.019 -0,-6.931l-6.799,-6.799Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.108,34.623c-2.705,0 -4.901,2.196 -4.901,4.901c-0,2.705 2.196,4.901 4.901,4.901l9.614,0c2.705,0 4.901,-2.196 4.901,-4.901c-0,-2.705 -2.196,-4.901 -4.901,-4.901l-9.614,0Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'dark'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_dark"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><circle cx="39.311" cy="39.524" r="15.734" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.212,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.901,2.196 -4.901,4.901c0,2.705 2.197,4.901 4.901,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.662,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.989,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.732,61.103c1.91,-1.91 1.91,-5.011 0,-6.921l-0.009,-0.01c-1.91,-1.91 -5.012,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.909,1.91 5.011,1.91 6.92,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.672,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.52,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l-0,-0.01c-0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.212,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.901,2.196 -4.901,4.901c0,2.704 2.197,4.9 4.901,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.73,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 -0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.098,34.623c-2.699,0 -4.891,2.192 -4.891,4.892l-0,0.019c-0,2.699 2.192,4.891 4.891,4.891c2.7,0 4.892,-2.192 4.892,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.892,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+
+    <template v-if="mode == 'darkest'">
+        <svg width="100%" height="100%" viewBox="0 0 79 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"><g id="mode_darkest"><rect id="Bounds" x="0" y="-0" width="78.623" height="79.049" style="fill:none;"/><path d="M39.315,23.791c8.684,-0 15.734,7.05 15.734,15.733c0,8.684 -7.05,15.734 -15.734,15.734c-8.683,0 -15.733,-7.05 -15.733,-15.734c-0,-8.683 7.05,-15.733 15.733,-15.733Zm0,4.737c6.069,0 10.997,4.927 10.997,10.996c-0,6.069 -4.928,10.996 -10.997,10.996c-6.068,0 -10.996,-4.927 -10.996,-10.996c0,-6.069 4.928,-10.996 10.996,-10.996Z" style="fill:#fff;"/><g id="beams"><g id="beam"><path id="beam1" serif:id="beam" d="M44.216,14.515c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,0 -4.9,2.196 -4.9,4.901c-0,2.705 2.196,4.901 4.9,4.901c2.705,0 4.901,-2.196 4.901,-4.901Z" style="fill:#fff;"/></g><g id="beam2" serif:id="beam"><path id="beam3" serif:id="beam" d="M60.666,24.892c1.902,-1.902 1.902,-4.99 0,-6.892l-0.04,-0.039c-1.901,-1.902 -4.989,-1.902 -6.891,-0c-1.901,1.901 -1.901,4.989 0,6.891l0.04,0.04c1.902,1.901 4.99,1.901 6.891,-0Z" style="fill:#fff;"/></g><g id="beam4" serif:id="beam"><path id="beam5" serif:id="beam" d="M25.737,61.103c1.909,-1.91 1.909,-5.011 -0,-6.921l-0.01,-0.01c-1.91,-1.91 -5.011,-1.91 -6.921,-0c-1.91,1.91 -1.91,5.011 -0,6.921l0.01,0.01c1.91,1.91 5.011,1.91 6.921,-0Z" style="fill:#fff;"/></g><g id="beam6" serif:id="beam"><path id="beam7" serif:id="beam" d="M60.676,54.167c-1.907,-1.907 -5.004,-1.907 -6.911,0l-0.02,0.02c-1.907,1.907 -1.907,5.004 0,6.911c1.907,1.907 5.004,1.907 6.911,-0l0.02,-0.02c1.907,-1.907 1.907,-5.004 0,-6.911Z" style="fill:#fff;"/></g><g id="beam8" serif:id="beam"><path id="beam9" serif:id="beam" d="M14.524,34.623c-2.702,0 -4.896,2.194 -4.896,4.896l0,0.01c0,2.702 2.194,4.896 4.896,4.896c2.702,0 4.896,-2.194 4.896,-4.896l0,-0.01c0,-2.702 -2.194,-4.896 -4.896,-4.896Z" style="fill:#fff;"/></g><g id="beam10" serif:id="beam"><path id="beam11" serif:id="beam" d="M44.216,64.534c0,-2.705 -2.196,-4.901 -4.901,-4.901c-2.704,-0 -4.9,2.196 -4.9,4.901c-0,2.704 2.196,4.9 4.9,4.9c2.705,0 4.901,-2.196 4.901,-4.9Z" style="fill:#fff;"/></g><g id="beam12" serif:id="beam"><path id="beam13" serif:id="beam" d="M25.734,17.943c-1.911,-1.911 -5.015,-1.911 -6.926,0l-0.005,0.005c-1.911,1.911 -1.911,5.015 0,6.926c1.911,1.911 5.015,1.911 6.926,0l0.005,-0.005c1.911,-1.911 1.911,-5.014 0,-6.926Z" style="fill:#fff;"/></g><g id="beam14" serif:id="beam"><path id="beam15" serif:id="beam" d="M64.103,34.623c-2.7,0 -4.892,2.192 -4.892,4.892l-0,0.019c-0,2.699 2.192,4.891 4.892,4.891c2.699,0 4.891,-2.192 4.891,-4.891l0,-0.019c0,-2.7 -2.192,-4.892 -4.891,-4.892Z" style="fill:#fff;"/></g></g></g></svg>
+    </template>
+</a>
+
+<script>
+(function() {
+    const LOCAL_STORAGE_KEY = 'piccoloThemeMode'
+
+    var initialMode = localStorage.getItem(LOCAL_STORAGE_KEY)
+
+    if (initialMode) {
+        // Make sure the value in local storage is valid
+        if (['light', 'dark', 'darkest'].indexOf(initialMode) == -1) {
+            initialMode = 'light'
+            localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+        }
+    } else {
+        // Check if the client prefers dark mode
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            initialMode = 'dark'
+        } else {
+            initialMode = 'light'
+        }
+        localStorage.setItem(LOCAL_STORAGE_KEY, initialMode)
+    }
+
+    document.documentElement.dataset.mode = initialMode
+
+    PetiteVue.createApp({
+        'mode': initialMode,
+        handleClick() {
+            let currentMode = this.mode
+
+            if (currentMode == 'light') {
+                this.mode = 'dark'
+            } else if (currentMode == 'dark') {
+                this.mode = 'darkest'
+            } else if (currentMode == 'darkest') {
+                this.mode = 'light'
+            }
+
+            document.documentElement.dataset.mode = this.mode
+            localStorage.setItem(LOCAL_STORAGE_KEY, this.mode)
+
+            console.log(this.mode)
+        }
+    }).mount('#mode_toggle')
+})()
+</script>
+            <p class="mobile_search_link">
+                <a href="../search.html" title="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 65 64" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+                        <path d="M14.873 40.009c-2.315-3.943-3.642-8.532-3.642-13.429C11.231 11.91 23.141 0 37.811 0s26.58 11.91 26.58 26.58-11.91 26.58-26.58 26.58a26.44 26.44 0 0 1-14.277-4.161L9.739 62.794a3.12 3.12 0 0 1-4.413 0L.913 58.382c-1.217-1.218-1.217-3.196 0-4.413l13.96-13.96zM37.811 8.054c10.225 0 18.526 8.301 18.526 18.526s-8.301 18.526-18.526 18.526-18.526-8.301-18.526-18.526S27.586 8.054 37.811 8.054z" fill="#fff" />
+                    </svg>
+                </a>
+            </p>
+        
+
+        <div class="searchbox_wrapper">
+            
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+    </nav>
+</div>
+
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../README_rtd.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="1_the_very_basics.html">Tutorial 1: the basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2_Hard_data.html">Tutorial 2: hard data files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3_filling_and_saving.html">Tutorial 3: filling methods and saving a project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="4_load_project.html">Tutorial 4: load ArchPy project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="1_many_hierarchical_units.html">Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_example.html">An example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mps_surfaces.html">Surfaces with MPS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_geological_map.html">Geological map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Article_example.html">Article ArchPy exemple</a></li>
+<li class="toctree-l2"><a class="reference internal" href="x_valid_exemple1.html">Cross-validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inference_surfaces.html">Surface parameters inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.html">Rotation of a grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_thickness_controlled.html">Control unit thickness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_use_existing_surfaces.html">Existing Surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_non_stationary.html">Non-stationary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_selection.html">Draw your own area !</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_coupling.html">Modflow/Modpath basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_coupling_unstructured_grid.html">ArchPy2Modflow: Energy model with unstructured grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_energy_model.html">ArchPy2Modflow: Energy Transport with Modflow 6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transport_simple_example.html">modflow_transport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upscaling_3D_fields.html">Upscaling using Renormalization</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Upscaling unstructured grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ap2_mf_paper.html">ArchPy2Modflow: paper examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">List of modules</a></li>
+</ul>
+
+        </div>
+      </div>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="Upscaling-unstructured-grids">
+<h1>Upscaling unstructured grids<a class="headerlink" href="#Upscaling-unstructured-grids" title="Link to this heading">¶</a></h1>
+<p>This notebook presents how to upscale a fine structured grid to a coarse unstructured grid using uppy. Grid are generated using flopy and gridgen.</p>
+<p>Note that grid cells need to be rectangles.</p>
+<p>Multiple type of grids are presented:</p>
+<ul class="simple">
+<li><p>2D DISV grid (see modflow 6 documentation)</p></li>
+<li><p>3D DISV grid</p></li>
+<li><p>3D DISU grid</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">flopy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flopy.utils.gridgen</span><span class="w"> </span><span class="kn">import</span> <span class="n">Gridgen</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flopy.export.vtk</span><span class="w"> </span><span class="kn">import</span> <span class="n">Vtk</span>
+<span class="c1"># import pyvista as pv</span>
+
+<span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+
+<span class="c1"># import uppy</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../../&quot;</span><span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ArchPy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ArchPy.uppy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ArchPy.uppy</span><span class="w"> </span><span class="kn">import</span> <span class="n">upscale_k</span><span class="p">,</span> <span class="n">upscale_k_2D</span><span class="p">,</span> <span class="n">rotate_point</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ArchPy.C_modules.simplified_renorm_C</span><span class="w"> </span><span class="kn">import</span> <span class="n">simplified_renorm3D</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gridgen_path</span> <span class="o">=</span> <span class="s2">&quot;../../../../exe/gridgen.exe&quot;</span>
+</pre></div>
+</div>
+</div>
+<section id="2D-DISV">
+<h2>2D DISV<a class="headerlink" href="#2D-DISV" title="Link to this heading">¶</a></h2>
+<p>Let’s create a 2D unstructured grid using gridgen and flopy</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># grid dimensions</span>
+<span class="n">nlay</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">nrow</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">ncol</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">delr</span> <span class="o">=</span> <span class="mf">100.</span>
+<span class="n">delc</span> <span class="o">=</span> <span class="mf">100.</span>
+<span class="n">top</span> <span class="o">=</span> <span class="mf">0.</span>
+<span class="n">botm</span> <span class="o">=</span> <span class="o">-</span><span class="mf">100.</span>
+
+
+<span class="n">sim</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">mf6</span><span class="o">.</span><span class="n">MFSimulation</span><span class="p">(</span>
+    <span class="n">sim_name</span><span class="o">=</span><span class="s2">&quot;asdf&quot;</span><span class="p">,</span> <span class="n">sim_ws</span><span class="o">=</span><span class="s2">&quot;ws&quot;</span><span class="p">,</span> <span class="n">exe_name</span><span class="o">=</span><span class="s2">&quot;mf6&quot;</span><span class="p">)</span>
+<span class="n">tdis</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">mf6</span><span class="o">.</span><span class="n">ModflowTdis</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">time_units</span><span class="o">=</span><span class="s2">&quot;DAYS&quot;</span><span class="p">,</span> <span class="n">perioddata</span><span class="o">=</span><span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]])</span>
+<span class="n">ms</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">mf6</span><span class="o">.</span><span class="n">ModflowGwf</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">modelname</span><span class="o">=</span><span class="s2">&quot;asdf&quot;</span><span class="p">,</span> <span class="n">save_flows</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">dis</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">mf6</span><span class="o">.</span><span class="n">ModflowGwfdis</span><span class="p">(</span>
+    <span class="n">ms</span><span class="p">,</span>
+    <span class="n">nlay</span><span class="o">=</span><span class="n">nlay</span><span class="p">,</span>
+    <span class="n">nrow</span><span class="o">=</span><span class="n">nrow</span><span class="p">,</span>
+    <span class="n">ncol</span><span class="o">=</span><span class="n">ncol</span><span class="p">,</span>
+    <span class="n">delr</span><span class="o">=</span><span class="n">delr</span><span class="p">,</span>
+    <span class="n">delc</span><span class="o">=</span><span class="n">delc</span><span class="p">,</span>
+    <span class="n">top</span><span class="o">=</span><span class="n">top</span><span class="p">,</span>
+    <span class="n">botm</span><span class="o">=</span><span class="n">botm</span><span class="p">,</span>
+    <span class="n">xorigin</span><span class="o">=</span><span class="mf">1103.3</span><span class="p">,</span>
+    <span class="n">yorigin</span><span class="o">=</span><span class="mf">1103.5</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># create Gridgen object</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">Gridgen</span><span class="p">(</span><span class="n">ms</span><span class="o">.</span><span class="n">modelgrid</span><span class="p">,</span> <span class="n">model_ws</span><span class="o">=</span><span class="s2">&quot;gridgen_ws&quot;</span><span class="p">,</span> <span class="n">exe_name</span><span class="o">=</span><span class="n">gridgen_path</span><span class="p">)</span>  <span class="c1"># ! modidfy path to gridgen.exe !</span>
+
+<span class="c1"># polygon refinement in the center of the grid (size 250 x 250)</span>
+<span class="n">polygon</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="mi">1600</span><span class="p">,</span> <span class="mi">1350</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">1700</span><span class="p">,</span> <span class="mi">1300</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">1300</span><span class="p">,</span> <span class="mi">1800</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">1300</span><span class="p">,</span> <span class="mi">1700</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">1600</span><span class="p">,</span> <span class="mi">1350</span><span class="p">),</span>
+    <span class="p">]</span>
+<span class="p">]</span>
+
+
+<span class="n">g</span><span class="o">.</span><span class="n">add_refinement_features</span><span class="p">([</span><span class="n">polygon</span><span class="p">],</span> <span class="s2">&quot;polygon&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">nlay</span><span class="p">))</span>  <span class="c1"># refinement level</span>
+<span class="n">refshp0</span> <span class="o">=</span> <span class="s2">&quot;gridgen_ws/&quot;</span> <span class="o">+</span> <span class="s2">&quot;rf0&quot;</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ms</span><span class="o">.</span><span class="n">modelgrid</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+xll:1103.3; yll:1103.5; rotation:0.0; units:undefined; lenuni:0
+</pre></div></div>
+</div>
+<p>Build refinement</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">grid</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">discretization</span><span class="o">.</span><span class="n">VertexGrid</span><span class="p">(</span><span class="o">**</span><span class="n">g</span><span class="o">.</span><span class="n">get_gridprops_vertexgrid</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="o">.</span><span class="n">ncpl</span>  <span class="c1"># number of cells</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+523
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+<span class="n">mm</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">PlotMapView</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">ms</span><span class="p">)</span>
+<span class="n">grid</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+
+<span class="n">flopy</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_shapefile</span><span class="p">(</span><span class="n">refshp0</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Possible issue encountered when converting Shape #0 to GeoJSON: Shapefile format requires that polygons contain at least one exterior ring, but the Shape was entirely made up of interior holes (defined by counter-clockwise orientation in the shapefile format). The rings were still included but were encoded as GeoJSON exterior rings instead of holes.
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.PatchCollection at 0x22cea37d250&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_unstructured_grids_10_2.png" src="../_images/notebooks_unstructured_grids_10_2.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">disv_gridprops</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">get_gridprops_disv</span><span class="p">()</span>  <span class="c1"># get the disv gridprops</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># remove existing dis package and add new disv package</span>
+<span class="n">ms</span><span class="o">.</span><span class="n">dis</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+<span class="n">disv</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">mf6</span><span class="o">.</span><span class="n">ModflowGwfdisv</span><span class="p">(</span><span class="n">ms</span><span class="p">,</span> <span class="o">**</span><span class="n">disv_gridprops</span><span class="p">,</span> <span class="n">xorigin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">yorigin</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># it is important to set xorigin and yorigin to 0, 0</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ms</span><span class="o">.</span><span class="n">modelgrid</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.LineCollection at 0x22ced7e8bd0&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_unstructured_grids_13_1.png" src="../_images/notebooks_unstructured_grids_13_1.png" />
+</div>
+</div>
+<p>Now we generate a reference K field. Note that the field that is upscaled must be larger (or equivalent), in extension, than the new coarse grid</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># generate a random field for the grid</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+
+<span class="n">cm</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">covModel</span><span class="o">.</span><span class="n">CovModel2D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;spherical&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mf">.5</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">:[</span><span class="mi">250</span><span class="p">,</span> <span class="mi">450</span><span class="p">]})</span>
+                                    <span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+                                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">)</span>
+<span class="n">nx_grid</span><span class="p">,</span> <span class="n">ny_grid</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span>
+<span class="n">sx_grid</span><span class="p">,</span> <span class="n">sy_grid</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span>
+<span class="n">ox_grid</span><span class="p">,</span> <span class="n">oy_grid</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span>
+<span class="n">field</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">multiGaussian</span><span class="o">.</span><span class="n">multiGaussianRun</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="p">(</span><span class="n">nx_grid</span><span class="p">,</span> <span class="n">ny_grid</span><span class="p">),</span> <span class="p">(</span><span class="n">sx_grid</span><span class="p">,</span> <span class="n">sy_grid</span><span class="p">),</span> <span class="p">(</span><span class="n">ox_grid</span><span class="p">,</span> <span class="n">oy_grid</span><span class="p">),</span> <span class="n">output_mode</span><span class="o">=</span><span class="s2">&quot;array&quot;</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+grf2D: Preliminary computation...
+grf2D: Computing circulant embedding...
+grf2D: embedding dimension: 128 x 256
+grf2D: Computing FFT of circulant matrix...
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="n">grid</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">vmax</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="n">ox_grid</span><span class="p">,</span> <span class="n">ox_grid</span><span class="o">+</span><span class="n">sx_grid</span><span class="o">*</span><span class="n">nx_grid</span><span class="p">,</span> <span class="n">oy_grid</span><span class="p">,</span> <span class="n">oy_grid</span><span class="o">+</span><span class="n">sy_grid</span><span class="o">*</span><span class="n">ny_grid</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">ox_grid</span><span class="p">,</span> <span class="n">ox_grid</span><span class="o">+</span><span class="n">sx_grid</span><span class="o">*</span><span class="n">nx_grid</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">oy_grid</span><span class="p">,</span> <span class="n">oy_grid</span><span class="o">+</span><span class="n">sy_grid</span><span class="o">*</span><span class="n">ny_grid</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Original field&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_unstructured_grids_16_0.png" src="../_images/notebooks_unstructured_grids_16_0.png" />
+</div>
+</div>
+<section id="Upscaling">
+<h3>Upscaling<a class="headerlink" href="#Upscaling" title="Link to this heading">¶</a></h3>
+<p>The available method for the upscaling are:</p>
+<ul class="simple">
+<li><p>arithmetic mean</p></li>
+<li><p>harmonic mean</p></li>
+<li><p>geometric mean</p></li>
+<li><p>Simplified renormalization</p></li>
+</ul>
+<p>Note that upscaling function (upscale_k_2D and upscale_k) need to be compiled first by numba. Hence the first call to the function will be slow.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">field</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="n">field</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">new_k</span> <span class="o">=</span> <span class="n">upscale_k_2D</span><span class="p">(</span><span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dx</span><span class="o">=</span><span class="n">sx_grid</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">sy_grid</span><span class="p">,</span> <span class="n">ox</span><span class="o">=</span><span class="n">ox_grid</span><span class="p">,</span> <span class="n">oy</span><span class="o">=</span><span class="n">oy_grid</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;simplified_renormalization&quot;</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="c1"># new_k_g = upscale_k_2D(field[0], dx=sx_grid, dy=sy_grid, ox=ox_grid, oy=oy_grid, method=&quot;geometric&quot;, grid=grid)</span>
+<span class="c1"># new_k_h = upscale_k_2D(field[0], dx=sx_grid, dy=sy_grid, ox=ox_grid, oy=oy_grid, method=&quot;harmonic&quot;, grid=grid)</span>
+<span class="c1"># new_k_m = upscale_k_2D(field[0], dx=sx_grid, dy=sy_grid, ox=ox_grid, oy=oy_grid, method=&quot;arithmetic&quot;, grid=grid)</span>
+<span class="n">new_k</span> <span class="o">=</span> <span class="n">upscale_k_2D</span><span class="p">(</span><span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dx</span><span class="o">=</span><span class="n">sx_grid</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">sy_grid</span><span class="p">,</span> <span class="n">ox</span><span class="o">=</span><span class="n">ox_grid</span><span class="p">,</span> <span class="n">oy</span><span class="o">=</span><span class="n">oy_grid</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;simplified_renormalization&quot;</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+CPU times: total: 62.5 ms
+Wall time: 74.8 ms
+</pre></div></div>
+</div>
+<p>C version is generally faster than pure python (between 2x-10x faster)</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="c1"># new_k_g = upscale_k_2D(field[0], dx=sx_grid, dy=sy_grid, ox=ox_grid, oy=oy_grid, method=&quot;geometric&quot;, grid=grid)</span>
+<span class="c1"># new_k_h = upscale_k_2D(field[0], dx=sx_grid, dy=sy_grid, ox=ox_grid, oy=oy_grid, method=&quot;harmonic&quot;, grid=grid)</span>
+<span class="c1"># new_k_m = upscale_k_2D(field[0], dx=sx_grid, dy=sy_grid, ox=ox_grid, oy=oy_grid, method=&quot;arithmetic&quot;, grid=grid)</span>
+<span class="n">new_k</span> <span class="o">=</span> <span class="n">upscale_k_2D</span><span class="p">(</span><span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dx</span><span class="o">=</span><span class="n">sx_grid</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">sy_grid</span><span class="p">,</span> <span class="n">ox</span><span class="o">=</span><span class="n">ox_grid</span><span class="p">,</span> <span class="n">oy</span><span class="o">=</span><span class="n">oy_grid</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;simplified_renormalization_C&quot;</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+CPU times: total: 31.2 ms
+Wall time: 29.4 ms
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">new_k</span> <span class="o">=</span> <span class="n">upscale_k_2D</span><span class="p">(</span><span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dx</span><span class="o">=</span><span class="n">sx_grid</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">sy_grid</span><span class="p">,</span> <span class="n">ox</span><span class="o">=</span><span class="n">ox_grid</span><span class="p">,</span> <span class="n">oy</span><span class="o">=</span><span class="n">oy_grid</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;simplified_renormalization_C&quot;</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">new_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">new_k</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Let’s compare to a standard upscaling using a structured grid</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">Kxx</span><span class="p">,</span> <span class="n">Kyy</span> <span class="o">=</span> <span class="n">upscale_k_2D</span><span class="p">(</span><span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dx</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">factor_x</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">factor_y</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+CPU times: total: 109 ms
+Wall time: 110 ms
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Kxx</span><span class="p">,</span> <span class="n">Kyy</span> <span class="o">=</span> <span class="n">upscale_k_2D</span><span class="p">(</span><span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dx</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">factor_x</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">factor_y</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Kxx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">Kxx</span><span class="p">)</span>
+<span class="n">Kyy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">Kyy</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">field</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="n">mm</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">PlotMapView</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">ms</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">mm</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.15</span><span class="p">)</span>
+<span class="n">mm</span><span class="o">.</span><span class="n">plot_array</span><span class="p">(</span><span class="n">new_k</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">vmax</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">ox_grid</span><span class="p">,</span> <span class="n">ox_grid</span> <span class="o">+</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">oy_grid</span><span class="p">,</span> <span class="n">oy_grid</span> <span class="o">+</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Upscaled field with nested grids&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">vmax</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="n">ox_grid</span><span class="p">,</span> <span class="n">ox_grid</span> <span class="o">+</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">oy_grid</span><span class="p">,</span> <span class="n">oy_grid</span> <span class="o">+</span> <span class="mi">1000</span><span class="p">))</span>
+<span class="c1">#draw rectangle of the size of field</span>
+<span class="n">extent</span> <span class="o">=</span> <span class="n">ms</span><span class="o">.</span><span class="n">modelgrid</span><span class="o">.</span><span class="n">extent</span>
+<span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">extent</span>
+<span class="n">rect</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">((</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span> <span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">rect</span><span class="p">)</span>
+<span class="c1"># plt.colorbar()</span>
+<span class="c1"># grid_ref.plot(alpha=.2, ax=ax[1])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Original field&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+
+<span class="n">g</span> <span class="o">=</span> <span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">Kyy</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">vmax</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="n">ox_grid</span><span class="p">,</span> <span class="n">ox_grid</span> <span class="o">+</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">oy_grid</span><span class="p">,</span> <span class="n">oy_grid</span> <span class="o">+</span> <span class="mi">1000</span><span class="p">))</span>
+<span class="c1"># plt.colorbar()</span>
+<span class="n">rect</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">((</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span> <span class="n">x2</span> <span class="o">-</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">rect</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;upscaled field&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+
+<span class="c1"># add colorbar</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">right</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">cbar_ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.85</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">])</span>
+<span class="n">cl</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">cax</span><span class="o">=</span><span class="n">cbar_ax</span><span class="p">)</span>
+<span class="n">cl</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;K log10(m/s)&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_unstructured_grids_31_0.png" src="../_images/notebooks_unstructured_grids_31_0.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="3D-DISV">
+<h2>3D DISV<a class="headerlink" href="#3D-DISV" title="Link to this heading">¶</a></h2>
+<p>Same as before but here using a 3D grid</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 3D example</span>
+<span class="c1"># grid dimensions</span>
+<span class="n">nlay</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">nrow</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">ncol</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">delr</span> <span class="o">=</span> <span class="mf">100.</span>
+<span class="n">delc</span> <span class="o">=</span> <span class="mf">100.</span>
+<span class="n">top</span> <span class="o">=</span> <span class="mf">0.</span>
+<span class="n">ox</span> <span class="o">=</span> <span class="mf">1103.3</span>
+<span class="n">oy</span> <span class="o">=</span> <span class="mf">1103.5</span>
+
+<span class="n">botm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="n">nlay</span><span class="p">)</span>
+
+<span class="n">sim</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">mf6</span><span class="o">.</span><span class="n">MFSimulation</span><span class="p">(</span>
+    <span class="n">sim_name</span><span class="o">=</span><span class="s2">&quot;asdf&quot;</span><span class="p">,</span> <span class="n">sim_ws</span><span class="o">=</span><span class="s2">&quot;ws&quot;</span><span class="p">,</span> <span class="n">exe_name</span><span class="o">=</span><span class="s2">&quot;mf6&quot;</span><span class="p">)</span>
+<span class="n">tdis</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">mf6</span><span class="o">.</span><span class="n">ModflowTdis</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">time_units</span><span class="o">=</span><span class="s2">&quot;DAYS&quot;</span><span class="p">,</span> <span class="n">perioddata</span><span class="o">=</span><span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]])</span>
+<span class="n">ms</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">mf6</span><span class="o">.</span><span class="n">ModflowGwf</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">modelname</span><span class="o">=</span><span class="s2">&quot;asdf&quot;</span><span class="p">,</span> <span class="n">save_flows</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">dis</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">mf6</span><span class="o">.</span><span class="n">ModflowGwfdis</span><span class="p">(</span>
+    <span class="n">ms</span><span class="p">,</span>
+    <span class="n">nlay</span><span class="o">=</span><span class="n">nlay</span><span class="p">,</span>
+    <span class="n">nrow</span><span class="o">=</span><span class="n">nrow</span><span class="p">,</span>
+    <span class="n">ncol</span><span class="o">=</span><span class="n">ncol</span><span class="p">,</span>
+    <span class="n">delr</span><span class="o">=</span><span class="n">delr</span><span class="p">,</span>
+    <span class="n">delc</span><span class="o">=</span><span class="n">delc</span><span class="p">,</span>
+    <span class="n">top</span><span class="o">=</span><span class="n">top</span><span class="p">,</span>
+    <span class="n">botm</span><span class="o">=</span><span class="n">botm</span><span class="p">,</span>
+    <span class="n">xorigin</span><span class="o">=</span><span class="n">ox</span><span class="p">,</span>  <span class="c1"># gridgen will be applied on a grid with origin at 0, 0</span>
+    <span class="n">yorigin</span><span class="o">=</span><span class="n">oy</span><span class="p">,</span>
+    <span class="n">angrot</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># create Gridgen object</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">Gridgen</span><span class="p">(</span><span class="n">ms</span><span class="o">.</span><span class="n">modelgrid</span><span class="p">,</span> <span class="n">model_ws</span><span class="o">=</span><span class="s2">&quot;gridgen_ws&quot;</span><span class="p">,</span> <span class="n">exe_name</span><span class="o">=</span><span class="n">gridgen_path</span><span class="p">)</span>
+
+<span class="n">polygon</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="mi">1800</span><span class="p">,</span> <span class="mi">1700</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">1800</span><span class="p">,</span> <span class="mi">1500</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">1400</span><span class="p">,</span> <span class="mi">1500</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">1400</span><span class="p">,</span> <span class="mi">1700</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">1800</span><span class="p">,</span> <span class="mi">1700</span><span class="p">),</span>
+    <span class="p">]</span>
+<span class="p">]</span>
+<span class="n">polygon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">polygon</span><span class="p">)</span>
+
+<span class="n">g</span><span class="o">.</span><span class="n">add_refinement_features</span><span class="p">([</span><span class="n">polygon</span><span class="p">],</span> <span class="s2">&quot;polygon&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">nlay</span><span class="p">))</span>
+<span class="n">refshp0</span> <span class="o">=</span> <span class="s2">&quot;gridgen_ws/&quot;</span> <span class="o">+</span> <span class="s2">&quot;rf0&quot;</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ms</span><span class="o">.</span><span class="n">dis</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+<span class="n">disv_gridprops</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">get_gridprops_disv</span><span class="p">()</span>
+<span class="n">disv</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">mf6</span><span class="o">.</span><span class="n">ModflowGwfdisv</span><span class="p">(</span><span class="n">ms</span><span class="p">,</span> <span class="o">**</span><span class="n">disv_gridprops</span><span class="p">,</span> <span class="n">xorigin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">yorigin</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># create grid this time with the origin at ox, oy</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span> <span class="o">=</span> <span class="n">ms</span><span class="o">.</span><span class="n">modelgrid</span>
+<span class="n">grid</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.LineCollection at 0x22cee62b210&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_unstructured_grids_36_1.png" src="../_images/notebooks_unstructured_grids_36_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot a cross section</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flopy.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlotCrossSection</span>
+
+<span class="n">linex</span><span class="p">,</span> <span class="n">liney</span> <span class="o">=</span> <span class="p">[</span><span class="mi">700</span><span class="p">,</span> <span class="mi">1900</span><span class="p">],</span> <span class="p">[</span><span class="mi">1800</span><span class="p">,</span> <span class="mi">1400</span><span class="p">]</span>
+
+<span class="n">mm</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">PlotMapView</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">ms</span><span class="p">)</span>
+<span class="n">ms</span><span class="o">.</span><span class="n">modelgrid</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">linex</span><span class="p">,</span> <span class="n">liney</span><span class="p">,</span> <span class="s2">&quot;r-&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">4.8</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">xsect</span> <span class="o">=</span> <span class="n">PlotCrossSection</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">ms</span><span class="p">,</span><span class="n">geographic_coords</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">linex</span><span class="p">,</span> <span class="n">liney</span><span class="p">]})</span>
+<span class="n">xsect</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">()</span>
+<br/><br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_unstructured_grids_37_0.png" src="../_images/notebooks_unstructured_grids_37_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.PatchCollection at 0x22cee4a1450&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_unstructured_grids_37_2.png" src="../_images/notebooks_unstructured_grids_37_2.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># generate a random field for the grid</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+
+<span class="n">cm</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">covModel</span><span class="o">.</span><span class="n">CovModel3D</span><span class="p">(</span><span class="n">elem</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;spherical&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;w&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">:[</span><span class="mi">250</span><span class="p">,</span> <span class="mi">450</span><span class="p">,</span> <span class="mi">50</span><span class="p">]})</span>
+                                    <span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+                                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">)</span>
+
+<span class="c1"># grid parameters</span>
+<span class="n">nx_grid</span><span class="p">,</span> <span class="n">ny_grid</span><span class="p">,</span> <span class="n">nz_grid</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span>
+<span class="n">sx_grid</span><span class="p">,</span> <span class="n">sy_grid</span><span class="p">,</span> <span class="n">sz_grid</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span>
+<span class="n">ox_grid</span><span class="p">,</span> <span class="n">oy_grid</span><span class="p">,</span> <span class="n">oz_grid</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span>
+<span class="n">field_img</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">multiGaussian</span><span class="o">.</span><span class="n">multiGaussianRun</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="p">(</span><span class="n">nx_grid</span><span class="p">,</span> <span class="n">ny_grid</span><span class="p">,</span> <span class="n">nz_grid</span><span class="p">),</span> <span class="p">(</span><span class="n">sx_grid</span><span class="p">,</span> <span class="n">sy_grid</span><span class="p">,</span> <span class="n">sz_grid</span><span class="p">),</span> <span class="n">output_mode</span><span class="o">=</span><span class="s2">&quot;img&quot;</span><span class="p">,</span> <span class="n">mean</span><span class="o">=-</span><span class="mi">5</span><span class="p">,</span> <span class="n">algo</span><span class="o">=</span><span class="s2">&quot;fft&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+grf3D: Preliminary computation...
+grf3D: Computing circulant embedding...
+grf3D: embedding dimension: 128 x 256 x 128
+grf3D: Computing FFT of circulant matrix...
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pv.set_jupyter_backend(&#39;client&#39;)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create a modflow grid of the resolution of the random field to check the extent of the two grids</span>
+
+<span class="n">field</span> <span class="o">=</span> <span class="n">field_img</span><span class="o">.</span><span class="n">val</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">field</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">field</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># flip the field to have the same orientation as the grid</span>
+<span class="n">nrow</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">ncol</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">nlay</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">botm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="n">nlay</span><span class="p">)</span>
+<span class="c1"># transform botm to have the same shape as the field</span>
+<span class="n">botm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">botm</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">nrow</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">botm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">botm</span><span class="p">,</span> <span class="n">ncol</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">top</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nrow</span><span class="p">,</span> <span class="n">ncol</span><span class="p">))</span>
+<span class="n">grid_ref</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">discretization</span><span class="o">.</span><span class="n">StructuredGrid</span><span class="p">(</span><span class="n">nrow</span><span class="o">=</span><span class="n">field</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ncol</span><span class="o">=</span><span class="n">field</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">nlay</span><span class="o">=</span><span class="n">field</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                               <span class="n">delr</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">field</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span><span class="o">*</span><span class="n">sx_grid</span><span class="p">,</span> <span class="n">delc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">field</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span><span class="o">*</span><span class="n">sy_grid</span><span class="p">,</span>
+                                               <span class="n">botm</span><span class="o">=</span><span class="n">botm</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="n">top</span><span class="p">,</span>
+                                               <span class="n">xoff</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">yoff</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">angrot</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Check superposition of the two grids</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span> <span class="o">=</span> <span class="n">ms</span><span class="o">.</span><span class="n">modelgrid</span>
+<span class="n">grid_ref</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">.1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+<span class="n">grid</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.collections.LineCollection at 0x22cf1316fd0&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_unstructured_grids_42_1.png" src="../_images/notebooks_unstructured_grids_42_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">field</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="n">field</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span><span class="o">.</span><span class="n">ncpl</span> <span class="o">*</span> <span class="n">grid</span><span class="o">.</span><span class="n">nlay</span>  <span class="c1"># number of cells</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+3088
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">Kxx1</span><span class="p">,</span> <span class="n">Kyy</span><span class="p">,</span> <span class="n">Kzz</span> <span class="o">=</span> <span class="n">upscale_k</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">sx_grid</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">sy_grid</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="n">sz_grid</span><span class="p">,</span> <span class="n">ox</span><span class="o">=</span><span class="n">ox_grid</span><span class="p">,</span> <span class="n">oy</span><span class="o">=</span><span class="n">oy_grid</span><span class="p">,</span> <span class="n">oz</span><span class="o">=</span><span class="n">oz_grid</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;simplified_renormalization&quot;</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+CPU times: total: 1.72 s
+Wall time: 1.71 s
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">Kxx2</span><span class="p">,</span> <span class="n">Kyy</span><span class="p">,</span> <span class="n">Kzz</span> <span class="o">=</span> <span class="n">upscale_k</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">sx_grid</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">sy_grid</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="n">sz_grid</span><span class="p">,</span> <span class="n">ox</span><span class="o">=</span><span class="n">ox_grid</span><span class="p">,</span> <span class="n">oy</span><span class="o">=</span><span class="n">oy_grid</span><span class="p">,</span> <span class="n">oz</span><span class="o">=</span><span class="n">oz_grid</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;simplified_renormalization_C&quot;</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+CPU times: total: 188 ms
+Wall time: 214 ms
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">Kxx</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">upscale_k</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">sx_grid</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">sy_grid</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="n">sz_grid</span><span class="p">,</span> <span class="n">ox</span><span class="o">=</span><span class="n">ox_grid</span><span class="p">,</span> <span class="n">oy</span><span class="o">=</span><span class="n">oy_grid</span><span class="p">,</span> <span class="n">oz</span><span class="o">=</span><span class="n">oz_grid</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;arithmetic&quot;</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+CPU times: total: 125 ms
+Wall time: 136 ms
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Kxx</span><span class="p">,</span> <span class="n">Kyy</span><span class="p">,</span> <span class="n">Kzz</span> <span class="o">=</span> <span class="n">upscale_k</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">sx_grid</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">sy_grid</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="n">sz_grid</span><span class="p">,</span> <span class="n">ox</span><span class="o">=</span><span class="n">ox_grid</span><span class="p">,</span> <span class="n">oy</span><span class="o">=</span><span class="n">oy_grid</span><span class="p">,</span> <span class="n">oz</span><span class="o">=</span><span class="n">oz_grid</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;simplified_renormalization_C&quot;</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Kxx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">Kxx</span><span class="p">)</span>
+<span class="n">Kyy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">Kyy</span><span class="p">)</span>
+<span class="n">Kzz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">Kzz</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sx_grid</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+10
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">((</span><span class="n">Kxx</span> <span class="o">-</span> <span class="n">Kzz</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(array([   8.,   23.,  967., 1159.,  404.,  251.,  152.,   81.,   31.,
+          12.]),
+ array([-0.80159967, -0.49586197, -0.19012428,  0.11561342,  0.42135112,
+         0.72708882,  1.03282652,  1.33856422,  1.64430192,  1.95003962,
+         2.25577732]),
+ &lt;BarContainer object of 10 artists&gt;)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_unstructured_grids_51_1.png" src="../_images/notebooks_unstructured_grids_51_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">field_kxx</span><span class="p">,</span> <span class="n">fieldkyy</span><span class="p">,</span> <span class="n">field_kzz</span> <span class="o">=</span> <span class="n">upscale_k</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;simplified_renormalization&quot;</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">factor_x</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">factor_y</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">factor_z</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+CPU times: total: 3.94 s
+Wall time: 4.05 s
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">field_kxx</span><span class="p">,</span> <span class="n">fieldkyy</span><span class="p">,</span> <span class="n">field_kzz</span> <span class="o">=</span> <span class="n">upscale_k</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;simplified_renormalization_C&quot;</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">factor_x</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">factor_y</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">factor_z</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+CPU times: total: 234 ms
+Wall time: 232 ms
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">field_kxx</span><span class="p">,</span> <span class="n">fieldkyy</span><span class="p">,</span> <span class="n">field_kzz</span> <span class="o">=</span> <span class="n">upscale_k</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;simplified_renormalization_C&quot;</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">factor_x</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">factor_y</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">factor_z</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">field_kxx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">field_kxx</span><span class="p">)</span>
+<span class="n">field_kyy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">fieldkyy</span><span class="p">)</span>
+<span class="n">field_kzz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">field_kzz</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get number of cells in field_kxx</span>
+<span class="n">nlay</span> <span class="o">=</span> <span class="n">field_kxx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">nrow</span> <span class="o">=</span> <span class="n">field_kxx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">ncol</span> <span class="o">=</span> <span class="n">field_kxx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">ncells</span> <span class="o">=</span> <span class="n">nlay</span><span class="o">*</span><span class="n">nrow</span><span class="o">*</span><span class="n">ncol</span>
+<span class="n">ncells</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+8000
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vert_exag</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">vtk</span> <span class="o">=</span> <span class="n">Vtk</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">ms</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">vertical_exageration</span><span class="o">=</span><span class="n">vert_exag</span><span class="p">,</span> <span class="n">smooth</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">vtk</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="n">ms</span><span class="p">)</span>
+<span class="n">vtk</span><span class="o">.</span><span class="n">add_array</span><span class="p">(</span><span class="n">Kxx</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;K&quot;</span><span class="p">)</span>
+<span class="n">vtk</span><span class="o">.</span><span class="n">add_array</span><span class="p">(</span><span class="n">Kyy</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Kyy&quot;</span><span class="p">)</span>
+<span class="n">vtk</span><span class="o">.</span><span class="n">add_array</span><span class="p">(</span><span class="n">Kzz</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Kzz&quot;</span><span class="p">)</span>
+<span class="n">gwf_mesh</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">to_pyvista</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ms</span><span class="o">.</span><span class="n">dis</span><span class="o">.</span><span class="n">yorigin</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">ms</span><span class="o">.</span><span class="n">dis</span><span class="o">.</span><span class="n">xorigin</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvista</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="n">pv</span><span class="o">.</span><span class="n">set_plot_theme</span><span class="p">(</span><span class="s2">&quot;document&quot;</span><span class="p">)</span>
+<span class="n">pv</span><span class="o">.</span><span class="n">set_jupyter_backend</span><span class="p">(</span><span class="s1">&#39;static&#39;</span><span class="p">)</span>
+
+<span class="n">pl</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">window_size</span><span class="o">=</span><span class="p">[</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">800</span><span class="p">])</span>
+<span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">field_img</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">pl</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span><span class="n">gwf_mesh</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scalars</span><span class="o">=</span><span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">clim</span><span class="o">=</span><span class="p">[</span><span class="n">field_img</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">field_img</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">max</span><span class="p">()],</span> <span class="n">show_edges</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_scalar_bar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_kxx</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">sx_grid</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">sy_grid</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">sz_grid</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span> <span class="n">ox</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">oy</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">oz</span><span class="o">=-</span><span class="mi">100</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cmin</span><span class="o">=</span><span class="n">field_img</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">cmax</span><span class="o">=</span><span class="n">field_img</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">show_edges</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_unstructured_grids_59_0.png" src="../_images/notebooks_unstructured_grids_59_0.png" />
+</div>
+</div>
+<p>The unstructured upscaled model looks different than reference and structured upscaled model because of the extent that is different. unstructured grid is slightly smaller than the reference grid.</p>
+<p><img alt="image.png" src="data:image/png;base64,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NmzYUF1dLYJpOp1etGjRX//618OHD+/Zs+f666//7ne/y4C4dOnS+fPnv//+++++++6VV165cuVK+iqTyUybNu3ee+89dOjQiy++OGHChO3bt3OtIQsEpv7TSWlq8S8kAAn4lEC5pJOKYCoB3z//+c8gCI4cORKGYSqVCoLggw8+IJo33nhj1KhRdG7dunXr5MmTe3t76avHHnvsmmuukZoKw7Cnpydz/tPR0REEJciA8rmAwAsSgARIAiP8ZMpgpwHTt956a9SoUZlMJgzD559//rLLLuNafX19Y8aMqa6uDsNw1apVK1as4K92794dBMGJEyf4CRU2btwYXPjxn5sPNd+omhkJWFX0bMSIld5tqVbbC1M/Old6N8+dH3blouYz0g0HpqdPn7722mvvueceonzyySevvvpqrhWGYVVV1datW8MwXLx48YMPPshfffjhh0EQpFIpfkIF9WSK0CiERpG1S+M+tnRAw5tvs5YshamZDpovS2mXnTd/SDA9c+bM8uXLFyxYQMfSMAwLB1MRWxEahdAoyw1puf8tW0sodrtCN0thumIHMA3PnDlzxx13fPvb3/7yyy8ZAQtX87mpMAxL5c1vb895Ffftk1OkRJ+gJQFtyyGJOQDF871KI5sd0kk1DnHNahTXNq9MvTARGsVgFS0DSjqZEpLOnTv3iy++4BbZAdXQ0EAP33zzTckBdebMGfpq/fr1QzqgxNYAptLGMC5fDQHvEIDpkL9tIpoYCViYerixBC9X7DSzX4zRuWJXLnGm2Wy28etPEARbtmxpbGw8cuTImTNnbr/99lmzZh04cKDr/Ifd9EuXLl2wYMHevXvfe++9q666ikOj0un0tGnTVq1adejQoZdeeuk/MaqWoVGwmdrYuew1U8/XOHlmp8+AhJpvs5ag5otHOpuy1cm0trb2Qtd6cN9997W3t0sPgyCora0lrsePH1+5cuXEiRMrKyvvv//+IYP2Z86c+dRTTxl7CZspbKaW8Ge5/y1bs/9lihV2uzJiWgrTFbuys5kaga8YBFDzoeZbasrx1LstOw81v7ziTIuBlcY2AaYAU0s8Apja+EvdChM2U0YwKzWfqUtSIDD1n0566lTuLYkFvg3U+ILGMnldaDqddSVMzRsuWZj6F2qKb77UtGbscDzZGUdkOXzL0blih7eT+kBXnExxMnV7mLJszZXe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" /></p>
+</section>
+<section id="3D-DISU">
+<h2>3D DISU<a class="headerlink" href="#3D-DISU" title="Link to this heading">¶</a></h2>
+<p>Uppy can also work with DISU grids. As long as the cells of the grid are rectangles, upscaling is possible.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 3D example</span>
+<span class="c1"># grid dimensions</span>
+<span class="n">nlay</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">nrow</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">ncol</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">delr</span> <span class="o">=</span> <span class="mf">100.</span>
+<span class="n">delc</span> <span class="o">=</span> <span class="mf">100.</span>
+<span class="n">top</span> <span class="o">=</span> <span class="mf">0.</span>
+<span class="n">botm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="n">nlay</span><span class="p">)</span>
+
+<span class="n">sim</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">mf6</span><span class="o">.</span><span class="n">MFSimulation</span><span class="p">(</span>
+    <span class="n">sim_name</span><span class="o">=</span><span class="s2">&quot;asdf&quot;</span><span class="p">,</span> <span class="n">sim_ws</span><span class="o">=</span><span class="s2">&quot;ws&quot;</span><span class="p">,</span> <span class="n">exe_name</span><span class="o">=</span><span class="s2">&quot;mf6&quot;</span><span class="p">)</span>
+<span class="n">tdis</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">mf6</span><span class="o">.</span><span class="n">ModflowTdis</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">time_units</span><span class="o">=</span><span class="s2">&quot;DAYS&quot;</span><span class="p">,</span> <span class="n">perioddata</span><span class="o">=</span><span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]])</span>
+<span class="n">ms</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">mf6</span><span class="o">.</span><span class="n">ModflowGwf</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="n">modelname</span><span class="o">=</span><span class="s2">&quot;asdf&quot;</span><span class="p">,</span> <span class="n">save_flows</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">dis</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">mf6</span><span class="o">.</span><span class="n">ModflowGwfdis</span><span class="p">(</span>
+    <span class="n">ms</span><span class="p">,</span>
+    <span class="n">nlay</span><span class="o">=</span><span class="n">nlay</span><span class="p">,</span>
+    <span class="n">nrow</span><span class="o">=</span><span class="n">nrow</span><span class="p">,</span>
+    <span class="n">ncol</span><span class="o">=</span><span class="n">ncol</span><span class="p">,</span>
+    <span class="n">delr</span><span class="o">=</span><span class="n">delr</span><span class="p">,</span>
+    <span class="n">delc</span><span class="o">=</span><span class="n">delc</span><span class="p">,</span>
+    <span class="n">top</span><span class="o">=</span><span class="n">top</span><span class="p">,</span>
+    <span class="n">botm</span><span class="o">=</span><span class="n">botm</span><span class="p">,</span>
+    <span class="n">xorigin</span><span class="o">=</span><span class="mf">1103.3</span><span class="p">,</span>
+    <span class="n">yorigin</span><span class="o">=</span><span class="mf">1103.5</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># create Gridgen object</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">Gridgen</span><span class="p">(</span><span class="n">ms</span><span class="o">.</span><span class="n">modelgrid</span><span class="p">,</span> <span class="n">model_ws</span><span class="o">=</span><span class="s2">&quot;gridgen_ws&quot;</span><span class="p">,</span> <span class="n">exe_name</span><span class="o">=</span><span class="n">gridgen_path</span><span class="p">)</span>
+
+<span class="n">polygon</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="mi">1600</span><span class="p">,</span> <span class="mi">1350</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">1700</span><span class="p">,</span> <span class="mi">1300</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">1300</span><span class="p">,</span> <span class="mi">1800</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">1300</span><span class="p">,</span> <span class="mi">1700</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">1600</span><span class="p">,</span> <span class="mi">1350</span><span class="p">),</span>
+    <span class="p">]</span>
+<span class="p">]</span>
+
+
+<span class="n">g</span><span class="o">.</span><span class="n">add_refinement_features</span><span class="p">([</span><span class="n">polygon</span><span class="p">],</span> <span class="s2">&quot;polygon&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">refshp0</span> <span class="o">=</span> <span class="s2">&quot;gridgen_ws/&quot;</span> <span class="o">+</span> <span class="s2">&quot;rf0&quot;</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[53]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ms</span><span class="o">.</span><span class="n">dis</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+<span class="c1"># disv_gridprops = g.get_gridprops_disv()</span>
+<span class="n">grid_prop_disu</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">get_gridprops_disu6</span><span class="p">()</span>
+<span class="c1"># disv = flopy.mf6.ModflowGwfdisv(ms, **disv_gridprops, xorigin=0, yorigin=0)</span>
+<span class="n">disu</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">mf6</span><span class="o">.</span><span class="n">ModflowGwfdisu</span><span class="p">(</span><span class="n">ms</span><span class="p">,</span> <span class="o">**</span><span class="n">grid_prop_disu</span><span class="p">,</span> <span class="n">xorigin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">yorigin</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[54]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot a cross section</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flopy.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlotCrossSection</span>
+
+<span class="n">linex</span><span class="p">,</span> <span class="n">liney</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1100</span><span class="p">,</span> <span class="mi">1900</span><span class="p">],</span> <span class="p">[</span><span class="mi">1800</span><span class="p">,</span> <span class="mi">1400</span><span class="p">]</span>
+
+<span class="n">mm</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">PlotMapView</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">ms</span><span class="p">)</span>
+<span class="n">mm</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">linex</span><span class="p">,</span> <span class="n">liney</span><span class="p">,</span> <span class="s2">&quot;r-&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">4.8</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">xsect</span> <span class="o">=</span> <span class="n">PlotCrossSection</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">ms</span><span class="p">,</span><span class="n">geographic_coords</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">linex</span><span class="p">,</span> <span class="n">liney</span><span class="p">]})</span>
+<span class="n">xsect</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_unstructured_grids_65_0.png" src="../_images/notebooks_unstructured_grids_65_0.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_unstructured_grids_65_1.png" src="../_images/notebooks_unstructured_grids_65_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[55]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span> <span class="o">=</span> <span class="n">ms</span><span class="o">.</span><span class="n">modelgrid</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Kxx</span><span class="p">,</span> <span class="n">Kyy</span><span class="p">,</span> <span class="n">Kzz</span> <span class="o">=</span> <span class="n">upscale_k</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">sx_grid</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="n">sy_grid</span><span class="p">,</span> <span class="n">dz</span><span class="o">=</span><span class="n">sz_grid</span><span class="p">,</span> <span class="n">ox</span><span class="o">=</span><span class="n">ox_grid</span><span class="p">,</span> <span class="n">oy</span><span class="o">=</span><span class="n">oy_grid</span><span class="p">,</span> <span class="n">oz</span><span class="o">=</span><span class="n">oz_grid</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;simplified_renormalization_C&quot;</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">)</span>  <span class="c1"># upscale the field</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[57]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Kxx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">Kxx</span><span class="p">)</span>
+<span class="n">Kyy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">Kyy</span><span class="p">)</span>
+<span class="n">Kzz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">Kzz</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[58]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#extract vtk params for plotting with pyvista</span>
+<span class="n">vert_exag</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">vtk</span> <span class="o">=</span> <span class="n">Vtk</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">ms</span><span class="p">,</span> <span class="n">binary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">vertical_exageration</span><span class="o">=</span><span class="n">vert_exag</span><span class="p">,</span> <span class="n">smooth</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">vtk</span><span class="o">.</span><span class="n">add_model</span><span class="p">(</span><span class="n">ms</span><span class="p">)</span>
+<span class="n">vtk</span><span class="o">.</span><span class="n">add_array</span><span class="p">(</span><span class="n">Kxx</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;K&quot;</span><span class="p">)</span>
+<span class="n">vtk</span><span class="o">.</span><span class="n">add_array</span><span class="p">(</span><span class="n">Kyy</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Kyy&quot;</span><span class="p">)</span>
+<span class="n">vtk</span><span class="o">.</span><span class="n">add_array</span><span class="p">(</span><span class="n">Kzz</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Kzz&quot;</span><span class="p">)</span>
+<span class="n">gwf_mesh</span> <span class="o">=</span> <span class="n">vtk</span><span class="o">.</span><span class="n">to_pyvista</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[59]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvista</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="n">pv</span><span class="o">.</span><span class="n">set_plot_theme</span><span class="p">(</span><span class="s2">&quot;document&quot;</span><span class="p">)</span>
+<span class="n">pv</span><span class="o">.</span><span class="n">set_jupyter_backend</span><span class="p">(</span><span class="s1">&#39;static&#39;</span><span class="p">)</span>
+
+<span class="n">pl</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">window_size</span><span class="o">=</span><span class="p">[</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">800</span><span class="p">])</span>
+<span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">field_img</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">pl</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span><span class="n">gwf_mesh</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scalars</span><span class="o">=</span><span class="s2">&quot;K&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">clim</span><span class="o">=</span><span class="p">[</span><span class="n">field_img</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">field_img</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">max</span><span class="p">()],</span> <span class="n">show_edges</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">field_kxx</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">geone</span><span class="o">.</span><span class="n">img</span><span class="o">.</span><span class="n">Img</span><span class="p">(</span><span class="n">nx</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ny</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">nz</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">sx</span><span class="o">=</span><span class="n">sx_grid</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span> <span class="n">sy</span><span class="o">=</span><span class="n">sy_grid</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span> <span class="n">sz</span><span class="o">=</span><span class="n">sz_grid</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span> <span class="n">ox</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">oy</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">oz</span><span class="o">=-</span><span class="mi">100</span><span class="p">,</span> <span class="n">nv</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">arr</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+<span class="n">geone</span><span class="o">.</span><span class="n">imgplot3d</span><span class="o">.</span><span class="n">drawImage3D_surface</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">pl</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">show_edges</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cmin</span><span class="o">=</span><span class="n">field_img</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">cmax</span><span class="o">=</span><span class="n">field_img</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+
+<span class="n">pl</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_unstructured_grids_70_0.png" src="../_images/notebooks_unstructured_grids_70_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[60]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot a cross section</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flopy.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlotCrossSection</span>
+
+<span class="n">linex</span><span class="p">,</span> <span class="n">liney</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1100</span><span class="p">,</span> <span class="mi">1900</span><span class="p">],</span> <span class="p">[</span><span class="mi">1800</span><span class="p">,</span> <span class="mi">1200</span><span class="p">]</span>
+
+<span class="n">mm</span> <span class="o">=</span> <span class="n">flopy</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">PlotMapView</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">ms</span><span class="p">)</span>
+<span class="n">mm</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">linex</span><span class="p">,</span> <span class="n">liney</span><span class="p">,</span> <span class="s2">&quot;r-&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">xsect</span> <span class="o">=</span> <span class="n">PlotCrossSection</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">ms</span><span class="p">,</span><span class="n">geographic_coords</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">linex</span><span class="p">,</span> <span class="n">liney</span><span class="p">]})</span>
+
+<span class="n">g</span> <span class="o">=</span> <span class="n">xsect</span><span class="o">.</span><span class="n">plot_array</span><span class="p">(</span><span class="n">Kxx</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">field_img</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">vmax</span><span class="o">=</span><span class="n">field_img</span><span class="o">.</span><span class="n">val</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+<span class="n">xsect</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">xsect</span> <span class="o">=</span> <span class="n">PlotCrossSection</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">ms</span><span class="p">,</span><span class="n">geographic_coords</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">linex</span><span class="p">,</span> <span class="n">liney</span><span class="p">]})</span>
+
+<span class="n">g</span> <span class="o">=</span> <span class="n">xsect</span><span class="o">.</span><span class="n">plot_array</span><span class="p">(</span><span class="n">Kxx</span> <span class="o">-</span> <span class="n">Kzz</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Anisotropic ratio (Kxx / Kzz)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+<span class="n">xsect</span><span class="o">.</span><span class="n">plot_grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_unstructured_grids_71_0.png" src="../_images/notebooks_unstructured_grids_71_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_unstructured_grids_71_1.png" src="../_images/notebooks_unstructured_grids_71_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_unstructured_grids_71_2.png" src="../_images/notebooks_unstructured_grids_71_2.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+    
+        <div id="show_right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
+        </div>
+
+        <div id="right_sidebar">
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
+            <div class="page_toc">
+                <ul>
+<li><a class="reference internal" href="#">Upscaling unstructured grids</a><ul>
+<li><a class="reference internal" href="#2D-DISV">2D DISV</a><ul>
+<li><a class="reference internal" href="#Upscaling">Upscaling</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#3D-DISV">3D DISV</a></li>
+<li><a class="reference internal" href="#3D-DISU">3D DISU</a></li>
+</ul>
+</li>
+</ul>
+
+            </div>
+        </div>
+    
+
+      <div class="clearer"></div>
+    </div>
+    <div class="button_nav_wrapper">
+        <div class="button_nav">
+            <div class="left">
+                
+                <a href="upscaling_3D_fields.html">
+                    <span class="icon">&lt;</span><span>Upscaling using Renormalization</span></a>
+                
+            </div>
+
+            <div class="right">
+                
+                    <a href="ap2_mf_paper.html"><span>ArchPy2Modflow: paper examples</span><span class="icon">&gt;</span></a>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2026, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
+    </div>
+
+<p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>
+  </body>
+</html>

@@ -1,26 +1,23 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>inputs module &#8212; ArchPy 1.0.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=0.7.0-1" />
-    <link rel="stylesheet" type="text/css" href="_static/twemoji.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
+    <title>inputs module &#8212; ArchPy 1.2.12 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="_static/twemoji.css?v=2199c511" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
-    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
-    <script src="_static/twemoji.js"></script>
+    <script src="_static/documentation_options.js?v=817200f7"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="https://unpkg.com/twemoji@latest/dist/twemoji.min.js"></script>
+    <script src="_static/twemoji.js?v=a4381b3f"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <script src="_static/js/theme.js"></script>
     <script src="_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -40,7 +37,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="index.html" title="Go to homepage">ArchPy 1.0.0 documentation</a></h1>
+        <h1><a href="index.html" title="Go to homepage">ArchPy 1.2.12 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -112,7 +109,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -120,14 +117,14 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="README_rtd.html">Introduction</a></li>
@@ -137,6 +134,9 @@
 <li class="toctree-l2"><a class="reference internal" href="infer.html">infer module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">inputs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="x_valid.html">x_valid module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ap_mf.html">ArchPy2Modflow module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uppy.html">Upscaling module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="automatic_pile.html">Automatic pile module</a></li>
 </ul>
 </li>
 </ul>
@@ -151,20 +151,36 @@
           <div class="body" role="main">
             
   <section id="module-inputs">
-<span id="inputs-module"></span><h1>inputs module<a class="headerlink" href="#module-inputs" title="Permalink to this heading">¶</a></h1>
+<span id="inputs-module"></span><h1>inputs module<a class="headerlink" href="#module-inputs" title="Link to this heading">¶</a></h1>
 <p>This module contains functions to load and save ArchPy models and results.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="inputs.GeolInconsistencyError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">GeolInconsistencyError</span></span><a class="headerlink" href="#inputs.GeolInconsistencyError" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.bhs_analysis">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">bhs_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Strat_ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Strat_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Facies_ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Facies_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bot_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bot'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.bhs_analysis" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">bhs_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Strat_ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Strat_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Facies_ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Facies_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bot_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bot'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.bhs_analysis" title="Link to this definition">¶</a></dt>
 <dd><p>Function to plot the facies proportions in boreholes and return the values in a dataframe</p>
-<dl class="field-list simple">
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>db</strong> (<em>pandas dataframe</em>) – dataframe containing the boreholes</p></li>
-<li><p><strong>Strat_ID</strong> (<em>str, optional</em>) – name of the column containing the stratigraphic ID</p></li>
-<li><p><strong>Facies_ID</strong> (<em>str, optional</em>) – name of the column containing the facies ID</p></li>
-<li><p><strong>top_col</strong> (<em>str, optional</em>) – name of the column containing the top of the unit</p></li>
-<li><p><strong>bot_col</strong> (<em>str, optional</em>) – name of the column containing the bottom of the unit</p></li>
+<dd class="field-odd"><ul>
+<li><p><strong>db</strong> (<em>pandas dataframe</em>) – dataframe containing the geological database, each row is an interval observed
+The dataframe is composed of at least the following columns:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Strat_ID: name of the column containing the stratigraphic ID</p></li>
+<li><p>Facies_ID: name of the column containing the facies ID</p></li>
+<li><p>top: name of the column containing the top altitude of the interval</p></li>
+<li><p>bot: name of the column containing the bot altitude of the interval</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><strong>Strat_ID</strong> (<em>str, optional</em>) – name of the column containing the name of the stratigraphic unit</p></li>
+<li><p><strong>Facies_ID</strong> (<em>str, optional</em>) – name of the column containing the name of the facies</p></li>
+<li><p><strong>top_col</strong> (<em>str, optional</em>) – name of the column containing the top of the interval</p></li>
+<li><p><strong>bot_col</strong> (<em>str, optional</em>) – name of the column containing the bottom of the interval</p></li>
 <li><p><strong>ax</strong> (<em>matplotlib axis, optional</em>) – axis to plot the results</p></li>
 </ul>
 </dd>
@@ -179,54 +195,54 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.create_d_f_covmodels">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_f_covmodels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_f_covmodels" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_f_covmodels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_f_covmodels" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.create_d_facies">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_facies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_facies" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_facies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_facies" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.create_d_pile">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_pile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_pile" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_pile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_pile" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.create_d_piles">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_piles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_piles" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_piles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_piles" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.create_d_prop">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_prop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_prop" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_prop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_prop" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.create_d_properties">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_properties" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_properties" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.create_d_unit">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_unit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ws</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_unit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_unit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ws</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_unit" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.create_d_units">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_units</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_units" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">create_d_units</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.create_d_units" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="inputs.drawPoly">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">drawPoly</span></span><a class="headerlink" href="#inputs.drawPoly" title="Permalink to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">drawPoly</span></span><a class="headerlink" href="#inputs.drawPoly" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class to draw a polygon on a specified figure (ax) and return the coordinates of the polygon.
 First the object must be create and after the draw function can be called.
 It takes as inputs a figure (ax) and a type of drawing (rectangle or polygon)</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="inputs.drawPoly.draw">
-<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typ</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rectangle'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.drawPoly.draw" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typ</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rectangle'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.drawPoly.draw" title="Link to this definition">¶</a></dt>
 <dd><p>Draw a polygon on a specified figure (ax) and return the coordinates of the polygon.
 It takes as inputs a figure (ax) and a type of drawing (rectangle or polygon)</p>
 <dl class="field-list simple">
@@ -242,19 +258,19 @@ Can be “rectangle” or “polygon”.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="inputs.drawPoly.f">
-<span class="sig-name descname"><span class="pre">f</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.drawPoly.f" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">f</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.drawPoly.f" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="inputs.drawPoly.f_rect">
-<span class="sig-name descname"><span class="pre">f_rect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclick</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">erelease</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.drawPoly.f_rect" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">f_rect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclick</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">erelease</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.drawPoly.f_rect" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.extract_bhs">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">extract_bhs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_bhs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units_to_ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facies_to_ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extract_units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extract_facies</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore2None</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_gaps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.extract_bhs" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">extract_bhs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_bhs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units_to_ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facies_to_ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extract_units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extract_facies</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore2None</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_gaps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.extract_bhs" title="Link to this definition">¶</a></dt>
 <dd><p>Return a list of ArchTable boreholes from final database of load_bh_files</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -283,7 +299,7 @@ the unit/facies is considered as the one above. The default is True.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.imp_cm">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">imp_cm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">covmodel_dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.imp_cm" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">imp_cm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">covmodel_dic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ws</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.imp_cm" title="Link to this definition">¶</a></dt>
 <dd><p>Function to import a geone covmodel given the dictionnary written in the yaml file</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -309,7 +325,7 @@ the unit/facies is considered as the one above. The default is True.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.import_d_facies">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">import_d_facies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic_project</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.import_d_facies" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">import_d_facies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic_project</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.import_d_facies" title="Link to this definition">¶</a></dt>
 <dd><p>Import a dictionary of facies objects from the dictionary of
 the project that was imported from the yaml file</p>
 <dl class="field-list simple">
@@ -327,7 +343,7 @@ the project that was imported from the yaml file</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.import_d_piles">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">import_d_piles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_units</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.import_d_piles" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">import_d_piles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_units</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.import_d_piles" title="Link to this definition">¶</a></dt>
 <dd><p>Import a dictionary of pile objects from the given dictionary project</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -341,7 +357,7 @@ the project that was imported from the yaml file</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.import_d_prop">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">import_d_prop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_fa</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.import_d_prop" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">import_d_prop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_fa</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.import_d_prop" title="Link to this definition">¶</a></dt>
 <dd><p>Import a dictionary of property objects</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -355,7 +371,7 @@ the project that was imported from the yaml file</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.import_d_units">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">import_d_units</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_facies</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ws</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.import_d_units" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">import_d_units</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_facies</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ws</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.import_d_units" title="Link to this definition">¶</a></dt>
 <dd><p>Import a dictionary of unit objects</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -376,7 +392,7 @@ the project that was imported from the yaml file</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.import_project">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">import_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ws</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">import_bhs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">import_results</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">import_grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.import_project" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">import_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ws</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">import_bhs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">import_results</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">import_grid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.import_project" title="Link to this definition">¶</a></dt>
 <dd><p>Load an ArchPy project (Arch_table)
 with the specified name (project_name)
 and in the working_directory (ws)</p>
@@ -402,7 +418,7 @@ and in the working_directory (ws)</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.load_bh_files">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">load_bh_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_bhs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facies_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lbhs_bh_id_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_bh_id_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fa_bh_id_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_top_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_bot_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bot'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Strat'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fa_top_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fa_bot_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bot'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fa_ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'facies_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bhx_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_x'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bhy_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_y'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bhz_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_z'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bh_depth_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_depth'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_units_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_facies_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.load_bh_files" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">load_bh_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_bhs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facies_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lbhs_bh_id_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_bh_id_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fa_bh_id_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_top_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_bot_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bot'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Strat'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fa_top_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'top'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fa_bot_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bot'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fa_ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'facies_ID'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bhx_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_x'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bhy_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_y'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bhz_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_z'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bh_depth_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bh_depth'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_units_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic_facies_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">altitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.load_bh_files" title="Link to this definition">¶</a></dt>
 <dd><p>This function merges unit and facies
 databases in only one,
 each row of the output dataframe corresponds
@@ -439,7 +455,7 @@ to a layer information about units and facies</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.load_results">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">load_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surfs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surfs_bot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facies</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">props</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.load_results" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">load_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surfs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surfs_bot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facies</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">props</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.load_results" title="Link to this definition">¶</a></dt>
 <dd><p>Load ArchTable results.
 If external results must be imported, path of these files (e.g. surf argument) can be passed directly
 All files must be pickle binary files with appropriate format (see below).</p>
@@ -476,7 +492,7 @@ with prop values as values.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.save_project">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">save_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.save_project" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">save_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.save_project" title="Link to this definition">¶</a></dt>
 <dd><p>Save an Arch_table object in a yaml file and other supplementary files
 (images, numpy arrays, gslib files) in a folder.</p>
 <dl class="field-list simple">
@@ -491,13 +507,13 @@ with prop values as values.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.save_results">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">save_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.save_results" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">save_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.save_results" title="Link to this definition">¶</a></dt>
 <dd><p>Save ArchTable results</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="inputs.write_bh_files">
-<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">write_bh_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.write_bh_files" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">inputs.</span></span><span class="sig-name descname"><span class="pre">write_bh_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ArchTable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fake_bhs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#inputs.write_bh_files" title="Link to this definition">¶</a></dt>
 <dd><p>Write input files from an existing ArchTable project</p>
 </dd></dl>
 
@@ -510,14 +526,15 @@ with prop values as values.</p></li>
       </div>
     
         <div id="show_right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents<span></a></p>
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&lt;</span><span>Page contents</span></a></p>
         </div>
 
         <div id="right_sidebar">
-            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:<span></a></p>
+            <p><a class="toggle_right_sidebar" href="#"><span class="icon">&gt;</span><span>Page contents:</span></a></p>
             <div class="page_toc">
                 <ul>
 <li><a class="reference internal" href="#">inputs module</a><ul>
+<li><a class="reference internal" href="#inputs.GeolInconsistencyError"><code class="docutils literal notranslate"><span class="pre">GeolInconsistencyError</span></code></a></li>
 <li><a class="reference internal" href="#inputs.bhs_analysis"><code class="docutils literal notranslate"><span class="pre">bhs_analysis()</span></code></a></li>
 <li><a class="reference internal" href="#inputs.create_d_f_covmodels"><code class="docutils literal notranslate"><span class="pre">create_d_f_covmodels()</span></code></a></li>
 <li><a class="reference internal" href="#inputs.create_d_facies"><code class="docutils literal notranslate"><span class="pre">create_d_facies()</span></code></a></li>
@@ -574,8 +591,8 @@ with prop values as values.</p></li>
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, University of Neuchâtel.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    &#169; Copyright 2026, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

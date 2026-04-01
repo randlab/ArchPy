@@ -1,29 +1,26 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Geological map &#8212; ArchPy 1.0.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=0.7.0-1" />
-    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css" />
+    <title>Geological map &#8212; ArchPy 1.2.12 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic_mod.css?v=9b2032db" />
+    <link rel="stylesheet" type="text/css" href="../_static/twemoji.css?v=2199c511" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
-    <script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js"></script>
-    <script src="../_static/twemoji.js"></script>
+    <script src="../_static/documentation_options.js?v=817200f7"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="https://unpkg.com/twemoji@latest/dist/twemoji.min.js"></script>
+    <script src="../_static/twemoji.js?v=a4381b3f"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <script src="../_static/js/petite-vue.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -43,7 +40,7 @@
         <p id="toggle_sidebar">
             <a href="#" title="Toggle sidebar">|||</a>
         </p>
-        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.0.0 documentation</a></h1>
+        <h1><a href="../index.html" title="Go to homepage">ArchPy 1.2.12 documentation</a></h1>
 
         <a id="mode_toggle" href="#" @click.prevent="handleClick" :title="mode">
     <template v-if="mode == 'light'">
@@ -115,7 +112,7 @@
 
         <div class="searchbox_wrapper">
             
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -123,14 +120,14 @@
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
     </nav>
 </div>
 
     
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper"><p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../README_rtd.html">Introduction</a></li>
@@ -140,12 +137,24 @@
 <li class="toctree-l2"><a class="reference internal" href="3_filling_and_saving.html">Tutorial 3: filling methods and saving a project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="4_load_project.html">Tutorial 4: load ArchPy project</a></li>
 <li class="toctree-l2"><a class="reference internal" href="1_many_hierarchical_units.html">Hierarchy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_example.html">3D model example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_example.html">An example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mps_surfaces.html">Surfaces with MPS</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Geological map</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Article_example.html">Article ArchPy exemple</a></li>
 <li class="toctree-l2"><a class="reference internal" href="x_valid_exemple1.html">Cross-validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="inference_surfaces.html">Surface parameters inference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example.html">Rotation of a grid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_thickness_controlled.html">Control unit thickness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_use_existing_surfaces.html">Existing Surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3D_ArchPy_non_stationary.html">Non-stationary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_selection.html">Draw your own area !</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_coupling.html">Modflow/Modpath basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_coupling_unstructured_grid.html">ArchPy2Modflow: Energy model with unstructured grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modflow_energy_model.html">ArchPy2Modflow: Energy Transport with Modflow 6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transport_simple_example.html">modflow_transport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upscaling_3D_fields.html">Upscaling using Renormalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unstructured_grids.html">Upscaling unstructured grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ap2_mf_paper.html">ArchPy2Modflow: paper examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">List of modules</a></li>
@@ -161,26 +170,26 @@
           <div class="body" role="main">
             
   <section id="Geological-map">
-<h1>Geological map<a class="headerlink" href="#Geological-map" title="Permalink to this heading">¶</a></h1>
+<h1>Geological map<a class="headerlink" href="#Geological-map" title="Link to this heading">¶</a></h1>
 <p>This notebooks presents how to use a geological map with ArchPy models</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">colors</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">geone</span>
-<span class="kn">import</span> <span class="nn">geone.covModel</span> <span class="k">as</span> <span class="nn">gcm</span>
-<span class="kn">import</span> <span class="nn">geone.imgplot3d</span> <span class="k">as</span> <span class="nn">imgplt3</span>
-<span class="kn">import</span> <span class="nn">pyvista</span> <span class="k">as</span> <span class="nn">pv</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">colors</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone.covModel</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gcm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geone.imgplot3d</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">imgplt3</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvista</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../../&quot;</span><span class="p">)</span>
 <span class="c1">#my modules</span>
-<span class="kn">from</span> <span class="nn">ArchPy.base</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">ArchPy.tpgs</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ArchPy.base</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ArchPy.tpgs</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 </div>
 </div>
@@ -212,7 +221,7 @@
 <span class="n">ny</span> <span class="o">=</span> <span class="mi">67</span>
 <span class="n">nz</span> <span class="o">=</span> <span class="mi">75</span>
 
-<span class="k">def</span> <span class="nf">topo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">topo</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
     <span class="n">x</span> <span class="o">/=</span> <span class="mi">30</span>
     <span class="n">y</span> <span class="o">/=</span> <span class="mi">30</span>
     <span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="o">/</span><span class="mi">7</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">+</span> \
@@ -249,7 +258,7 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.colorbar.Colorbar at 0x23da439e808&gt;
+&lt;matplotlib.colorbar.Colorbar at 0x20df60830d0&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -293,7 +302,7 @@
 
 <span class="n">dic_s_A</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;int_method&quot;</span><span class="p">:</span><span class="s2">&quot;grf_ineq&quot;</span><span class="p">,</span><span class="s2">&quot;covmodel&quot;</span><span class="p">:</span> <span class="n">covmodelB</span><span class="p">}</span>
 <span class="n">dic_f_A</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f_method&quot;</span><span class="p">:</span><span class="s2">&quot;homogenous&quot;</span><span class="p">}</span>
-<span class="n">A</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">ID</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">,</span><span class="n">dic_facies</span><span class="o">=</span><span class="n">dic_f_A</span><span class="p">,</span><span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">dic_surf</span> <span class="o">=</span> <span class="n">dic_s_A</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">))</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">ID</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">,</span><span class="n">dic_facies</span><span class="o">=</span><span class="n">dic_f_A</span><span class="p">,</span><span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">dic_surf</span> <span class="o">=</span> <span class="n">dic_s_A</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">))</span>
 
 <span class="c1">#Master pile</span>
 <span class="n">P1</span><span class="o">.</span><span class="n">add_unit</span><span class="p">([</span><span class="n">D</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">A</span><span class="p">])</span>
@@ -318,7 +327,7 @@
 <span class="c1"># PD</span>
 <span class="n">ds_D2</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;int_method&quot;</span><span class="p">:</span><span class="s2">&quot;grf_ineq&quot;</span><span class="p">,</span><span class="s2">&quot;covmodel&quot;</span><span class="p">:</span><span class="n">covmodelD1</span><span class="p">}</span>
 <span class="n">df_D2</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f_method&quot;</span><span class="p">:</span><span class="s2">&quot;SIS&quot;</span><span class="p">,</span><span class="s2">&quot;neig&quot;</span> <span class="p">:</span> <span class="mi">20</span><span class="p">,</span><span class="s2">&quot;f_covmodel&quot;</span><span class="p">:</span><span class="n">covmodel_SIS_D</span><span class="p">}</span>
-<span class="n">D2</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;D2&quot;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ID</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkgoldenrod&quot;</span><span class="p">,</span><span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">dic_surf</span><span class="o">=</span><span class="n">ds_D2</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">),</span><span class="n">dic_facies</span><span class="o">=</span><span class="n">df_D2</span><span class="p">)</span>
+<span class="n">D2</span> <span class="o">=</span> <span class="n">Unit</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;D2&quot;</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ID</span> <span class="o">=</span><span class="mi">9</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkgoldenrod&quot;</span><span class="p">,</span><span class="n">surface</span><span class="o">=</span><span class="n">Surface</span><span class="p">(</span><span class="n">dic_surf</span><span class="o">=</span><span class="n">ds_D2</span><span class="p">,</span><span class="n">contact</span><span class="o">=</span><span class="s2">&quot;onlap&quot;</span><span class="p">),</span><span class="n">dic_facies</span><span class="o">=</span><span class="n">df_D2</span><span class="p">)</span>
 
 <span class="n">ds_D1</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;int_method&quot;</span><span class="p">:</span><span class="s2">&quot;grf_ineq&quot;</span><span class="p">,</span><span class="s2">&quot;covmodel&quot;</span><span class="p">:</span><span class="n">covmodelD1</span><span class="p">}</span>
 <span class="n">df_D1</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;f_method&quot;</span><span class="p">:</span><span class="s2">&quot;SIS&quot;</span><span class="p">,</span><span class="s2">&quot;neig&quot;</span> <span class="p">:</span> <span class="mi">20</span><span class="p">,</span><span class="s2">&quot;f_covmodel&quot;</span><span class="p">:</span><span class="n">covmodel_SIS_D</span><span class="p">}</span>
@@ -338,25 +347,25 @@ Unit C: covmodel for SIS added
 Unit C: Surface added for interpolation
 Unit B: Surface added for interpolation
 Unit A: Surface added for interpolation
-Stratigraphic unit D added
-Stratigraphic unit C added
-Stratigraphic unit B added
-Stratigraphic unit A added
+Stratigraphic unit D added ✅
+Stratigraphic unit C added ✅
+Stratigraphic unit B added ✅
+Stratigraphic unit A added ✅
 Unit B3: covmodel for SIS added
 Unit B3: Surface added for interpolation
 Unit B2: covmodel for SIS added
 Unit B2: Surface added for interpolation
 Unit B1: covmodel for SIS added
 Unit B1: Surface added for interpolation
-Stratigraphic unit B3 added
-Stratigraphic unit B2 added
-Stratigraphic unit B1 added
+Stratigraphic unit B3 added ✅
+Stratigraphic unit B2 added ✅
+Stratigraphic unit B1 added ✅
 Unit D2: covmodel for SIS added
 Unit D2: Surface added for interpolation
 Unit D1: covmodel for SIS added
 Unit D1: Surface added for interpolation
-Stratigraphic unit D2 added
-Stratigraphic unit D1 added
+Stratigraphic unit D2 added ✅
+Stratigraphic unit D1 added ✅
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -401,37 +410,37 @@ Stratigraphic unit D1 added
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Facies basement added to unit A
-Facies Sand added to unit B
-Facies Gravel added to unit B
-Facies GM added to unit B
-Facies SM added to unit B
-Facies Sand added to unit D
-Facies Gravel added to unit D
-Facies GM added to unit D
-Facies SM added to unit D
-Facies Clay added to unit C
-Facies Silt added to unit C
-Facies Sand added to unit B3
-Facies Gravel added to unit B3
-Facies GM added to unit B3
-Facies SM added to unit B3
-Facies Sand added to unit B2
-Facies Gravel added to unit B2
-Facies GM added to unit B2
-Facies SM added to unit B2
-Facies Sand added to unit B1
-Facies Gravel added to unit B1
-Facies GM added to unit B1
-Facies SM added to unit B1
-Facies Sand added to unit D2
-Facies Gravel added to unit D2
-Facies GM added to unit D2
-Facies SM added to unit D2
-Facies Sand added to unit D1
-Facies Gravel added to unit D1
-Facies GM added to unit D1
-Facies SM added to unit D1
+Facies basement added to unit A ✅
+Facies Sand added to unit B ✅
+Facies Gravel added to unit B ✅
+Facies GM added to unit B ✅
+Facies SM added to unit B ✅
+Facies Sand added to unit D ✅
+Facies Gravel added to unit D ✅
+Facies GM added to unit D ✅
+Facies SM added to unit D ✅
+Facies Clay added to unit C ✅
+Facies Silt added to unit C ✅
+Facies Sand added to unit B3 ✅
+Facies Gravel added to unit B3 ✅
+Facies GM added to unit B3 ✅
+Facies SM added to unit B3 ✅
+Facies Sand added to unit B2 ✅
+Facies Gravel added to unit B2 ✅
+Facies GM added to unit B2 ✅
+Facies SM added to unit B2 ✅
+Facies Sand added to unit B1 ✅
+Facies Gravel added to unit B1 ✅
+Facies GM added to unit B1 ✅
+Facies SM added to unit B1 ✅
+Facies Sand added to unit D2 ✅
+Facies Gravel added to unit D2 ✅
+Facies GM added to unit D2 ✅
+Facies SM added to unit D2 ✅
+Facies Sand added to unit D1 ✅
+Facies Gravel added to unit D1 ✅
+Facies GM added to unit D1 ✅
+Facies SM added to unit D1 ✅
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -507,7 +516,9 @@ Pile sets as Pile master
 hierarchical relations set
 ## Adding Grid ##
 ## Grid added and is now simulation grid ##
-boreholes removed
+Standard boreholes removed
+Fake boreholes removed
+Geological map boreholes removed
 Borehole 1 goes below model limits, borehole 1 depth cut
 Borehole 1 added
 Borehole 2 added
@@ -523,7 +534,7 @@ Property K added
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -541,14 +552,13 @@ Property K added
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "8e72cc68a0ad433e88c6cfa3f20ad7a3", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "6f4157ee3ed94ef79b86ed699858c582", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">process_bhs</span><span class="p">()</span>
-<span class="n">T1</span><span class="o">.</span><span class="n">compute_surf</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -560,8 +570,6 @@ Property K added
 ##### ORDERING UNITS #####
 Pile P1: ordering units
 Stratigraphic units have been sorted according to order
-Discrepency in the orders for units A and B
-Changing orders for that they range from 1 to n
 Pile PD: ordering units
 Stratigraphic units have been sorted according to order
 Pile PB: ordering units
@@ -573,71 +581,14 @@ First altitude in log facies of bh 3 is not set at the top of the borehole, alti
  ## Computing distributions for Normal Score Transform ##
 
 Processing ended successfully
-########## PILE P1 ##########
-Pile P1: ordering units
-Stratigraphic units have been sorted according to order
-
-#### COMPUTING SURFACE OF UNIT A
-A: time elapsed for computing surface 0.005003452301025391 s
-
-#### COMPUTING SURFACE OF UNIT B
-B: time elapsed for computing surface 0.03387880325317383 s
-
-#### COMPUTING SURFACE OF UNIT C
-C: time elapsed for computing surface 0.038895368576049805 s
-
-#### COMPUTING SURFACE OF UNIT D
-D: time elapsed for computing surface 0.0 s
-
-Time elapsed for getting domains 0.04388141632080078 s
-##########################
-
-########## PILE PD ##########
-Pile PD: ordering units
-Stratigraphic units have been sorted according to order
-
-#### COMPUTING SURFACE OF UNIT D1
-D1: time elapsed for computing surface 0.0249326229095459 s
-
-#### COMPUTING SURFACE OF UNIT D2
-D2: time elapsed for computing surface 0.0 s
-
-Time elapsed for getting domains 0.02194046974182129 s
-##########################
-
-########## PILE PB ##########
-Pile PB: ordering units
-Stratigraphic units have been sorted according to order
-
-#### COMPUTING SURFACE OF UNIT B1
-B1: time elapsed for computing surface 0.02792525291442871 s
-
-#### COMPUTING SURFACE OF UNIT B2
-B2: time elapsed for computing surface 0.007978439331054688 s
-
-#### COMPUTING SURFACE OF UNIT B3
-B3: time elapsed for computing surface 0.0 s
-
-Time elapsed for getting domains 0.02792525291442871 s
-##########################
-
-
-### 0.2622978687286377: Total time elapsed for computing surfaces ###
 </pre></div></div>
 </div>
-<div class="nbinput nblast docutils container">
+<p>Plot pile to see the hierarchy and relations between objects. Note that it needs to be done after processing the boreholes.</p>
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pv</span><span class="o">.</span><span class="n">set_jupyter_backend</span><span class="p">(</span><span class="s1">&#39;static&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_units</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_pile</span><span class="p">(</span><span class="n">plot_facies</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -649,32 +600,298 @@ Time elapsed for getting domains 0.02792525291442871 s
 </div>
 </div>
 <div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">get_sp</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<style type="text/css">
+#T_b8eb0_row0_col0, #T_b8eb0_row0_col1, #T_b8eb0_row0_col2, #T_b8eb0_row0_col3, #T_b8eb0_row0_col4 {
+  background-color: #ffd700;
+  color: black;
+}
+#T_b8eb0_row1_col0, #T_b8eb0_row1_col1, #T_b8eb0_row1_col2, #T_b8eb0_row1_col3, #T_b8eb0_row1_col4 {
+  background-color: #0000ff;
+  color: white;
+}
+#T_b8eb0_row2_col0, #T_b8eb0_row2_col1, #T_b8eb0_row2_col2, #T_b8eb0_row2_col3, #T_b8eb0_row2_col4 {
+  background-color: #800080;
+  color: white;
+}
+#T_b8eb0_row3_col0, #T_b8eb0_row3_col1, #T_b8eb0_row3_col2, #T_b8eb0_row3_col3, #T_b8eb0_row3_col4 {
+  background-color: #ff0000;
+  color: white;
+}
+#T_b8eb0_row4_col0, #T_b8eb0_row4_col1, #T_b8eb0_row4_col2, #T_b8eb0_row4_col3, #T_b8eb0_row4_col4 {
+  background-color: #b8860b;
+  color: black;
+}
+#T_b8eb0_row5_col0, #T_b8eb0_row5_col1, #T_b8eb0_row5_col2, #T_b8eb0_row5_col3, #T_b8eb0_row5_col4 {
+  background-color: #ffff00;
+  color: black;
+}
+#T_b8eb0_row6_col0, #T_b8eb0_row6_col1, #T_b8eb0_row6_col2, #T_b8eb0_row6_col3, #T_b8eb0_row6_col4 {
+  background-color: #228b22;
+  color: white;
+}
+#T_b8eb0_row7_col0, #T_b8eb0_row7_col1, #T_b8eb0_row7_col2, #T_b8eb0_row7_col3, #T_b8eb0_row7_col4 {
+  background-color: #32cd32;
+  color: black;
+}
+#T_b8eb0_row8_col0, #T_b8eb0_row8_col1, #T_b8eb0_row8_col2, #T_b8eb0_row8_col3, #T_b8eb0_row8_col4 {
+  background-color: #98fb98;
+  color: black;
+}
+</style>
+<table id="T_b8eb0">
+  <thead>
+    <tr>
+      <th class="blank level0" >&nbsp;</th>
+      <th id="T_b8eb0_level0_col0" class="col_heading level0 col0" >name</th>
+      <th id="T_b8eb0_level0_col1" class="col_heading level0 col1" >contact</th>
+      <th id="T_b8eb0_level0_col2" class="col_heading level0 col2" >int_method</th>
+      <th id="T_b8eb0_level0_col3" class="col_heading level0 col3" >filling_method</th>
+      <th id="T_b8eb0_level0_col4" class="col_heading level0 col4" >list_facies</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th id="T_b8eb0_level0_row0" class="row_heading level0 row0" >0</th>
+      <td id="T_b8eb0_row0_col0" class="data row0 col0" >D</td>
+      <td id="T_b8eb0_row0_col1" class="data row0 col1" >onlap</td>
+      <td id="T_b8eb0_row0_col2" class="data row0 col2" >grf_ineq</td>
+      <td id="T_b8eb0_row0_col3" class="data row0 col3" >SubPile</td>
+      <td id="T_b8eb0_row0_col4" class="data row0 col4" >[Sand, Gravel, GM, SM]</td>
+    </tr>
+    <tr>
+      <th id="T_b8eb0_level0_row1" class="row_heading level0 row1" >1</th>
+      <td id="T_b8eb0_row1_col0" class="data row1 col0" >C</td>
+      <td id="T_b8eb0_row1_col1" class="data row1 col1" >onlap</td>
+      <td id="T_b8eb0_row1_col2" class="data row1 col2" >grf_ineq</td>
+      <td id="T_b8eb0_row1_col3" class="data row1 col3" >SIS</td>
+      <td id="T_b8eb0_row1_col4" class="data row1 col4" >[Clay, Silt]</td>
+    </tr>
+    <tr>
+      <th id="T_b8eb0_level0_row2" class="row_heading level0 row2" >2</th>
+      <td id="T_b8eb0_row2_col0" class="data row2 col0" >B</td>
+      <td id="T_b8eb0_row2_col1" class="data row2 col1" >onlap</td>
+      <td id="T_b8eb0_row2_col2" class="data row2 col2" >grf_ineq</td>
+      <td id="T_b8eb0_row2_col3" class="data row2 col3" >SubPile</td>
+      <td id="T_b8eb0_row2_col4" class="data row2 col4" >[Sand, Gravel, GM, SM]</td>
+    </tr>
+    <tr>
+      <th id="T_b8eb0_level0_row3" class="row_heading level0 row3" >3</th>
+      <td id="T_b8eb0_row3_col0" class="data row3 col0" >A</td>
+      <td id="T_b8eb0_row3_col1" class="data row3 col1" >onlap</td>
+      <td id="T_b8eb0_row3_col2" class="data row3 col2" >grf_ineq</td>
+      <td id="T_b8eb0_row3_col3" class="data row3 col3" >homogenous</td>
+      <td id="T_b8eb0_row3_col4" class="data row3 col4" >[basement]</td>
+    </tr>
+    <tr>
+      <th id="T_b8eb0_level0_row4" class="row_heading level0 row4" >4</th>
+      <td id="T_b8eb0_row4_col0" class="data row4 col0" >D2</td>
+      <td id="T_b8eb0_row4_col1" class="data row4 col1" >onlap</td>
+      <td id="T_b8eb0_row4_col2" class="data row4 col2" >grf_ineq</td>
+      <td id="T_b8eb0_row4_col3" class="data row4 col3" >SIS</td>
+      <td id="T_b8eb0_row4_col4" class="data row4 col4" >[Sand, Gravel, GM, SM]</td>
+    </tr>
+    <tr>
+      <th id="T_b8eb0_level0_row5" class="row_heading level0 row5" >5</th>
+      <td id="T_b8eb0_row5_col0" class="data row5 col0" >D1</td>
+      <td id="T_b8eb0_row5_col1" class="data row5 col1" >onlap</td>
+      <td id="T_b8eb0_row5_col2" class="data row5 col2" >grf_ineq</td>
+      <td id="T_b8eb0_row5_col3" class="data row5 col3" >SIS</td>
+      <td id="T_b8eb0_row5_col4" class="data row5 col4" >[Sand, Gravel, GM, SM]</td>
+    </tr>
+    <tr>
+      <th id="T_b8eb0_level0_row6" class="row_heading level0 row6" >6</th>
+      <td id="T_b8eb0_row6_col0" class="data row6 col0" >B3</td>
+      <td id="T_b8eb0_row6_col1" class="data row6 col1" >onlap</td>
+      <td id="T_b8eb0_row6_col2" class="data row6 col2" >grf_ineq</td>
+      <td id="T_b8eb0_row6_col3" class="data row6 col3" >SIS</td>
+      <td id="T_b8eb0_row6_col4" class="data row6 col4" >[Sand, Gravel, GM, SM]</td>
+    </tr>
+    <tr>
+      <th id="T_b8eb0_level0_row7" class="row_heading level0 row7" >7</th>
+      <td id="T_b8eb0_row7_col0" class="data row7 col0" >B2</td>
+      <td id="T_b8eb0_row7_col1" class="data row7 col1" >erode</td>
+      <td id="T_b8eb0_row7_col2" class="data row7 col2" >grf_ineq</td>
+      <td id="T_b8eb0_row7_col3" class="data row7 col3" >SIS</td>
+      <td id="T_b8eb0_row7_col4" class="data row7 col4" >[Sand, Gravel, GM, SM]</td>
+    </tr>
+    <tr>
+      <th id="T_b8eb0_level0_row8" class="row_heading level0 row8" >8</th>
+      <td id="T_b8eb0_row8_col0" class="data row8 col0" >B1</td>
+      <td id="T_b8eb0_row8_col1" class="data row8 col1" >onlap</td>
+      <td id="T_b8eb0_row8_col2" class="data row8 col2" >grf_ineq</td>
+      <td id="T_b8eb0_row8_col3" class="data row8 col3" >SIS</td>
+      <td id="T_b8eb0_row8_col4" class="data row8 col4" >[Sand, Gravel, GM, SM]</td>
+    </tr>
+  </tbody>
+</table></div>
+</div>
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">geol_map</span> <span class="o">=</span> <span class="n">T1</span><span class="o">.</span><span class="n">compute_geol_map</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_surf</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+########## PILE P1 ##########
+Pile P1: ordering units
+Stratigraphic units have been sorted according to order
+
+#### COMPUTING SURFACE OF UNIT A
+A: time elapsed for computing surface 0.00984501838684082 s
+
+#### COMPUTING SURFACE OF UNIT B
+B: time elapsed for computing surface 0.010233402252197266 s
+
+#### COMPUTING SURFACE OF UNIT C
+C: time elapsed for computing surface 0.011365890502929688 s
+
+#### COMPUTING SURFACE OF UNIT D
+D: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.0029997825622558594 s
+##########################
+
+########## PILE PD ##########
+Pile PD: ordering units
+Stratigraphic units have been sorted according to order
+
+#### COMPUTING SURFACE OF UNIT D1
+D1: time elapsed for computing surface 0.011049985885620117 s
+
+#### COMPUTING SURFACE OF UNIT D2
+D2: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.002064228057861328 s
+##########################
+
+########## PILE PB ##########
+Pile PB: ordering units
+Stratigraphic units have been sorted according to order
+
+#### COMPUTING SURFACE OF UNIT B1
+B1: time elapsed for computing surface 0.013092756271362305 s
+
+#### COMPUTING SURFACE OF UNIT B2
+B2: time elapsed for computing surface 0.0067365169525146484 s
+
+#### COMPUTING SURFACE OF UNIT B3
+B3: time elapsed for computing surface 0.0 s
+
+Time elapsed for getting domains 0.0030210018157958984 s
+##########################
+
+
+### 0.0894169807434082: Total time elapsed for computing surfaces ###
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pv</span><span class="o">.</span><span class="n">set_jupyter_backend</span><span class="p">(</span><span class="s1">&#39;static&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_units</span><span class="p">(</span><span class="n">h_level</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/notebooks_3D_ArchPy_geological_map_18_0.png" src="../_images/notebooks_3D_ArchPy_geological_map_18_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">geol_map</span> <span class="o">=</span> <span class="n">T1</span><span class="o">.</span><span class="n">compute_geol_map</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">geol_map</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.image.AxesImage at 0x23daf9439c8&gt;
+&lt;matplotlib.image.AxesImage at 0x20df98ef010&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_3D_ArchPy_geological_map_15_1.png" src="../_images/notebooks_3D_ArchPy_geological_map_15_1.png" />
+<img alt="../_images/notebooks_3D_ArchPy_geological_map_19_1.png" src="../_images/notebooks_3D_ArchPy_geological_map_19_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># save geological map as raster</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">rasterio</span>
+<span class="n">g_map</span> <span class="o">=</span> <span class="n">T1</span><span class="o">.</span><span class="n">compute_geol_map</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;geological_map.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="s1">&#39;GTiff&#39;</span><span class="p">,</span>
+                   <span class="n">height</span><span class="o">=</span><span class="n">g_map</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="n">g_map</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                   <span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">g_map</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span> <span class="k">as</span> <span class="n">dst</span><span class="p">:</span>
+    <span class="n">dst</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">g_map</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<br/></pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g_map</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(67, 66)
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">geol_map</span> <span class="o">=</span> <span class="n">T1</span><span class="o">.</span><span class="n">compute_geol_map</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">add_geological_map</span><span class="p">(</span><span class="n">geol_map</span><span class="p">)</span>
@@ -690,12 +907,12 @@ Geological map added
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">()</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_bhs</span><span class="p">(</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
-<span class="n">T1</span><span class="o">.</span><span class="n">plot_geol_map</span><span class="p">(</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">up</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># T1.plot_geol_map(plotter=p, up=0)</span>
 <span class="n">p</span><span class="o">.</span><span class="n">add_bounding_box</span><span class="p">()</span>
 <span class="n">p</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -705,14 +922,14 @@ Geological map added
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_3D_ArchPy_geological_map_17_0.png" src="../_images/notebooks_3D_ArchPy_geological_map_17_0.png" />
+<img alt="../_images/notebooks_3D_ArchPy_geological_map_24_0.png" src="../_images/notebooks_3D_ArchPy_geological_map_24_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">process_geological_map</span><span class="p">(</span><span class="n">typ</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">process_geological_map</span><span class="p">(</span><span class="n">typ</span><span class="o">=</span><span class="s2">&quot;uniform&quot;</span><span class="p">,</span> <span class="n">step_uniform</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -725,24 +942,7 @@ Geological map extracted - processus ended successfully
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">geol_map</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-(67, 66)
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">reprocess</span><span class="p">()</span>
@@ -772,7 +972,7 @@ Processing ended successfully
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">order_Piles</span><span class="p">()</span>
@@ -794,7 +994,7 @@ Stratigraphic units have been sorted according to order
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">hierarchy_relations</span><span class="p">()</span>
@@ -810,19 +1010,21 @@ hierarchical relations set
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">dic_surf</span><span class="p">[</span><span class="s2">&quot;krig_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ordinary_kriging&quot;</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># modify kriging type for the simulation to ordinary to better account for trends</span>
+<span class="c1"># and also increase number of iterations of the gibbs samplers</span>
+<span class="n">C</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">dic_surf</span><span class="p">[</span><span class="s2">&quot;krig_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ordinary_kriging&quot;</span>
 <span class="n">C</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">dic_surf</span><span class="p">[</span><span class="s2">&quot;nit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">50</span>
 <span class="n">B</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">dic_surf</span><span class="p">[</span><span class="s2">&quot;nit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">50</span>
 <span class="n">A</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">dic_surf</span><span class="p">[</span><span class="s2">&quot;nit&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">50</span>
@@ -830,7 +1032,7 @@ hierarchical relations set
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_surf</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
@@ -847,74 +1049,74 @@ Pile P1: ordering units
 Stratigraphic units have been sorted according to order
 
 #### COMPUTING SURFACE OF UNIT A
-A: time elapsed for computing surface 0.42540931701660156 s
+A: time elapsed for computing surface 0.14131617546081543 s
 
 #### COMPUTING SURFACE OF UNIT B
-B: time elapsed for computing surface 0.40478968620300293 s
+B: time elapsed for computing surface 0.13399982452392578 s
 
 #### COMPUTING SURFACE OF UNIT C
-C: time elapsed for computing surface 0.4029226303100586 s
+C: time elapsed for computing surface 0.13593316078186035 s
 
 #### COMPUTING SURFACE OF UNIT D
 D: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.04487943649291992 s
+Time elapsed for getting domains 0.0030028820037841797 s
 
 #### COMPUTING SURFACE OF UNIT A
-A: time elapsed for computing surface 0.42685914039611816 s
+A: time elapsed for computing surface 0.13859891891479492 s
 
 #### COMPUTING SURFACE OF UNIT B
-B: time elapsed for computing surface 0.4009268283843994 s
+B: time elapsed for computing surface 0.1351299285888672 s
 
 #### COMPUTING SURFACE OF UNIT C
-C: time elapsed for computing surface 0.3949573040008545 s
+C: time elapsed for computing surface 0.13752245903015137 s
 
 #### COMPUTING SURFACE OF UNIT D
 D: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.03690052032470703 s
+Time elapsed for getting domains 0.003038167953491211 s
 
 #### COMPUTING SURFACE OF UNIT A
-A: time elapsed for computing surface 0.44814085960388184 s
+A: time elapsed for computing surface 0.15128207206726074 s
 
 #### COMPUTING SURFACE OF UNIT B
-B: time elapsed for computing surface 0.39844632148742676 s
+B: time elapsed for computing surface 0.13829302787780762 s
 
 #### COMPUTING SURFACE OF UNIT C
-C: time elapsed for computing surface 0.4029204845428467 s
+C: time elapsed for computing surface 0.14284372329711914 s
 
 #### COMPUTING SURFACE OF UNIT D
 D: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.04388165473937988 s
+Time elapsed for getting domains 0.0030336380004882812 s
 
 #### COMPUTING SURFACE OF UNIT A
-A: time elapsed for computing surface 0.43461060523986816 s
+A: time elapsed for computing surface 0.14635109901428223 s
 
 #### COMPUTING SURFACE OF UNIT B
-B: time elapsed for computing surface 0.41976118087768555 s
+B: time elapsed for computing surface 0.14177775382995605 s
 
 #### COMPUTING SURFACE OF UNIT C
-C: time elapsed for computing surface 0.40463781356811523 s
+C: time elapsed for computing surface 0.13992094993591309 s
 
 #### COMPUTING SURFACE OF UNIT D
 D: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.04388236999511719 s
+Time elapsed for getting domains 0.0029976367950439453 s
 
 #### COMPUTING SURFACE OF UNIT A
-A: time elapsed for computing surface 0.42985033988952637 s
+A: time elapsed for computing surface 0.20995664596557617 s
 
 #### COMPUTING SURFACE OF UNIT B
-B: time elapsed for computing surface 0.41246628761291504 s
+B: time elapsed for computing surface 0.1990971565246582 s
 
 #### COMPUTING SURFACE OF UNIT C
-C: time elapsed for computing surface 0.40636563301086426 s
+C: time elapsed for computing surface 0.15072369575500488 s
 
 #### COMPUTING SURFACE OF UNIT D
 D: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.0413966178894043 s
+Time elapsed for getting domains 0.003167390823364258 s
 ##########################
 
 ########## PILE PD ##########
@@ -922,44 +1124,44 @@ Pile PD: ordering units
 Stratigraphic units have been sorted according to order
 
 #### COMPUTING SURFACE OF UNIT D1
-D1: time elapsed for computing surface 0.3595468997955322 s
+D1: time elapsed for computing surface 0.13994550704956055 s
 
 #### COMPUTING SURFACE OF UNIT D2
 D2: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.021941184997558594 s
+Time elapsed for getting domains 0.002062082290649414 s
 
 #### COMPUTING SURFACE OF UNIT D1
-D1: time elapsed for computing surface 0.3480703830718994 s
+D1: time elapsed for computing surface 0.13340234756469727 s
 
 #### COMPUTING SURFACE OF UNIT D2
 D2: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.021939992904663086 s
+Time elapsed for getting domains 0.002000093460083008 s
 
 #### COMPUTING SURFACE OF UNIT D1
-D1: time elapsed for computing surface 0.3476877212524414 s
+D1: time elapsed for computing surface 0.13629603385925293 s
 
 #### COMPUTING SURFACE OF UNIT D2
 D2: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.017951488494873047 s
+Time elapsed for getting domains 0.0010004043579101562 s
 
 #### COMPUTING SURFACE OF UNIT D1
-D1: time elapsed for computing surface 0.3540060520172119 s
+D1: time elapsed for computing surface 0.13399910926818848 s
 
 #### COMPUTING SURFACE OF UNIT D2
 D2: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.02003788948059082 s
+Time elapsed for getting domains 0.0009999275207519531 s
 
 #### COMPUTING SURFACE OF UNIT D1
-D1: time elapsed for computing surface 0.3517577648162842 s
+D1: time elapsed for computing surface 0.13740253448486328 s
 
 #### COMPUTING SURFACE OF UNIT D2
 D2: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.018948793411254883 s
+Time elapsed for getting domains 0.0009984970092773438 s
 ##########################
 
 ########## PILE PB ##########
@@ -967,72 +1169,80 @@ Pile PB: ordering units
 Stratigraphic units have been sorted according to order
 
 #### COMPUTING SURFACE OF UNIT B1
-B1: time elapsed for computing surface 0.13164758682250977 s
+B1: time elapsed for computing surface 0.02779865264892578 s
 
 #### COMPUTING SURFACE OF UNIT B2
-B2: time elapsed for computing surface 0.12666106224060059 s
+B2: time elapsed for computing surface 0.02736210823059082 s
 
 #### COMPUTING SURFACE OF UNIT B3
 B3: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.028922080993652344 s
+Time elapsed for getting domains 0.002004861831665039 s
 
 #### COMPUTING SURFACE OF UNIT B1
-B1: time elapsed for computing surface 0.1356372833251953 s
+B1: time elapsed for computing surface 0.0317835807800293 s
 
 #### COMPUTING SURFACE OF UNIT B2
-B2: time elapsed for computing surface 0.1436166763305664 s
+B2: time elapsed for computing surface 0.029268264770507812 s
 
 #### COMPUTING SURFACE OF UNIT B3
 B3: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.03091740608215332 s
+Time elapsed for getting domains 0.003052949905395508 s
 
 #### COMPUTING SURFACE OF UNIT B1
-B1: time elapsed for computing surface 0.13065338134765625 s
+B1: time elapsed for computing surface 0.02730250358581543 s
 
 #### COMPUTING SURFACE OF UNIT B2
-B2: time elapsed for computing surface 0.14028239250183105 s
+B2: time elapsed for computing surface 0.023798465728759766 s
 
 #### COMPUTING SURFACE OF UNIT B3
 B3: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.03291201591491699 s
+Time elapsed for getting domains 0.002999544143676758 s
 
 #### COMPUTING SURFACE OF UNIT B1
-B1: time elapsed for computing surface 0.13265609741210938 s
+B1: time elapsed for computing surface 0.025969743728637695 s
 
 #### COMPUTING SURFACE OF UNIT B2
-B2: time elapsed for computing surface 0.1396324634552002 s
+B2: time elapsed for computing surface 0.024364709854125977 s
 
 #### COMPUTING SURFACE OF UNIT B3
 B3: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.03191494941711426 s
+Time elapsed for getting domains 0.0030541419982910156 s
 
 #### COMPUTING SURFACE OF UNIT B1
-B1: time elapsed for computing surface 0.1402895450592041 s
+B1: time elapsed for computing surface 0.029395580291748047 s
 
 #### COMPUTING SURFACE OF UNIT B2
-B2: time elapsed for computing surface 0.1376361846923828 s
+B2: time elapsed for computing surface 0.02576732635498047 s
 
 #### COMPUTING SURFACE OF UNIT B3
 B3: time elapsed for computing surface 0.0 s
 
-Time elapsed for getting domains 0.03293275833129883 s
+Time elapsed for getting domains 0.002000093460083008 s
 ##########################
 
 
-### 9.90597677230835: Total time elapsed for computing surfaces ###
+### 3.273360252380371: Total time elapsed for computing surfaces ###
 </pre></div></div>
 </div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pv</span><span class="o">.</span><span class="n">set_jupyter_backend</span><span class="p">(</span><span class="s2">&quot;server&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">()</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_units</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
-<span class="n">T1</span><span class="o">.</span><span class="n">plot_geol_map</span><span class="p">(</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">up</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="c1"># T1.plot_geol_map(plotter=p, up=15)</span>
 <span class="n">p</span><span class="o">.</span><span class="n">add_bounding_box</span><span class="p">()</span>
 <span class="n">T1</span><span class="o">.</span><span class="n">plot_bhs</span><span class="p">(</span><span class="n">plotter</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
 <span class="n">p</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -1043,11 +1253,18 @@ Time elapsed for getting domains 0.03293275833129883 s
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_3D_ArchPy_geological_map_26_0.png" src="../_images/notebooks_3D_ArchPy_geological_map_26_0.png" />
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "81cb2e9cd11a44ff8bbe181db148d7bc", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="o">=</span><span class="n">pv</span><span class="o">.</span><span class="n">Plotter</span><span class="p">()</span>
@@ -1063,14 +1280,13 @@ Time elapsed for getting domains 0.03293275833129883 s
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_3D_ArchPy_geological_map_27_0.png" src="../_images/notebooks_3D_ArchPy_geological_map_27_0.png" />
-</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "e62c05b09ee04d5f91620cc639051f00", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_proba</span><span class="p">(</span><span class="n">D</span><span class="p">,</span><span class="n">v_ex</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_proba</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">v_ex</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">filtering_interval</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
@@ -1078,11 +1294,10 @@ Time elapsed for getting domains 0.03293275833129883 s
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_3D_ArchPy_geological_map_28_0.png" src="../_images/notebooks_3D_ArchPy_geological_map_28_0.png" />
-</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "2d962a69415e42e6968e05e24d8b6b41", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_facies</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbose_methods</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -1105,44 +1320,47 @@ Some errors have been found
 Some facies were found inside units where they shouldn&#39;t be
 
 ### List of errors ####
-Facies Sand: 1 points
 Facies Gravel: 2 points
-Facies SM: 4 points
 
 
 Only one facies covmodels for multiples facies, adapt sill to right proportions
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
 ### Unit C - realization 1 ###
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
+
+### List of errors ####
+Facies basement: 1 points
+
+
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
 ### Unit C - realization 2 ###
 Some errors have been found
 Some facies were found inside units where they shouldn&#39;t be
 
 ### List of errors ####
-Facies Sand: 1 points
-Facies Gravel: 2 points
+Facies basement: 1 points
 
 
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
 ### Unit C - realization 3 ###
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
+### Unit C - realization 4 ###
 Some errors have been found
 Some facies were found inside units where they shouldn&#39;t be
 
 ### List of errors ####
-Facies Sand: 1 points
-Facies Gravel: 2 points
-Facies basement: 1 points
+Facies SM: 2 points
+Facies basement: 6 points
 
 
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
-### Unit C - realization 4 ###
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
-Time elapsed 4.34 s
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
+Time elapsed 2.87 s
 
 ### Unit B: facies simulation with SubPile method ####
 SubPile filling method, nothing happened
@@ -1154,139 +1372,114 @@ Time elapsed 0.0 s
 ### Unit A - realization 2 ###
 ### Unit A - realization 3 ###
 ### Unit A - realization 4 ###
-Time elapsed 0.03 s
+Time elapsed 0.0 s
 
 ### Unit D2: facies simulation with SIS method ####
 ### Unit D2 - realization 0 ###
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
+
+### List of errors ####
+Facies Clay: 4 points
+
+
 Only one facies covmodels for multiples facies, adapt sill to right proportions
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
-
-Warnings encountered (1 times in all):
-#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
 ### Unit D2 - realization 1 ###
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
 
-Warnings encountered (1 times in all):
-#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+### List of errors ####
+Facies Clay: 5 points
+
+
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
 ### Unit D2 - realization 2 ###
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
 
-Warnings encountered (1 times in all):
-#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+### List of errors ####
+Facies Clay: 8 points
+
+
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
 ### Unit D2 - realization 3 ###
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
 
-Warnings encountered (1 times in all):
-#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+### List of errors ####
+Facies Clay: 1 points
+
+
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
 ### Unit D2 - realization 4 ###
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
 
-Warnings encountered (1 times in all):
-#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
-Time elapsed 4.17 s
+### List of errors ####
+Facies Clay: 2 points
+
+
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
+Time elapsed 3.3 s
 
 ### Unit D1: facies simulation with SIS method ####
 ### Unit D1 - realization 0 ###
-Only one facies covmodels for multiples facies, adapt sill to right proportions
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
 
-Warnings encountered (1 times in all):
-#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+### List of errors ####
+Facies Clay: 3 points
+Facies Silt: 4 points
+
+
+Only one facies covmodels for multiples facies, adapt sill to right proportions
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
 ### Unit D1 - realization 1 ###
 Some errors have been found
 Some facies were found inside units where they shouldn&#39;t be
 
 ### List of errors ####
-Facies basement: 2 points
+Facies Clay: 2 points
+Facies Silt: 2 points
 
 
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
-
-Warnings encountered (1 times in all):
-#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
 ### Unit D1 - realization 2 ###
 Some errors have been found
 Some facies were found inside units where they shouldn&#39;t be
 
 ### List of errors ####
-Facies Clay: 1 points
-Facies basement: 3 points
+Facies Clay: 2 points
+Facies Silt: 3 points
 
 
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
-
-Warnings encountered (1 times in all):
-#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
 ### Unit D1 - realization 3 ###
-Some errors have been found
-Some facies were found inside units where they shouldn&#39;t be
-
-### List of errors ####
-Facies Clay: 1 points
-
-
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
-
-Warnings encountered (1 times in all):
-#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
 ### Unit D1 - realization 4 ###
-Some errors have been found
-Some facies were found inside units where they shouldn&#39;t be
-
-### List of errors ####
-Facies basement: 3 points
-
-
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
-
-Warnings encountered (1 times in all):
-#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
-Time elapsed 4.32 s
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
+Time elapsed 3.33 s
 
 ### Unit B3: facies simulation with SIS method ####
 ### Unit B3 - realization 0 ###
 Only one facies covmodels for multiples facies, adapt sill to right proportions
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
-
-Warnings encountered (1 times in all):
-#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
 ### Unit B3 - realization 1 ###
-Some errors have been found
-Some facies were found inside units where they shouldn&#39;t be
-
-### List of errors ####
-Facies Silt: 1 points
-
-
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
-
-Warnings encountered (1 times in all):
-#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
 ### Unit B3 - realization 2 ###
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
-
-Warnings encountered (1 times in all):
-#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
-### Unit B3 - realization 3 ###
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
-
-Warnings encountered (1 times in all):
-#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
-### Unit B3 - realization 4 ###
 Some errors have been found
 Some facies were found inside units where they shouldn&#39;t be
 
@@ -1294,65 +1487,137 @@ Some facies were found inside units where they shouldn&#39;t be
 Facies Silt: 2 points
 
 
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
+### Unit B3 - realization 3 ###
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
 
-Warnings encountered (1 times in all):
-#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
-Time elapsed 3.47 s
+### List of errors ####
+Facies Clay: 4 points
+Facies basement: 2 points
+
+
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
+### Unit B3 - realization 4 ###
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
+
+### List of errors ####
+Facies Silt: 3 points
+
+
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
+Time elapsed 1.99 s
 
 ### Unit B2: facies simulation with SIS method ####
 ### Unit B2 - realization 0 ###
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
+
+### List of errors ####
+Facies basement: 3 points
+
+
 Only one facies covmodels for multiples facies, adapt sill to right proportions
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
 ### Unit B2 - realization 1 ###
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
 
-Warnings encountered (1 times in all):
-#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+### List of errors ####
+Facies basement: 1 points
+
+
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
 ### Unit B2 - realization 2 ###
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
 
-Warnings encountered (1 times in all):
-#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
+### List of errors ####
+Facies basement: 6 points
+
+
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
 ### Unit B2 - realization 3 ###
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
 ### Unit B2 - realization 4 ###
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
 
-Warnings encountered (1 times in all):
-#  1: WARNING 00040: conditioning value(s) has(have) been removed (in the non-simulated part of the mask!)
-Time elapsed 3.04 s
+### List of errors ####
+Facies basement: 2 points
+
+
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
+Time elapsed 1.75 s
 
 ### Unit B1: facies simulation with SIS method ####
 ### Unit B1 - realization 0 ###
-Only one facies covmodels for multiples facies, adapt sill to right proportions
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
-### Unit B1 - realization 1 ###
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
-### Unit B1 - realization 2 ###
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
-### Unit B1 - realization 3 ###
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
-### Unit B1 - realization 4 ###
-Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20221014 / OpenMP 15 thread(s)]
-Geos-Classic run complete
-Time elapsed 3.11 s
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
 
-### 22.48: Total time elapsed for computing facies ###
+### List of errors ####
+Facies basement: 1 points
+
+
+Only one facies covmodels for multiples facies, adapt sill to right proportions
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
+### Unit B1 - realization 1 ###
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
+
+### List of errors ####
+Facies basement: 8 points
+
+
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
+### Unit B1 - realization 2 ###
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
+
+### List of errors ####
+Facies basement: 2 points
+
+
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
+### Unit B1 - realization 3 ###
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
+
+### List of errors ####
+Facies basement: 2 points
+
+
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
+### Unit B1 - realization 4 ###
+Some errors have been found
+Some facies were found inside units where they shouldn&#39;t be
+
+### List of errors ####
+Facies basement: 6 points
+
+
+simulateIndicator3D: Geos-Classic running... [VERSION 2.0 / BUILD NUMBER 20240322 / OpenMP 7 thread(s)]
+simulateIndicator3D: Geos-Classic run complete
+Time elapsed 1.92 s
+
+### 15.16: Total time elapsed for computing facies ###
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_facies</span><span class="p">()</span>
@@ -1363,11 +1628,10 @@ Time elapsed 3.11 s
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_3D_ArchPy_geological_map_30_0.png" src="../_images/notebooks_3D_ArchPy_geological_map_30_0.png" />
-</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "9826fef676c74c2ab36738dd21d8ad0f", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_facies</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">inside_units</span><span class="o">=</span><span class="p">[</span><span class="n">C</span><span class="p">])</span>
@@ -1378,11 +1642,10 @@ Time elapsed 3.11 s
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_3D_ArchPy_geological_map_31_0.png" src="../_images/notebooks_3D_ArchPy_geological_map_31_0.png" />
-</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "08385e4a74d14c388a5f032544fe41a3", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#prop hd</span>
@@ -1395,7 +1658,7 @@ Time elapsed 3.11 s
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">permea</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1404,7 +1667,7 @@ Time elapsed 3.11 s
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">permea</span><span class="o">.</span><span class="n">add_hd</span><span class="p">(</span><span class="n">x_hd</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
@@ -1412,7 +1675,7 @@ Time elapsed 3.11 s
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">compute_prop</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
@@ -1443,7 +1706,7 @@ homogenous method chosen ! Warning: Some HD can be not respected
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_units</span><span class="p">(</span><span class="n">slicex</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">slicey</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">slicez</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
@@ -1454,11 +1717,10 @@ homogenous method chosen ! Warning: Some HD can be not respected
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_3D_ArchPy_geological_map_36_0.png" src="../_images/notebooks_3D_ArchPy_geological_map_36_0.png" />
-</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "0f4e0821fbb24875a264a242ea894aeb", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_prop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="n">slicex</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">slicey</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">slicez</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
@@ -1469,11 +1731,10 @@ homogenous method chosen ! Warning: Some HD can be not respected
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_3D_ArchPy_geological_map_37_0.png" src="../_images/notebooks_3D_ArchPy_geological_map_37_0.png" />
-</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "f5ac5222eca14844b98b5dd3c917f7db", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T1</span><span class="o">.</span><span class="n">plot_mean_prop</span><span class="p">(</span><span class="s2">&quot;K&quot;</span><span class="p">)</span>
@@ -1484,10 +1745,11 @@ homogenous method chosen ! Warning: Some HD can be not respected
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_3D_ArchPy_geological_map_38_0.png" src="../_images/notebooks_3D_ArchPy_geological_map_38_0.png" />
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "51c6cfcd22c54a69a9ea576d932edc36", "version_major": 2, "version_minor": 0}</script></div>
 </div>
-</div>
-</section>
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {"08385e4a74d14c388a5f032544fe41a3": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_4c70ba6b47b949de8edb9071356bfc60", "placeholder": "\u200b", "style": "IPY_MODEL_45fc4336183941fc97805075c7ff18cd", "tabbable": null, "tooltip": null, "value": "<iframe src=\"http://localhost:58967/index.html?ui=P_0x20e06f96950_7&reconnect=auto\" class=\"pyvista\" style=\"width: 99%; height: 600px; border: 1px solid rgb(221,221,221);\"></iframe>"}}, "0f4e0821fbb24875a264a242ea894aeb": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_35600db959c74d59b35e1bf824a9e81f", "placeholder": "\u200b", "style": "IPY_MODEL_a797c6c497314383aa6ece47c72b8358", "tabbable": null, "tooltip": null, "value": "<iframe src=\"http://localhost:58967/index.html?ui=P_0x20e06f8ebd0_8&reconnect=auto\" class=\"pyvista\" style=\"width: 99%; height: 600px; border: 1px solid rgb(221,221,221);\"></iframe>"}}, "2d962a69415e42e6968e05e24d8b6b41": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_e8fd6376f8fe41a7a5ddddf641f5d6cf", "placeholder": "\u200b", "style": "IPY_MODEL_5bb4e51b72b34336991ccc1125aa3e66", "tabbable": null, "tooltip": null, "value": "<iframe src=\"http://localhost:58967/index.html?ui=P_0x20d80886810_5&reconnect=auto\" class=\"pyvista\" style=\"width: 99%; height: 600px; border: 1px solid rgb(221,221,221);\"></iframe>"}}, "35600db959c74d59b35e1bf824a9e81f": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "45fc4336183941fc97805075c7ff18cd": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "4c70ba6b47b949de8edb9071356bfc60": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "51c6cfcd22c54a69a9ea576d932edc36": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_60109691289b4ad6bb5bdb473f23955b", "placeholder": "\u200b", "style": "IPY_MODEL_c4750b352fc34cc99b75059cdd624308", "tabbable": null, "tooltip": null, "value": "<iframe src=\"http://localhost:58967/index.html?ui=P_0x20e2a2ff150_10&reconnect=auto\" class=\"pyvista\" style=\"width: 99%; height: 600px; border: 1px solid rgb(221,221,221);\"></iframe>"}}, "56ba0eb82c1e4dfcbe47b37e36cbd7df": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "5bb4e51b72b34336991ccc1125aa3e66": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "60109691289b4ad6bb5bdb473f23955b": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "6f4157ee3ed94ef79b86ed699858c582": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_56ba0eb82c1e4dfcbe47b37e36cbd7df", "placeholder": "\u200b", "style": "IPY_MODEL_caa27ea964c246e99c2f965b7af2d6c0", "tabbable": null, "tooltip": null, "value": "<iframe src=\"http://localhost:58967/index.html?ui=P_0x20df826cdd0_0&reconnect=auto\" class=\"pyvista\" style=\"width: 99%; height: 600px; border: 1px solid rgb(221,221,221);\"></iframe>"}}, "81cb2e9cd11a44ff8bbe181db148d7bc": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_f9e3530c662e43d9bb50625fd16c31d1", "placeholder": "\u200b", "style": "IPY_MODEL_a6c9de6e5be34acdb0a478a8b55af1e8", "tabbable": null, "tooltip": null, "value": "<iframe src=\"http://localhost:58967/index.html?ui=P_0x20d87015850_3&reconnect=auto\" class=\"pyvista\" style=\"width: 99%; height: 600px; border: 1px solid rgb(221,221,221);\"></iframe>"}}, "9826fef676c74c2ab36738dd21d8ad0f": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_d343cf1c01f5426ea69b79a24913c303", "placeholder": "\u200b", "style": "IPY_MODEL_df9b522c8f0e45c8ab4e12a45a925a0c", "tabbable": null, "tooltip": null, "value": "<iframe src=\"http://localhost:58967/index.html?ui=P_0x20e06f95350_6&reconnect=auto\" class=\"pyvista\" style=\"width: 99%; height: 600px; border: 1px solid rgb(221,221,221);\"></iframe>"}}, "a6c9de6e5be34acdb0a478a8b55af1e8": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "a797c6c497314383aa6ece47c72b8358": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "c4750b352fc34cc99b75059cdd624308": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "c62a22172df34ed3b5b0b0987427bfd6": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "c765a3e7721f4631b1e030364bb04cde": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "caa27ea964c246e99c2f965b7af2d6c0": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "d343cf1c01f5426ea69b79a24913c303": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "df9b522c8f0e45c8ab4e12a45a925a0c": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "e08cd7eba2d4441d831031a0e0130280": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "e62c05b09ee04d5f91620cc639051f00": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_e08cd7eba2d4441d831031a0e0130280", "placeholder": "\u200b", "style": "IPY_MODEL_e662b175c83e409ebfb3f4b073922ee1", "tabbable": null, "tooltip": null, "value": "<iframe src=\"http://localhost:58967/index.html?ui=P_0x20d808bcc10_4&reconnect=auto\" class=\"pyvista\" style=\"width: 99%; height: 600px; border: 1px solid rgb(221,221,221);\"></iframe>"}}, "e662b175c83e409ebfb3f4b073922ee1": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "e8fd6376f8fe41a7a5ddddf641f5d6cf": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "f5ac5222eca14844b98b5dd3c917f7db": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_c765a3e7721f4631b1e030364bb04cde", "placeholder": "\u200b", "style": "IPY_MODEL_c62a22172df34ed3b5b0b0987427bfd6", "tabbable": null, "tooltip": null, "value": "<iframe src=\"http://localhost:58967/index.html?ui=P_0x20e06f14b50_9&reconnect=auto\" class=\"pyvista\" style=\"width: 99%; height: 600px; border: 1px solid rgb(221,221,221);\"></iframe>"}}, "f9e3530c662e43d9bb50625fd16c31d1": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}}, "version_major": 2, "version_minor": 0}
+</script></section>
 
 
             <div class="clearer"></div>
@@ -1517,8 +1779,8 @@ homogenous method chosen ! Warning: Some HD can be not respected
 
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, University of Neuchâtel.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    &#169; Copyright 2026, University of Neuchâtel.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
     </div>
 
 <p id="theme_credit">Styled using the <a href="https://github.com/piccolo-orm/piccolo_theme">Piccolo Theme</a></p>

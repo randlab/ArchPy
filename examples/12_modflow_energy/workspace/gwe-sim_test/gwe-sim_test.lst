@@ -118,7 +118,7 @@ Logical Variables
 
  The specified IDOMAIN results in a reduced number of cells.
  Number of user nodes: 30000
- Number of nodes in solution: 29529
+ Number of nodes in solution: 29581
 
 
 
@@ -951,27 +951,27 @@ start timestep kper="1" kstp="50" mode="normal"
 
            IN:                                      IN:
            ---                                      ---
-     STORAGE-CELLBLK =192694757055.5040       STORAGE-CELLBLK =         545.5466     EST                              
+     STORAGE-CELLBLK =217213172549.8976       STORAGE-CELLBLK =        1127.0457     EST                              
                  WEL =       1.2658E+12                   WEL =       29302.0000     SSM_WEL-INJ                      
                  WEL =           0.0000                   WEL =           0.0000     SSM_WEL-PROD                     
-                 CHD =       2.5356E+12                   CHD =       58693.6744     SSM_CHD-1                        
+                 CHD =       2.0046E+12                   CHD =       46403.6950     SSM_CHD-1                        
                  CHD =           0.0000                   CHD =           0.0000     SSM_CHD-2                        
 
-            TOTAL IN =       3.9941E+12              TOTAL IN =       88541.2211
+            TOTAL IN =       3.4877E+12              TOTAL IN =       76832.7407
 
           OUT:                                     OUT:
           ----                                     ----
-     STORAGE-CELLBLK =   173933186.5750       STORAGE-CELLBLK =           0.3331     EST                              
+     STORAGE-CELLBLK =     2951061.2472       STORAGE-CELLBLK =           0.0000     EST                              
                  WEL =           0.0000                   WEL =           0.0000     SSM_WEL-INJ                      
-                 WEL =       1.7734E+12                   WEL =       40907.4444     SSM_WEL-PROD                     
+                 WEL =       1.7161E+12                   WEL =       39436.2106     SSM_WEL-PROD                     
                  CHD =           0.0000                   CHD =           0.0000     SSM_CHD-1                        
-                 CHD =       2.2205E+12                   CHD =       47633.4316     SSM_CHD-2                        
+                 CHD =       1.7716E+12                   CHD =       37396.6605     SSM_CHD-2                        
 
-           TOTAL OUT =       3.9941E+12             TOTAL OUT =       88541.2092
+           TOTAL OUT =       3.4877E+12             TOTAL OUT =       76832.8711
 
-            IN - OUT =    11076410.2749              IN - OUT =       1.1835E-02
+            IN - OUT =    19635844.1284              IN - OUT =          -0.1304
 
- PERCENT DISCREPANCY =           0.00     PERCENT DISCREPANCY =           0.00
+ PERCENT DISCREPANCY =           0.00     PERCENT DISCREPANCY =          -0.00
 
 
 

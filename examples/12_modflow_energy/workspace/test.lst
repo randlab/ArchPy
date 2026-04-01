@@ -122,7 +122,7 @@ Logical Variables
 
  The specified IDOMAIN results in a reduced number of cells.
  Number of user nodes: 30000
- Number of nodes in solution: 29529
+ Number of nodes in solution: 29581
 
 
  Setting NPF Options
@@ -172,7 +172,7 @@ Logical Variables
  END OF CHD BASE OPTIONS
 
  PROCESSING CHD BASE DIMENSIONS
-    MAXBOUND =     300
+    MAXBOUND =     290
  END OF CHD BASE DIMENSIONS
 
  CHD -- CHD PACKAGE, VERSION 8, 2/22/2014 INPUT READ FROM MEMPATH: __INPUT__/TEST/CHD-2                              
@@ -249,23 +249,23 @@ start timestep kper="1" kstp="1" mode="normal"
            ---                                      ---
                  WEL =       1.0000E-03                   WEL =       1.0000E-03     WEL-INJ                          
                  WEL =           0.0000                   WEL =           0.0000     WEL-PROD                         
-                 CHD =       1.4021E-03                   CHD =       1.4021E-03     CHD-1                            
+                 CHD =       1.1085E-03                   CHD =       1.1085E-03     CHD-1                            
                  CHD =           0.0000                   CHD =           0.0000     CHD-2                            
 
-            TOTAL IN =       2.4021E-03              TOTAL IN =       2.4021E-03
+            TOTAL IN =       2.1085E-03              TOTAL IN =       2.1085E-03
 
           OUT:                                     OUT:
           ----                                     ----
                  WEL =           0.0000                   WEL =           0.0000     WEL-INJ                          
                  WEL =       1.0000E-03                   WEL =       1.0000E-03     WEL-PROD                         
                  CHD =           0.0000                   CHD =           0.0000     CHD-1                            
-                 CHD =       1.4030E-03                   CHD =       1.4030E-03     CHD-2                            
+                 CHD =       1.1161E-03                   CHD =       1.1161E-03     CHD-2                            
 
-           TOTAL OUT =       2.4030E-03             TOTAL OUT =       2.4030E-03
+           TOTAL OUT =       2.1161E-03             TOTAL OUT =       2.1161E-03
 
-            IN - OUT =      -8.7943E-07              IN - OUT =      -8.7943E-07
+            IN - OUT =      -7.5590E-06              IN - OUT =      -7.5590E-06
 
- PERCENT DISCREPANCY =          -0.04     PERCENT DISCREPANCY =          -0.04
+ PERCENT DISCREPANCY =          -0.36     PERCENT DISCREPANCY =          -0.36
 
 
 

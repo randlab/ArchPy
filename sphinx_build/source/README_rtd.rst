@@ -54,19 +54,19 @@ ArchPy requires the following packages:
    - `Geone <https://github.com/randlab/geone>`_
    - matplotlib (tested with 3.10.8)
    - numpy (tested with 1.26.4)
-   - scipy (tested with 1.16.3)
+   - scipy (tested with 1.17.1)
    - sklearn (tested with 1.8.0)
    - pandas (tested with 2.3.3)
    - shapely (tested with 2.1.2)
 
 The following packages are optional but are required for some functionalities:
 
-   - pyvista (tested with 0.46.4)
+   - pyvista (tested with 0.46.5)
    - yaml (tested with 6.0.3)
-   - rasterio (tested with 1.4.3)
-   - geopandas (tested with 1.1.1)
+   - rasterio (tested with 1.4.4)
+   - geopandas (tested with 1.1.3)
    - ipywidgets (tested with 8.1.8)
-   - flopy (tested with 3.9.5)
+   - flopy (tested with 3.10.0)
 
 Members of the project
 ----------------------

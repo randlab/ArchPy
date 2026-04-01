@@ -22,7 +22,7 @@ setuptools.setup(
                       'scipy',
                       'scikit-learn',
                       'scikit-image',
-                      'geone',
+                      'geone < 1.3',
                       'pandas',
                       'shapely',
                       'ipywidgets',

@@ -42,10 +42,10 @@ pip install trame-vtk
 Works and tested with 3.8 <= python <= 3.11
 
 The following python packages are absolutely necessary:
-   - [Geone](https://github.com/randlab/geone)
+   - [Geone](https://github.com/randlab/geone) (tested with 1.2.18)
    - matplotlib (tested with 3.10.8)
    - numpy (tested with 1.26.4)
-   - scipy (tested with 1.17.0)
+   - scipy (tested with 1.17.1)
    - sklearn (tested with 1.8.0)
    - pandas (tested with 2.3.3)
    - shapely (tested with 2.1.2)
@@ -54,9 +54,9 @@ These are not required but highly recommanded. They are installed with ArchPy by
    - pyvista (tested with 0.46.5)
    - yaml (tested with 6.0.3)
    - rasterio (tested with 1.4.4)
-   - geopandas (tested with 1.1.2)
+   - geopandas (tested with 1.1.3)
    - ipywidgets (tested with 8.1.8)
-   - flopy (tested with 3.9.5)
+   - flopy (tested with 3.10.0)
    
  ## Examples
  There is some example notebooks :
@@ -68,12 +68,13 @@ These are not required but highly recommanded. They are installed with ArchPy by
  - 06_cross_validation : a notebook that present how to perform a cross-validation directly with ArchPy
  - 07_geological_map : this notebook presents how to integrate and use a geological in an ArchPy model
  - 08_inference : little guide how to use archpy inference tools to estimate surface parameters (no facies parameters for now) --> Note that for now, the interface is not working due to incompatibilities issues with ipywidgets.
- - 09_interface : little exemple of an interface to call an preexisting archpy model as well as drawing a new model extension.
+ - 09_interactive_modeling_area : little exemple of how importing data and draw modeling area using interactive backend
  - 10_rotation : an example of how to create a rotated model
  - 11_modflow_coupling : an example of how to couple ArchPy with Modflow
  - 12_modflow_energy : How to couple ArchPy to model energy models with MODFOLOW 6
  - 13_modflow_energy : How to couple ArchPy to model transport models with MODFOLOW 6
  - 14_archpy2modflow : example shown in the archpy2modflow paper
+ - upscaling : Dedicated notebooks to show how Uppy, ArchPy submodules for upscaling, is working
  
  ## Paper
  A paper was published on the ArchPy concept and its different capabilities.

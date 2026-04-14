@@ -1529,6 +1529,9 @@ class archpy2modflow:
         # determine grid type
         grid_type = dis.package_type
         if grid_type == "dis":
+            if dis.angrot.array is None:
+                raise ValueError("The grid must be rotated for particle tracking. Please rotate the grid and try again.")
+                
             dis_prt = fp.mf6.ModflowGwfdis(prt, nlay=dis.nlay.array, nrow=dis.nrow.array, ncol=dis.ncol.array,
                                             delr=dis.delr.array, delc=dis.delc.array, top=dis.top.array, botm=dis.botm.array,
                                             xorigin=dis.xorigin.array, yorigin=dis.yorigin.array,

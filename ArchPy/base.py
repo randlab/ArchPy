@@ -5170,7 +5170,12 @@ class Arch_table():
                     if un_p.SubPile is not None:
 
                         if pile.nature == "surfaces":
-                            bot = mean_surfs[i+1]  # get bottom of un_p
+                            if len(mean_surfs) == 1:
+                                bot = self.bot
+                            elif len(mean_surfs) > 1:
+                                bot = mean_surfs[i+1]  # get bottom of un_p
+                            else:
+                                raise ValueError ("mean_surfs should not be empty")
                         else:
                             bot = None
                         mask = (best_model == un_p.ID)

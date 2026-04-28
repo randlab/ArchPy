@@ -5169,7 +5169,7 @@ class Arch_table():
                     un_p = pile.list_units[i]
                     if un_p.SubPile is not None:
 
-                        if pile.nature == "surface":
+                        if pile.nature == "surfaces":
                             bot = mean_surfs[i+1]  # get bottom of un_p
                         else:
                             bot = None

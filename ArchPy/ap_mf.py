@@ -2253,8 +2253,6 @@ class archpy2modflow:
 
         gwt = self.get_gw_transport()
         gwtname=gwt.name
-
-        gwt = self.get_gw_transport()
         
         # if porosity is None, keep previous value
         if porosity is None:

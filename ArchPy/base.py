@@ -4057,8 +4057,6 @@ class Arch_table():
             return None
         self.get_pile_master().compute_surf(self, nreal, fl_top, vb=self.verbose, vert_discret=vert_discret)  # compute surfs of the first pile
 
-
-
         ## stochastic hard data
         #hierarchies
         def fun(pile):  # compute surf hierarchically

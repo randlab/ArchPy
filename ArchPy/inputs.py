@@ -309,8 +309,10 @@ def load_bh_files(list_bhs, facies_data, units_data,
 
     Returns
     -------
-    panda dataframe
-        dataframe with unit and facies information merged
+    two panda dataframe
+        first one is a dataframe with unit and facies information merged
+        second is a dataframe with information of all boreholes. 
+        These two dataframes can be pass to extract_bhs
     """
 
     def merge_dbs (fa_data, s_data):

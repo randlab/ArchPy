@@ -4893,7 +4893,7 @@ class Arch_table():
             elif typ == "facies":
 
                 facies_domains = self.get_facies().reshape(-1, self.nz, self.ny, self.nx)
-                data = units[:, self.mask]
+                data = facies_domains[:, self.mask]
                 SE = np.zeros([data.shape[1]])  # shannon entropy
                 b = len(self.get_all_facies())
                 nreal=facies_domains.shape[0]

@@ -5553,6 +5553,12 @@ class Arch_table():
             if the top of the simulation domain must be plotted
         plot_bot: bool
             if the bot of the simulation domain must be plotted
+        unit_rgb: bool
+            if True, the units are plotted with their RGB color, otherwise a colormap is used
+            this option must be set to True if the units objects use RGB colors, otherwise a colormap is used
+        facies_rgb: bool
+            if True, the facies are plotted with their RGB color, otherwise a colormap is used
+            this option must be set to True if the facies objects use RGB colors, otherwise a colormap is used
 
         """
 
@@ -5809,7 +5815,7 @@ class Arch_table():
 
         """
         Plot the thickness or top or bottom of a unit from borehole data on a map.
-        unit: :class:`Unit` object
+        unit: :class:`Unit` object or string unit name
             unit to plot
         typ: string
             "top", "bot" or "thk" for thickness
@@ -5819,6 +5825,9 @@ class Arch_table():
         v = []
         x = []
         y = []
+
+        if isinstance(unit, str):
+            unit = self.get_unit(unit)
 
         for bh in self.list_bhs:
 

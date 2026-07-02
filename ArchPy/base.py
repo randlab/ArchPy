@@ -8258,6 +8258,7 @@ class Unit():
                     break
             if f:
                 self.list_f_covmodel=f_covmodel
+                self.dic_facies["f_covmodel"] = f_covmodel  # update dic_facies
 
             else:
                 if self.verbose:
@@ -8266,6 +8267,7 @@ class Unit():
         except: # only one object passed
             if isinstance(f_covmodel, covmodels_class):
                 self.list_f_covmodel.append(f_covmodel)
+                self.dic_facies["f_covmodel"] = [f_covmodel]  # update dic_facies
                 if self.verbose:
                     print("Unit {}: covmodel for SIS added".format(self.name))
             else:
@@ -8856,17 +8858,19 @@ class Surface():
                 if a multi-gaussian method is used
             - N_transfo : bool
                 Normal-score transform. Flag to apply or not a Normal Score on the data for the interpolation
-            - Units kwargs  (passed in dic_surf directly):
+            - Units kwargs used for geone functions (passed in dic_surf directly):
 
-            for the search ellipsoid (kriging, grf, ...):
-            
-                - r, relative (to covariance model) radius of research (default is 1)
-                - neig, number of neighbours
-                - krig_type: string, kriging method (ordinary_kriging, simple_kriging)
-            for MPS:
-            
-                - TI
-                - various MPS parameters, see geone documentation
+                - mean : int or np array
+                    mean elevation for the surface.
+                - r : float
+                    relative (to covariance model) radius of research (default is 1)
+                - neig : int
+                    number of neighbours
+                - krig_type : string
+                    string, kriging method (ordinary_kriging, simple_kriging)
+                - TI : geone image
+                    training image for MPS simulation
+                - Other various MPS parameters, see geone documentation
 
     """
 

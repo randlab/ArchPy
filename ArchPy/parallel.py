@@ -48,52 +48,61 @@ def parallel_compute(Arch_Table, n_real = 1, n_real_fa = 0, n_real_prop = 0, l_u
     elif Arch_Table.ncpu > 0:
         ncpu = Arch_Table.ncpu
     
-    Arch_Table.nreal_units = n_real
-    
-    ## units ##
-    l = []
-    ncpu_units_real = max(int(ncpu/n_real), 1)
-    left_cpu = int(ncpu - ncpu_units_real*n_real)
-    
-    if l_u is not None:
-        l = l_u
-    else:
-        for iu in range(n_real):
-            
-            # make a copy
-            T1_copy = copy.deepcopy(Arch_Table)
+    if n_real > 0:
+        flag = True
 
-            T1_copy.seed  = int(Arch_Table.seed + iu)
-            if left_cpu > 0:
-                cpu_bonus = 1
-                left_cpu -= 1
-            else:
-                cpu_bonus = 0
-            T1_copy.ncpu = ncpu_units_real + cpu_bonus
+        Arch_Table.nreal_units = n_real
+        
+        ## units ##
+        l = []
+        ncpu_units_real = max(int(ncpu/n_real), 1)
+        left_cpu = int(ncpu - ncpu_units_real*n_real)
+        
+        if l_u is not None:
+            l = l_u
+        else:
+            for iu in range(n_real):
+                
+                # make a copy
+                T1_copy = copy.deepcopy(Arch_Table)
 
-            T1_copy.verbose = 3
-            l.append(T1_copy)
-    
-    with Pool(ncpu) as p:
-        res = p.map(compute_surf_1table, l)
+                T1_copy.seed  = int(Arch_Table.seed + iu)
+                if left_cpu > 0:
+                    cpu_bonus = 1
+                    left_cpu -= 1
+                else:
+                    cpu_bonus = 0
+                T1_copy.ncpu = ncpu_units_real + cpu_bonus
 
-    # get unit results and assemble them
-    u_domains = np.array([i[0] for i in res]).reshape(n_real, nz, ny, nx)
-    list_surf_dic = np.array([i[1] for i in res])
-    # combine dictionaries
-    d = list_surf_dic[0]
-    for k in d.keys():
-        d[k] = np.concatenate([d[k] for d in list_surf_dic], axis=0)
-    surf = d
+                T1_copy.verbose = 3
+                l.append(T1_copy)
+        
+        with Pool(ncpu) as p:
+            res = p.map(compute_surf_1table, l)
 
-    list_surf_bot_dic = np.array([i[2] for i in res])
-    # combine dictionaries
-    d = list_surf_bot_dic[0]
-    for k in d.keys():
-        d[k] = np.concatenate([d[k] for d in list_surf_bot_dic], axis=0)
-    surf_bot = d
+        # get unit results and assemble them
+        u_domains = np.array([i[0] for i in res]).reshape(n_real, nz, ny, nx)
+        list_surf_dic = np.array([i[1] for i in res])
+        # combine dictionaries
+        d = list_surf_dic[0]
+        for k in d.keys():
+            d[k] = np.concatenate([d[k] for d in list_surf_dic], axis=0)
+        surf = d
+
+        list_surf_bot_dic = np.array([i[2] for i in res])
+        # combine dictionaries
+        d = list_surf_bot_dic[0]
+        for k in d.keys():
+            d[k] = np.concatenate([d[k] for d in list_surf_bot_dic], axis=0)
+        surf_bot = d
+
+    else:  # if units already computed
+        flag = False
+        n_real = Arch_Table.nreal_units
+        u_domains = Arch_Table.Geol.units_domains
 
     if n_real_fa > 0:
+        
         ## facies ##
         l_fa = []  # list to contain Arch_tables
         Arch_Table.nreal_fa = n_real_fa
@@ -152,9 +161,11 @@ def parallel_compute(Arch_Table, n_real = 1, n_real_fa = 0, n_real_prop = 0, l_u
             res_prop = p.map(compute_prop_1table, l_prop)
     
     # store results 
-    Arch_Table.Geol.units_domains = u_domains
-    Arch_Table.Geol.surfaces_by_piles = surf
-    Arch_Table.Geol.surfaces_bot_by_piles = surf_bot
+    if flag:
+        Arch_Table.Geol.units_domains = u_domains
+        Arch_Table.Geol.surfaces_by_piles = surf
+        Arch_Table.Geol.surfaces_bot_by_piles = surf_bot
+
     Arch_Table.surfaces_computed = 1
     if n_real_fa > 0:
         # put results in facies_domains

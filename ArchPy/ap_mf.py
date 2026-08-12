@@ -514,8 +514,14 @@ class archpy2modflow:
             gwf = sim.get_model(self.model_name)
             self.sim = sim
 
-            self.grid_mode = grid_mode
-            
+            grid_type = gwf.modelgrid.grid_type
+            if grid_type == "vertex":
+                self.grid_mode = "disv"
+            elif grid_type == "structured":
+                self.grid_mode = "dis"           
+            elif grid_type == "unstructured":
+                self.grid_mode = "disu"     
+                        
         else:
             sim = fp.mf6.MFSimulation(sim_name=self.sim_name, version='mf6', exe_name=self.exe_name, 
                             sim_ws=self.model_dir)

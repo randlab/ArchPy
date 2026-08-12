@@ -486,6 +486,12 @@ class archpy2modflow:
             index of the unit to use when grid_mode is "layers"
         lay_sep : int or list of int of size nlay
             if grid_mode is layers, lay_sep indicates the number of layers to separate each unit
+        modflowgrid_props : dict
+            if grid_mode is disv or disu, modflowgrid_props must contain the properties of the grid
+        xorigin : float
+            x origin of the grid
+        yorigin : float
+            y origin of the grid
         factor_x : float
             factor to change the resolution of the grid in the x direction. e.g. 2 means that the resolution will be divided by 2
         factor_y : float
@@ -503,9 +509,12 @@ class archpy2modflow:
             if self.vb > 0:
                 print("## Loading existing MODFLOW 6 model from {} ###\n".format(self.model_dir))
                 print("Note: the model_dir must contain a valid MODFLOW 6 simulation and it must be compatible with the ArchPy model\n")
+                print("Make sure the given grid_mode is consistent with the modflow model")
             sim = fp.mf6.MFSimulation.load(sim_ws=self.model_dir)
             gwf = sim.get_model(self.model_name)
             self.sim = sim
+
+            self.grid_mode = grid_mode
             
         else:
             sim = fp.mf6.MFSimulation(sim_name=self.sim_name, version='mf6', exe_name=self.exe_name, 

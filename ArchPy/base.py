@@ -3725,7 +3725,8 @@ class Arch_table():
                         if len(bhs_cell) > 1: # more than one borehole in one cell
                             if self.verbose:
                                 print("Multiples boreholes {} were found inside the same cell, the deepest will be kept".format([i.ID for i in bhs_cell]))
-                            depths=(np.array([i.depth for i in bhs_cell]))
+                            depths = (np.array([i.depth for i in bhs_cell]))
+                            # prio = (np.array([i.prio for i in bhs_cell]))
                             mask2=(depths == max(depths))
                             if sum(mask2) == 1:
                                 for (bh, chk) in zip(bhs_cell, mask2):

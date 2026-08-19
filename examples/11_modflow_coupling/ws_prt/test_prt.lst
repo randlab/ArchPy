@@ -98,8 +98,8 @@ Logical Variables
 
  Setting Discretization Dimensions
     NLAY = 4
-    NCPL = 600
-    NVERT = 677
+    NCPL = 915
+    NVERT = 1043
  End Setting Discretization Dimensions
 
  Setting Discretization Griddata
@@ -122,7 +122,7 @@ Logical Variables
  END OF FMI OPTIONS
  PROCESSING FMI PACKAGEDATA
 
- OPENED M:\GitHub\ArchPy\examples\11_modflow_coupling\workspace\test.hds
+ OPENED \\home\schorppl$\GitHub\ArchPy\examples\11_modflow_coupling\workspace\test.hds
  FILE TYPE:DATA(BINARY)   UNIT 1011   STATUS:UNKNOWN             
  FORMAT:UNFORMATTED            ACCESS:STREAM              
  ACTION:READWRITE           
@@ -130,7 +130,7 @@ Logical Variables
 Reading binary file to determine number of records per time step.
 Detected 4 unique records in binary file.
 
- OPENED M:\GitHub\ArchPy\examples\11_modflow_coupling\workspace\test.cbc
+ OPENED \\home\schorppl$\GitHub\ArchPy\examples\11_modflow_coupling\workspace\test.cbc
  FILE TYPE:DATA(BINARY)   UNIT 1012   STATUS:UNKNOWN             
  FORMAT:UNFORMATTED            ACCESS:STREAM              
  ACTION:READWRITE           

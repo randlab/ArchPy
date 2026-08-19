@@ -100,8 +100,8 @@ Logical Variables
 
  Setting Discretization Dimensions
     NLAY = 4
-    NCPL = 600
-    NVERT = 677
+    NCPL = 915
+    NVERT = 1043
  End Setting Discretization Dimensions
 
  Setting Discretization Griddata
@@ -201,19 +201,19 @@ start timestep kper="1" kstp="1" mode="normal"
 
            IN:                                      IN:
            ---                                      ---
-                 CHD =       1.9581E-04                   CHD =       1.9581E-04     CHD                              
+                 CHD =       3.0279E-05                   CHD =       3.0279E-05     CHD                              
 
-            TOTAL IN =       1.9581E-04              TOTAL IN =       1.9581E-04
+            TOTAL IN =       3.0279E-05              TOTAL IN =       3.0279E-05
 
           OUT:                                     OUT:
           ----                                     ----
-                 CHD =       2.0058E-04                   CHD =       2.0058E-04     CHD                              
+                 CHD =       3.3115E-05                   CHD =       3.3115E-05     CHD                              
 
-           TOTAL OUT =       2.0058E-04             TOTAL OUT =       2.0058E-04
+           TOTAL OUT =       3.3115E-05             TOTAL OUT =       3.3115E-05
 
-            IN - OUT =      -4.7741E-06              IN - OUT =      -4.7741E-06
+            IN - OUT =      -2.8362E-06              IN - OUT =      -2.8362E-06
 
- PERCENT DISCREPANCY =          -2.41     PERCENT DISCREPANCY =          -2.41
+ PERCENT DISCREPANCY =          -8.95     PERCENT DISCREPANCY =          -8.95
 
 
 

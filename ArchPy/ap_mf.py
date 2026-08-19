@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from numba import jit
+import copy
+
 
 import ArchPy
 import ArchPy.base
@@ -458,6 +460,7 @@ class archpy2modflow:
         xorigin=0,
         yorigin=0,
         angrot=0,
+        grid_already_rotated=True,
         factor_x=None,
         factor_y=None,
         factor_z=None,
@@ -492,6 +495,16 @@ class archpy2modflow:
             x origin of the grid
         yorigin : float
             y origin of the grid
+        angrot : float
+            angle of rotation of the grid in degrees.
+            if the provided grid is rotated, angrot can be specified.
+        grid_already_rotated : bool
+            Used only with disv grid mode.
+            flag to indicate if the grid is already rotated by angrot or not.
+            Already rotated means that the rotation is already applied to grid in the vertices of the grid. 
+            Hence the grid is rotated despite having an angle of rotation of 0.
+            This is the classical output of a grid obtained through gridgen. 
+            If it is not the case, set this parameter to False.
         factor_x : float
             factor to change the resolution of the grid in the x direction. e.g. 2 means that the resolution will be divided by 2
         factor_y : float
@@ -521,7 +534,9 @@ class archpy2modflow:
                 self.grid_mode = "dis"           
             elif grid_type == "unstructured":
                 self.grid_mode = "disu"     
-                        
+
+            self.grid_already_rotated = grid_already_rotated
+
         else:
             sim = fp.mf6.MFSimulation(sim_name=self.sim_name, version='mf6', exe_name=self.exe_name, 
                             sim_ws=self.model_dir)
@@ -531,18 +546,28 @@ class archpy2modflow:
             # upscale idomain
             sx_grid, sy_grid, sz_grid = self.T1.get_sx(), self.T1.get_sy(), self.T1.get_sz()
             ox_grid, oy_grid, oz_grid = self.T1.get_ox(), self.T1.get_oy(), self.T1.get_oz()
-
+            
+            self.grid_already_rotated = grid_already_rotated
             if grid_mode in ["disv", "disu"]:  
 
                 if grid_mode == "disv":
-                    dis = fp.mf6.ModflowGwfdisv(gwf, **modflowgrid_props, xorigin=xorigin, yorigin=yorigin)
+                    if grid_already_rotated:
+                        dis = fp.mf6.ModflowGwfdisv(gwf, **modflowgrid_props, xorigin=xorigin, yorigin=yorigin)
+                    else:
+                        dis = fp.mf6.ModflowGwfdisv(gwf, **modflowgrid_props, xorigin=xorigin, yorigin=yorigin, angrot=angrot)
+                        self.grid_already_rotated = grid_already_rotated
                 else:
                     dis = fp.mf6.ModflowGwfdisu(gwf, **modflowgrid_props, xorigin=xorigin, yorigin=yorigin)
                 
                 grid = gwf.modelgrid  # get the grid object
+                grid = copy.deepcopy(grid)  # create a copy of the grid to avoid modifying the original one
+
                 # rotate grid around the origin of archpy model
                 xorigin_rot, yorigin_rot = rotate_point((xorigin, yorigin), origin=(ox_grid, oy_grid), angle=-angrot) 
-                grid.set_coord_info(xoff=xorigin_rot, yoff=yorigin_rot, angrot=-angrot)
+                if grid_already_rotated:
+                    grid.set_coord_info(xoff=xorigin_rot, yoff=yorigin_rot, angrot=-angrot)
+                else:
+                    grid.set_coord_info(xoff=xorigin_rot, yoff=yorigin_rot, angrot=0)
 
                 # idomain #
                 # inactive cells below unit limit
@@ -886,7 +911,10 @@ class archpy2modflow:
             xorigin_rot, yorigin_rot = rotate_point((xorigin, yorigin), origin=(ox_grid, oy_grid), angle=-angrot) 
 
             # rotation
-            grid.set_coord_info(xoff=xorigin_rot, yoff=yorigin_rot, angrot=-angrot)
+            if self.grid_already_rotated:
+                grid.set_coord_info(xoff=xorigin_rot, yoff=yorigin_rot, angrot=-angrot)
+            else:
+                grid.set_coord_info(xoff=xorigin_rot, yoff=yorigin_rot, angrot=0)
 
             # upscale
             new_prop, _, _ = upscale_k(prop, method=method,
@@ -1184,7 +1212,8 @@ class archpy2modflow:
                 new_k33 = None
 
                 # get the grid object --> needs to be rotated
-                grid = gwf.modelgrid  
+                grid = gwf.modelgrid
+                grid = copy.deepcopy(grid)  # create a copy of the grid to avoid modifying the original one
 
                 # rotate grid around the origin of archpy model
 
@@ -1195,7 +1224,11 @@ class archpy2modflow:
                 xorigin_rot, yorigin_rot = rotate_point((xorigin, yorigin), origin=(ox_grid, oy_grid), angle=-angrot) 
 
                 # rotation
-                grid.set_coord_info(xoff=xorigin_rot, yoff=yorigin_rot, angrot=-angrot)
+                if self.grid_already_rotated:
+                    grid.set_coord_info(xoff=xorigin_rot, yoff=yorigin_rot, angrot=-angrot)
+                else:
+                    grid.set_coord_info(xoff=xorigin_rot, yoff=yorigin_rot, angrot=0)
+                # grid.set_coord_info(xoff=xorigin_rot, yoff=yorigin_rot, angrot=-angrot)
 
                 # get field
                 field = self.T1.get_prop(k_key)[iu, ifa, ip]
@@ -1572,7 +1605,7 @@ class archpy2modflow:
         from shapely.geometry import Point
 
         grid = self.get_gwf().modelgrid
-        
+        grid = copy.deepcopy(grid)
 
         if grid_type == "dis":
 
@@ -1643,7 +1676,10 @@ class archpy2modflow:
         elif grid_type in ["disv", "disu"]:
             
             # rotate the grid
-            grid.set_coord_info(xoff=grid.xoffset, yoff=grid.yoffset, angrot=0)
+            if self.grid_already_rotated:
+                grid.set_coord_info(xoff=grid.xoffset, yoff=grid.yoffset, angrot=0)
+            else:
+                pass
 
             # convert coordinates into cellids
             cellids = points2grid_index(list_p_coords, grid)
@@ -1656,7 +1692,7 @@ class archpy2modflow:
             else:
                 package_data = []
                 for i in range(len(cellids)):
-                    package_data.append((i, cellids[i], list_p_coords[i][0] - grid.xoffset, list_p_coords[i][1] - grid.yoffset, list_p_coords[i][2], particle_names[ip]))                
+                    package_data.append((i, cellids[i], list_p_coords[i][0] - grid.xoffset, list_p_coords[i][1] - grid.yoffset, list_p_coords[i][2], particle_names[i]))                
 
         else:
             raise ValueError("grid type not supported")

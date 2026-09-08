@@ -5538,7 +5538,7 @@ class Arch_table():
 
         plt.axis('off')    
 
-    def plot_bhs(self, log="strati", plotter=None, v_ex=1, plot_top=False, plot_bot=False, unit_rgb=False, facies_rgb=False):
+    def plot_bhs(self, log="strati", plotter=None, v_ex=1, plot_top=False, opacity_top=1, plot_bot=False,  opacity_bot=1, unit_rgb=False, facies_rgb=False):
 
         """
         Plot the boreholes of the Arch_table project.
@@ -5732,12 +5732,12 @@ class Arch_table():
         if plot_top:
             X, Y=np.meshgrid(self.get_xgc(), self.get_ygc())
             grid=pv.StructuredGrid(X, Y, (self.top-z0)*v_ex+z0)
-            p.add_mesh(grid, opacity=1, color="white")
+            p.add_mesh(grid, opacity=opacity_top, color="white")
 
         if plot_bot:
             X, Y=np.meshgrid(self.get_xgc(), self.get_ygc())
             grid=pv.StructuredGrid(X, Y, (self.bot-z0)*v_ex+z0)
-            p.add_mesh(grid, opacity=1, color="red")
+            p.add_mesh(grid, opacity=opacity_bot, color="red")
 
         if plotter is None:
             p.add_bounding_box()

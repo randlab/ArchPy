@@ -669,7 +669,8 @@ class archpy2modflow:
                     # define idomain (1 if thickness > 0, 0 if nan, -1 if thickness = 0)
                     idomain = np.ones((nlay, nrow, ncol))
                     thicknesses = -np.diff(np.vstack([top.reshape(-1, nrow, ncol), botm]), axis=0)
-                    idomain[thicknesses < self.T1.sz] = -1
+                    # idomain[thicknesses < self.T1.sz] = -1
+                    idomain[thicknesses == 0] = -1
                     idomain[np.isnan(thicknesses)] = 0
 
                     # set nan of each layer to the mean of the previous layer + 1e-2

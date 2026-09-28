@@ -332,9 +332,9 @@ def load_bh_files(list_bhs, facies_data, units_data,
                 
                 #set top of log to top of bh
                 if fa_idata.top.values[0] != list_bhs.loc[bh_id]["bh_z"]:
-                    fa_idata.top.values[0]=list_bhs.loc[bh_id]["bh_z"]
+                    fa_idata.loc[0, "top"] = list_bhs.loc[bh_id]["bh_z"]
                 if s_idata.top.values[0] != list_bhs.loc[bh_id]["bh_z"]:
-                     s_idata.top.values[0]=list_bhs.loc[bh_id]["bh_z"]
+                     s_idata.loc[0, "top"] = list_bhs.loc[bh_id]["bh_z"]
                      
                 i_fa=0
                 i_s=0

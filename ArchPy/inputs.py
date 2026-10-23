@@ -603,9 +603,9 @@ def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()
             if log_strati or log_facies:  # if data about units or facies 
                 
                 # check if there is at least one info in each log
-                if len([s[0] for s in log_strati if s[0] is not None]) == 0:
+                if len([s[0] for s in log_strati if not pd.isna(s[0])]) == 0:
                     log_strati=None
-                if len([s[0] for s in log_facies if s[0] is not None]) == 0:
+                if len([s[0] for s in log_facies if not pd.isna(s[0])]) == 0:
                     log_facies=None
                 
                 if log_strati is not None or log_facies is not None: 
@@ -643,7 +643,7 @@ def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()
             #log strati
             if unit_name not in units_to_ignore:
                 prev_ignore_flag=False
-                if unit_name in [i.name for i in ArchTable.get_all_units()] or unit_name is None:# new bh that have strati info
+                if unit_name in [i.name for i in ArchTable.get_all_units()] or pd.isna(unit_name):# new bh that have strati info
                     #if unit_name not in [i[0].name for i in log_strati if i[0] is not None]: # if this encountered unit is not already in log
                     if unit_name_prev != unit_name:
                         if altitude:
@@ -652,7 +652,7 @@ def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()
                             z=list_bhs.loc[list_bhs["bh_ID"] == bh_ID]["bh_z"].values[0] - df.loc[idx,"top"] 
                         z=np.round(z, 2)
 
-                        if unit_name is not None:
+                        if not pd.isna(unit_name):
                             log_strati.append((ArchTable.get_unit(unit_name),z))
                         else:
                             log_strati.append((None, z))
@@ -678,7 +678,7 @@ def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()
                         z=np.round(z, 2)
 
                         if log_strati and fill_gaps:
-                            if log_strati[-1][0] is None:  # if latest entry is None
+                            if pd.isna(log_strati[-1][0]):  # if latest entry is None
                                 log_strati.pop(-1)  # remove latest None entry
 
                         log_strati.append((None, z))
@@ -693,7 +693,7 @@ def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()
             #log_facies
             if facies_name not in facies_to_ignore:
                 prev_ignore_flag = False
-                if facies_name in [i.name for i in ArchTable.get_all_facies()] or facies_name is None:# new bh that have strati info
+                if facies_name in [i.name for i in ArchTable.get_all_facies()] or pd.isna(facies_name):# new bh that have strati info
                     if facies_name_prev != facies_name:
                         if altitude:
                             z=df.loc[idx,"top"] 
@@ -705,7 +705,7 @@ def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()
                         if list_bhs.loc[list_bhs["bh_ID"] == bh_ID]["bh_z"].values[0] - df.loc[idx,"bot"] > idepth:
                             idepth=list_bhs.loc[list_bhs["bh_ID"] == bh_ID]["bh_z"].values[0] - df.loc[idx,"bot"]
                             
-                        if facies_name is not None:
+                        if not pd.isna(facies_name):
                             log_facies.append((ArchTable.get_facies_obj(facies_name),z))
                         else:
                             log_facies.append((None, z))
@@ -725,7 +725,7 @@ def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()
                         z=np.round(z, 2)
 
                         if log_facies and fill_gaps:
-                            if log_facies[-1][0] is None:  # if latest entry is None
+                            if pd.isna(log_facies[-1][0]):  # if latest entry is None
                                 log_facies.pop(-1)  # remove latest None entry
 
                         log_facies.append((None, z))
@@ -739,9 +739,9 @@ def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()
     if log_strati or log_facies: #if data about units or facies (to do)
         
         #check if there is at least one info in each log
-        if len([s[0] for s in log_strati if s[0] is not None]) == 0:
+        if len([s[0] for s in log_strati if not pd.isna(s[0])]) == 0:
             log_strati=None
-        if len([s[0] for s in log_facies if s[0] is not None]) == 0:
+        if len([s[0] for s in log_facies if not pd.isna(s[0])]) == 0:
             log_facies=None
         
         # get borehole info

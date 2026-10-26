@@ -3725,7 +3725,8 @@ class Arch_table():
                         if len(bhs_cell) > 1: # more than one borehole in one cell
                             if self.verbose:
                                 print("Multiples boreholes {} were found inside the same cell, the deepest will be kept".format([i.ID for i in bhs_cell]))
-                            depths=(np.array([i.depth for i in bhs_cell]))
+                            depths = (np.array([i.depth for i in bhs_cell]))
+                            # prio = (np.array([i.prio for i in bhs_cell]))
                             mask2=(depths == max(depths))
                             if sum(mask2) == 1:
                                 for (bh, chk) in zip(bhs_cell, mask2):
@@ -4056,8 +4057,6 @@ class Arch_table():
         if self.check_units_ID() is None:  # check if units have correct IDs
             return None
         self.get_pile_master().compute_surf(self, nreal, fl_top, vb=self.verbose, vert_discret=vert_discret)  # compute surfs of the first pile
-
-
 
         ## stochastic hard data
         #hierarchies
@@ -4895,7 +4894,7 @@ class Arch_table():
             elif typ == "facies":
 
                 facies_domains = self.get_facies().reshape(-1, self.nz, self.ny, self.nx)
-                data = units[:, self.mask]
+                data = facies_domains[:, self.mask]
                 SE = np.zeros([data.shape[1]])  # shannon entropy
                 b = len(self.get_all_facies())
                 nreal=facies_domains.shape[0]
@@ -5113,6 +5112,7 @@ class Arch_table():
         elif method == "mean_surfs":
             
             best_model = np.zeros([nz, ny, nx], dtype=np.int8)
+            all_surfs = {}
 
             def fun(pile, bot=None, mask_unit=None):
 
@@ -5169,14 +5169,25 @@ class Arch_table():
                     un_p = pile.list_units[i]
                     if un_p.SubPile is not None:
 
-                        if pile.nature == "surface":
-                            bot = mean_surfs[i+1]  # get bottom of un_p
+                        if pile.nature == "surfaces":
+                            if len(mean_surfs) == 1:
+                                bot = self.bot
+                            elif len(mean_surfs) > 1:
+                                if i == len(mean_surfs)-1:
+                                    bot_sub = bot
+                                    pass
+                                else:
+                                    bot_sub = mean_surfs[i+1]  # get bottom of un_p
+                            else:
+                                raise ValueError ("mean_surfs should not be empty")
                         else:
-                            bot = None
+                            bot_sub = None
                         mask = (best_model == un_p.ID)
 
-                        fun(un_p.SubPile, bot, mask)
+                        fun(un_p.SubPile, bot_sub, mask)
 
+                all_surfs[pile.name] = np.array(mean_surfs)  # store mean surfaces
+                
             fun(self.get_pile_master(), self.bot, self.mask)
 
             ids = [self.get_unit(u).ID for u in units_to_fill]
@@ -5184,7 +5195,7 @@ class Arch_table():
                 best_model[(best_model==iv) & (self.mask)] = -99
                 best_model = self.fill_ID(best_model, -99)
 
-            return best_model
+            return best_model, all_surfs
         
         elif method == "MDS_errors":  # a discuter avec Philippe
             
@@ -5248,7 +5259,30 @@ class Arch_table():
         else:
             print("help")
 
+    def replace_strati_with_mean_model(self):
+
+        """
+        Allows to replace stochastic unit simulations with mean surfaces model.
+        Only works with unit model obtained from surfaces
+        """
+
+        best_model, all_surfs = self.realizations_aggregation(method="mean_surfs")
+
+        # adjust shape
+        new_d = {}
+        for key in all_surfs:
+            new_d[key] = all_surfs[key].reshape(1, *all_surfs[key].shape)
+
+        # TO DO --> also do the change on botom surfaces
+        self.Geol.units_domains  = best_model.reshape(1, *best_model.shape)  # set mean model for plot
+        self.Geol.surfaces_by_piles = new_d
+        self.nreal_units = 1
+
     def get_sp(self, unit_kws=[], facies_kws=[], folder="./", **kwargs):
+
+        """
+        Function to display the stratigraphic pile
+        """
 
         # convert the image to html
         def path_to_image_html(path, width=200):
@@ -5534,7 +5568,7 @@ class Arch_table():
 
         plt.axis('off')    
 
-    def plot_bhs(self, log="strati", plotter=None, v_ex=1, plot_top=False, plot_bot=False, unit_rgb=False, facies_rgb=False):
+    def plot_bhs(self, log="strati", plotter=None, v_ex=1, plot_top=False, opacity_top=1, plot_bot=False,  opacity_bot=1, unit_rgb=False, facies_rgb=False):
 
         """
         Plot the boreholes of the Arch_table project.
@@ -5550,6 +5584,12 @@ class Arch_table():
             if the top of the simulation domain must be plotted
         plot_bot: bool
             if the bot of the simulation domain must be plotted
+        unit_rgb: bool
+            if True, the units are plotted with their RGB color, otherwise a colormap is used
+            this option must be set to True if the units objects use RGB colors, otherwise a colormap is used
+        facies_rgb: bool
+            if True, the facies are plotted with their RGB color, otherwise a colormap is used
+            this option must be set to True if the facies objects use RGB colors, otherwise a colormap is used
 
         """
 
@@ -5722,12 +5762,12 @@ class Arch_table():
         if plot_top:
             X, Y=np.meshgrid(self.get_xgc(), self.get_ygc())
             grid=pv.StructuredGrid(X, Y, (self.top-z0)*v_ex+z0)
-            p.add_mesh(grid, opacity=1, color="white")
+            p.add_mesh(grid, opacity=opacity_top, color="white")
 
         if plot_bot:
             X, Y=np.meshgrid(self.get_xgc(), self.get_ygc())
             grid=pv.StructuredGrid(X, Y, (self.bot-z0)*v_ex+z0)
-            p.add_mesh(grid, opacity=1, color="red")
+            p.add_mesh(grid, opacity=opacity_bot, color="red")
 
         if plotter is None:
             p.add_bounding_box()
@@ -5806,7 +5846,7 @@ class Arch_table():
 
         """
         Plot the thickness or top or bottom of a unit from borehole data on a map.
-        unit: :class:`Unit` object
+        unit: :class:`Unit` object or string unit name
             unit to plot
         typ: string
             "top", "bot" or "thk" for thickness
@@ -5816,6 +5856,9 @@ class Arch_table():
         v = []
         x = []
         y = []
+
+        if isinstance(unit, str):
+            unit = self.get_unit(unit)
 
         for bh in self.list_bhs:
 
@@ -8246,6 +8289,7 @@ class Unit():
                     break
             if f:
                 self.list_f_covmodel=f_covmodel
+                self.dic_facies["f_covmodel"] = f_covmodel  # update dic_facies
 
             else:
                 if self.verbose:
@@ -8254,6 +8298,7 @@ class Unit():
         except: # only one object passed
             if isinstance(f_covmodel, covmodels_class):
                 self.list_f_covmodel.append(f_covmodel)
+                self.dic_facies["f_covmodel"] = [f_covmodel]  # update dic_facies
                 if self.verbose:
                     print("Unit {}: covmodel for SIS added".format(self.name))
             else:
@@ -8844,17 +8889,19 @@ class Surface():
                 if a multi-gaussian method is used
             - N_transfo : bool
                 Normal-score transform. Flag to apply or not a Normal Score on the data for the interpolation
-            - Units kwargs  (passed in dic_surf directly):
+            - Units kwargs used for geone functions (passed in dic_surf directly):
 
-            for the search ellipsoid (kriging, grf, ...):
-            
-                - r, relative (to covariance model) radius of research (default is 1)
-                - neig, number of neighbours
-                - krig_type: string, kriging method (ordinary_kriging, simple_kriging)
-            for MPS:
-            
-                - TI
-                - various MPS parameters, see geone documentation
+                - mean : int or np array
+                    mean elevation for the surface.
+                - r : float
+                    relative (to covariance model) radius of research (default is 1)
+                - neig : int
+                    number of neighbours
+                - krig_type : string
+                    string, kriging method (ordinary_kriging, simple_kriging)
+                - TI : geone image
+                    training image for MPS simulation
+                - Other various MPS parameters, see geone documentation
 
     """
 

@@ -5628,6 +5628,7 @@ class Arch_table():
                             d_colors[ID] = unit.c
                             ID += 1
 
+
         # define new IDs for facies and get colors
         d_f = {}
         d_colors_f = {}
@@ -5663,7 +5664,7 @@ class Arch_table():
                             wells.append(line)
                             IDs.append(d[st.ID])
                         else:
-                            break
+                            pass
             
             wells = wells.combine()   
 
@@ -5695,7 +5696,7 @@ class Arch_table():
                             wells.append(line)
                             IDs.append(d_f[st.ID])
                         else:
-                            break
+                            pass
 
             wells = wells.combine()   
 

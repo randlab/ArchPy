@@ -598,7 +598,6 @@ def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()
     for idx in df.index:
     
         bh_ID=df.loc[idx,"bh_ID"]
-        
 
         #store borehole
         if bh_ID != bh_ID_prev:  # new borehole --> save old one
@@ -647,7 +646,7 @@ def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()
                 prev_ignore_flag=False
                 if unit_name in [i.name for i in ArchTable.get_all_units()] or pd.isna(unit_name):# new bh that have strati info
                     #if unit_name not in [i[0].name for i in log_strati if i[0] is not None]: # if this encountered unit is not already in log
-                    if unit_name_prev != unit_name:
+                    if unit_name_prev != unit_name and not (pd.isna(unit_name_prev) and pd.isna(unit_name)):
                         if altitude:
                             z=df.loc[idx,"top"] 
                         else:
@@ -696,7 +695,7 @@ def extract_bhs(df, list_bhs, ArchTable, units_to_ignore=(), facies_to_ignore=()
             if facies_name not in facies_to_ignore:
                 prev_ignore_flag = False
                 if facies_name in [i.name for i in ArchTable.get_all_facies()] or pd.isna(facies_name):# new bh that have strati info
-                    if facies_name_prev != facies_name:
+                    if facies_name_prev != facies_name and not (pd.isna(facies_name_prev) and pd.isna(facies_name)):
                         if altitude:
                             z=df.loc[idx,"top"] 
                         else:

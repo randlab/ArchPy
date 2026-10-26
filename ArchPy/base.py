@@ -5112,6 +5112,7 @@ class Arch_table():
         elif method == "mean_surfs":
             
             best_model = np.zeros([nz, ny, nx], dtype=np.int8)
+            all_surfs = {}
 
             def fun(pile, bot=None, mask_unit=None):
 
@@ -5172,15 +5173,21 @@ class Arch_table():
                             if len(mean_surfs) == 1:
                                 bot = self.bot
                             elif len(mean_surfs) > 1:
-                                bot = mean_surfs[i+1]  # get bottom of un_p
+                                if i == len(mean_surfs)-1:
+                                    bot_sub = bot
+                                    pass
+                                else:
+                                    bot_sub = mean_surfs[i+1]  # get bottom of un_p
                             else:
                                 raise ValueError ("mean_surfs should not be empty")
                         else:
-                            bot = None
+                            bot_sub = None
                         mask = (best_model == un_p.ID)
 
-                        fun(un_p.SubPile, bot, mask)
+                        fun(un_p.SubPile, bot_sub, mask)
 
+                all_surfs[pile.name] = np.array(mean_surfs)  # store mean surfaces
+                
             fun(self.get_pile_master(), self.bot, self.mask)
 
             ids = [self.get_unit(u).ID for u in units_to_fill]
@@ -5188,7 +5195,7 @@ class Arch_table():
                 best_model[(best_model==iv) & (self.mask)] = -99
                 best_model = self.fill_ID(best_model, -99)
 
-            return best_model
+            return best_model, all_surfs
         
         elif method == "MDS_errors":  # a discuter avec Philippe
             
@@ -5252,7 +5259,30 @@ class Arch_table():
         else:
             print("help")
 
+    def replace_strati_with_mean_model(self):
+
+        """
+        Allows to replace stochastic unit simulations with mean surfaces model.
+        Only works with unit model obtained from surfaces
+        """
+
+        best_model, all_surfs = self.realizations_aggregation(method="mean_surfs")
+
+        # adjust shape
+        new_d = {}
+        for key in all_surfs:
+            new_d[key] = all_surfs[key].reshape(1, *all_surfs[key].shape)
+
+        # TO DO --> also do the change on botom surfaces
+        self.Geol.units_domains  = best_model.reshape(1, *best_model.shape)  # set mean model for plot
+        self.Geol.surfaces_by_piles = new_d
+        self.nreal_units = 1
+
     def get_sp(self, unit_kws=[], facies_kws=[], folder="./", **kwargs):
+
+        """
+        Function to display the stratigraphic pile
+        """
 
         # convert the image to html
         def path_to_image_html(path, width=200):

@@ -4963,7 +4963,8 @@ class Arch_table():
     def realizations_aggregation(self, typ="units", method="basic",
                                 depth=100, ignore_units=None,
                                 units_to_fill=[],
-                                n_iter = 50):
+                                n_iter = 50,
+                                return_surfs=False):
     
         """
         Method to aggregate multiple ArchPy realizations into one for units and facies (TO DO)
@@ -4990,6 +4991,8 @@ class Arch_table():
             Should not be used except to fill the top unit.
         n_iter: int
             number of times MDS is run.
+        return_surfs: bool
+            return mean surfaces if mean_surfs method is used.
 
         Returns
         -------
@@ -5195,8 +5198,11 @@ class Arch_table():
                 best_model[(best_model==iv) & (self.mask)] = -99
                 best_model = self.fill_ID(best_model, -99)
 
-            return best_model, all_surfs
-        
+            if return_surfs:
+                return best_model, all_surfs
+            else:
+                return best_model
+                    
         elif method == "MDS_errors":  # a discuter avec Philippe
             
             # get data
@@ -5266,7 +5272,7 @@ class Arch_table():
         Only works with unit model obtained from surfaces
         """
 
-        best_model, all_surfs = self.realizations_aggregation(method="mean_surfs")
+        best_model, all_surfs = self.realizations_aggregation(method="mean_surfs", return_surfs=True)
 
         # adjust shape
         new_d = {}
@@ -5888,7 +5894,6 @@ class Arch_table():
         plt.colorbar(label="{} of unit {}".format(typ, unit.name))
         plt.xlabel("X")
         plt.ylabel("Y")
-
 
 
     def get_units_domains_realizations(self, iu=None, all_data=True, fill="ID", h_level="all"):
